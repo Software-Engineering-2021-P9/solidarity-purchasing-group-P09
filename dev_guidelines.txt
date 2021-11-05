@@ -1,0 +1,19 @@
+This document lists all the rules developers must follow during development.
+
+YOU HAVE TO STICK TO THE RULES, NO PR WILL BE ACCEPTED IF SOMETHING IS AGAINST THEM.
+
+COMMON:
+- You have to STICK on the design made at the start of the sprint. If you find a problem, leave a comment on the design task and SHOUT on the Telegram group.
+
+BACK END:
+- Before defining a new method (e.g. for database access) or a new service which can be shared, ask on the Telegram group if someone already did it.
+- Before start implementing an API, provide a mock implementation which returns fixed data so the front end devs can use it. 
+  You have to create a PR for that, ask to someone for the review. After acceptance you can create another branch and start implementing the real API.
+  E.g. 
+	1.1. 	Create mock API in a branch named like "feat-mock-{APIName}"
+	1.2. 	Start working on the real implementation on a branch named like "feat-{APIName}"
+	2. 	Ask for review
+	3. 	Merge it
+	4. 	Notify front end developer
+
+FRONT END:

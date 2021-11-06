@@ -4,13 +4,15 @@ info:
     The APIs definitions for the Solidarity Purchasing Group application.
   version: 1.0.0
   title: SPG - Solidarity Purchasing Group
-host: petstore.swagger.io
-basePath: /v2
+host: to-be-defined.com
+basePath: /api
 tags:
   - name: client
   - name: employee
   - name: order
   - name: product
+  - name: week-phase
+  - name: testing
 schemes:
   - https
   - http
@@ -45,7 +47,7 @@ paths:
             items:
               $ref: '#/definitions/Product'
         '400':
-          description: Bad Request
+          description: Bad Request - The request contains invalid parameters
         '500':
           description: Internal Server Error         
           
@@ -71,9 +73,9 @@ paths:
             items:
               $ref: '#/definitions/Order'
         '400':
-          description: Bad Request
+          description: Bad Request - The request contains invalid parameters
         '401':
-          description: Unauthorized
+          description: Unauthorized - The user is not logged or is not allowed to make this action
         '500':
           description: Internal Server Error
     post: 
@@ -90,16 +92,18 @@ paths:
           description: Order object to be added to the database
           required: true
           schema:
-            $ref: '#/definitions/OrderParams'
+            $ref: '#/definitions/CreateOrderParams'
       responses:
         '200':
           description: Success
           schema:
             $ref: '#/definitions/Order'
         '400':
-          description: Bad Request
+          description: Bad Request - The request contains invalid parameters
         '401': 
-          description: Unauthorized
+          description: Unauthorized - The user is not logged or is not allowed to make this action
+        '403':
+          description: Forbidden - The action cannot be executed in the current week phase
         '500':
           description: Internal Server Error
         
@@ -116,16 +120,18 @@ paths:
         parameters:
           - in: path
             required: true
-            name: orderID
+            name: orderID 
             type: string
             description: The ID of the order to set as completed
         responses:
           '204':
             description: Success
           '400':
-            description: Bad Request
+            description: Bad Request - The request contains invalid parameters
           '401':
-            description: Unauthorized
+            description: Unauthorized - The user is not logged or is not allowed to make this action
+          '403':
+            description: Forbidden - The action cannot be executed in the current week phase
           '500':
             description: Internal Server Error
   
@@ -151,7 +157,9 @@ paths:
           schema:
             $ref: '#/definitions/ClientInfo'
         '400':
-          description: Bad Request
+          description: Bad Request - The request contains invalid parameters
+        '404':
+          description: Not Found
         '500':
           description: Internal Server Error
           
@@ -164,19 +172,29 @@ paths:
       operationId: addFundToWallet
       consumes: 
         - application/json
-      parameters: 
+      parameters:
+        - in: path
+          required: true
+          name: clientID
+          type: string
+          description: Parameter that identify and select the Client
         - in: body
           name: body
           required: true
           schema:
-            type: number
+            type: object
+            properties: 
+              increaseBy:
+                type: number
+                example: 55.50
+          description: The value to be added to the wallet
       responses: 
         '204':
           description: No content
         '400': 
-          description: Bad Request
+          description: Bad Request - The request contains invalid parameters
         '401': 
-          description: Unauthorized
+          description: Unauthorized - The user is not logged or is not allowed to make this action
         '500':
           description: Internal Server Error
 
@@ -196,16 +214,16 @@ paths:
           description: Client object to be added to the database
           required: true
           schema:
-             $ref: '#/definitions/ClientInfo'
+             $ref: '#/definitions/SignupClientParams'
       responses:
         '200':
           description: Success
           schema:
             $ref: '#/definitions/ClientInfo'
         '400':
-          description: Bad Request
+          description: Bad Request - The request contains invalid parameters
         '401': 
-          description: Unauthorized
+          description: Unauthorized - The user is not logged or is not allowed to make this action
         '500':
           description: Internal Server Error
     get:
@@ -229,7 +247,7 @@ paths:
             items:
               $ref: '#/definitions/ClientInfo'
         '400':
-          description: Bad Request
+          description: Bad Request - The request contains invalid parameters
         '500':
           description: Internal Server Error   
           
@@ -266,7 +284,7 @@ paths:
           schema:
             $ref: '#/definitions/ClientInfo'
         '400':
-          description: Bad Request
+          description: Bad Request - The request contains invalid parameters
         '500':
           description: Internal Server Error  
           
@@ -278,20 +296,21 @@ paths:
         - client
       summary: Allows a client to signup
       description: Allows a client to signup storing his details and credentials
-      operationId: SignupClient
+      operationId: signupClient
       consumes: 
         - application/json
       parameters:
         - in: body
           name: body
           required: true
+          description: details and credentials object to signup
           schema: 
             $ref: '#/definitions/SignupClientParams'
       responses: 
         '204':
           description: No Content
         '400':
-          description: Bad Request
+          description: Bad Request - The request contains invalid parameters
         '500': 
           description: Internal Server Error
 
@@ -299,44 +318,103 @@ paths:
     post:
       tags:
         - employee
-      summary: Login the Employee
-      description: Login the Employee based on the provided credentials
-      operationId: loginEmployee(employeeEmail, password)
+      summary: Allow an employee to login
+      description: Allows a client to login based on the provided credentials
+      operationId: loginEmployee
       consumes: 
         - application/json
       parameters:
         - in: body
           required: true
+          description: credentials to request authentication
           name: credentials
-          name: employeeEmail
-          type: string
-          format: email
-          description: mail of the employee that need to login
           schema:
-            $ref: '#/definitions/'
-        - in: body
-          required: true
-          name: password
-          type: string
-          minLength: 6
-          description: password of the employee that need to login
-          schema:
-            $ref: '#/definitions/'
+            type: object
+            properties: 
+              email:
+                type: string
+                format: email
+                description: Email of the employee to login
+                example: employee@email.com
+              password:
+                type: string
+                description: Password of the employee to login
+                example: password
       responses:
         '200':
           description: Success
           schema:
             $ref: '#/definitions/EmployeeInfo'
         '400':
-          description: Bad Request
+          description: Bad Request - The request contains invalid parameters
         '401': 
-          description: Unauthorized
+          description: Unauthorized - The user is not logged or is not allowed to make this action
         '500':
           description: Internal Server Error
-          
+
+  /weekPhases/current:
+    get:
+      tags:
+        - week-phase
+      summary: Retreive the current active week phase
+      description: Retreive the current active week phase. This must be used by the front end to only allow actions compatible with the current active phase. Actions made outside of the week phase, for which they are enabled, will return an error.
+      operationId: getCurrentWeekPhase
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              activePhase:
+                type: string
+                example: "order-creation"
+        '500':
+          description: Internal Server Error
+
+  /testing/weekPhases/current:
+    patch:
+      tags:
+        - testing
+      summary: Override the current active week phase
+      description: Sets the current active week phase to a fixed one for testing purposes. Changing a week phase means triggering the week phase change handler.
+      operationId: setPhaseOverride
+      produces:
+        - application/json
+      responses:
+        '204':
+          description: Success
+        '400':
+          description: Bad Request - The request contains invalid parameters
+        '401': 
+          description: Unauthorized - The user is not logged or is not allowed to make this action
+        '500':
+          description: Internal Server Error
+
+  /testing/database/reset:
+    get:
+      tags:
+        - testing
+      summary: Resets the testing database to the initial snapshot
+      description: Resets the testing database to the initial snapshot to cleanup testing gone wrong.
+      operationId: resetTestingDatabase
+      produces:
+        - application/json
+      responses:
+        '204':
+          description: Success
+        '400':
+          description: Bad Request - The request contains invalid parameters
+        '401': 
+          description: Unauthorized - The user is not logged or is not allowed to make this action
+        '500':
+          description: Internal Server Error
+
+
 definitions:
   ClientInfo:
-    description: "At least one between email and (fullName, address, wallet) are required"
+    description: "At least one between email and (fullName, address) are required"
     type: object
     additionalProperties: false
     required:
@@ -350,21 +428,26 @@ definitions:
       password:
         type: string
         minLength: 6
+        example:
+          basePassword
       email:
         type: string
         format: email
+        example: 
+          mariorossi@gmail.com
       fullName:
         type: string
         maxLength: 35
+        example: 
+          Mario Rossi
       address:
         type: string
         maxLength: 60
         example:
-          "Via dei castagni 7a|Torino|TO|10140"
+          Via dei castagni 7a|Torino|TO|10140
       wallet:
         type: number
   SignupClientParams:
-    description: "At least one between email and (fullName, address, wallet) are required"
     type: object
     additionalProperties: false
     required:
@@ -376,17 +459,23 @@ definitions:
       password:
         type: string
         minLength: 6
+        example:
+          basePassword
       email:
         type: string
         format: email
+        example: 
+          mariorossi@gmail.com
       fullName:
         type: string
         maxLength: 35
+        example: 
+         Mario Rossi
       address:
         type: string
         maxLength: 60
         example:
-          "Via dei castagni 7a|Torino|TO|10140"
+          Via dei castagni 7a|Torino|TO|10140
   Order:
     type: object
     additionalProperties: false
@@ -424,14 +513,12 @@ definitions:
           - CONFIRMED
           - PREPARED
           - DONE
-  OrderParams:
+  CreateOrderParams:
     type: object
     additionalProperties: false
     required:
       - clientID
       - products
-      - totalPrice
-      - status
     properties:
       clientID:
         type: string
@@ -448,15 +535,6 @@ definitions:
               type: integer
         example:
           "{$productID:$quantity,...}"
-      totalPrice:
-        type: number
-      status:
-        type: string
-        enum:
-          - WAITING
-          - CONFIRMED
-          - PREPARED
-          - DONE
   Product:
       type: object
       additionalProperties: false

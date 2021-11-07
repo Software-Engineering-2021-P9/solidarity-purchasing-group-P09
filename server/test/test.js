@@ -1,0 +1,69 @@
+let chai = require("chai");
+let expect = chai.expect;
+let chaiHttp = require("chai-http");
+
+chai.use(chaiHttp);
+
+// This will contain the main server app, needed to listen for requests.
+// This is initialized when the mock MongoDB initialization is completed.
+let app;
+
+// Init mock MongoDB
+const mongoUnit = require("mongo-unit");
+let testData = require("./test-data");
+
+const mongoTestDBName = "spg-test";
+mongoUnit.start().then(() => {
+  process.env.MONGO_CONN_STR = mongoUnit.getUrl();
+  process.env.MONGO_DB_NAME = mongoTestDBName;
+  app = require("../app");
+  run();
+});
+
+after(() => {
+  return mongoUnit.stop();
+});
+
+// Employees API tests
+describe("Employees API tests:", () => {
+  beforeEach(() => mongoUnit.load(testData.employeesCollection));
+
+  afterEach(() => mongoUnit.drop());
+
+  describe("GET /employees/:employeeID", () => {
+    it("it should retrieve the employee associated to the given ID", (done) => {
+      chai
+        .request(app)
+        .get("api/employees/56d9bf92f9be48771d6fe5b1")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          expect(res.body).to.be.an("object");
+          expect(res.body.name).to.be.equal("Mario Biondi");
+
+          done();
+        });
+    });
+  });
+
+  describe("POST /employees", () => {
+    it("it should create a new employee", (done) => {
+      chai
+        .request(app)
+        .post("api/employees", {
+          email: "employee3@test.com",
+          password: "password",
+          fullName: "Mario Verdi",
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          expect(res.body).to.be.an("object");
+          expect(res.body.email).to.be.equal("employee3@test.com");
+          expect(res.body.name).to.be.equal("Mario Verdi");
+
+          done();
+        });
+    });
+  });
+});

@@ -13,7 +13,7 @@ const mongoUnit = require("mongo-unit");
 let testData = require("./test-data");
 
 const mongoTestDBName = "spg-test";
-mongoUnit.start().then(() => {
+mongoUnit.start({ dbName: mongoTestDBName }).then(() => {
   process.env.MONGO_CONN_STR = mongoUnit.getUrl();
   process.env.MONGO_DB_NAME = mongoTestDBName;
   app = require("../app");
@@ -34,7 +34,7 @@ describe("Employees API tests:", () => {
     it("it should retrieve the employee associated to the given ID", (done) => {
       chai
         .request(app)
-        .get("api/employees/56d9bf92f9be48771d6fe5b1")
+        .get("/api/employees/6187c957b288576ca26f8257")
         .end((err, res) => {
           expect(err).to.be.null;
           expect(res.status).to.be.equal(200);
@@ -50,7 +50,8 @@ describe("Employees API tests:", () => {
     it("it should create a new employee", (done) => {
       chai
         .request(app)
-        .post("api/employees", {
+        .post("/api/employees")
+        .send({
           email: "employee3@test.com",
           password: "password",
           fullName: "Mario Verdi",
@@ -60,7 +61,7 @@ describe("Employees API tests:", () => {
           expect(res.status).to.be.equal(200);
           expect(res.body).to.be.an("object");
           expect(res.body.email).to.be.equal("employee3@test.com");
-          expect(res.body.name).to.be.equal("Mario Verdi");
+          expect(res.body.fullName).to.be.equal("Mario Verdi");
 
           done();
         });

@@ -9,13 +9,19 @@ const {
 
 exports.getEmployeeByIDValidatorChain = [employeeIDPathValidator];
 exports.getEmployeeByIDHandler = async function (req, res, next) {
-  dao
+  await dao
     .getEmployeeByID(req.params.employeeID)
     .catch((e) => {
       console.error(`GetEmployeeByID() -> couldn't retrieve employee: ${e}`);
       res.status(500).end();
     })
     .then((json) => {
+      if (!json) {
+        console.error(
+          `GetEmployeeByID() -> couldn't retrieve employee: not found`
+        );
+        res.status(404).end();
+      }
       let employee = Employee.fromMongoJSON(json);
       res.json(employee);
     });

@@ -6,7 +6,7 @@ const {
   fullNameBodyValidator,
   passwordBodyValidator,
 } = require("./shared_validators");
-const {validationResult} = require("express-validator");
+const { validationResult } = require("express-validator");
 
 exports.getEmployeeByIDValidatorChain = [employeeIDPathValidator];
 exports.getEmployeeByIDHandler = async function (req, res, next) {
@@ -46,7 +46,11 @@ exports.createEmployeeHandler = async function (req, res, next) {
 
   let insertedEmployeeID;
   await dao
-    .createEmployee(req.body.email, req.body.password, req.body.fullName)
+    .createEmployee(
+      req.body.email.toString(),
+      req.body.password.toString(),
+      req.body.fullName.toString()
+    )
     .catch((e) => {
       console.error(`CreateEmployee() -> couldn't create employee: ${e}`);
       res.status(500).end();

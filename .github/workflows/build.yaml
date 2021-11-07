@@ -46,6 +46,8 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: lcov-report
+      - run: pwd
+      - run: ls
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:

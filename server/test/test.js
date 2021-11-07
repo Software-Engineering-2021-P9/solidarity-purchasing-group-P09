@@ -39,7 +39,7 @@ describe("Employees API tests:", () => {
           expect(err).to.be.null;
           expect(res.status).to.be.equal(200);
           expect(res.body).to.be.an("object");
-          expect(res.body.name).to.be.equal("Mario Biondi");
+          expect(res.body.fullName).to.be.equal("Mario Biondi");
 
           done();
         });

@@ -44,6 +44,18 @@ describe("Employees API tests:", () => {
           done();
         });
     });
+
+    it("it must fail when an invalid Mongo ID is passed", (done) => {
+      chai
+        .request(app)
+        .get("/api/employees/test")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(400);
+
+          done();
+        });
+    });
   });
 
   describe("POST /employees", () => {
@@ -62,6 +74,57 @@ describe("Employees API tests:", () => {
           expect(res.body).to.be.an("object");
           expect(res.body.email).to.be.equal("employee3@test.com");
           expect(res.body.fullName).to.be.equal("Mario Verdi");
+
+          done();
+        });
+    });
+
+    it("it must fail when an invalid email is passed", (done) => {
+      chai
+        .request(app)
+        .post("/api/employees")
+        .send({
+          email: "notanemail",
+          password: "password",
+          fullName: "Mario Verdi",
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(400);
+
+          done();
+        });
+    });
+
+    it("it must fail when a password too short is passed", (done) => {
+      chai
+        .request(app)
+        .post("/api/employees")
+        .send({
+          email: "employee3@test.com",
+          password: "pas",
+          fullName: "Mario Verdi",
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(400);
+
+          done();
+        });
+    });
+
+    it("it must fail when a fullName too long is passed", (done) => {
+      chai
+        .request(app)
+        .post("/api/employees")
+        .send({
+          email: "employee3@test.com",
+          password: "password",
+          fullName: "Mario VerdiMario VerdiMario VerdiMario VerdiMario Verdi",
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(400);
 
           done();
         });

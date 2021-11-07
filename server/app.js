@@ -8,9 +8,10 @@ var indexHandlers = require("./handlers/index");
 var employeeHandlers = require("./handlers/employee");
 
 const port = process.env.PORT || 3001;
-const requestPath = (path) => "/api" + path;
+const requestPath = (requestPath) => "/api" + requestPath;
 
 var app = express();
+app.disable("x-powered-by");
 
 app.use(logger("dev"));
 app.use(express.json());

@@ -1,5 +1,3 @@
-"use strict";
-
 class Employee {
   constructor(id, email, password, fullName) {
     this.id = id;
@@ -13,4 +11,4 @@ class Employee {
   }
 }
 
-module.exports = { Employee };
+export default Employee;

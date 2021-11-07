@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Container, Row, Col, Alert, Button, Spinner } from "react-bootstrap";
-import {getEmployeeByID} from "../src/services/api_client"
+import { getEmployeeByID } from "./services/ApiClient";
 
 function App() {
   const [employee, setEmployee] = useState({});
@@ -9,7 +9,10 @@ function App() {
 
   function onButtonClick() {
     setIsLoading(true);
-    getEmployeeByID("6187c957b288576ca26f8257").then(employee=>setEmployee(employee)).catch(err => setError(err)).finally(()=>setIsLoading(false));
+    getEmployeeByID("6187c957b288576ca26f8257")
+      .then((employee) => setEmployee(employee))
+      .catch((err) => setError(err))
+      .finally(() => setIsLoading(false));
   }
 
   return (

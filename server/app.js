@@ -8,7 +8,7 @@ var indexHandlers = require("./handlers/index");
 var employeeHandlers = require("./handlers/employee");
 
 const port = process.env.PORT || 3001;
-const requestPath = (requestPath) => "/api" + requestPath;
+const buildAPIPath = (apiPath) => "/api" + apiPath;
 
 var app = express();
 app.disable("x-powered-by");
@@ -22,20 +22,20 @@ app.use(cors());
 // Serve client app
 app.use("/", express.static(path.resolve(__dirname, "../client/build")));
 
-app.get(requestPath("/"), indexHandlers.indexHandler);
+app.get(buildAPIPath("/"), indexHandlers.indexHandler);
 
 // ----------
 // /employees
 // ----------
 
 app.get(
-  requestPath("/employees/:employeeID"),
+  buildAPIPath("/employees/:employeeID"),
   employeeHandlers.getEmployeeByIDValidatorChain,
   employeeHandlers.getEmployeeByIDHandler
 );
 
 app.post(
-  requestPath("/employees"),
+  buildAPIPath("/employees"),
   employeeHandlers.createEmployeeHandlerValidatorChain,
   employeeHandlers.createEmployeeHandler
 );

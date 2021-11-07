@@ -6,8 +6,7 @@ exports.emailBodyValidator = body("email")
   .bail()
   .trim()
   .escape()
-  .isEmail()
-  .nomalizeEmail();
+  .isEmail();
 exports.fullNameBodyValidator = body("fullName")
   .notEmpty()
   .bail()

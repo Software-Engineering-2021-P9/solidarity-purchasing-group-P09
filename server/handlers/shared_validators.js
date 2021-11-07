@@ -1,6 +1,6 @@
 const { body, param } = require("express-validator");
 
-exports.employeeIDPathValidator = param("employeeID").isString();
+exports.employeeIDPathValidator = param("employeeID").isMongoId();
 exports.emailBodyValidator = body("email").exists().bail().isEmail();
 exports.fullNameBodyValidator = body("fullName")
   .exists()

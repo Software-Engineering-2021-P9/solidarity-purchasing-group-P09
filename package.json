@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "description": "An app that allow clients to make group orders for great products, made by farmers with love",
     "scripts": {
-        "start":"npm start --prefix server/",
+        "start": "npm start --prefix server/",
         "build": "npm ci --prefix client/ && npm ci --prefix server/ && npm run build --prefix client/"
     }
 }

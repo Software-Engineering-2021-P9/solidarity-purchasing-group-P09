@@ -6,9 +6,15 @@ const {
   fullNameBodyValidator,
   passwordBodyValidator,
 } = require("./shared_validators");
+const {validationResult} = require("express-validator");
 
 exports.getEmployeeByIDValidatorChain = [employeeIDPathValidator];
 exports.getEmployeeByIDHandler = async function (req, res, next) {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
   await dao
     .getEmployeeByID(req.params.employeeID)
     .catch((e) => {
@@ -33,6 +39,11 @@ exports.createEmployeeHandlerValidatorChain = [
   fullNameBodyValidator,
 ];
 exports.createEmployeeHandler = async function (req, res, next) {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
   let insertedEmployeeID;
   await dao
     .createEmployee(req.body.email, req.body.password, req.body.fullName)

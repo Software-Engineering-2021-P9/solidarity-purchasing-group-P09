@@ -131,3 +131,130 @@ describe("Employees API tests:", () => {
     });
   });
 });
+
+
+describe("Products API tests: ", () => {
+  beforeEach(() => mongoUnit.load(testData.productsCollection));
+
+  afterEach(() => mongoUnit.drop());
+
+  describe("GET /products", () => {
+    it("it should retrieve the list of products based on the filters sent: CATEGORY", (done) => {
+      chai
+        .request(app)
+        .get("/api/products")
+        .send({ category: "meat", searchString: undefined, IDs: undefined })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          expect(res.body).to.be.an("array");
+          expect(res.body.length).to.be.equal(2);
+          expect(res.body.filter(product => product.category == "meat").length).to.be.equal(2);
+          done();
+        });
+    });
+
+
+    it("it should retrieve the list of products based on the filters sent: SEARCHSTRING", (done) => {
+      chai
+        .request(app)
+        .get("/api/products")
+        .send({ category: undefined, searchString: "Nutella", IDs: undefined })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          expect(res.body).to.be.an("array");
+          expect(res.body.length).to.be.equal(2);
+          expect(res.body.map(product => product.id)).to.include.members(["000000000000000000000012", "000000000000000000000006"]);
+          done();
+        });
+    });
+
+
+    it("it should retrieve the list of products based on the filters sent: IDs", (done) => {
+      chai
+        .request(app)
+        .get("/api/products")
+        .send({
+          category: undefined, searchString: undefined,
+          IDs: "000000000000000000000001,000000000000000000000003,000000000000000000000008"
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          expect(res.body).to.be.an("array");
+          expect(res.body.length).to.be.equal(3);
+          expect(res.body.map(product => product.id)).to.include.members(["000000000000000000000001", "000000000000000000000003", "000000000000000000000008"]);
+          done();
+        });
+    });
+
+    it("it should retrieve the list of products based on the filters sent: CATEGORY, SEARCHSTRING", (done) => {
+      chai
+        .request(app)
+        .get("/api/products")
+        .send({ category: "fruit", searchString: "Giovanni", IDs: undefined })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          expect(res.body).to.be.an("array");
+          expect(res.body.length).to.be.equal(1);
+          expect(res.body.map(product => product.id)).to.include.members(["000000000000000000000001"]);
+          done();
+        });
+    });
+
+    it("If no filter are passed then all the products should be retrieved", (done) => {
+      chai
+        .request(app)
+        .get("/api/products")
+        .send({ category: undefined, searchString: undefined, IDs: undefined })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          expect(res.body).to.be.an("array");
+          expect(res.body.length).to.be.equal(12);
+          done();
+        });
+    });
+
+    it("If there are no products with applied filters then it should return an empty array", (done) => {
+      chai
+        .request(app)
+        .get("/api/products")
+        .send({ category: "Pizza", searchString: undefined, IDs: undefined })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          expect(res.body).to.be.an("array");
+          expect(res.body.length).to.be.equal(0);
+          done();
+        });
+    });
+
+    it("It should return an error if the IDs passed are not valid: ", (done) => {
+      chai
+        .request(app)
+        .get("/api/products")
+        .send({ category: undefined , searchString: undefined, IDs: "000000000000000000000001,000000000000000000000003,08" })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(400);
+          done();
+        });
+    });
+
+    it("It should return an error if the category passed is not valid: ", (done) => {
+      chai
+        .request(app)
+        .get("/api/products")
+        .send({ category: "pizza" , searchString: undefined, IDs: undefined })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(400);
+          done();
+        });
+    });
+
+  });
+});

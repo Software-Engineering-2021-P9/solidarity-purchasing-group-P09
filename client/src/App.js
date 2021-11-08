@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Container, Row, Col, Alert, Button, Spinner } from "react-bootstrap";
+import ProductListPage from "./ProductListPage";
 import { getEmployeeByID } from "./services/ApiClient";
 
 function App() {
@@ -17,19 +18,7 @@ function App() {
 
   return (
     <Container>
-      <Row className='vh-100 justify-content-center align-items-center'>
-        <Col className='d-flex justify-content-center align-items-center flex-column'>
-          {isLoading ? (
-            <Spinner animation='border' variant='primary' />
-          ) : (
-            <>
-              <Button onClick={onButtonClick}>Get an employee name!</Button>
-              <h1>{employee.fullName}</h1>
-              {error ? <Alert>{error}</Alert> : null}
-            </>
-          )}
-        </Col>
-      </Row>
+     <ProductListPage />
     </Container>
   );
 }

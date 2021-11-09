@@ -29,7 +29,7 @@ function App() {
 
           <Switch>
             <Route exact path="/">
-              <h1>Home page</h1>
+              <h1>ProductListPage</h1>
               <Col className='d-flex justify-content-center align-items-center flex-column'>
                 {isLoading ? (
                   <Spinner animation='border' variant='primary' />
@@ -43,19 +43,25 @@ function App() {
               </Col>
             </Route>
             <Route exact path="/cart">
-              <h1>Cart page</h1>
+              <h1>ShoppingCartPage</h1>
             </Route>
             <Route exact path="/orders">
-              <h1>Orders page</h1>
+              <h1>OrdersPage</h1>
             </Route>
             <Route exact path="/clients">
-              <h1>Clients page</h1>
+              <h1>ClientsManagementPage</h1>
+            </Route>
+            <Route exact path="/clients/:id">
+              <h1>ClientDetailspage</h1>
             </Route>
             <Route exact path="/neworder">
               <h1>New order page</h1>
             </Route>
             <Route exact path="/newclient">
-              <h1>New client page</h1>
+              <h1>ClientRegistrationPage</h1>
+            </Route>
+            <Route exact path="/login">
+              <h1>LoginPage</h1>
             </Route>
             <Route path="/">
               <Redirect to="/" />

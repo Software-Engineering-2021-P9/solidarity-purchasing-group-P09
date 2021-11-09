@@ -155,7 +155,7 @@ paths:
         '200':
           description: Success
           schema:
-            $ref: '#/definitions/ClientInfo'
+            $ref: '#/definitions/ClientInfoResult'
         '400':
           description: Bad Request - The request contains invalid parameters
         '404':
@@ -189,8 +189,14 @@ paths:
                 example: 55.50
           description: The value to be added to the wallet
       responses: 
-        '204':
-          description: No content
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties: 
+              newWalletValue:
+                type: number
+                example: 1023.23
         '400': 
           description: Bad Request - The request contains invalid parameters
         '401': 
@@ -219,7 +225,7 @@ paths:
         '200':
           description: Success
           schema:
-            $ref: '#/definitions/ClientInfo'
+            $ref: '#/definitions/ClientInfoResult'
         '400':
           description: Bad Request - The request contains invalid parameters
         '401': 
@@ -245,9 +251,11 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/ClientInfo'
+              $ref: '#/definitions/ClientInfoResult'
         '400':
           description: Bad Request - The request contains invalid parameters
+        '401': 
+          description: Unauthorized - The user is not logged or is not allowed to make this action
         '500':
           description: Internal Server Error   
           
@@ -282,7 +290,7 @@ paths:
         '200':
           description: Success
           schema:
-            $ref: '#/definitions/ClientInfo'
+            $ref: '#/definitions/ClientInfoResult'
         '400':
           description: Bad Request - The request contains invalid parameters
         '500':
@@ -344,7 +352,7 @@ paths:
         '200':
           description: Success
           schema:
-            $ref: '#/definitions/EmployeeInfo'
+            $ref: '#/definitions/EmployeeInfoResult'
         '400':
           description: Bad Request - The request contains invalid parameters
         '401': 
@@ -387,8 +395,6 @@ paths:
           description: Success
         '400':
           description: Bad Request - The request contains invalid parameters
-        '401': 
-          description: Unauthorized - The user is not logged or is not allowed to make this action
         '500':
           description: Internal Server Error
 
@@ -404,10 +410,6 @@ paths:
       responses:
         '204':
           description: Success
-        '400':
-          description: Bad Request - The request contains invalid parameters
-        '401': 
-          description: Unauthorized - The user is not logged or is not allowed to make this action
         '500':
           description: Internal Server Error
 
@@ -420,6 +422,9 @@ definitions:
     required:
       - id
       - password
+      - email
+      - fullName
+      - address
       - wallet
     properties:
       id:
@@ -447,35 +452,27 @@ definitions:
           Via dei castagni 7a|Torino|TO|10140
       wallet:
         type: number
-  SignupClientParams:
-    type: object
-    additionalProperties: false
-    required:
-      - email
-      - fullname
-      - address
-      - password
-    properties:
-      password:
-        type: string
-        minLength: 6
-        example:
-          basePassword
-      email:
-        type: string
-        format: email
-        example: 
-          mariorossi@gmail.com
-      fullName:
-        type: string
-        maxLength: 35
-        example: 
-         Mario Rossi
-      address:
-        type: string
-        maxLength: 60
-        example:
-          Via dei castagni 7a|Torino|TO|10140
+  EmployeeInfo:
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - password
+        - email
+        - fullname
+      properties:
+        id:
+          type: string
+          format: bsonID
+        password:
+          type: string
+          minLength: 6
+        email:
+          type: string
+          format: email
+        fullname:
+          type: string
+          maxLength: 35
   Order:
     type: object
     additionalProperties: false
@@ -513,28 +510,6 @@ definitions:
           - CONFIRMED
           - PREPARED
           - DONE
-  CreateOrderParams:
-    type: object
-    additionalProperties: false
-    required:
-      - clientID
-      - products
-    properties:
-      clientID:
-        type: string
-        format: bsonID
-      products:
-        type: array
-        items:
-          type: object
-          properties:
-            productID:
-              type: string
-              format: bsonID
-            quantity:
-              type: integer
-        example:
-          "{$productID:$quantity,...}"
   Product:
       type: object
       additionalProperties: false
@@ -567,21 +542,100 @@ definitions:
             - meat
             - eggs
             - milk
-  EmployeeInfo:
+  CreateOrderParams:
+    type: object
+    additionalProperties: false
+    required:
+      - clientID
+      - products
+    properties:
+      clientID:
+        type: string
+        format: bsonID
+      products:
+        type: array
+        items:
+          type: object
+          properties:
+            productID:
+              type: string
+              format: bsonID
+            quantity:
+              type: integer
+        example:
+          "{$productID:$quantity,...}"
+  SignupClientParams:
+    type: object
+    additionalProperties: false
+    required:
+      - email
+      - fullname
+      - address
+      - password
+    properties:
+      password:
+        type: string
+        minLength: 6
+        example:
+          basePassword
+      email:
+        type: string
+        format: email
+        example: 
+          mariorossi@gmail.com
+      fullName:
+        type: string
+        maxLength: 35
+        example: 
+         Mario Rossi
+      address:
+        type: string
+        maxLength: 60
+        example:
+          Via dei castagni 7a|Torino|TO|10140
+  ClientInfoResult:
+    description: "Return model for methods which return ClientInfo (sensitive data is stripped). At least one between email and (fullName, address) are required"
+    type: object
+    additionalProperties: false
+    required:
+      - id
+      - email
+      - fullName
+      - address
+      - wallet
+    properties:
+      id:
+        type: string
+        format: bsonID
+      email:
+        type: string
+        format: email
+        example: 
+          mariorossi@gmail.com
+      fullName:
+        type: string
+        maxLength: 35
+        example: 
+          Mario Rossi
+      address:
+        type: string
+        maxLength: 60
+        example:
+          Via dei castagni 7a|Torino|TO|10140
+      wallet:
+        type: number
+  EmployeeInfoResult:
+      description: Return model for methods which return EmployeeInfo (sensitive data is stripped).
       type: object
       additionalProperties: false
       required:
         - id
-        - password
         - email
         - fullname
       properties:
         id:
           type: string
           format: bsonID
-        password:
-          type: string
-          minLength: 6
         email:
           type: string
           format: email

@@ -15,7 +15,7 @@ import { NewOrderPage } from "./pages/NewOrderPage";
 
 function App() {
   
-  {/*const [employee, setEmployee] = useState({});
+ /*const [employee, setEmployee] = useState({});
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -43,7 +43,7 @@ function App() {
         </Col>
       </Row>
     </Container>
-  ); */}
+  ); */
 
   return (
     <Router>

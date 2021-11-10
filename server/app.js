@@ -21,6 +21,8 @@ app.use(cors());
 
 // Serve client app
 app.use("/", express.static(path.resolve(__dirname, "../client/build")));
+// This is needed to handle subpaths routing from the client
+app.use("/*", express.static(path.resolve(__dirname, "../client/build")));
 
 app.get(buildAPIPath("/"), indexHandlers.indexHandler);
 

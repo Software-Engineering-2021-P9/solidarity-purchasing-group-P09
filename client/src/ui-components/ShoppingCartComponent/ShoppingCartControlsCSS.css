@@ -1,15 +1,3 @@
-.cart-icon{
-    fill: #635F46 !important;
-    vertical-align: middle;
-}
-.title{
-    color: #635F46 !important;
-    vertical-align: middle;
-}
-.total-amount{
-    color:red;
-    text-align: end;
-}
 .cart-inverse-button{
     border: 2px solid black;
     background-color: whitesmoke;

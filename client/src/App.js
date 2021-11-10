@@ -18,16 +18,16 @@ function App() {
           <Route exact path="/">
               <ProductListPage/>
             </Route>
-            <Route exact path="/currentCart">
+            <Route path="/currentCart">
               <ShoppingCartPage/> 
             </Route>
-            <Route exact path="/clients">
+            <Route path="/clients">
               <ClientManagementPage/>
             </Route>
-            <Route exact path="/clients/:id">
+            <Route path="/clients/:id">
               <ClientDetailsPage/>
             </Route>
-            <Route exact path="/newclient">
+            <Route path="/clientSignup">
               <ClientSignupPage/>
             </Route>
             <Route path="/">

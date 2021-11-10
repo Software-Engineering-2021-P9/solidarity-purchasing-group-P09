@@ -17,7 +17,7 @@ function NavbarComponent(props) {
             <Navbar.Collapse>
                 <Nav className="me-auto my-2 my-lg-0 ">
                     <Nav.Link className="navbar-text" href="/clients">Clients</Nav.Link>
-                    <Nav.Link className="navbar-text" href="/newclient">New client</Nav.Link>
+                    <Nav.Link className="navbar-text" href="/clientSignup">New client</Nav.Link>
                 </Nav>
             </Navbar.Collapse>
 

@@ -49,7 +49,10 @@ describe("Orders API tests:", () => {
           expect(res.status).to.be.equal(200);
           expect(res.body).to.be.an("object");
           expect(res.body.clientId).to.be.equal("23321321421421");
-          expect(res.body.products).to.be.an("array");
+          expect(res.body.products).to.be.an.string;
+          expect(res.body.status).to.be.equal("WAITING");
+          expect(res.body.totalPrice).to.be.equal("6");
+
           done();
         });
     });

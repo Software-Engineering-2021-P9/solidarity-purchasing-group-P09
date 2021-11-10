@@ -14,6 +14,12 @@ import { NewOrderPage } from "./pages/NewOrderPage";
 
 
 function App() {
+
+  function getProductById(id){
+    var price = Math.floor(Math.random() * (10 - 0 + 1) + 0);
+    const product = {id:id, item:"Eggplant", price:price};
+    return 
+  }
   
   /*const [employee, setEmployee] = useState({});
   const [error, setError] = useState("");
@@ -58,7 +64,8 @@ function App() {
               <ProducutListPage/>
             </Route>
             <Route exact path="/cart">
-              <ShoppingCartPage/> 
+              <ShoppingCartPage client={"Giuseppe"} getProductById={getProductById}/> 
+              {/* this prop should be pass by ClientDetailsPage when "add new order button is clicked" */}
             </Route>
             <Route exact path="/orders">
               <OrdersPage/> 

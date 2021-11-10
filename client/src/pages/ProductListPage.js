@@ -1,11 +1,25 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
-import React from 'react';
+import React from "react";
+import { Container, Row } from "react-bootstrap";
+import { employeeNavbarLinks } from "../Routes";
+import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponent";
 
-function ProducutListPage(props) {
+import "bootstrap/dist/css/bootstrap.min.css";
 
-    return (
+function ProductListPage(props) {
+  return (
+    <Container>
+      <Row>
+        <NavbarComponent
+          links={employeeNavbarLinks}
+          showShoppingCart
+          shoppingCartItems='1'
+        />
+      </Row>
+      <Row>
         <h1>ProductListPage</h1>
-    )
+      </Row>
+    </Container>
+  );
 }
 
-export { ProducutListPage };
+export { ProductListPage };

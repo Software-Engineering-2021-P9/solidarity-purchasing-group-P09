@@ -41,6 +41,10 @@ app.post(
   employeeHandlers.createEmployeeHandler
 );
 
+// ----------
+// /orders
+// ----------
+
 app.post(buildAPIPath("/orders"), orderHandlers.createOrderHandler);
 
 app.listen(port, () => {

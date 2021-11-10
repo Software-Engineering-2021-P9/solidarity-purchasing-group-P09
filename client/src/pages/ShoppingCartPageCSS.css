@@ -6,6 +6,35 @@
     color: #635F46 !important;
     vertical-align: middle;
 }
-.table-heading{
-    background-color: #7465132f;
+.total-amount{
+    color:red;
+    text-align: end;
+}
+.cart-inverse-button{
+    border: 2px solid black;
+    background-color: whitesmoke;
+    color:#DB9471 ;
+    width: auto;
+    margin-left: 1%;
+    border-color: #DB9471;
+}
+.cart-inverse-button:hover{
+    border: 2px solid black;
+    background-color: #ece6e2;
+    color:#DB9471 ;
+    width: auto;
+    margin-left: 1%;
+    border-color: #DB9471;
+}
+.cart-button{
+    border: 2px solid black;
+    background-color: #DB9471;
+    width: auto;
+    border-color: #DB9471;
+}
+.cart-button:hover{
+    border: 2px solid black;
+    background-color: #d88054;
+    width: auto;
+    border-color: #DB9471;
 }

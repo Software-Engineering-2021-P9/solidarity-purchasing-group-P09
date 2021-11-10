@@ -6,6 +6,7 @@ var cors = require("cors");
 
 var indexHandlers = require("./handlers/index");
 var employeeHandlers = require("./handlers/employee");
+var orderHandlers = require("./handlers/order");
 
 const port = process.env.PORT || 3001;
 const buildAPIPath = (apiPath) => "/api" + apiPath;
@@ -39,6 +40,8 @@ app.post(
   employeeHandlers.createEmployeeHandlerValidatorChain,
   employeeHandlers.createEmployeeHandler
 );
+
+app.post(buildAPIPath("/orders"), orderHandlers.createOrderHandler);
 
 app.listen(port, () => {
   console.log(`Server listening at :${port}`);

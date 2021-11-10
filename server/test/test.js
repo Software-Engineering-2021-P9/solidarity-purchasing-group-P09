@@ -24,6 +24,38 @@ after(() => {
   return mongoUnit.stop();
 });
 
+// Orders API tests
+
+describe("Orders API tests:", () => {
+  beforeEach(() => mongoUnit.load(testData.ordersCollection));
+
+  afterEach(() => mongoUnit.drop());
+
+  describe("POST /orders", () => {
+    it("it should create a new order", (done) => {
+      chai
+        .request(app)
+        .post("/api/orders")
+        .send({
+          clientId: "23321321421421",
+          products: [
+            { name: "apple", quantity: 3 },
+            { name: "banana", quantity: 1 },
+            { name: "tomatoes", quantity: 2 },
+          ],
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          expect(res.body).to.be.an("object");
+          expect(res.body.clientId).to.be.equal("23321321421421");
+          expect(res.body.products).to.be.an("array");
+          done();
+        });
+    });
+  });
+});
+
 // Employees API tests
 describe("Employees API tests:", () => {
   beforeEach(() => mongoUnit.load(testData.employeesCollection));

@@ -16,3 +16,17 @@ exports.employeesCollection = {
     },
   ],
 };
+
+exports.ordersCollection = {
+  orders: [
+    {
+      _id: ObjectID("6187c957b288576ca26f8251"),
+      clientId: 12321321421421,
+      products: [
+        { name: "apple", quantity: 3 },
+        { name: "banana", quantity: 1 },
+        { name: "tomatoes", quantity: 2 },
+      ],
+    },
+  ],
+};

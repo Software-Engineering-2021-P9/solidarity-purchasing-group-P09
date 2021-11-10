@@ -36,7 +36,7 @@ function NavbarComponent(props) {
       </Navbar.Collapse>
       <Navbar.Toggle />
 
-      {props.showShoppingCart ? (
+      {props.showShoppingCart && (
         <div className='navbar-logo d-flex justify-content-end '>
           <Link
             to={routes[shoppingCartRouteName].path}
@@ -62,7 +62,7 @@ function NavbarComponent(props) {
             )}
           </Link>
         </div>
-      ) : null}
+      )}
     </Navbar>
   );
 }

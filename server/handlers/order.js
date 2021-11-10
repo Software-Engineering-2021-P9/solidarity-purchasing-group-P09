@@ -4,8 +4,6 @@ const { Order } = require("../models/order");
 exports.createOrderHandler = async function (req, res, next) {
   let insertedOrderID;
 
-  ("TODO : Right now every product price is taken as 1. Change it to normal prices");
-
   var totalPrice = 0;
   var productPrice = 1;
   req.body.products.forEach((product) => {

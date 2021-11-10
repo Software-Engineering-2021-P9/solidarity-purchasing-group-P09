@@ -1,21 +1,21 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
-import React from 'react';
+import React from "react";
 import { Container, Row } from "react-bootstrap";
+import { employeeNavbarLinks } from "../Routes";
 import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponent";
 
-function ClientSignupPage(props) {
+import "bootstrap/dist/css/bootstrap.min.css";
 
-    return (
-        <Container>
-            <Row>
-                <NavbarComponent cart={1} />
-                {/*cart prop receives the length of the items list in shopping cart */}
-            </Row>
-            <Row>
-                <h1>ClientSignupPage</h1>
-            </Row>
-        </Container>
-    )
+function ClientSignupPage(props) {
+  return (
+    <Container>
+      <Row>
+        <NavbarComponent links={employeeNavbarLinks} />
+      </Row>
+      <Row>
+        <h1>ClientSignupPage</h1>
+      </Row>
+    </Container>
+  );
 }
 
 export { ClientSignupPage };

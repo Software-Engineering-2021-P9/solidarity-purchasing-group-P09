@@ -1,21 +1,25 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
-import React from 'react';
+import React from "react";
 import { Container, Row } from "react-bootstrap";
+import { employeeNavbarLinks } from "../Routes";
 import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponent";
 
-function ProductListPage(props) {
+import "bootstrap/dist/css/bootstrap.min.css";
 
-    return (
-        <Container>
-            <Row>
-                <NavbarComponent cart={1} />
-                {/*cart prop receives the length of the items list in shopping cart */}
-            </Row>
-            <Row>
-                <h1>ProductListPage</h1>
-            </Row>
-        </Container>
-    )
+function ProductListPage(props) {
+  return (
+    <Container>
+      <Row>
+        <NavbarComponent
+          links={employeeNavbarLinks}
+          showShoppingCart
+          shoppingCartItems='1'
+        />
+      </Row>
+      <Row>
+        <h1>ProductListPage</h1>
+      </Row>
+    </Container>
+  );
 }
 
 export { ProductListPage };

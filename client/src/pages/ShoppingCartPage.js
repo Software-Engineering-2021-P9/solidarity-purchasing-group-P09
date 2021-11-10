@@ -1,21 +1,20 @@
 import React from "react";
 import { Container, Row } from "react-bootstrap";
 import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponent";
-import { employeeNavbarLinks } from "../Routes";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 
-function ClientDetailsPage(props) {
+function ShoppingCartPage(props) {
   return (
     <Container>
       <Row>
-        <NavbarComponent links={employeeNavbarLinks} />
+        <NavbarComponent />
       </Row>
       <Row>
-        <h1>ClientDetailsPage</h1>
+        <h1>ShoppingCartPage</h1>
       </Row>
     </Container>
   );
 }
 
-export { ClientDetailsPage };
+export { ShoppingCartPage };

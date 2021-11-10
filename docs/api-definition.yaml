@@ -1,0 +1,644 @@
+swagger: '2.0'
+info:
+  description: >-
+    The APIs definitions for the Solidarity Purchasing Group application.
+  version: 1.0.0
+  title: SPG - Solidarity Purchasing Group
+host: to-be-defined.com
+basePath: /api
+tags:
+  - name: client
+  - name: employee
+  - name: order
+  - name: product
+  - name: week-phase
+  - name: testing
+schemes:
+  - https
+  - http
+paths:
+  /products:
+    get:
+      tags:
+        - product
+      summary: List all the products
+      description: 'Products can be filtered by name and farmer or/and selecting a category. It can also accept a list of productIDs to be retrieved. Filters will not be applied.'
+      operationId: getProducts
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: category
+          type: string
+          description: Filter the products by category
+        - in: query
+          name: searchString
+          type: string
+          description: Filter the products by any substring related to the product (name of the product, name of the farmer, description)
+        - in: query
+          name: IDs
+          type: string
+          description: String of productsID commas separated
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Product'
+        '400':
+          description: Bad Request - The request contains invalid parameters
+        '500':
+          description: Internal Server Error         
+          
+  /orders:
+    get:
+      tags:
+        - order
+      summary: List all the existing client's orders
+      description: 'Retrieve all the orders for the client associated to the given ID'
+      operationId: getClientOrders
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: clientID
+          type: string
+          description: Get Client Orders given ClientID
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Order'
+        '400':
+          description: Bad Request - The request contains invalid parameters
+        '401':
+          description: Unauthorized - The user is not logged or is not allowed to make this action
+        '500':
+          description: Internal Server Error
+    post: 
+      tags: 
+        - order
+      summary: Create a new order
+      description: 'Insert a new order into the system'
+      operationId: createOrder
+      consumes: 
+        - application/json
+      parameters: 
+        - in: body
+          name: body
+          description: Order object to be added to the database
+          required: true
+          schema:
+            $ref: '#/definitions/CreateOrderParams'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/Order'
+        '400':
+          description: Bad Request - The request contains invalid parameters
+        '401': 
+          description: Unauthorized - The user is not logged or is not allowed to make this action
+        '403':
+          description: Forbidden - The action cannot be executed in the current week phase
+        '500':
+          description: Internal Server Error
+        
+      
+  /orders/{orderID}/complete:
+      patch:
+        tags:
+          - order
+        summary: Set an order as completed
+        description: Set the order associated to the given orderID as completed
+        operationId: completeOrder
+        produces:
+          - application/json
+        parameters:
+          - in: path
+            required: true
+            name: orderID 
+            type: string
+            description: The ID of the order to set as completed
+        responses:
+          '204':
+            description: Success
+          '400':
+            description: Bad Request - The request contains invalid parameters
+          '401':
+            description: Unauthorized - The user is not logged or is not allowed to make this action
+          '403':
+            description: Forbidden - The action cannot be executed in the current week phase
+          '500':
+            description: Internal Server Error
+  
+          
+  /clients/{clientID}:
+    get:
+      tags:
+        - client
+      summary: Get a registered client details
+      description: 'Get the client details given its ID.'
+      operationId: getClientByID
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          required: true
+          name: clientID
+          type: string
+          description: Parameter that identify and select the Client
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ClientInfoResult'
+        '400':
+          description: Bad Request - The request contains invalid parameters
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+          
+  /clients/{clientID}/wallet:
+    patch:
+      tags:
+        - client
+      summary: Increase the wallet of a client
+      description: in the body there will be the value
+      operationId: addFundToWallet
+      consumes: 
+        - application/json
+      parameters:
+        - in: path
+          required: true
+          name: clientID
+          type: string
+          description: Parameter that identify and select the Client
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties: 
+              increaseBy:
+                type: number
+                example: 55.50
+          description: The value to be added to the wallet
+      responses: 
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties: 
+              newWalletValue:
+                type: number
+                example: 1023.23
+        '400': 
+          description: Bad Request - The request contains invalid parameters
+        '401': 
+          description: Unauthorized - The user is not logged or is not allowed to make this action
+        '500':
+          description: Internal Server Error
+
+          
+  /clients:
+    post: 
+      tags: 
+        - client
+      summary: Create a new client
+      description: 'Insert a new client into the system'
+      operationId: createClient
+      consumes: 
+        - application/json
+      parameters: 
+        - in: body
+          name: body
+          description: Client object to be added to the database
+          required: true
+          schema:
+             $ref: '#/definitions/SignupClientParams'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ClientInfoResult'
+        '400':
+          description: Bad Request - The request contains invalid parameters
+        '401': 
+          description: Unauthorized - The user is not logged or is not allowed to make this action
+        '500':
+          description: Internal Server Error
+    get:
+      tags:
+        - client
+      summary: Find matching clients
+      description: 'Find matching clients given a search string'
+      operationId: findClients
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: searchString
+          type: string
+          description: Parameter used in searching matching Clients (in any way, i.e. address, fullname, etc...)
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ClientInfoResult'
+        '400':
+          description: Bad Request - The request contains invalid parameters
+        '401': 
+          description: Unauthorized - The user is not logged or is not allowed to make this action
+        '500':
+          description: Internal Server Error   
+          
+  /clients/login:
+    post:
+      tags:
+        - client
+      summary: Allows a client to login
+      description: Allows a client to login based on the provided credentials
+      operationId: loginClient
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: credentials
+          required: true
+          schema: 
+            type: object
+            properties: 
+              email:
+                type: string
+                format: email
+                description: Email of the user to login
+                example: user@email.com
+              password:
+                type: string
+                description: Password of the user to login
+                example: password
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ClientInfoResult'
+        '400':
+          description: Bad Request - The request contains invalid parameters
+        '500':
+          description: Internal Server Error  
+          
+
+
+  /clients/signup: 
+    post: 
+      tags: 
+        - client
+      summary: Allows a client to signup
+      description: Allows a client to signup storing his details and credentials
+      operationId: signupClient
+      consumes: 
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          required: true
+          description: details and credentials object to signup
+          schema: 
+            $ref: '#/definitions/SignupClientParams'
+      responses: 
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request - The request contains invalid parameters
+        '500': 
+          description: Internal Server Error
+
+  /employee/login:
+    post:
+      tags:
+        - employee
+      summary: Allow an employee to login
+      description: Allows a client to login based on the provided credentials
+      operationId: loginEmployee
+      consumes: 
+        - application/json
+      parameters:
+        - in: body
+          required: true
+          description: credentials to request authentication
+          name: credentials
+          schema:
+            type: object
+            properties: 
+              email:
+                type: string
+                format: email
+                description: Email of the employee to login
+                example: employee@email.com
+              password:
+                type: string
+                description: Password of the employee to login
+                example: password
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/EmployeeInfoResult'
+        '400':
+          description: Bad Request - The request contains invalid parameters
+        '401': 
+          description: Unauthorized - The user is not logged or is not allowed to make this action
+        '500':
+          description: Internal Server Error
+
+  /weekPhases/current:
+    get:
+      tags:
+        - week-phase
+      summary: Retreive the current active week phase
+      description: Retreive the current active week phase. This must be used by the front end to only allow actions compatible with the current active phase. Actions made outside of the week phase, for which they are enabled, will return an error.
+      operationId: getCurrentWeekPhase
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              activePhase:
+                type: string
+                example: "order-creation"
+        '500':
+          description: Internal Server Error
+
+  /testing/weekPhases/current:
+    patch:
+      tags:
+        - testing
+      summary: Override the current active week phase
+      description: Sets the current active week phase to a fixed one for testing purposes. Changing a week phase means triggering the week phase change handler.
+      operationId: setPhaseOverride
+      produces:
+        - application/json
+      responses:
+        '204':
+          description: Success
+        '400':
+          description: Bad Request - The request contains invalid parameters
+        '500':
+          description: Internal Server Error
+
+  /testing/database/reset:
+    get:
+      tags:
+        - testing
+      summary: Resets the testing database to the initial snapshot
+      description: Resets the testing database to the initial snapshot to cleanup testing gone wrong.
+      operationId: resetTestingDatabase
+      produces:
+        - application/json
+      responses:
+        '204':
+          description: Success
+        '500':
+          description: Internal Server Error
+
+
+definitions:
+  ClientInfo:
+    description: "At least one between email and (fullName, address) are required"
+    type: object
+    additionalProperties: false
+    required:
+      - id
+      - password
+      - email
+      - fullName
+      - address
+      - wallet
+    properties:
+      id:
+        type: string
+        format: bsonID
+      password:
+        type: string
+        minLength: 6
+        example:
+          basePassword
+      email:
+        type: string
+        format: email
+        example: 
+          mariorossi@gmail.com
+      fullName:
+        type: string
+        maxLength: 35
+        example: 
+          Mario Rossi
+      address:
+        type: string
+        maxLength: 60
+        example:
+          Via dei castagni 7a|Torino|TO|10140
+      wallet:
+        type: number
+  EmployeeInfo:
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - password
+        - email
+        - fullname
+      properties:
+        id:
+          type: string
+          format: bsonID
+        password:
+          type: string
+          minLength: 6
+        email:
+          type: string
+          format: email
+        fullname:
+          type: string
+          maxLength: 35
+  Order:
+    type: object
+    additionalProperties: false
+    required:
+      - id
+      - clientID
+      - products
+      - totalPrice
+      - status
+    properties:
+      id:
+        type: string
+        format: bsonID
+      clientID:
+        type: string
+        format: bsonID
+      products:
+        type: array
+        items:
+          type: object
+          properties:
+            productID:
+              type: string
+              format: bsonID
+            quantity:
+              type: integer
+        example:
+          "{$productID:$quantity,...}"
+      totalPrice:
+        type: number
+      status:
+        type: string
+        enum:
+          - WAITING
+          - CONFIRMED
+          - PREPARED
+          - DONE
+  Product:
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - farmerID
+        - name
+        - description
+        - category
+      properties: 
+        id:
+          type: string
+          format: bsonID
+        farmerID:
+          type: string
+          format: bsonID
+        name: 
+          type: string
+          maxLength: 25
+          example: Potato
+        description: 
+          type: string
+          maxLength: 100
+        category: 
+          type: string
+          enum:
+            - fruit
+            - vegetables
+            - spreadable creams
+            - meat
+            - eggs
+            - milk
+  CreateOrderParams:
+    type: object
+    additionalProperties: false
+    required:
+      - clientID
+      - products
+    properties:
+      clientID:
+        type: string
+        format: bsonID
+      products:
+        type: array
+        items:
+          type: object
+          properties:
+            productID:
+              type: string
+              format: bsonID
+            quantity:
+              type: integer
+        example:
+          "{$productID:$quantity,...}"
+  SignupClientParams:
+    type: object
+    additionalProperties: false
+    required:
+      - email
+      - fullname
+      - address
+      - password
+    properties:
+      password:
+        type: string
+        minLength: 6
+        example:
+          basePassword
+      email:
+        type: string
+        format: email
+        example: 
+          mariorossi@gmail.com
+      fullName:
+        type: string
+        maxLength: 35
+        example: 
+         Mario Rossi
+      address:
+        type: string
+        maxLength: 60
+        example:
+          Via dei castagni 7a|Torino|TO|10140
+  ClientInfoResult:
+    description: "Return model for methods which return ClientInfo (sensitive data is stripped). At least one between email and (fullName, address) are required"
+    type: object
+    additionalProperties: false
+    required:
+      - id
+      - email
+      - fullName
+      - address
+      - wallet
+    properties:
+      id:
+        type: string
+        format: bsonID
+      email:
+        type: string
+        format: email
+        example: 
+          mariorossi@gmail.com
+      fullName:
+        type: string
+        maxLength: 35
+        example: 
+          Mario Rossi
+      address:
+        type: string
+        maxLength: 60
+        example:
+          Via dei castagni 7a|Torino|TO|10140
+      wallet:
+        type: number
+  EmployeeInfoResult:
+      description: Return model for methods which return EmployeeInfo (sensitive data is stripped).
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - email
+        - fullname
+      properties:
+        id:
+          type: string
+          format: bsonID
+        email:
+          type: string
+          format: email
+        fullname:
+          type: string
+          maxLength: 35

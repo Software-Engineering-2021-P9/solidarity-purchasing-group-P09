@@ -193,7 +193,7 @@ describe("Products API tests: ", () => {
       chai
         .request(app)
         .get("/api/products")
-        .send({ category: "fruit", searchString: "Giovanni", IDs: undefined })
+        .send({ category: "fruit", searchString: "Italy", IDs: undefined })
         .end((err, res) => {
           expect(err).to.be.null;
           expect(res.status).to.be.equal(200);

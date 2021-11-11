@@ -9,7 +9,8 @@ function ModalOrderConfirmed(props) {
       <Modal.Header closeButton>
         <Modal.Title className="modal-title">Order Recap</Modal.Title>
       </Modal.Header>
-      <ul>To be completed</ul>
+      <ul>To be completed
+      </ul>
       <Modal.Footer>
         <Button onClick={props.handleClose} className="cart-inverse-button">
           Close

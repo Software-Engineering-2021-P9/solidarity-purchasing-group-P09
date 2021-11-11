@@ -33,7 +33,7 @@ exports.getProducts = (db, category, searchString, IDs) => {
   }
 
   else if (searchString) {
-    query = { $text: { $search: searchString } };
+    query = { $text: { $search: searchString.toString() } };
   }
 
 

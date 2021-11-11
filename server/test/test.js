@@ -39,9 +39,9 @@ describe("Orders API tests:", () => {
         .send({
           clientId: "23321321421421",
           products: [
-            { name: "apple", quantity: 3 },
-            { name: "banana", quantity: 1 },
-            { name: "tomatoes", quantity: 2 },
+            { productId: "a123dasvfdacasds", quantity: 3 },
+            { productId: "b123dasvfdacasds", quantity: 1 },
+            { productId: "c123dasvfdacasds", quantity: 2 },
           ],
         })
         .end((err, res) => {

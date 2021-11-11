@@ -21,11 +21,6 @@ exports.findProducts = (db, searchString, category) => {
   //4 cases: 1. Category is defined, 2. stringSearch is defined,
   //3.both stringSearch and Category are defined, 4. none of them are defined
 
-  //create text index
-  db.collection(productsCollectionName).createIndex({
-    name: "text",
-    description: "text",
-  });
   let query = {};
 
   if (searchString && category) {

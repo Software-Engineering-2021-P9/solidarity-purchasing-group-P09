@@ -18,6 +18,7 @@ exports.getProductsByIDHandler = async function (req, res, next) {
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
+  let products = [];
   if (req.body.ids) {
     await dao
       .getProductsByIDs(req.body.ids)
@@ -26,9 +27,7 @@ exports.getProductsByIDHandler = async function (req, res, next) {
         res.status(500).end();
       })
       .then((json) => {
-        res.json(
-          json.map((element, index) => Product.fromMongoJSON(json[index]))
-        );
+        products = json;
       });
   } else {
     await dao
@@ -38,9 +37,9 @@ exports.getProductsByIDHandler = async function (req, res, next) {
         res.status(500).end();
       })
       .then((json) => {
-        res.json(
-          json.map((element, index) => Product.fromMongoJSON(json[index]))
-        );
+        products = json;
       });
   }
+
+  res.json(products.map((element) => Product.fromMongoJSON(element)));
 };

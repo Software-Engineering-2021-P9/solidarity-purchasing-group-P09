@@ -9,7 +9,8 @@ class Product {
         this.farmerID = farmerID;
         this.name = name;
         this.description = description;
-        this.category = category;
+        if (Object.values(Product.Categories).includes(category))
+            this.category = category;
 
     }
 

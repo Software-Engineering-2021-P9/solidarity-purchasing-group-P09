@@ -23,13 +23,13 @@ exports.getProducts = (db, category, searchString, IDs) => {
   }
 
   else if (searchString && category) {
-    query = { $and: [{ $text: { $search: searchString } }, { category: category }] }
+    query = { $and: [{ $text: { $search: searchString.toString() } }, { category: category.toString() }] }
 
   }
 
 
   else if (category) {
-    query = { category: category }
+    query = { category: category.toString() }
   }
 
   else if (searchString) {

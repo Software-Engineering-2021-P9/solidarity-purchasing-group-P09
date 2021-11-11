@@ -4,9 +4,9 @@ YOU HAVE TO STICK TO THE RULES, NO PR WILL BE ACCEPTED IF SOMETHING IS AGAINST T
 
 COMMON:
 - You have to STICK on the design made at the start of the sprint. If you find a problem, leave a comment on the design task and SHOUT on the Telegram group.
+- Before defining a new method or a new service which can be shared, ask on the Telegram group if someone already did it.
 
 BACK END:
-- Before defining a new method (e.g. for database access) or a new service which can be shared, ask on the Telegram group if someone already did it.
 - Before start implementing an API, provide a mock implementation which returns fixed data so the front end devs can use it. 
   You have to create a PR for that, ask to someone for the review. After acceptance you can create another branch and start implementing the real API.
   E.g. 
@@ -15,5 +15,16 @@ BACK END:
 	2. 	Ask for review
 	3. 	Merge it
 	4. 	Notify front end developer
+- Every new API must be tested for the success case and at least for the more probable failure cases.
 
 FRONT END:
+- Please, when developing front end components, stick to a project folder layout like this:
+	root
+  		- src
+     			- ui-components (must contain custom buttons, containers,… everything used in pages)
+     			- pages (the components containing the full page)
+			- services (all the logic that can be shared between components or model specific methods)
+- Each component and page should have it’s own css file.
+- Please follow the format of the example api request for every other method you add in the APIClient service.
+- If a model you need is not implemented, look at the api definitions and implement it as the example model provided.
+- Try not to change the layout, if you can’t stick to it let all of us know.

@@ -4,7 +4,6 @@ var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 var cors = require("cors");
 
-var indexHandlers = require("./handlers/index");
 var employeeHandlers = require("./handlers/employee");
 
 const port = process.env.PORT || 3001;
@@ -18,11 +17,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(cors());
-
-// Serve client app
-app.use("/", express.static(path.resolve(__dirname, "../client/build")));
-
-app.get(buildAPIPath("/"), indexHandlers.indexHandler);
 
 // ----------
 // /employees
@@ -39,6 +33,10 @@ app.post(
   employeeHandlers.createEmployeeHandlerValidatorChain,
   employeeHandlers.createEmployeeHandler
 );
+
+// Serve client app
+app.use("/", express.static(path.resolve(__dirname, "../client/build")));
+app.use("/*", express.static(path.resolve(__dirname, "../client/build")));
 
 app.listen(port, () => {
   console.log(`Server listening at :${port}`);

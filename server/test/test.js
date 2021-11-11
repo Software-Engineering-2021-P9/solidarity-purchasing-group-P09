@@ -132,7 +132,6 @@ describe("Employees API tests:", () => {
   });
 });
 
-
 describe("Products API tests: ", () => {
   beforeEach(() => mongoUnit.load(testData.productsCollection));
 
@@ -149,11 +148,12 @@ describe("Products API tests: ", () => {
           expect(res.status).to.be.equal(200);
           expect(res.body).to.be.an("array");
           expect(res.body.length).to.be.equal(2);
-          expect(res.body.filter(product => product.category == "meat").length).to.be.equal(2);
+          expect(
+            res.body.filter((product) => product.category == "meat").length
+          ).to.be.equal(2);
           done();
         });
     });
-
 
     it("it should retrieve the list of products based on the filters sent: SEARCHSTRING", (done) => {
       chai
@@ -165,26 +165,33 @@ describe("Products API tests: ", () => {
           expect(res.status).to.be.equal(200);
           expect(res.body).to.be.an("array");
           expect(res.body.length).to.be.equal(2);
-          expect(res.body.map(product => product.id)).to.include.members(["000000000000000000000012", "000000000000000000000006"]);
+          expect(res.body.map((product) => product.id)).to.include.members([
+            "000000000000000000000012",
+            "000000000000000000000006",
+          ]);
           done();
         });
     });
-
 
     it("it should retrieve the list of products based on the filters sent: ids", (done) => {
       chai
         .request(app)
         .get("/api/products")
         .send({
-          category: undefined, searchString: undefined,
-          ids: "000000000000000000000001,000000000000000000000003,000000000000000000000008"
+          category: undefined,
+          searchString: undefined,
+          ids: "000000000000000000000001,000000000000000000000003,000000000000000000000008",
         })
         .end((err, res) => {
           expect(err).to.be.null;
           expect(res.status).to.be.equal(200);
           expect(res.body).to.be.an("array");
           expect(res.body.length).to.be.equal(3);
-          expect(res.body.map(product => product.id)).to.include.members(["000000000000000000000001", "000000000000000000000003", "000000000000000000000008"]);
+          expect(res.body.map((product) => product.id)).to.include.members([
+            "000000000000000000000001",
+            "000000000000000000000003",
+            "000000000000000000000008",
+          ]);
           done();
         });
     });
@@ -199,7 +206,9 @@ describe("Products API tests: ", () => {
           expect(res.status).to.be.equal(200);
           expect(res.body).to.be.an("array");
           expect(res.body.length).to.be.equal(1);
-          expect(res.body.map(product => product.id)).to.include.members(["000000000000000000000001"]);
+          expect(res.body.map((product) => product.id)).to.include.members([
+            "000000000000000000000001",
+          ]);
           done();
         });
     });
@@ -236,7 +245,11 @@ describe("Products API tests: ", () => {
       chai
         .request(app)
         .get("/api/products")
-        .send({ category: undefined , searchString: undefined, ids: "000000000000000000000001,000000000000000000000003,08" })
+        .send({
+          category: undefined,
+          searchString: undefined,
+          ids: "000000000000000000000001,000000000000000000000003,08",
+        })
         .end((err, res) => {
           expect(err).to.be.null;
           expect(res.status).to.be.equal(400);
@@ -248,13 +261,12 @@ describe("Products API tests: ", () => {
       chai
         .request(app)
         .get("/api/products")
-        .send({ category: "pizza" , searchString: undefined, ids: undefined })
+        .send({ category: "pizza", searchString: undefined, ids: undefined })
         .end((err, res) => {
           expect(err).to.be.null;
           expect(res.status).to.be.equal(400);
           done();
         });
     });
-
   });
 });

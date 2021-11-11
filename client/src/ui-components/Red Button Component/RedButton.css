@@ -1,0 +1,39 @@
+.button{
+    background-color: #DB9471;
+    ;
+}
+
+.navbar-title{
+    font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-size: 35px;
+    font-weight: bold; 
+    color: #F6DEC5 !important;
+    vertical-align: middle;
+    
+}
+.navbar-logo{
+    fill: #F6DEC5 !important;
+    vertical-align: middle;
+}
+.button-text{
+    color: #F6DEC5 !important;
+}
+
+a:not(.navbar-logo){
+    fill: #F6DEC5 !important;
+}
+
+/* Style The Dropdown Button */
+.dropbtn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+  }
+
+.dropdown-content:hover {
+    background-color: #7465134F;
+
+    }

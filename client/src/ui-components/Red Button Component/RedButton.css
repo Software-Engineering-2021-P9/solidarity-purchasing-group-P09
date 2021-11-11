@@ -1,39 +1,53 @@
-.button{
-    background-color: #DB9471;
-    ;
+.button {
+  background-color: #db9471 !important;
+  border-radius: 4px !important;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  padding: 10px 16px !important;
+  border-color: #db9471 !important;
 }
 
-.navbar-title{
-    font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-    font-size: 35px;
-    font-weight: bold; 
-    color: #F6DEC5 !important;
-    vertical-align: middle;
-    
-}
-.navbar-logo{
-    fill: #F6DEC5 !important;
-    vertical-align: middle;
-}
-.button-text{
-    color: #F6DEC5 !important;
+/*Hover with mouse*/
+.button:hover {
+  background-color: #db9471 !important;
+  border-color: #db9471 !important;
 }
 
-a:not(.navbar-logo){
-    fill: #F6DEC5 !important;
+/*selected */
+.button:focus {
+  background-color: #f6dec5 !important;
+  border-color: #db9471 !important;
 }
 
-/* Style The Dropdown Button */
-.dropbtn {
-    background-color: #4CAF50;
-    color: white;
-    padding: 16px;
-    font-size: 16px;
-    border: none;
-    cursor: pointer;
-  }
+.button-text {
+  color: #f6dec5 !important;
+}
+
+.dropdown-content {
+  /* dropdownItems */
+
+  /* Auto Layout */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 8px 16px;
+
+  /* /Gray / White */
+  background: #ffffff;
+
+  /* Inside Auto Layout */
+  flex: none;
+  order: 1;
+  align-self: stretch;
+  flex-grow: 0;
+  margin: 2px 0px;
+}
 
 .dropdown-content:hover {
-    background-color: #7465134F;
+  background-color: #7465134f;
+}
 
-    }
+.dropdown-content:focus {
+  background-color: #746513;
+}

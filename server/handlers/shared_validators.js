@@ -55,9 +55,7 @@ exports.passwordBodyValidator = body("password")
   .isString()
   .bail()
   .isIn(Object.values(Product.Categories))
-  // TODO: understand how to check if it is a valid category
   .trim()
-   // TODO: understand how to check if it is a valid category .custom(value=>Product.isAValidCategory(value))
   .escape();
 
   exports.searchStringValidator = body("searchString")

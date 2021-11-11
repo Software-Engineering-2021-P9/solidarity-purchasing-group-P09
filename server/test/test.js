@@ -222,7 +222,7 @@ describe("Products API tests: ", () => {
       chai
         .request(app)
         .get("/api/products")
-        .send({ category: "Pizza", searchString: undefined, IDs: undefined })
+        .send({ category: "meat", searchString: "Do not find", IDs: undefined })
         .end((err, res) => {
           expect(err).to.be.null;
           expect(res.status).to.be.equal(200);

@@ -1,5 +1,6 @@
 const { ObjectId } = require("bson");
 const { body, param } = require("express-validator");
+const { Product } = require("../models/product");
 
 exports.employeeIDPathValidator = param("employeeID").isMongoId();
 exports.emailBodyValidator = body("email")
@@ -53,6 +54,7 @@ exports.passwordBodyValidator = body("password")
   .bail()
   .isString()
   .bail()
+  .isIn(Object.values(Product.Categories))
   // TODO: understand how to check if it is a valid category
   .trim()
    // TODO: understand how to check if it is a valid category .custom(value=>Product.isAValidCategory(value))

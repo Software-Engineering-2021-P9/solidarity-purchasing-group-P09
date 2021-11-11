@@ -1,6 +1,6 @@
 const { ObjectId } = require("bson");
 const { body, param } = require("express-validator");
-const { Product } = require("../models/product");
+const { ProductCategory } = require("../models/product");
 
 exports.employeeIDPathValidator = param("employeeID").isMongoId();
 exports.emailBodyValidator = body("email")
@@ -49,17 +49,15 @@ exports.productDescriptionValidator = body("description")
   .escape();
 
 exports.productCategoryValidator = body("category")
-  .if(body('category').exists())
+  .optional()
   .notEmpty()
   .bail()
   .isString()
   .bail()
-  .isIn(Object.values(Product.Categories))
-  .trim()
-  .escape();
+  .isIn(Object.values(ProductCategory.Category));
 
 exports.searchStringValidator = body("searchString")
-  .if(body('searchString').exists())
+  .optional()
   .notEmpty()
   .bail()
   .isString()
@@ -68,20 +66,19 @@ exports.searchStringValidator = body("searchString")
   .trim()
   .escape();
 
-exports.IDsValidator = body("IDs")
-  .if(body('IDs').exists())
+exports.IDsValidator = body("ids")
+  .optional()
   .notEmpty()
   .bail()
   .isString()
   .bail()
   .isLength({ max: 100 })
   .trim()
-  .custom(value => {
-    const splittedID = value.split(",");
-    if (splittedID.length == splittedID.filter(id => ObjectId.isValid(id)).length) {
-      return true
-    }
-    
-    return false;
+  .custom((value) => {
+    const splittedIDs = value.split(",");
+    return (
+      splittedIDs.length ==
+      splittedIDs.filter((id) => ObjectId.isValid(id)).length
+    );
   })
   .escape();

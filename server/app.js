@@ -5,7 +5,7 @@ var logger = require("morgan");
 var cors = require("cors");
 
 var employeeHandlers = require("./handlers/employee");
-var productsHandlers = require("./handlers/products");
+var productHandlers = require("./handlers/product");
 
 const port = process.env.PORT || 3001;
 const buildAPIPath = (apiPath) => "/api" + apiPath;
@@ -40,8 +40,8 @@ app.post(
 // ----------
 app.get(
   buildAPIPath("/products"),
-  productsHandlers.getProductsByIDValidatorChain,
-  productsHandlers.getProductsByIDHandler
+  productHandlers.getProductsByIDValidatorChain,
+  productHandlers.getProductsByIDHandler
 );
 
 // Serve client app
@@ -51,8 +51,5 @@ app.use("/*", express.static(path.resolve(__dirname, "../client/build")));
 app.listen(port, () => {
   console.log(`Server listening at :${port}`);
 });
-
-
-
 
 module.exports = app;

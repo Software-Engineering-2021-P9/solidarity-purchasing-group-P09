@@ -143,7 +143,7 @@ describe("Products API tests: ", () => {
       chai
         .request(app)
         .get("/api/products")
-        .send({ category: "meat", searchString: undefined, IDs: undefined })
+        .send({ category: "meat", searchString: undefined, ids: undefined })
         .end((err, res) => {
           expect(err).to.be.null;
           expect(res.status).to.be.equal(200);
@@ -159,7 +159,7 @@ describe("Products API tests: ", () => {
       chai
         .request(app)
         .get("/api/products")
-        .send({ category: undefined, searchString: "Nutella", IDs: undefined })
+        .send({ category: undefined, searchString: "Nutella", ids: undefined })
         .end((err, res) => {
           expect(err).to.be.null;
           expect(res.status).to.be.equal(200);
@@ -171,13 +171,13 @@ describe("Products API tests: ", () => {
     });
 
 
-    it("it should retrieve the list of products based on the filters sent: IDs", (done) => {
+    it("it should retrieve the list of products based on the filters sent: ids", (done) => {
       chai
         .request(app)
         .get("/api/products")
         .send({
           category: undefined, searchString: undefined,
-          IDs: "000000000000000000000001,000000000000000000000003,000000000000000000000008"
+          ids: "000000000000000000000001,000000000000000000000003,000000000000000000000008"
         })
         .end((err, res) => {
           expect(err).to.be.null;
@@ -193,7 +193,7 @@ describe("Products API tests: ", () => {
       chai
         .request(app)
         .get("/api/products")
-        .send({ category: "fruit", searchString: "Italy", IDs: undefined })
+        .send({ category: "fruit", searchString: "Italy", ids: undefined })
         .end((err, res) => {
           expect(err).to.be.null;
           expect(res.status).to.be.equal(200);
@@ -208,7 +208,7 @@ describe("Products API tests: ", () => {
       chai
         .request(app)
         .get("/api/products")
-        .send({ category: undefined, searchString: undefined, IDs: undefined })
+        .send({ category: undefined, searchString: undefined, ids: undefined })
         .end((err, res) => {
           expect(err).to.be.null;
           expect(res.status).to.be.equal(200);
@@ -222,7 +222,7 @@ describe("Products API tests: ", () => {
       chai
         .request(app)
         .get("/api/products")
-        .send({ category: "meat", searchString: "Do not find", IDs: undefined })
+        .send({ category: "meat", searchString: "Do not find", ids: undefined })
         .end((err, res) => {
           expect(err).to.be.null;
           expect(res.status).to.be.equal(200);
@@ -232,11 +232,11 @@ describe("Products API tests: ", () => {
         });
     });
 
-    it("It should return an error if the IDs passed are not valid: ", (done) => {
+    it("It should return an error if the ids passed are not valid: ", (done) => {
       chai
         .request(app)
         .get("/api/products")
-        .send({ category: undefined , searchString: undefined, IDs: "000000000000000000000001,000000000000000000000003,08" })
+        .send({ category: undefined , searchString: undefined, ids: "000000000000000000000001,000000000000000000000003,08" })
         .end((err, res) => {
           expect(err).to.be.null;
           expect(res.status).to.be.equal(400);
@@ -248,7 +248,7 @@ describe("Products API tests: ", () => {
       chai
         .request(app)
         .get("/api/products")
-        .send({ category: "pizza" , searchString: undefined, IDs: undefined })
+        .send({ category: "pizza" , searchString: undefined, ids: undefined })
         .end((err, res) => {
           expect(err).to.be.null;
           expect(res.status).to.be.equal(400);

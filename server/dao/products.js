@@ -17,7 +17,7 @@ exports.getProductsByIDs = (db, ids) => {
   return db.collection(productsCollectionName).find(query).toArray();
 };
 
-exports.FindProducts = (db, searchString, category) => {
+exports.findProducts = (db, searchString, category) => {
   //4 cases: 1. Category is defined, 2. stringSearch is defined,
   //3.both stringSearch and Category are defined, 4. none of them are defined
 

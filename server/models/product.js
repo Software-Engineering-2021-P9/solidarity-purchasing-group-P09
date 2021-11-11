@@ -6,7 +6,7 @@ class Product {
     this.farmerID = farmerID;
     this.name = name;
     this.description = description;
-    if (Object.values(ProductCategory.Category).includes(category))
+    if (Object.values(ProductCategory).includes(category))
       this.category = category;
   }
 
@@ -21,15 +21,13 @@ class Product {
   }
 }
 
-class ProductCategory {
-  static Category = {
-    FRUIT: "fruit",
-    VEGETABLES: "vegetables",
-    SPREADABLECREAMS: "spreadable creams",
-    MEAT: "meat",
-    EGGS: "eggs",
-    MILK: "milk",
-  };
-}
+const ProductCategory = {
+  FRUIT: "fruit",
+  VEGETABLES: "vegetables",
+  SPREADABLECREAMS: "spreadable creams",
+  MEAT: "meat",
+  EGGS: "eggs",
+  MILK: "milk",
+};
 
 module.exports = { Product, ProductCategory };

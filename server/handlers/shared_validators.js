@@ -54,7 +54,7 @@ exports.productCategoryValidator = body("category")
   .bail()
   .isString()
   .bail()
-  .isIn(Object.values(ProductCategory.Category));
+  .isIn(Object.values(ProductCategory));
 
 exports.searchStringValidator = body("searchString")
   .optional()
@@ -66,7 +66,7 @@ exports.searchStringValidator = body("searchString")
   .trim()
   .escape();
 
-exports.IDsValidator = body("ids")
+exports.idsValidator = body("ids")
   .optional()
   .notEmpty()
   .bail()

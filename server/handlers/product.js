@@ -3,14 +3,14 @@ const { Product } = require("../models/product");
 const {
   searchStringValidator,
   productCategoryValidator,
-  IDsValidator,
+  idsValidator,
 } = require("./shared_validators");
 const { validationResult } = require("express-validator");
 
 exports.getProductsByIDValidatorChain = [
   searchStringValidator,
   productCategoryValidator,
-  IDsValidator,
+  idsValidator,
 ];
 
 exports.getProductsByIDHandler = async function (req, res, next) {
@@ -32,9 +32,9 @@ exports.getProductsByIDHandler = async function (req, res, next) {
       });
   } else {
     await dao
-      .FindProducts(req.body.searchString, req.body.category)
+      .findProducts(req.body.searchString, req.body.category)
       .catch((e) => {
-        console.error(`FindProducts() -> couldn't retrieve products: ${e}`);
+        console.error(`findProducts() -> couldn't retrieve products: ${e}`);
         res.status(500).end();
       })
       .then((json) => {

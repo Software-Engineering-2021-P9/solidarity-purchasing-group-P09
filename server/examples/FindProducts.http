@@ -1,7 +1,0 @@
-GET http://localhost:3001/api/products HTTP/1.1
-Content-Type: application/json
-
-{
-    "category": "meat",
-    "searchString":"Nutella",
-}

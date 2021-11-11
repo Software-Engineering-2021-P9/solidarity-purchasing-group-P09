@@ -26,11 +26,11 @@ exports.passwordBodyValidator = body("password")
   .trim()
   .escape();
 
-  //products
-  
-  exports.productIdValidator = param("id").isMongoId();
-  exports.farmerIdValidator = param("id").isMongoId();
-  exports.productNameValidator = body("name")
+//products
+
+exports.productIdValidator = param("id").isMongoId();
+exports.farmerIdValidator = param("id").isMongoId();
+exports.productNameValidator = body("name")
   .notEmpty()
   .bail()
   .isString()
@@ -39,7 +39,7 @@ exports.passwordBodyValidator = body("password")
   .trim()
   .escape();
 
-  exports.productDescriptionValidator = body("description")
+exports.productDescriptionValidator = body("description")
   .notEmpty()
   .bail()
   .isString()
@@ -48,7 +48,7 @@ exports.passwordBodyValidator = body("password")
   .trim()
   .escape();
 
-  exports.productCategoryValidator = body("category")
+exports.productCategoryValidator = body("category")
   .if(body('category').exists())
   .notEmpty()
   .bail()
@@ -58,7 +58,7 @@ exports.passwordBodyValidator = body("password")
   .trim()
   .escape();
 
-  exports.searchStringValidator = body("searchString")
+exports.searchStringValidator = body("searchString")
   .if(body('searchString').exists())
   .notEmpty()
   .bail()
@@ -68,7 +68,7 @@ exports.passwordBodyValidator = body("password")
   .trim()
   .escape();
 
-  exports.IDsValidator = body("IDs")
+exports.IDsValidator = body("IDs")
   .if(body('IDs').exists())
   .notEmpty()
   .bail()
@@ -76,11 +76,12 @@ exports.passwordBodyValidator = body("password")
   .bail()
   .isLength({ max: 100 })
   .trim()
-  .custom(value=>{
-    const splittedID=value.split(",");
-    if(splittedID.length==splittedID.filter(id=>ObjectId.isValid(id)).length)
-    return true
+  .custom(value => {
+    const splittedID = value.split(",");
+    if (splittedID.length == splittedID.filter(id => ObjectId.isValid(id)).length) {
+      return true
+    }
+    
     return false;
   })
   .escape();
- 

@@ -16,22 +16,28 @@ exports.getProducts = (db, category, searchString, IDs) => {
 
   //create text index
   db.collection(productsCollectionName).createIndex({ name: "text", description: "text" });
+  let query = {};
 
   if (IDs) {
-    return db.collection(productsCollectionName).find({ _id: { $in: IDs.split(",").map(element => ObjectID(element)) } }).toArray();
+    query = { _id: { $in: IDs.split(",").map(element => ObjectID(element)) } };
   }
-  else if (searchString && category)
-    return db.collection(productsCollectionName).find({
-      $and: [{ $text: { $search: searchString } }, { category: category }]
-    }).toArray();
 
-  else if (category)
-    return db.collection(productsCollectionName).find({ category: category }).toArray();
+  else if (searchString && category) {
+    query = { $and: [{ $text: { $search: searchString } }, { category: category }] }
 
-  else if (searchString)
-    return db.collection(productsCollectionName).find({ $text: { $search: searchString } }).toArray();
+  }
 
-  return db.collection(productsCollectionName).find().toArray();
+
+  else if (category) {
+    query = { category: category }
+  }
+
+  else if (searchString) {
+    query = { $text: { $search: searchString } };
+  }
+
+
+  return db.collection(productsCollectionName).find(query).toArray();
 };
 
 

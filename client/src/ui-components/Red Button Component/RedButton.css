@@ -5,6 +5,7 @@
   align-items: center !important;
   padding: 10px 16px !important;
   border-color: #db9471 !important;
+  box-shadow: none !important;
 }
 
 /*Hover with mouse*/
@@ -15,8 +16,9 @@
 
 /*selected */
 .button:focus {
-  background-color: #f6dec5 !important;
-  border-color: #db9471 !important;
+  background-color: #db9471 !important;
+  border-color: black !important;
+  color: black !important;
 }
 
 .button-text {
@@ -31,6 +33,7 @@
   align-items: center !important;
   /*padding: 10px 16px !important;*/
   border-color: #db9471 !important;
+  box-shadow: none !important;
 }
 
 /*selected */
@@ -48,13 +51,14 @@
   /* dropdownItems */
 
   padding: 8px 16px !important;
-  background: #ffffff !important;
+  /*background: #ffffff !important;*/
 }
 
 .dropdown-content:hover {
   background-color: #7465134f !important;
 }
 
-.dropdown-content:focus {
+.dropdown-content:focus,
+.dropdown-content.active {
   background-color: #746513 !important;
 }

@@ -25,9 +25,13 @@ function RedButtonDropDown(props) {
       <Dropdown.Menu className="dropdown-menu">
         {" "}
         {props.items.map((name, index) => (
-          <Dropdown.Item className="dropdown-content" key={index}>
-            {" "}
-            {name}{" "}
+          <Dropdown.Item
+            className="dropdown-content"
+            key={index}
+            onClick={() => props.updateSelectedItem(name)}
+            active={props.activeElement === name}
+          >
+            {name}
           </Dropdown.Item>
         ))}
       </Dropdown.Menu>

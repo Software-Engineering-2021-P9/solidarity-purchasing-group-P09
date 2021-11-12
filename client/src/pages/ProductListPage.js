@@ -1,4 +1,4 @@
-import { React, useState } from "react";
+import { React, useEffect, useState } from "react";
 import {
   Container,
   Row,
@@ -31,9 +31,28 @@ function ProductListPage(props) {
     new Product(5, "Luca", "Bananas", "Origin: Italy", "vegetables"),
   ]);
 
-  const [ids,setIds]=useState();
-  const [category, setCategory]= useState();
-  const [searcString, setSearchString]= useState();
+  //used for storing the content of the search form
+  const [text, setText] = useState();
+
+  //updated when selected a new category
+  const [category, setCategory] = useState();
+
+  //updated only when clicked on search
+  const [searcString, setSearchString] = useState();
+
+  useEffect(() => {
+    //call from props the function for fetching the new products
+    console.log("get new products");
+  }, [category, searcString]);
+
+  const handleOnSearchSubmit = () => {
+    //update searchString, this way useEffect is called
+    setSearchString(text);
+  };
+
+  const handleCategoryChanged = (newCategory) => {
+    setCategory(newCategory);
+  };
 
   return (
     <Container>
@@ -54,7 +73,8 @@ function ProductListPage(props) {
             <RedButtonDropDown
               items={Object.values(Product.Categories)}
               title={"Categories"}
-              onClick={}
+              updateSelectedItem={handleCategoryChanged}
+              activeElement={category}
             />
           </Col>
 
@@ -62,10 +82,15 @@ function ProductListPage(props) {
             <Form>
               <Row>
                 <Col>
-                  <FormControl type="text" placeholder="Filter" />
+                  <FormControl
+                    type="text"
+                    placeholder="Filter"
+                    value={text}
+                    onChange={(ev) => setText(ev.target.value)}
+                  />
                 </Col>
                 <Col>
-                  <RedButton text="Search" />
+                  <RedButton text="Search" onClick={handleOnSearchSubmit} />
                 </Col>
               </Row>
             </Form>

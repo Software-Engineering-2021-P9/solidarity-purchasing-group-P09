@@ -181,12 +181,15 @@ describe("Employees API tests:", () => {
 
 describe("Products API tests: ", () => {
   beforeEach(() => {
+    dao.open();
     mongoUnit.load(testData.productsCollection);
-    const { createIndex } = require("../dao/dao");
-    createIndex();
+    dao.createIndex();
   });
 
-  afterEach(() => mongoUnit.drop());
+  afterEach(() => {
+    mongoUnit.drop();
+    dao.close();
+  });
 
   describe("GET /products", () => {
     it("it should retrieve the list of products based on the filters sent: CATEGORY", (done) => {

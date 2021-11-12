@@ -37,3 +37,11 @@ exports.findProducts = (db, searchString, category) => {
   }
   return db.collection(productsCollectionName).find(query).toArray();
 };
+
+exports.createIndex = (db) => {
+  //create text index
+  db.collection(productsCollectionName).createIndex({
+    name: "text",
+    description: "text",
+  });
+};

@@ -133,7 +133,11 @@ describe("Employees API tests:", () => {
 });
 
 describe("Products API tests: ", () => {
-  beforeEach(() => mongoUnit.load(testData.productsCollection));
+  beforeEach(() => {
+    mongoUnit.load(testData.productsCollection);
+    const { createIndex } = require("../dao/dao");
+    createIndex();
+  });
 
   afterEach(() => mongoUnit.drop());
 

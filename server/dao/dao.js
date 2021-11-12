@@ -2,7 +2,7 @@
 
 const { MongoClient } = require("mongodb");
 const { getEmployeeByID, createEmployee } = require("./employee");
-const { getProductsByIDs, findProducts } = require("./products");
+const { getProductsByIDs, findProducts, createIndex } = require("./products");
 const client = new MongoClient(process.env.MONGO_CONN_STR);
 
 const db = client.db(process.env.MONGO_DB_NAME);
@@ -20,3 +20,7 @@ exports.createEmployee = (email, hashedPassword, fullName) =>
 exports.getProductsByIDs = (ids) => getProductsByIDs(db, ids);
 exports.findProducts = (searchString, category) =>
   findProducts(db, searchString, category);
+
+exports.createIndex = () => {
+  createIndex(db);
+};

@@ -3,7 +3,11 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 var cors = require("cors");
+var dao = require("./dao/dao");
 
+const {
+  checkValidationErrorMiddleware,
+} = require("./handlers/shared_validators");
 var employeeHandlers = require("./handlers/employee");
 
 const port = process.env.PORT || 3001;
@@ -18,6 +22,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(cors());
 
+dao.open();
+
 // ----------
 // /employees
 // ----------
@@ -25,12 +31,14 @@ app.use(cors());
 app.get(
   buildAPIPath("/employees/:employeeID"),
   employeeHandlers.getEmployeeByIDValidatorChain,
+  checkValidationErrorMiddleware,
   employeeHandlers.getEmployeeByIDHandler
 );
 
 app.post(
   buildAPIPath("/employees"),
   employeeHandlers.createEmployeeHandlerValidatorChain,
+  checkValidationErrorMiddleware,
   employeeHandlers.createEmployeeHandler
 );
 

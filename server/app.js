@@ -39,7 +39,11 @@ app.post(
 // /orders
 // ----------
 
-app.post(buildAPIPath("/orders"), orderHandlers.createOrderHandler);
+app.post(
+  buildAPIPath("/orders"),
+  orderHandlers.createOrderValidatorChain,
+  orderHandlers.createOrderHandler
+);
 // Serve client app
 app.use("/", express.static(path.resolve(__dirname, "../client/build")));
 app.use("/*", express.static(path.resolve(__dirname, "../client/build")));

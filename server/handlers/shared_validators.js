@@ -1,4 +1,12 @@
-const { body, param } = require("express-validator");
+const { body, param, validationResult } = require("express-validator");
+
+exports.checkValidationErrorMiddleware = (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+  next();
+};
 
 exports.clientIDPathValidator = body("clientId").isMongoId();
 exports.productsValidator = body("products").isArray();

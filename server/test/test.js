@@ -1,7 +1,7 @@
 let chai = require("chai");
 let expect = chai.expect;
 let chaiHttp = require("chai-http");
-
+let dao = require("../dao/dao");
 chai.use(chaiHttp);
 
 // This will contain the main server app, needed to listen for requests.
@@ -61,9 +61,15 @@ describe("Orders API tests:", () => {
 
 // Employees API tests
 describe("Employees API tests:", () => {
-  beforeEach(() => mongoUnit.load(testData.employeesCollection));
+  beforeEach(() => {
+    dao.open();
+    mongoUnit.load(testData.employeesCollection);
+  });
 
-  afterEach(() => mongoUnit.drop());
+  afterEach(() => {
+    mongoUnit.drop();
+    dao.close();
+  });
 
   describe("GET /employees/:employeeID", () => {
     it("it should retrieve the employee associated to the given ID", (done) => {
@@ -75,7 +81,17 @@ describe("Employees API tests:", () => {
           expect(res.status).to.be.equal(200);
           expect(res.body).to.be.an("object");
           expect(res.body.fullName).to.be.equal("Mario Biondi");
+          done();
+        });
+    });
 
+    it("it should fail when the employee associated to the given ID doesn't exist", (done) => {
+      chai
+        .request(app)
+        .get("/api/employees/6187c957b288076ca26f8234")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(404);
           done();
         });
     });
@@ -87,6 +103,19 @@ describe("Employees API tests:", () => {
         .end((err, res) => {
           expect(err).to.be.null;
           expect(res.status).to.be.equal(400);
+
+          done();
+        });
+    });
+
+    it("it must fail when mongo fails", (done) => {
+      dao.close();
+      chai
+        .request(app)
+        .get("/api/employees/6187c957b288576ca26f8257")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(500);
 
           done();
         });
@@ -160,6 +189,24 @@ describe("Employees API tests:", () => {
         .end((err, res) => {
           expect(err).to.be.null;
           expect(res.status).to.be.equal(400);
+
+          done();
+        });
+    });
+
+    it("it must fail when mongo fails", (done) => {
+      dao.close();
+      chai
+        .request(app)
+        .post("/api/employees")
+        .send({
+          email: "employee3@test.com",
+          password: "password",
+          fullName: "Mario Verdi",
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(500);
 
           done();
         });

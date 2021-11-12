@@ -1,13 +1,40 @@
 const { WeekPhase } = require("./WeekPhase");
+const{ dataSplitter } = require("./WeekPhase");
 var cron = require('node-cron');
 const dayjs = require("dayjs");
+
+//from "Monday:22:30:14" to "14 30 22 * * 1"
+function convertTimeFormat_To_CronStringFormat(data){
+    data = dataSplitter(data)
+    return "" + data[3] + " " + data[2] + " " + data[1] + " * * " + data[0];
+}
+
+//APPUNTO: CAMBIA THIS CHE E' UN ERRORE DI COPIA INCOLLA
+function scheduleEnablePhase(phase){
+    cron.schedule(convertTimeFormat_To_CronStringFormat(phase.getEndTime()), () => {
+        const index = this.inactivePhasesList.indexOf(phase);
+        this.inactivePhasesList.splice(index,1);
+        this.activePhasesList.push(phase);
+        scheduleDisablePhase();
+    });
+}
+//APPUNTO: CAMBIA THIS CHE E' UN ERRORE DI COPIA INCOLLA
+function scheduleDisablePhase(phase){
+    cron.schedule(convertTimeFormat_To_CronStringFormat(phase.getEndTime()), () => {
+        const index = this.activePhasesList.indexOf(phase);
+        this.activePhasesList.splice(index,1);
+        this.inactivePhasesList.push(phase)
+        scheduleEnablePhase();
+    });
+}
+
 
 class TimeManager {
     constructor() {
       this.setVirtual(false);//TODO: implement virtualization
       this.setInactivePhasesList(); //TODO: better if retrived from db rather than hardcoded? To discuss
       this.setActivePhasesList();
-      this.setCron();
+      //this.setCron();
     }
 
     //GETTERS
@@ -84,17 +111,18 @@ class TimeManager {
     //METHODS
     setCron(){
         //for active phases, set crono that do: disable + set crono for re-enable.
-        //for inactive phases, set crono that do: enable + set crono for disable. 
         this.activePhasesList.forEach(phase=>{
-            phase.getEndTime();
-            //cron.schedule('1-59 * * * * *', () => {
-                //console.log('running every minute to 1 from 5');
-            //});
-        })
+            scheduleDisablePhase(phase);
+        });
+        //for inactive phases, set crono that do: enable + set crono for disable. 
+        this.inactivePhasesList.forEach(phase=>{
+            scheduleEnablePhase(phase);
+        });
     }
 
     checkIfActivePhase(weekPhaseID){
         let IDList = this.activePhasesList.map(phase=>phase.ID);
+        //TODO: return this.activePhasesList.filter(p => p.ID == weekPhaseID).length > 0
         if(IDList.includes(weekPhaseID))
             return true;
         return false;
@@ -104,8 +132,33 @@ class TimeManager {
   let timeManagerObj = new TimeManager();
   console.log(timeManagerObj);
 
-  /*cron.schedule('1-59 * * * * *', () => {
-    console.log('running every minute to 1 from 5');
-  });*/
-
   module.exports = timeManagerObj;
+
+
+
+  /*
+
+    phaseIDOverride = null
+
+    setPhaseOverride(phaseID) =>
+        if (phaseID == null){
+            phaseIDOverride = null
+            accendo cron
+        }
+        if (phaseID != phaseIDOverride)
+            phaseIDOverride = phaseID
+            disabilito cron
+            find(phaseIDOverride).handler()
+    
+
+    activePhase = qualcosa
+    phaseList = [{id:"fasecarina", from:"1:0900", to:"3:1200", handler:()=>{funzione da eseguire quando divento attiva}}]
+
+    getCurrentPhase() => return phaseIDOverride ?? activePhase
+    
+    cron: ogni minuto getCurrentPhase se != da activePhase -> sovrascrive e chiama handler
+
+
+    now = dayjs()
+    now.weekDay+":"+now.hour+now.minutes
+  */

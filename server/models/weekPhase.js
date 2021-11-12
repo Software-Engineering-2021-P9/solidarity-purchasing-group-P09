@@ -1,7 +1,7 @@
 "use strict";
 
-//From "Monday:22:30:14" to 1223014
-function convertDataFormat(data){
+//From "Monday:22:30:14" to ["1","22","30","14"]
+function dataSplitter(data){
   data = data.split(":");
   switch(data[0]){
     case "Monday":
@@ -26,6 +26,12 @@ function convertDataFormat(data){
       data[0] = "7";
       break;
   }
+  return data;
+}
+
+//From "Monday:22:30:14" to 1223014
+function convertDataFormat(data){
+  data = dataSplitter(data);
   let dataString = "";
   for(let x of data){
     dataString = dataString + x;
@@ -66,11 +72,11 @@ class WeekPhase {
     let startTimeObj = convertDataFormat(this.startTime);
     let endTimeObj = convertDataFormat(this.endTime);
 
-    if(startTimeObj < endTimeObj){
+    if(startTimeObj < endTimeObj){//phase not cross weeks
       if(data>=startTimeObj && data<=endTimeObj)
         return true;
       return false;
-    }else{
+    }else{//phase is cross weeks
       if(data>=startTimeObj || data<=endTimeObj)
         return true;
       return false;
@@ -78,4 +84,4 @@ class WeekPhase {
   }
 }
 
-module.exports = { WeekPhase };
+module.exports = { WeekPhase, dataSplitter };

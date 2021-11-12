@@ -56,17 +56,15 @@ function ShoppingCartPage(props) {
         price: 1,
       },
     ];
-    const product = staticProducts.filter((p) => p.id === id)[0];
-    return product;
+    return staticProducts.filter((p) => p.id === id)[0];
   };
 
   const getClientById = (id)=>{
-    const client = {
+    return  {
       id: id,
       name: "John",
       surname: "Smith",
-    }
-    return client; 
+    }; 
   }; 
 
   /* END MOCK DATA */

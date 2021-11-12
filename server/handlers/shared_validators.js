@@ -1,6 +1,14 @@
 const { ObjectId } = require("bson");
-const { body, param } = require("express-validator");
 const { ProductCategory } = require("../models/product");
+const { body, param, validationResult } = require("express-validator");
+
+exports.checkValidationErrorMiddleware = (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+  next();
+};
 
 exports.employeeIDPathValidator = param("employeeID").isMongoId();
 exports.emailBodyValidator = body("email")

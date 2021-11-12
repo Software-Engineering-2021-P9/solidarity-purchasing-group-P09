@@ -14,11 +14,6 @@ exports.getProductsByIDValidatorChain = [
 ];
 
 exports.getProductsByIDHandler = async function (req, res, next) {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
   let result;
   if (req.body.ids) {
     try {

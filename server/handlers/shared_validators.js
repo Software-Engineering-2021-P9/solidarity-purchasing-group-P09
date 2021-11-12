@@ -36,26 +36,6 @@ exports.passwordBodyValidator = body("password")
 
 //products
 
-exports.productIdValidator = param("id").isMongoId();
-exports.farmerIdValidator = param("id").isMongoId();
-exports.productNameValidator = body("name")
-  .notEmpty()
-  .bail()
-  .isString()
-  .bail()
-  .isLength({ max: 25 })
-  .trim()
-  .escape();
-
-exports.productDescriptionValidator = body("description")
-  .notEmpty()
-  .bail()
-  .isString()
-  .bail()
-  .isLength({ max: 100 })
-  .trim()
-  .escape();
-
 exports.productCategoryValidator = body("category")
   .optional()
   .notEmpty()

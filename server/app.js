@@ -49,6 +49,7 @@ app.post(
 app.get(
   buildAPIPath("/products"),
   productHandlers.getProductsByIDValidatorChain,
+  checkValidationErrorMiddleware,
   productHandlers.getProductsByIDHandler
 );
 

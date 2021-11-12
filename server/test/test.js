@@ -183,7 +183,7 @@ describe("Products API tests: ", () => {
   beforeEach(() => {
     dao.open();
     mongoUnit.load(testData.productsCollection);
-    dao.createIndex();
+    dao.createProductsTextSearchIndexes();
   });
 
   afterEach(() => {
@@ -319,6 +319,25 @@ describe("Products API tests: ", () => {
         .end((err, res) => {
           expect(err).to.be.null;
           expect(res.status).to.be.equal(400);
+          done();
+        });
+    });
+
+    it("It should return an error while reading on the db if it has a wrong category: ", (done) => {
+      //upload new data set:
+      mongoUnit.drop();
+      dao.close();
+
+      dao.open();
+      mongoUnit.load(testData.productsCollectionWithCategoryError);
+      dao.createProductsTextSearchIndexes();
+      chai
+        .request(app)
+        .get("/api/products")
+        .send({ category: undefined, searchString: undefined, ids: undefined })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(500);
           done();
         });
     });

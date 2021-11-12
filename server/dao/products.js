@@ -1,7 +1,6 @@
 "use strict";
 
 const { ObjectID } = require("bson");
-const { json } = require("express");
 
 const productsCollectionName = "products";
 
@@ -38,7 +37,8 @@ exports.findProducts = (db, searchString, category) => {
   return db.collection(productsCollectionName).find(query).toArray();
 };
 
-exports.createIndex = (db) => {
+//Method used for testing
+exports.createProductsTextSearchIndexes = (db) => {
   //create text index
   db.collection(productsCollectionName).createIndex({
     name: "text",

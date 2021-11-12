@@ -195,8 +195,7 @@ describe("Products API tests: ", () => {
     it("it should retrieve the list of products based on the filters sent: CATEGORY", (done) => {
       chai
         .request(app)
-        .get("/api/products")
-        .send({ category: "meat", searchString: undefined, ids: undefined })
+        .get("/api/products?category=meat")
         .end((err, res) => {
           expect(err).to.be.null;
           expect(res.status).to.be.equal(200);
@@ -212,8 +211,7 @@ describe("Products API tests: ", () => {
     it("it should retrieve the list of products based on the filters sent: SEARCHSTRING", (done) => {
       chai
         .request(app)
-        .get("/api/products")
-        .send({ category: undefined, searchString: "Nutella", ids: undefined })
+        .get("/api/products?searchString=Nutella")
         .end((err, res) => {
           expect(err).to.be.null;
           expect(res.status).to.be.equal(200);
@@ -230,12 +228,9 @@ describe("Products API tests: ", () => {
     it("it should retrieve the list of products based on the filters sent: ids", (done) => {
       chai
         .request(app)
-        .get("/api/products")
-        .send({
-          category: undefined,
-          searchString: undefined,
-          ids: "000000000000000000000001,000000000000000000000003,000000000000000000000008",
-        })
+        .get(
+          "/api/products?ids=000000000000000000000001,000000000000000000000003,000000000000000000000008"
+        )
         .end((err, res) => {
           expect(err).to.be.null;
           expect(res.status).to.be.equal(200);
@@ -253,8 +248,7 @@ describe("Products API tests: ", () => {
     it("it should retrieve the list of products based on the filters sent: CATEGORY, SEARCHSTRING", (done) => {
       chai
         .request(app)
-        .get("/api/products")
-        .send({ category: "fruit", searchString: "Italy", ids: undefined })
+        .get("/api/products?category=fruit&searchString=Italy")
         .end((err, res) => {
           expect(err).to.be.null;
           expect(res.status).to.be.equal(200);
@@ -271,7 +265,6 @@ describe("Products API tests: ", () => {
       chai
         .request(app)
         .get("/api/products")
-        .send({ category: undefined, searchString: undefined, ids: undefined })
         .end((err, res) => {
           expect(err).to.be.null;
           expect(res.status).to.be.equal(200);
@@ -284,8 +277,7 @@ describe("Products API tests: ", () => {
     it("If there are no products with applied filters then it should return an empty array", (done) => {
       chai
         .request(app)
-        .get("/api/products")
-        .send({ category: "meat", searchString: "Do not find", ids: undefined })
+        .get("/api/products?category=meat&searchString=Do not find")
         .end((err, res) => {
           expect(err).to.be.null;
           expect(res.status).to.be.equal(200);
@@ -298,12 +290,9 @@ describe("Products API tests: ", () => {
     it("It should return an error if the ids passed are not valid: ", (done) => {
       chai
         .request(app)
-        .get("/api/products")
-        .send({
-          category: undefined,
-          searchString: undefined,
-          ids: "000000000000000000000001,000000000000000000000003,08",
-        })
+        .get(
+          "/api/products?ids=000000000000000000000001,000000000000000000000003,08"
+        )
         .end((err, res) => {
           expect(err).to.be.null;
           expect(res.status).to.be.equal(400);
@@ -314,8 +303,7 @@ describe("Products API tests: ", () => {
     it("It should return an error if the category passed is not valid: ", (done) => {
       chai
         .request(app)
-        .get("/api/products")
-        .send({ category: "pizza", searchString: undefined, ids: undefined })
+        .get("/api/products?category=pizza")
         .end((err, res) => {
           expect(err).to.be.null;
           expect(res.status).to.be.equal(400);
@@ -334,7 +322,6 @@ describe("Products API tests: ", () => {
       chai
         .request(app)
         .get("/api/products")
-        .send({ category: undefined, searchString: undefined, ids: undefined })
         .end((err, res) => {
           expect(err).to.be.null;
           expect(res.status).to.be.equal(500);

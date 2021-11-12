@@ -1,6 +1,6 @@
 const { ObjectId } = require("bson");
 const { ProductCategory } = require("../models/product");
-const { body, param, validationResult } = require("express-validator");
+const { body, param, validationResult, query } = require("express-validator");
 
 exports.checkValidationErrorMiddleware = (req, res, next) => {
   const errors = validationResult(req);
@@ -36,7 +36,7 @@ exports.passwordBodyValidator = body("password")
 
 //products
 
-exports.productCategoryValidator = body("category")
+exports.productCategoryValidator = query("category")
   .optional()
   .notEmpty()
   .bail()
@@ -44,7 +44,7 @@ exports.productCategoryValidator = body("category")
   .bail()
   .isIn(Object.values(ProductCategory));
 
-exports.searchStringValidator = body("searchString")
+exports.searchStringValidator = query("searchString")
   .optional()
   .notEmpty()
   .bail()
@@ -54,7 +54,7 @@ exports.searchStringValidator = body("searchString")
   .trim()
   .escape();
 
-exports.idsValidator = body("ids")
+exports.idsValidator = query("ids")
   .optional()
   .notEmpty()
   .bail()

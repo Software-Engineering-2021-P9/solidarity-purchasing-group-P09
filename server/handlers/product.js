@@ -5,7 +5,6 @@ const {
   productCategoryValidator,
   idsValidator,
 } = require("./shared_validators");
-const { validationResult } = require("express-validator");
 
 exports.getProductsByIDValidatorChain = [
   searchStringValidator,
@@ -15,16 +14,19 @@ exports.getProductsByIDValidatorChain = [
 
 exports.getProductsByIDHandler = async function (req, res, next) {
   let result;
-  if (req.body.ids) {
+  if (req.query.ids) {
     try {
-      result = await dao.getProductsByIDs(req.body.ids);
+      result = await dao.getProductsByIDs(req.query.ids);
     } catch (err) {
       console.error(`getProductsByIDs() -> couldn't retrieve products: ${err}`);
       return res.status(500).end();
     }
   } else {
     try {
-      result = await dao.findProducts(req.body.searchString, req.body.category);
+      result = await dao.findProducts(
+        req.query.searchString,
+        req.query.category
+      );
     } catch (err) {
       console.error(`findProducts() -> couldn't retrieve products: ${err}`);
       return res.status(500).end();

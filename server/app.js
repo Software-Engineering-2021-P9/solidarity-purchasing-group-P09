@@ -9,7 +9,6 @@ const {
   checkValidationErrorMiddleware,
 } = require("./handlers/shared_validators");
 var employeeHandlers = require("./handlers/employee");
-const { domainToASCII } = require("url");
 
 const port = process.env.PORT || 3001;
 const buildAPIPath = (apiPath) => "/api" + apiPath;

@@ -8,7 +8,7 @@ class Product {
     this.description = description;
     if (Object.values(ProductCategory).includes(category))
       this.category = category;
-    else throw "Unknown category (" + category + ")";
+    else throw new Error("Unknown category (" + category + ")");
   }
 
   static fromMongoJSON(json) {

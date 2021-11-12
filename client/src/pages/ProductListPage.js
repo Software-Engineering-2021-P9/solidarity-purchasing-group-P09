@@ -17,7 +17,7 @@ import ProductCard from "../ui-components/ProductCard";
 import {
   RedButton,
   RedButtonDropDown,
-} from "../ui-components/Red Button Component/RedButton";
+} from "../ui-components/RedButtonComponent/RedButton";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -72,7 +72,7 @@ function ProductListPage(props) {
           <Col>
             <RedButtonDropDown
               items={Object.values(Product.Categories)}
-              title={"Categories"}
+              title={category ? category : "Categories"}
               updateSelectedItem={handleCategoryChanged}
               activeElement={category}
             />

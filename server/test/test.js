@@ -37,18 +37,18 @@ describe("Orders API tests:", () => {
         .request(app)
         .post("/api/orders")
         .send({
-          clientId: "23321321421421",
+          clientId: "6187c957b288576ca26f8257",
           products: [
-            { productId: "a123dasvfdacasds", quantity: 3 },
-            { productId: "b123dasvfdacasds", quantity: 1 },
-            { productId: "c123dasvfdacasds", quantity: 2 },
+            { productId: "6187c957b288576ca26f8258", quantity: 3 },
+            { productId: "6187c957b288576ca26f8259", quantity: 1 },
+            { productId: "6187c957b288576ca26f8250", quantity: 2 },
           ],
         })
         .end((err, res) => {
           expect(err).to.be.null;
           expect(res.status).to.be.equal(200);
           expect(res.body).to.be.an("object");
-          expect(res.body.clientId).to.be.equal("23321321421421");
+          expect(res.body.clientId).to.be.equal("6187c957b288576ca26f8257");
           expect(res.body.products).to.be.an.string;
           expect(res.body.status).to.be.equal("WAITING");
           expect(res.body.totalPrice).to.be.equal("6");

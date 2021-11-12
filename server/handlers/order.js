@@ -14,16 +14,12 @@ exports.createOrderValidatorChain = [
   productIDPathValidator,
   productQtyPathValidator,
 ];
-//exports.createOrderValidatorChain = [clientIDPathValidator];
-//exports.createOrderProductValidatorChain = [productIDPathValidator];
 
 exports.createOrderHandler = async function (req, res, next) {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
-
-  let insertedOrderID;
 
   var totalPrice = 0;
   var productPrice = 1;

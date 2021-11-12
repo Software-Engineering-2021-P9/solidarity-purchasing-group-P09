@@ -23,10 +23,7 @@ exports.productQtyPathValidator = body(
   .notEmpty()
   .isInt({ min: 1, max: 100 });
 
-body().isArray(),
-  body("*.user_id", "user_idfield must be a number").isNumeric(),
-  body("*.hours", "annotations field must a number").exists().isNumeric(),
-  (exports.employeeIDPathValidator = param("employeeID").isMongoId());
+exports.employeeIDPathValidator = param("employeeID").isMongoId();
 exports.emailBodyValidator = body("email")
   .notEmpty()
   .bail()

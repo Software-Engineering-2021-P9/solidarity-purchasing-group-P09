@@ -9,6 +9,7 @@ const {
   checkValidationErrorMiddleware,
 } = require("./handlers/shared_validators");
 var employeeHandlers = require("./handlers/employee");
+var productHandlers = require("./handlers/product");
 
 const port = process.env.PORT || 3001;
 const buildAPIPath = (apiPath) => "/api" + apiPath;
@@ -40,6 +41,16 @@ app.post(
   employeeHandlers.createEmployeeHandlerValidatorChain,
   checkValidationErrorMiddleware,
   employeeHandlers.createEmployeeHandler
+);
+
+// ----------
+// /products
+// ----------
+app.get(
+  buildAPIPath("/products"),
+  productHandlers.getProductsByIDValidatorChain,
+  checkValidationErrorMiddleware,
+  productHandlers.getProductsByIDHandler
 );
 
 // Serve client app

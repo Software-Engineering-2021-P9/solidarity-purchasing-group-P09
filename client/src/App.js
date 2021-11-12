@@ -25,6 +25,7 @@ function App() {
 
             <Route path='/'>
               <Redirect to='/' />
+
             </Route>
           </Switch>
         </Row>

@@ -18,28 +18,33 @@ exports.getProductsByIDHandler = async function (req, res, next) {
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
-  let products = [];
+
+  let result;
   if (req.body.ids) {
-    await dao
-      .getProductsByIDs(req.body.ids)
-      .catch((e) => {
-        console.error(`getProductsByIDs() -> couldn't retrieve products: ${e}`);
-        res.status(500).end();
-      })
-      .then((json) => {
-        products = json;
-      });
+    try {
+      result = await dao.getProductsByIDs(req.body.ids);
+    } catch (err) {
+      console.error(`getProductsByIDs() -> couldn't retrieve products: ${err}`);
+      return res.status(500).end();
+    }
   } else {
-    await dao
-      .findProducts(req.body.searchString, req.body.category)
-      .catch((e) => {
-        console.error(`findProducts() -> couldn't retrieve products: ${e}`);
-        res.status(500).end();
-      })
-      .then((json) => {
-        products = json;
-      });
+    try {
+      result = await dao.findProducts(req.body.searchString, req.body.category);
+    } catch (err) {
+      console.error(`findProducts() -> couldn't retrieve products: ${err}`);
+      return res.status(500).end();
+    }
   }
 
-  res.json(products.map((element) => Product.fromMongoJSON(element)));
+  let products = [];
+  try {
+    products = result.map((element) => Product.fromMongoJSON(element));
+  } catch (err) {
+    console.error(
+      `fromMongoJSON() -> couldn't convert Mongo result to Product: ${err}`
+    );
+    return res.status(500).end();
+  }
+
+  return res.json(products);
 };

@@ -33,7 +33,6 @@ function ShoppingCartTable(props) {
 }
 
 function CartRow(props) {
-  console.log("CartRow for product " + props.product.item);
   return (
     <tr>
       <td className="item-cart">{props.product.item}</td>

@@ -1,6 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useState } from "react";
 import { Container, Row } from "react-bootstrap";
+import {Redirect} from "react-router-dom";
 
 import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponent";
 import { ShoppingCartTitle } from "../ui-components/ShoppingCartComponent/ShoppingCartTitle";
@@ -17,6 +18,7 @@ function ShoppingCartPage(props) {
   //      - a cart (Map <ItemID, Qty>)
   //      - the total amount of the current cart
   // it uses function getProductById(id) -> product object
+  // it uses function getClientById(id) -> client object 
 
   /* MOCK DATA (Map, client, getProductById) */
   const propsMap = new Map();
@@ -25,7 +27,7 @@ function ShoppingCartPage(props) {
   propsMap.set(3, 1);
   propsMap.set(4, 1);
 
-  const propsClient = "John Smith";
+  const propsClientId = 1;
 
   const getProductById = (id) => {
     const staticProducts = [
@@ -58,6 +60,15 @@ function ShoppingCartPage(props) {
     return product;
   };
 
+  const getClientById = (id)=>{
+    const client = {
+      id: id,
+      name: "John",
+      surname: "Smith",
+    }
+    return client; 
+  }; 
+
   /* END MOCK DATA */
 
   const [cart, setCart] = useState(propsMap);
@@ -72,6 +83,7 @@ function ShoppingCartPage(props) {
 
   const [amount, setAmount] = useState(sum);
   const [show, setShow] = useState(false);
+  const [submitted, setSubmitted]=useState(false); 
 
   const updateQuantity = (product, quantity) => {
     const prev_qty = cart.get(product.id);
@@ -82,6 +94,11 @@ function ShoppingCartPage(props) {
   };
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  const handleSubmit =()=>{
+    //call create order 
+    handleClose(); 
+    setSubmitted(true); 
+  }
 
   return (
     <Container>
@@ -89,7 +106,7 @@ function ShoppingCartPage(props) {
         <NavbarComponent />
       </Row>
       <Row>
-        <ShoppingCartTitle client={propsClient} />
+        <ShoppingCartTitle client={getClientById(propsClientId)} />
       </Row>
       <Row>
         <ShoppingCartTable
@@ -102,15 +119,23 @@ function ShoppingCartPage(props) {
         <ShoppingCartTotAmount tot={amount} />
       </Row>
       <Row>
-        <ShoppingCartControls handleShow={handleShow} />
+        <ShoppingCartControls handleShow={handleShow} clientId={propsClientId} cart={cart}/>
       </Row>
+
       <Row>
         <ModalOrderConfirmed
           show={show}
           handleClose={handleClose}
           cart={cart}
+          handleSubmit={handleSubmit}          
         />
       </Row>
+      {submitted ? <Redirect to={{
+            pathname: '/employee/clients/1',
+            state: { clientId: propsClientId}
+        }}/>:''}
+        {/*REDIRECT TO /clients/propsClientId when "PLACE ORDER is clicked pass props-> cart, propsClientId*/}
+        {/*call createOrder*/}
     </Container>
   );
 }

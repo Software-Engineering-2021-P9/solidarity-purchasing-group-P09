@@ -21,3 +21,13 @@ exports.createEmployee = (db, email, hashedPassword, fullName) => {
     .collection(employeeCollectionName)
     .insertOne({ email: email, password: hashedPassword, fullName: fullName });
 };
+
+// --------------
+// DeleteEmployee
+// --------------
+
+exports.deleteEmployee = (db, employeeID) => {
+  return db
+    .collection(employeeCollectionName)
+    .deleteOne({ employeeID: employeeID });
+};

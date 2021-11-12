@@ -10,6 +10,7 @@ const {
 } = require("./handlers/shared_validators");
 var employeeHandlers = require("./handlers/employee");
 var orderHandlers = require("./handlers/order");
+var productHandlers = require("./handlers/product");
 
 const port = process.env.PORT || 3001;
 const buildAPIPath = (apiPath) => "/api" + apiPath;
@@ -52,6 +53,16 @@ app.post(
   orderHandlers.createOrderValidatorChain,
   orderHandlers.createOrderHandler
 );
+
+// /products
+// ----------
+app.get(
+  buildAPIPath("/products"),
+  productHandlers.getProductsByIDValidatorChain,
+  checkValidationErrorMiddleware,
+  productHandlers.getProductsByIDHandler
+);
+
 // Serve client app
 app.use("/", express.static(path.resolve(__dirname, "../client/build")));
 app.use("/*", express.static(path.resolve(__dirname, "../client/build")));

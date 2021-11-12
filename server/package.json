@@ -11,12 +11,14 @@
     "chai-http": "^4.3.0",
     "cookie-parser": "~1.4.4",
     "cors": "^2.8.5",
+    "dayjs": "^1.10.7",
     "debug": "~2.6.9",
     "express": "~4.16.1",
     "express-validator": "^6.13.0",
     "mocha": "^9.1.3",
     "mongodb": "^4.1.4",
     "morgan": "~1.9.1",
+    "node-cron": "^3.0.0",
     "nyc": "^15.1.0"
   },
   "devDependencies": {

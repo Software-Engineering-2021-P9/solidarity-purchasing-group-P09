@@ -19,6 +19,12 @@ app.use(cookieParser());
 app.use(cors());
 
 // ----------
+// /timeManager
+// ----------
+
+var timeManagerObj = require('./models/timeManager'); 
+
+// ----------
 // /employees
 // ----------
 

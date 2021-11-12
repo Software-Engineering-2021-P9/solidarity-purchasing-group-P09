@@ -51,6 +51,7 @@ app.post(
 app.post(
   buildAPIPath("/orders"),
   orderHandlers.createOrderValidatorChain,
+  checkValidationErrorMiddleware,
   orderHandlers.createOrderHandler
 );
 

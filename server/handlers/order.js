@@ -16,11 +16,6 @@ exports.createOrderValidatorChain = [
 ];
 
 exports.createOrderHandler = async function (req, res, next) {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
   var totalPrice = 0;
   var productPrice = 1;
   req.body.products.forEach((product) => {

@@ -16,14 +16,26 @@ exports.createOrderValidatorChain = [
 ];
 
 exports.createOrderHandler = async function (req, res, next) {
-  // Insert the new employee
+  // Insert the new order
+
+  // productPrice is hardcoded to 1 as a tempoarary solution for now, will be fixed in the next sprints
+
   var result;
   var totalPrice = 0;
   var productPrice = 1;
+
+  var isNegativeQuantity = false;
   req.body.products.forEach((product) => {
     totalPrice = totalPrice + product.quantity * productPrice;
+    if (product.quantity < 0) {
+      isNegativeQuantity = true;
+    }
   });
 
+  if (isNegativeQuantity) {
+    console.error(`Negative Quantity is found: ${err}`);
+    return res.status(400).end();
+  }
   var obj = {
     clientId: req.body.clientId.toString(),
     products: JSON.stringify(req.body.products),
@@ -46,6 +58,7 @@ exports.createOrderHandler = async function (req, res, next) {
     console.error(`CreateOrder() -> couldn't retrieve newly created order`);
     return res.status(404).end();
   }
+
   let order = Order.fromMongoJSON(obj);
   res.json(order);
 };

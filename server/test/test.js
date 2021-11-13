@@ -81,12 +81,8 @@ describe("Orders API tests:", () => {
         .request(app)
         .post("/api/orders")
         .send({
-          clientId: "1",
-          products: [
-            { productId: "6187c957b288576ca26f8258", quantity: 3 },
-            { productId: "6187c957b288576ca26f8259", quantity: 1 },
-            { productId: "6187c957b288576ca26f8250", quantity: 2 },
-          ],
+          clientId: 1,
+          products: [{ productId: "6187c957b288576ca26f8258", quantity: 3 }],
         })
         .end((err, res) => {
           expect(err).to.be.null;
@@ -101,12 +97,45 @@ describe("Orders API tests:", () => {
         .request(app)
         .post("/api/orders")
         .send({
-          clientId: "1",
+          clientId: "6187c957b288576ca26f8257",
           products: [
             { wrongId: "6187c957b288576ca26f8258", quantity: 3 },
             { wrongId: "6187c957b288576ca26f8259", quantity: 1 },
             { wrongId: "6187c957b288576ca26f8250", quantity: 2 },
           ],
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(400);
+          expect(res.body).to.be.an("object");
+          done();
+        });
+    });
+
+    it("it should give Bad request error because product is integer", (done) => {
+      chai
+        .request(app)
+        .post("/api/orders")
+        .send({
+          clientId: "6187c957b288576ca26f8257",
+          products: [{ productId: 1, quantity: 3 }],
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(400);
+          expect(res.body).to.be.an("object");
+          done();
+        });
+    });
+
+    it("it should give Bad request error because quantity is negative", (done) => {
+      chai
+        .request(app)
+        .post("/api/orders")
+        .send({
+          clientId: "6187c957b288576ca26f8257",
+          products: [{ productId: "6187c957b288576ca26f8258", quantity: 2 }],
+          products: [{ productId: "6187c957b288576ca26f8258", quantity: -2 }],
         })
         .end((err, res) => {
           expect(err).to.be.null;

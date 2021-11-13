@@ -3,33 +3,22 @@ import {
   Container,
   Row,
   Col,
-  Dropdown,
   Form,
-  Button,
   CardGroup,
   FormControl,
-  DropdownButton,
 } from "react-bootstrap";
 import { employeeNavbarLinks } from "../Routes";
 import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponent";
 import Product from "../services/models/Product";
 import ProductCard from "../ui-components/ProductCard";
-import {
-  RedButton,
-  RedButtonDropDown,
-} from "../ui-components/RedButtonComponent/RedButton";
-
+import { RedButton } from "../ui-components/RedButtonComponent/RedButton";
+import { RedDropdown } from "../ui-components/RedDropdownComponent/RedDropdown";
 import "bootstrap/dist/css/bootstrap.min.css";
 
+import { findProducts } from "../services/ApiClient";
+
 function ProductListPage(props) {
-  /* TODO: Retrieve this products from back-end*/
-  const [products, setProducts] = useState([
-    new Product(1, "giovanni", "Zucchini", "Origin: Italy", "vegetables"),
-    new Product(2, "Luca", "Bananas", "Origin: Italy", "vegetables"),
-    new Product(3, "Luca", "Bananas", "Origin: Italy", "vegetables"),
-    new Product(4, "Luca", "Bananas", "Origin: Italy", "vegetables"),
-    new Product(5, "Luca", "Bananas", "Origin: Italy", "vegetables"),
-  ]);
+  const [products, setProducts] = useState([]);
 
   //used for storing the content of the search form
   const [text, setText] = useState();
@@ -40,14 +29,28 @@ function ProductListPage(props) {
   //updated only when clicked on search
   const [searcString, setSearchString] = useState();
 
+  async function updateProducts(category, searcString) {
+    try {
+      const fromServer = await findProducts(category, searcString);
+      setProducts(fromServer);
+    } catch (err) {
+      console.error(`findProducts() -> couldn't retrieve products: ${err}`);
+    }
+  }
+
   useEffect(() => {
     //call from props the function for fetching the new products
-    console.log("get new products");
+    updateProducts(category, searcString);
   }, [category, searcString]);
 
   const handleOnSearchSubmit = () => {
     //update searchString, this way useEffect is called
     setSearchString(text);
+  };
+
+  const handleFormSubmit = (ev) => {
+    ev.preventDefault();
+    handleOnSearchSubmit();
   };
 
   const handleCategoryChanged = (newCategory) => {
@@ -70,7 +73,7 @@ function ProductListPage(props) {
         </Row>
         <Row>
           <Col>
-            <RedButtonDropDown
+            <RedDropdown
               items={Object.values(Product.Categories)}
               title={category ? category : "Categories"}
               updateSelectedItem={handleCategoryChanged}
@@ -79,11 +82,11 @@ function ProductListPage(props) {
           </Col>
 
           <Col>
-            <Form>
+            <Form onSubmit={(ev) => handleFormSubmit(ev)}>
               <Row>
                 <Col>
                   <FormControl
-                    type="text"
+                    type="textarea"
                     placeholder="Filter"
                     value={text}
                     onChange={(ev) => setText(ev.target.value)}
@@ -98,13 +101,15 @@ function ProductListPage(props) {
         </Row>
         <hr />
         <Row md={4} xs={2} className="g-4">
-          {products.map((item) => {
-            return (
-              <CardGroup as={Col}>
-                <ProductCard product={item} />
-              </CardGroup>
-            );
-          })}
+          {products
+            ? products.map((item) => {
+                return (
+                  <CardGroup as={Col}>
+                    <ProductCard product={item} />
+                  </CardGroup>
+                );
+              })
+            : {}}
         </Row>
       </Row>
     </Container>

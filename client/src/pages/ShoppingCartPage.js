@@ -10,7 +10,7 @@ import { ShoppingCartTotAmount } from "../ui-components/ShoppingCartComponent/Sh
 import { ShoppingCartControls } from "../ui-components/ShoppingCartComponent/ShoppingCartControls";
 import { ModalOrderConfirmed } from "../ui-components/ShoppingCartComponent/ModalOrderConfirmed";
 
-import { createOrder } from "../services/ApiOrder";
+import { createOrder } from "../services/ApiClient";
 function ShoppingCartPage(props) {
   // as props, ShoppingCartPage receives
   //      - a Map <ItemID, Qty>

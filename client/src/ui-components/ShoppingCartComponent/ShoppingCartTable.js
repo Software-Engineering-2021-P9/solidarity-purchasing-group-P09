@@ -37,7 +37,10 @@ function CartRow(props) {
     <tr>
       <td className="item-cart">{props.product.item}</td>
       <td>{props.product.description}</td>
-      <td>{props.product.price}</td>
+      <td>
+        {props.product.price}
+        {" €"}
+      </td>
       <td>
         <span
           onClick={() => {
@@ -75,7 +78,10 @@ function CartRow(props) {
           </svg>
         </span>
       </td>
-      <td>{(props.product.price * props.quantity).toFixed(2)}</td>
+      <td>
+        {(props.product.price * props.quantity).toFixed(2)}
+        {" €"}
+      </td>
     </tr>
   );
 }

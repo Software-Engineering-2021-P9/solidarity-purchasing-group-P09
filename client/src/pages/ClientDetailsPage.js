@@ -15,7 +15,8 @@ function ClientDetailsPage(props) {
       <Row>
         <h1>ClientDetailsPage</h1>
       </Row>
-      {props.location.state != null ? (
+      {/* this part is only for debug pruposes 
+      { props.location.state != null ? (
         <>
           <Row>
             <p>
@@ -30,8 +31,11 @@ function ClientDetailsPage(props) {
       ) : (
         <Row>
           <CreateNewOrderButton />
-        </Row>
-      )}
+      </Row>
+       )} */}
+      <Row>
+        <CreateNewOrderButton />
+      </Row>
     </Container>
   );
 }

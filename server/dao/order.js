@@ -8,10 +8,10 @@ const orderCollectionName = "orders";
 
 exports.createOrder = async (db, clientId, products, status, totalPrice) => {
   const newOrder = {
-    clientId: clientId,
-    products: products,
-    status: status,
-    totalPrice: totalPrice,
+    clientId: clientId.toString(),
+    products: products.toString(),
+    status: status.toString(),
+    totalPrice: totalPrice.toString(),
   };
   const res = await db.collection(orderCollectionName).insertOne(newOrder);
   return res.insertedId.toString();

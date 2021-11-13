@@ -36,6 +36,7 @@ function ShoppingCartPage(props) {
     { productId: "718d971d89d6240eb03742d7", quantity: 3 },
     { productId: "298d971d89d6240eb03742d7", quantity: 1 },
     { productId: "318d971d89d6240eb03742d7", quantity: 2 },
+    { productId: "418d971d89d6240eb03742d7", quantity: 3 },
   ];
 
   const propsClientId = "918d971d89d6240eb03742d7";
@@ -43,25 +44,25 @@ function ShoppingCartPage(props) {
   const getProductById = (id) => {
     const staticProducts = [
       {
-        id: 1,
+        id: "718d971d89d6240eb03742d7",
         item: "Eggplant",
         description: "Origin: Italy, packaging: 1kg",
         price: 2.5,
       },
       {
-        id: 2,
+        id: "298d971d89d6240eb03742d7",
         item: "Zucchini",
         description: "Origin: Italy, packaging: 1kg",
         price: 3,
       },
       {
-        id: 3,
+        id: "318d971d89d6240eb03742d7",
         item: "Eggs",
         description: "Origin: Italy, packaging: 6 eggs",
         price: 1.6,
       },
       {
-        id: 4,
+        id: "418d971d89d6240eb03742d7",
         item: "Milk",
         description: "Origin: Italy, packaging: 2l",
         price: 1,
@@ -80,7 +81,10 @@ function ShoppingCartPage(props) {
 
   /* END MOCK DATA */
 
-  const [cart, setCart] = useState(propsMap);
+  // Convert array to Map in here for next processes
+  const [cart, setCart] = useState(
+    new Map(mockProductQuantity.map((i) => [i.productId, i.quantity]))
+  );
 
   var sum = 0;
   Array.from(cart.entries()).map((entry) => {
@@ -106,7 +110,14 @@ function ShoppingCartPage(props) {
   const handleSubmit = () => {
     //call create order
 
-    createOrder(propsClientId, mockProductQuantity);
+    //convert back to array format for backend side!
+
+    var products = Array.from(cart, ([productId, quantity]) => ({
+      productId,
+      quantity,
+    }));
+
+    createOrder(propsClientId, products);
     handleClose();
     setSubmitted(true);
   };

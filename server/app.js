@@ -48,12 +48,27 @@ app.post(
 // /clients
 // --------
 
+app.get(
+  buildAPIPath("/clients/:clientID"),
+  clientHandlers.getclientIDPathValidator,
+  checkValidationErrorMiddleware,
+  clientHandlers.getClientByIDHandler
+);
+
 app.patch(
   buildAPIPath("/clients/:clientID/wallet"),
-  clientHandlers.getWalletTopUpBodyValidator,
+  clientHandlers.getAddFundToWalletBodyValidator,
   checkValidationErrorMiddleware,
-  clientHandlers.topUpWalletHandler
+  clientHandlers.addFundToWalletHandler
 );
+
+app.get(
+  buildAPIPath("/clients"),
+  clientHandlers.getSearchStringValidator,
+  checkValidationErrorMiddleware,
+  clientHandlers.findClientsHandler
+);
+
 
 // Serve client app
 app.use("/", express.static(path.resolve(__dirname, "../client/build")));

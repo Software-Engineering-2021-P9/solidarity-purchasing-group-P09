@@ -1,4 +1,4 @@
-const { body, param, validationResult } = require("express-validator");
+const { body, param, validationResult, query } = require("express-validator");
 
 exports.checkValidationErrorMiddleware = (req, res, next) => {
   const errors = validationResult(req);
@@ -32,9 +32,18 @@ exports.passwordBodyValidator = body("password")
   .isLength({ min: 6 })
   .trim()
   .escape();
-exports.walletTopUpBodyValidator = body("increaseBy")
+exports.addFundToWalletBodyValidator = body("increaseBy")
   .notEmpty()
   .bail()
   .trim()
   .escape()
   .isFloat({ min: 0 });
+exports.searchStringValidator = query("searchString")
+  .optional()
+  .notEmpty()
+  .bail()
+  .isString()
+  .bail()
+  .isLength({ max: 100 })
+  .trim()
+  .escape();

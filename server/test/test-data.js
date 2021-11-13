@@ -25,7 +25,7 @@ exports.clientsCollection = {
       password: "sosuonareeh?",
       fullName: " Domenico Bini",
       phoneNumber: 3205708803,
-      address: "via DomenicoBini,26 Torino,10538",
+      address: "via Domenico Bini,26 Torino,10538",
       wallet: 55.50
     },
     {
@@ -34,7 +34,7 @@ exports.clientsCollection = {
       password: "sonouncriticoeh?",
       fullName: "Andrea Diprè",
       phoneNumber: 3205755555,
-      address: "via AndreaDipre,24 Torino,10538",
+      address: "via Andrea Dipre,24 Torino,10538",
       wallet: 0
     }
   ]

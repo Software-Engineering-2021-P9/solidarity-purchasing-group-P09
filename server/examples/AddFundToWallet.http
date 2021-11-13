@@ -1,0 +1,6 @@
+PATCH http://localhost:3001/api/clients/618d4ad3736fffaf2d3b3ca5/wallet HTTP/1.1
+Content-Type: application/json
+
+{
+  "increaseBy": 55.5
+}

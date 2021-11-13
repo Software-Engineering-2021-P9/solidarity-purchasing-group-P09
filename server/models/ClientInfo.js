@@ -1,6 +1,6 @@
 "use strict";
 
-class Client {
+class ClientInfo {
     constructor(id, email, fullName, address, phoneNumber, wallet) {
         this.id = id;
         this.email = email;
@@ -11,8 +11,8 @@ class Client {
     }
 
     static fromMongoJSON(json) {
-        return new Client(json._id, json.email, json.fullName, json.address, json.phoneNumber, json.wallet);
+        return new ClientInfo(json._id, json.email, json.fullName, json.address, json.phoneNumber, json.wallet);
     }
 }
 
-module.exports = { Client };
+module.exports = { ClientInfo };

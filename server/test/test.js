@@ -178,3 +178,82 @@ describe("Employees API tests:", () => {
     });
   });
 });
+
+// Clients API tests
+describe("Clients API tests:", () => {
+  beforeEach(() => {
+    dao.open();
+    mongoUnit.load(testData.clientsCollection);
+  });
+
+  afterEach(() => {
+    mongoUnit.drop();
+    dao.close();
+  });
+
+  describe("PATCH /clients/:clientID/wallet", () => {
+
+    it("it must fail when mongo fails", (done) => {
+      dao.close();
+      chai
+        .request(app)
+        .patch("/api/clients/6187c957b288576ca26f8257/wallet")
+        .send({
+          increaseBy: 24.30
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(500);
+
+          done();
+        });
+    });
+
+    it("it must fail when a wrong clientID is given", (done) => {
+      chai
+        .request(app)
+        .patch("/api/clients/6187c957b288521ca26f8257/wallet")
+        .send({
+          increaseBy: 24.30
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(400);
+
+          done();
+        });
+    });
+
+    it("it must return 400 when a negative float is given as increaseBy", (done) => {
+      chai
+        .request(app)
+        .patch("/api/clients/6187c957b28sfb6ca26f8257/wallet")
+        .send({
+          increaseBy: -2.4
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(400);
+
+          done();
+        });
+    });
+
+    it("it should update the client wallet", (done) => {
+      chai
+        .request(app)
+        .patch("/api/clients/6187c957b288576ca26f8257/wallet")
+        .send({
+          increaseBy: 24.30
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          expect(res.body).to.be.an("object");
+          expect(res.body.newWalletValue).to.be.equal(79.8);
+
+          done();
+        })
+    });
+  });
+});

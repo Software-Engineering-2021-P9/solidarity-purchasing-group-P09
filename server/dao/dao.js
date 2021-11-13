@@ -2,6 +2,7 @@
 
 const { MongoClient } = require("mongodb");
 const { getEmployeeByID, createEmployee } = require("./employee");
+const { topUpWallet, getClientByID } = require("./client");
 
 // DAO initialization
 // Only one instance can be open at a time. Subsequent calls has no effect.
@@ -32,3 +33,4 @@ exports.getEmployeeByID = (employeeID) => getEmployeeByID(db, employeeID);
 exports.createEmployee = (email, hashedPassword, fullName) =>
   createEmployee(db, email, hashedPassword, fullName);
 exports.deleteEmployee = (employeeID) => deleteEmployee(db, employeeID);
+exports.topUpWallet = (clientID, increaseBy) => topUpWallet(db, clientID, increaseBy);

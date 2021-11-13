@@ -9,6 +9,7 @@ const {
   checkValidationErrorMiddleware,
 } = require("./handlers/shared_validators");
 var employeeHandlers = require("./handlers/employee");
+var clientHandlers = require("./handlers/client");
 
 const port = process.env.PORT || 3001;
 const buildAPIPath = (apiPath) => "/api" + apiPath;
@@ -40,6 +41,18 @@ app.post(
   employeeHandlers.createEmployeeHandlerValidatorChain,
   checkValidationErrorMiddleware,
   employeeHandlers.createEmployeeHandler
+);
+
+
+// --------
+// /clients
+// --------
+
+app.patch(
+  buildAPIPath("/clients/:clientID/wallet"),
+  clientHandlers.getWalletTopUpBodyValidator,
+  checkValidationErrorMiddleware,
+  clientHandlers.topUpWalletHandler
 );
 
 // Serve client app

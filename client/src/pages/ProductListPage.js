@@ -10,9 +10,11 @@ import {
 import { employeeNavbarLinks } from "../Routes";
 import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponent";
 import Product from "../services/models/Product";
-import ProductCard from "../ui-components/ProductCard";
-import { RedButton } from "../ui-components/RedButtonComponent/RedButton";
-import { RedDropdown } from "../ui-components/RedDropdownComponent/RedDropdown";
+import ProductCard from "../ui-components/ProductListpageComponents/ProductCard";
+import { RedButton } from "../ui-components/ProductListpageComponents/RedButtonComponent/RedButton";
+import { RedDropdown } from "../ui-components/ProductListpageComponents/RedDropdownComponent/RedDropdown";
+
+import "../ui-components/ProductListpageComponents/Title.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import { findProducts } from "../services/ApiClient";
@@ -69,7 +71,7 @@ function ProductListPage(props) {
 
       <Row fluid>
         <Row>
-          <h1>Available products</h1>
+          <h1 className="title">Available products</h1>
         </Row>
         <Row>
           <Col>
@@ -99,7 +101,7 @@ function ProductListPage(props) {
             </Form>
           </Col>
         </Row>
-        <hr />
+        <hr className="line" />
         <Row md={4} xs={2} className="g-4">
           {products
             ? products.map((item) => {

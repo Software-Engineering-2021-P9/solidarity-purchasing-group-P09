@@ -134,7 +134,6 @@ describe("Orders API tests:", () => {
         .post("/api/orders")
         .send({
           clientId: "6187c957b288576ca26f8257",
-          products: [{ productId: "6187c957b288576ca26f8258", quantity: 2 }],
           products: [{ productId: "6187c957b288576ca26f8258", quantity: -2 }],
         })
         .end((err, res) => {

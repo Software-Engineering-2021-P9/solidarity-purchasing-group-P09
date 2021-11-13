@@ -59,6 +59,5 @@ exports.createOrderHandler = async function (req, res, next) {
     return res.status(404).end();
   }
 
-  let order = Order.fromMongoJSON(obj);
-  res.json(order);
+  res.json(Order.fromMongoJSON(obj));
 };

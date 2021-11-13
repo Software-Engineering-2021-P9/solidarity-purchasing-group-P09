@@ -33,10 +33,10 @@ function ShoppingCartPage(props) {
   // If we can get this format from props, then we are totally done!
 
   const mockProductQuantity = [
-    { productId: "718d971d89d6240eb03742d7", quantity: 3 },
+    { productId: "718d971d89d6240eb03742d7", quantity: 1 },
     { productId: "298d971d89d6240eb03742d7", quantity: 1 },
-    { productId: "318d971d89d6240eb03742d7", quantity: 2 },
-    { productId: "418d971d89d6240eb03742d7", quantity: 3 },
+    { productId: "318d971d89d6240eb03742d7", quantity: 1 },
+    { productId: "418d971d89d6240eb03742d7", quantity: 1 },
   ];
 
   const propsClientId = "918d971d89d6240eb03742d7";

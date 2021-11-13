@@ -38,7 +38,7 @@ exports.createOrderHandler = async function (req, res, next) {
   }
   var obj = {
     clientId: req.body.clientId.toString(),
-    products: JSON.stringify(req.body.products),
+    products: req.body.products,
     status: "WAITING",
     totalPrice: totalPrice.toString(),
   };
@@ -58,6 +58,7 @@ exports.createOrderHandler = async function (req, res, next) {
     console.error(`CreateOrder() -> couldn't retrieve newly created order`);
     return res.status(404).end();
   }
-
+  obj._id = result;
+  //console.log(Order.fromMongoJSON(obj));
   res.json(Order.fromMongoJSON(obj));
 };

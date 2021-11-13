@@ -10,6 +10,7 @@ class Order {
   }
 
   static fromMongoJSON(json) {
+    console.log(json);
     return new Order(
       json._id,
       json.clientId,

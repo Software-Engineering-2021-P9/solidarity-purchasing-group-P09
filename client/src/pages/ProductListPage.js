@@ -6,8 +6,8 @@ import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponen
 import "bootstrap/dist/css/bootstrap.min.css";
 
 function ProductListPage(props) {
-  if(props.location.state!=null){
-    console.log(props.location.state.cart); 
+  if (props.location.state != null) {
+    console.log(props.location.state.cart);
   }
 
   return (
@@ -23,6 +23,7 @@ function ProductListPage(props) {
       <Row>
         <h1>ProductListPage</h1>
       </Row>
+      {/* this part is only for debug pruposes 
       {props.location.state != null ? (
         <>
           <Row>
@@ -34,7 +35,7 @@ function ProductListPage(props) {
         </>
       ) : (
         ""
-      )}
+      )} */}
     </Container>
   );
 }

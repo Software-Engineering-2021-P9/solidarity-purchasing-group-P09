@@ -15,10 +15,14 @@ function ClientDetailsPage(props) {
       <Row>
         <h1>ClientDetailsPage</h1>
       </Row>
-      {props.location.state != null ? (
+      {/* this part is only for debug pruposes 
+      { props.location.state != null ? (
         <>
           <Row>
-            <p>Client with id:{props.location.state.clientId} </p>
+            <p>
+              Order is recorded to database!! Client with id:
+              {props.location.state.clientId}{" "}
+            </p>
           </Row>
           <Row>
             <CreateNewOrderButton clientId={props.location.state.clientId} />
@@ -27,8 +31,11 @@ function ClientDetailsPage(props) {
       ) : (
         <Row>
           <CreateNewOrderButton />
-        </Row>
-      )}
+      </Row>
+       )} */}
+      <Row>
+        <CreateNewOrderButton />
+      </Row>
     </Container>
   );
 }

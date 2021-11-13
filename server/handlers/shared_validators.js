@@ -10,6 +10,19 @@ exports.checkValidationErrorMiddleware = (req, res, next) => {
   next();
 };
 
+exports.clientIDPathValidator = body("clientId").isMongoId();
+exports.productsValidator = body("products").isArray();
+exports.productIDPathValidator = body(
+  "products.*.productId",
+  "productId must be a Mongo ID"
+).isMongoId();
+exports.productQtyPathValidator = body(
+  "products.*.quantity",
+  "quantity must be a positive integer"
+)
+  .notEmpty()
+  .isInt({ min: 1, max: 100 });
+
 exports.employeeIDPathValidator = param("employeeID").isMongoId();
 exports.emailBodyValidator = body("email")
   .notEmpty()

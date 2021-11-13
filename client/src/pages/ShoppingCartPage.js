@@ -1,7 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useState } from "react";
 import { Container, Row } from "react-bootstrap";
-import {Redirect} from "react-router-dom";
+import { Redirect } from "react-router-dom";
 
 import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponent";
 import { ShoppingCartTitle } from "../ui-components/ShoppingCartComponent/ShoppingCartTitle";
@@ -10,6 +10,7 @@ import { ShoppingCartTotAmount } from "../ui-components/ShoppingCartComponent/Sh
 import { ShoppingCartControls } from "../ui-components/ShoppingCartComponent/ShoppingCartControls";
 import { ModalOrderConfirmed } from "../ui-components/ShoppingCartComponent/ModalOrderConfirmed";
 
+import { createOrder } from "../services/ApiClient";
 function ShoppingCartPage(props) {
   // as props, ShoppingCartPage receives
   //      - a Map <ItemID, Qty>
@@ -18,7 +19,7 @@ function ShoppingCartPage(props) {
   //      - a cart (Map <ItemID, Qty>)
   //      - the total amount of the current cart
   // it uses function getProductById(id) -> product object
-  // it uses function getClientById(id) -> client object 
+  // it uses function getClientById(id) -> client object
 
   /* MOCK DATA (Map, client, getProductById) */
   const propsMap = new Map();
@@ -27,30 +28,41 @@ function ShoppingCartPage(props) {
   propsMap.set(3, 1);
   propsMap.set(4, 1);
 
-  const propsClientId = 1;
+  // This is the format for the backend, I am not sure if can we use this format????
+  // Mock data, same with the postman request
+  // If we can get this format from props, then we are totally done!
+
+  const mockProductQuantity = [
+    { productId: "718d971d89d6240eb03742d7", quantity: 1 },
+    { productId: "298d971d89d6240eb03742d7", quantity: 1 },
+    { productId: "318d971d89d6240eb03742d7", quantity: 1 },
+    { productId: "418d971d89d6240eb03742d7", quantity: 1 },
+  ];
+
+  const propsClientId = "918d971d89d6240eb03742d7";
 
   const getProductById = (id) => {
     const staticProducts = [
       {
-        id: 1,
+        id: "718d971d89d6240eb03742d7",
         item: "Eggplant",
         description: "Origin: Italy, packaging: 1kg",
         price: 2.5,
       },
       {
-        id: 2,
+        id: "298d971d89d6240eb03742d7",
         item: "Zucchini",
         description: "Origin: Italy, packaging: 1kg",
         price: 3,
       },
       {
-        id: 3,
+        id: "318d971d89d6240eb03742d7",
         item: "Eggs",
         description: "Origin: Italy, packaging: 6 eggs",
         price: 1.6,
       },
       {
-        id: 4,
+        id: "418d971d89d6240eb03742d7",
         item: "Milk",
         description: "Origin: Italy, packaging: 2l",
         price: 1,
@@ -59,17 +71,20 @@ function ShoppingCartPage(props) {
     return staticProducts.filter((p) => p.id === id)[0];
   };
 
-  const getClientById = (id)=>{
-    return  {
+  const getClientById = (id) => {
+    return {
       id: id,
       name: "John",
       surname: "Smith",
-    }; 
-  }; 
+    };
+  };
 
   /* END MOCK DATA */
 
-  const [cart, setCart] = useState(propsMap);
+  // Convert array to Map in here for next processes
+  const [cart, setCart] = useState(
+    new Map(mockProductQuantity.map((i) => [i.productId, i.quantity]))
+  );
 
   var sum = 0;
   Array.from(cart.entries()).map((entry) => {
@@ -81,7 +96,7 @@ function ShoppingCartPage(props) {
 
   const [amount, setAmount] = useState(sum);
   const [show, setShow] = useState(false);
-  const [submitted, setSubmitted]=useState(false); 
+  const [submitted, setSubmitted] = useState(false);
 
   const updateQuantity = (product, quantity) => {
     const prev_qty = cart.get(product.id);
@@ -92,11 +107,18 @@ function ShoppingCartPage(props) {
   };
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-  const handleSubmit =()=>{
-    //call create order 
-    handleClose(); 
-    setSubmitted(true); 
-  }
+  const handleSubmit = () => {
+    //call create order
+    //convert back to array format for backend side!
+    var products = Array.from(cart, ([productId, quantity]) => ({
+      productId,
+      quantity,
+    }));
+
+    createOrder(propsClientId, products);
+    handleClose();
+    setSubmitted(true);
+  };
 
   return (
     <Container>
@@ -117,7 +139,11 @@ function ShoppingCartPage(props) {
         <ShoppingCartTotAmount tot={amount} />
       </Row>
       <Row>
-        <ShoppingCartControls handleShow={handleShow} clientId={propsClientId} cart={cart}/>
+        <ShoppingCartControls
+          handleShow={handleShow}
+          clientId={propsClientId}
+          cart={cart}
+        />
       </Row>
 
       <Row>
@@ -125,15 +151,21 @@ function ShoppingCartPage(props) {
           show={show}
           handleClose={handleClose}
           cart={cart}
-          handleSubmit={handleSubmit}          
+          handleSubmit={handleSubmit}
         />
       </Row>
-      {submitted ? <Redirect to={{
-            pathname: '/employee/clients/1',
-            state: { clientId: propsClientId}
-        }}/>:''}
-        {/*REDIRECT TO /clients/propsClientId when "PLACE ORDER is clicked pass props-> cart, propsClientId*/}
-        {/*call createOrder*/}
+      {submitted ? (
+        <Redirect
+          to={{
+            pathname: "/employee/clients/1",
+            state: { clientId: propsClientId },
+          }}
+        />
+      ) : (
+        ""
+      )}
+      {/*REDIRECT TO /clients/propsClientId when "PLACE ORDER is clicked pass props-> cart, propsClientId*/}
+      {/*call createOrder*/}
     </Container>
   );
 }

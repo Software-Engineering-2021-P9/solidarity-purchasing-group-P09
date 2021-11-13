@@ -2,11 +2,14 @@
 
 const { MongoClient } = require("mongodb");
 const { getEmployeeByID, createEmployee } = require("./employee");
+const { createOrder } = require("./order");
+
 const {
   getProductsByIDs,
   findProducts,
   createProductsTextSearchIndexes,
 } = require("./products");
+
 // DAO initialization
 // Only one instance can be open at a time. Subsequent calls has no effect.
 var client;
@@ -43,4 +46,8 @@ exports.findProducts = (searchString, category) =>
 exports.createProductsTextSearchIndexes = () => {
   createProductsTextSearchIndexes(db);
 };
+
 exports.deleteEmployee = (employeeID) => deleteEmployee(db, employeeID);
+
+exports.createOrder = (clientId, products, status, totalPrice) =>
+  createOrder(db, clientId, products, status, totalPrice);

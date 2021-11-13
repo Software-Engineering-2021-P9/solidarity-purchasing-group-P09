@@ -24,6 +24,128 @@ after(() => {
   return mongoUnit.stop();
 });
 
+// Orders API tests
+
+describe("Orders API tests:", () => {
+  beforeEach(() => mongoUnit.load(testData.ordersCollection));
+
+  afterEach(() => mongoUnit.drop());
+
+  describe("POST /orders", () => {
+    it("it should create a new order", (done) => {
+      chai
+        .request(app)
+        .post("/api/orders")
+        .send({
+          clientId: "6187c957b288576ca26f8257",
+          products: [
+            { productId: "6187c957b288576ca26f8258", quantity: 3 },
+            { productId: "6187c957b288576ca26f8259", quantity: 1 },
+            { productId: "6187c957b288576ca26f8250", quantity: 2 },
+          ],
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          expect(res.body).to.be.an("object");
+          expect(res.body.clientId).to.be.equal("6187c957b288576ca26f8257");
+          expect(res.body.products).to.be.an.string;
+          expect(res.body.status).to.be.equal("WAITING");
+          expect(res.body.totalPrice).to.be.equal("6");
+
+          done();
+        });
+    });
+    it("it should give Bad request error when clientId is not mongo db id", (done) => {
+      chai
+        .request(app)
+        .post("/api/orders")
+        .send({
+          clientId: "1",
+          products: [
+            { productId: "6187c957b288576ca26f8258", quantity: 3 },
+            { productId: "6187c957b288576ca26f8259", quantity: 1 },
+            { productId: "6187c957b288576ca26f8250", quantity: 2 },
+          ],
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(400);
+          expect(res.body).to.be.an("object");
+          done();
+        });
+    });
+
+    it("it should give Bad request error when clientId is integer", (done) => {
+      chai
+        .request(app)
+        .post("/api/orders")
+        .send({
+          clientId: 1,
+          products: [{ productId: "6187c957b288576ca26f8258", quantity: 3 }],
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(400);
+          expect(res.body).to.be.an("object");
+          done();
+        });
+    });
+
+    it("it should give Bad request error because object is not correct", (done) => {
+      chai
+        .request(app)
+        .post("/api/orders")
+        .send({
+          clientId: "6187c957b288576ca26f8257",
+          products: [
+            { wrongId: "6187c957b288576ca26f8258", quantity: 3 },
+            { wrongId: "6187c957b288576ca26f8259", quantity: 1 },
+            { wrongId: "6187c957b288576ca26f8250", quantity: 2 },
+          ],
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(400);
+          expect(res.body).to.be.an("object");
+          done();
+        });
+    });
+
+    it("it should give Bad request error because product is integer", (done) => {
+      chai
+        .request(app)
+        .post("/api/orders")
+        .send({
+          clientId: "6187c957b288576ca26f8257",
+          products: [{ productId: 1, quantity: 3 }],
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(400);
+          expect(res.body).to.be.an("object");
+          done();
+        });
+    });
+
+    it("it should give Bad request error because quantity is negative", (done) => {
+      chai
+        .request(app)
+        .post("/api/orders")
+        .send({
+          clientId: "6187c957b288576ca26f8257",
+          products: [{ productId: "6187c957b288576ca26f8258", quantity: -2 }],
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(400);
+          expect(res.body).to.be.an("object");
+          done();
+        });
+    });
+  });
+});
+
 // Employees API tests
 describe("Employees API tests:", () => {
   beforeEach(() => {

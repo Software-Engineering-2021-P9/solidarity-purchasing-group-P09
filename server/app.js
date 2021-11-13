@@ -9,6 +9,7 @@ const {
   checkValidationErrorMiddleware,
 } = require("./handlers/shared_validators");
 var employeeHandlers = require("./handlers/employee");
+var orderHandlers = require("./handlers/order");
 var productHandlers = require("./handlers/product");
 
 const port = process.env.PORT || 3001;
@@ -44,6 +45,16 @@ app.post(
 );
 
 // ----------
+// /orders
+// ----------
+
+app.post(
+  buildAPIPath("/orders"),
+  orderHandlers.createOrderValidatorChain,
+  checkValidationErrorMiddleware,
+  orderHandlers.createOrderHandler
+);
+
 // /products
 // ----------
 app.get(

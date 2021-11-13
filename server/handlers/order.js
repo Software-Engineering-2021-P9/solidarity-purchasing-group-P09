@@ -26,7 +26,7 @@ exports.createOrderHandler = async function (req, res, next) {
 
   var obj = {
     clientId: req.body.clientId.toString(),
-    products: req.body.products,
+    products: JSON.stringify(req.body.products),
     status: "WAITING",
     totalPrice: totalPrice.toString(),
   };

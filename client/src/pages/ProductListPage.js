@@ -10,7 +10,7 @@ import {
 import { employeeNavbarLinks } from "../Routes";
 import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponent";
 import Product from "../services/models/Product";
-import ProductCard from "../ui-components/ProductListpageComponents/ProductCard";
+import ProductCard from "../ui-components/ProductListpageComponents/ProductCardComponent/ProductCard";
 import { RedButton } from "../ui-components/ProductListpageComponents/RedButtonComponent/RedButton";
 import { RedDropdown } from "../ui-components/ProductListpageComponents/RedDropdownComponent/RedDropdown";
 

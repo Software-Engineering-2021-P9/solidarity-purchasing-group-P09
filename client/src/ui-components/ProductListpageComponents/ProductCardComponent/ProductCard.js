@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Container, Card, CardImg, Row, Col } from "react-bootstrap";
-import eggs from "../../assets/eggs.jpg";
-import fruit from "../../assets/fruit.jpg";
-import creams from "../../assets/spreadableCreams.jpg";
-import meat from "../../assets/meat.jpg";
-import milk from "../../assets/milk.jpg";
-import vegetables from "../../assets/vegetables.jpg";
-import Product from "../../services/models/Product";
+import eggs from "../../../assets/eggs.jpg";
+import fruit from "../../../assets/fruit.jpg";
+import creams from "../../../assets/spreadableCreams.jpg";
+import meat from "../../../assets/meat.jpg";
+import milk from "../../../assets/milk.jpg";
+import vegetables from "../../../assets/vegetables.jpg";
+import Product from "../../../services/models/Product";
 
 function ProductCard(props) {
   const [product, setProduct] = useState([]);
@@ -48,14 +48,14 @@ function ProductCard(props) {
   return (
     <Container>
       <Card>
-        <CardImg src={selectImage(props.product.category)} />
+        <CardImg src={selectImage(product.category)} />
         <Card.Body>
           <Card.Title>{product.name}</Card.Title>
           <Row>
             <Col>
-              <Card.Text>
+              <Card.Text className="title">
                 {product.description} {"\n"}
-                Price: 1$
+                Price: 1 € MOCK PRICE
               </Card.Text>
             </Col>
           </Row>

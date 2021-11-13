@@ -1,3 +1,4 @@
+/*
 const { WeekPhase } = require("./WeekPhase");
 const{ dataSplitter } = require("./WeekPhase");
 var cron = require('node-cron');
@@ -133,6 +134,94 @@ class TimeManager {
   console.log(timeManagerObj);
 
   module.exports = timeManagerObj;
+
+*/
+
+const { WeekPhase } = require("./WeekPhase");
+var cron = require('node-cron');
+const { Time } = require("./TimeModel");
+const dayjs = require("dayjs");
+
+//Handle of phase called only when phase is enabled
+
+class TimeManager {
+    constructor(){
+        /*List of class attributes:
+        this.phaseList
+        this.activePhase
+        this.phaseIDOverride
+        this.cronTask
+        */
+        setPhaseList();
+        this.activePhase = getTrueActivePhase();
+        setPhaseOverride(null);
+    }
+
+    setPhaseList(){
+        this.phaseList = [
+            //ID, StartTime, EndTime, Description, Handler
+            new WeekPhase("ID1", new Time("Monday","00","00","00"), new Time("Saturday","00","00","00"), "description bla bla bla", ()=>{console.log("try handle 1");}),
+            new WeekPhase("ID2", new Time("Saturday","00","00","00"), new Time("Monday","00","00","00"), "description bla bla bla", ()=>{console.log("try handle 2");})
+        ];
+    }
+
+    getTrueActivePhase(){
+        let nowjs = dayjs();
+        let now = new Time(nowjs.day(), nowjs.hour(), nowjs.minute(), nowjs.second());
+
+        for(let phase of this.phaseList){
+            if(phase.isActiveDuringData(now)){
+                return phase;
+            }
+        }
+        return undefined;
+    }
+
+    setPhaseOverride(phaseID){
+        //this mean we are setting time to "not virtual"
+        if(phaseID == null){
+            this.phaseIDOverride = null;
+            enableCron();
+            return;
+        }
+        //this mean we are setting time to "virtual"
+        if(phaseID != phaseIDOverride){
+            this.phaseIDOverride = phaseID;
+            disableCron();
+            let handle = this.phaseList.filter(phase.ID == phaseID).handle;
+            handle();
+        }
+    }
+
+    enableCron(){
+        this.cronTask = cron.schedule('* * * * *', ()=> {
+
+            console.log("Checking if new phase...");
+        
+            let phase = getTrueActivePhase();
+            if(phase.ID != this.activePhase.ID){
+                this.activePhase = phase;
+                this.activePhase.handle();
+            }
+        });
+        this.cronTask.start();
+    }
+
+    disableCron(){
+        this.cronTask.stop();
+    }
+
+    getCurrentPhase(){
+        if(this.phaseIDOverride != null)
+            return this.phaseIDOverride.ID;
+        return this.activePhase.ID;
+    }
+}
+
+let timeManagerObj = new TimeManager();
+console.log(timeManagerObj);
+
+module.exports = timeManagerObj;
 
 
 

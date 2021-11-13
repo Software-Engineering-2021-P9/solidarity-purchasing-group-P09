@@ -56,6 +56,65 @@ describe("Orders API tests:", () => {
           done();
         });
     });
+    it("it should give Bad request error when clientId is not mongo db id", (done) => {
+      chai
+        .request(app)
+        .post("/api/orders")
+        .send({
+          clientId: "1",
+          products: [
+            { productId: "6187c957b288576ca26f8258", quantity: 3 },
+            { productId: "6187c957b288576ca26f8259", quantity: 1 },
+            { productId: "6187c957b288576ca26f8250", quantity: 2 },
+          ],
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(400);
+          expect(res.body).to.be.an("object");
+          done();
+        });
+    });
+
+    it("it should give Bad request error when clientId is integer", (done) => {
+      chai
+        .request(app)
+        .post("/api/orders")
+        .send({
+          clientId: "1",
+          products: [
+            { productId: "6187c957b288576ca26f8258", quantity: 3 },
+            { productId: "6187c957b288576ca26f8259", quantity: 1 },
+            { productId: "6187c957b288576ca26f8250", quantity: 2 },
+          ],
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(400);
+          expect(res.body).to.be.an("object");
+          done();
+        });
+    });
+
+    it("it should give Bad request error because object is not correct", (done) => {
+      chai
+        .request(app)
+        .post("/api/orders")
+        .send({
+          clientId: "1",
+          products: [
+            { wrongId: "6187c957b288576ca26f8258", quantity: 3 },
+            { wrongId: "6187c957b288576ca26f8259", quantity: 1 },
+            { wrongId: "6187c957b288576ca26f8250", quantity: 2 },
+          ],
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(400);
+          expect(res.body).to.be.an("object");
+          done();
+        });
+    });
   });
 });
 

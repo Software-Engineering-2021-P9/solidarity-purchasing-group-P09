@@ -4,7 +4,7 @@ class Order {
   constructor(id, clientId, products, status, totalPrice) {
     this.id = id;
     this.clientId = clientId;
-    this.products = products;
+    this.products = [...products];
     this.status = status;
     this.totalPrice = totalPrice;
   }

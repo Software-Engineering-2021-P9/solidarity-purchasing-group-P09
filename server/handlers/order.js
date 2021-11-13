@@ -16,6 +16,8 @@ exports.createOrderValidatorChain = [
 ];
 
 exports.createOrderHandler = async function (req, res, next) {
+  // Insert the new employee
+  var result;
   var totalPrice = 0;
   var productPrice = 1;
   req.body.products.forEach((product) => {
@@ -24,24 +26,26 @@ exports.createOrderHandler = async function (req, res, next) {
 
   var obj = {
     clientId: req.body.clientId.toString(),
-    products: JSON.stringify(req.body.products),
+    products: req.body.products,
     status: "WAITING",
     totalPrice: totalPrice.toString(),
   };
+  try {
+    result = await dao.createOrder(
+      obj.clientId,
+      obj.products,
+      obj.status,
+      obj.totalPrice
+    );
+  } catch (err) {
+    console.error(`CreateOrder() -> couldn't create order: ${err}`);
+    return res.status(500).end();
+  }
 
-  await dao
-    .createOrder(obj.clientId, obj.products, obj.status, obj.totalPrice)
-    .catch((e) => {
-      console.error(`CreateOrder() -> couldn't create order: ${e}`);
-      res.status(500).end();
-    })
-    .then((json) => {
-      if (!json) {
-        console.error(`CreateOrder do not return exactly`);
-        res.status(404).end();
-      }
-
-      let order = Order.fromMongoJSON(obj);
-      res.json(order);
-    });
+  if (!result) {
+    console.error(`CreateOrder() -> couldn't retrieve newly created order`);
+    return res.status(404).end();
+  }
+  let order = Order.fromMongoJSON(obj);
+  res.json(order);
 };

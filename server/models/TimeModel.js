@@ -1,7 +1,7 @@
 class Time{
     constructor(day, hour, min, sec){
         this.day = day;
-        this.dayNumber = convertDayIntoNumber(day);
+        this.dayNumber = this.convertDayIntoNumber(day);
         this.hour = hour;
         this.min = min;
         this.sec = sec;

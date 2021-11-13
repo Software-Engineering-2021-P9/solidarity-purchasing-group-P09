@@ -21,9 +21,9 @@ class WeekPhase {
     let endTimeString = this.endTime.toString();
 
     if(startTimeString < endTimeString){//phase not cross weeks
-      return(dateString>=startTimeString && dateString<=endTimeString)
+      return(dateString>=startTimeString && dateString<endTimeString)
     }else{//phase is cross weeks
-      return (dateString>=startTimeString || dateString<=endTimeString);
+      return (dateString>=startTimeString || dateString<endTimeString);
     }
   }
 }

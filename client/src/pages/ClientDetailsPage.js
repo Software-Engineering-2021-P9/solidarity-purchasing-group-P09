@@ -18,7 +18,10 @@ function ClientDetailsPage(props) {
       {props.location.state != null ? (
         <>
           <Row>
-            <p>Client with id:{props.location.state.clientId} </p>
+            <p>
+              Order is recorded to database!! Client with id:
+              {props.location.state.clientId}{" "}
+            </p>
           </Row>
           <Row>
             <CreateNewOrderButton clientId={props.location.state.clientId} />

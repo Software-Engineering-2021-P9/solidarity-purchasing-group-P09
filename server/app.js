@@ -68,16 +68,6 @@ app.get(
 app.use("/", express.static(path.resolve(__dirname, "../client/build")));
 app.use("/*", express.static(path.resolve(__dirname, "../client/build")));
 
-/*
-process.on("SIGINT", () => {
-  dao.close();
-});
-
-process.on("SIGTERM", () => {
-  dao.close();
-  return;
-});
-*/
 app.listen(port, () => {
   console.log(`Server listening at :${port}`);
 });

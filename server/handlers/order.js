@@ -46,7 +46,7 @@ exports.createOrderHandler = async function (req, res, next) {
     // Try reverting the changes made until now, using a best-effort strategy
     dao.deleteOrder(result.insertedId);
     console.error(
-      `GetOrderByID() -> couldn't retrieve newly created order: ${err}`
+      `CreateOrder() -> couldn't retrieve newly created order: ${err}`
     );
     return res.status(500).end();
   }
@@ -55,7 +55,6 @@ exports.createOrderHandler = async function (req, res, next) {
     console.error(`CreateOrder() -> couldn't retrieve newly created order`);
     return res.status(404).end();
   }
-  console.log(result.products);
 
   return res.json(Order.fromMongoJSON(result));
 };

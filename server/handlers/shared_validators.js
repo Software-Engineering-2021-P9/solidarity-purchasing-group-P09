@@ -1,5 +1,6 @@
 const { ObjectId } = require("bson");
 const { ProductCategory } = require("../models/product");
+
 const { body, param, validationResult, query } = require("express-validator");
 
 exports.checkValidationErrorMiddleware = (req, res, next) => {
@@ -10,20 +11,12 @@ exports.checkValidationErrorMiddleware = (req, res, next) => {
   next();
 };
 
-exports.clientIDPathValidator = body("clientId").isMongoId();
-exports.productsValidator = body("products").isArray();
-exports.productIDPathValidator = body(
-  "products.*.productId",
-  "productId must be a Mongo ID"
-).isMongoId();
-exports.productQtyPathValidator = body(
-  "products.*.quantity",
-  "quantity must be a positive integer"
-)
-  .notEmpty()
-  .isInt({ min: 1, max: 100 });
+
+// shared validators
 
 exports.employeeIDPathValidator = param("employeeID").isMongoId();
+exports.clientIDPathValidator = param("clientID").exists().isMongoId();
+
 exports.emailBodyValidator = body("email")
   .notEmpty()
   .bail()
@@ -47,8 +40,23 @@ exports.passwordBodyValidator = body("password")
   .trim()
   .escape();
 
+
+// client validators
+exports.clientIDBodyValidator = body("clientID").isMongoId();
+
+// employee validators
+exports.employeeIDPathValidator = param("employeeID").isMongoId();
+
+exports.addFundToWalletBodyValidator = body("increaseBy")
+  .notEmpty()
+  .bail()
+  .isFloat({ min: 0 });
+
+
 //products
 
+
+// product validators
 exports.productCategoryValidator = query("category")
   .optional()
   .notEmpty()
@@ -56,6 +64,7 @@ exports.productCategoryValidator = query("category")
   .isString()
   .bail()
   .isIn(Object.values(ProductCategory));
+
 
 exports.searchStringValidator = query("searchString")
   .optional()
@@ -83,3 +92,21 @@ exports.idsValidator = query("ids")
     );
   })
   .escape();
+
+// order validators
+exports.orderProductsBodyValidator = body("products")
+  .exists()
+  .isArray()
+  .bail()
+  .isLength({ min: 1, max: 20 });
+
+exports.orderProductIDsBodyValidator = body("products.*.productID")
+  .exists()
+  .isMongoId();
+
+exports.orderProductQtysBodyValidator = body("products.*.quantity")
+  .exists()
+  .isInt({
+    min: 1,
+    max: 100,
+  });

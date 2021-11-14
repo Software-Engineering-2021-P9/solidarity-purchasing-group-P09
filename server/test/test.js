@@ -51,7 +51,7 @@ describe("Orders API tests:", () => {
           expect(res.body).to.be.an("object");
           expect(res.body.clientID).to.be.equal("6187c957b288576ca26f8257");
           expect(res.body.products).to.be.an.string;
-          expect(res.body.status).to.be.equal("WAITING");
+          expect(res.body.status).to.be.equal("waiting");
           expect(res.body.totalPrice).to.be.equal("6");
 
           done();

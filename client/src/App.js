@@ -12,7 +12,7 @@ function App() {
   return (
     <Router>
       <Container>
-        <Row className='vh-100 justify-content-center align-items-center'>
+        <Row className='vh-100'>
           <Switch>
             {Object.values(routes).map((route, i) => (
               <Route

@@ -1,0 +1,21 @@
+.client-info-list-item {
+  cursor: pointer;
+  border-bottom: #ffd6c2 solid 1px;
+}
+
+.client-info-list-item:hover,
+.client-info-list-item:focus {
+  background-color: #f4bfa7;
+}
+
+.client-info-list-item:active {
+  background-color: #c48566;
+}
+
+.client-info-list-item:focus:not(.focus-visible) {
+  box-shadow: 0 0 0 0.15rem #c48566 !important;
+}
+
+.client-info-list-item-arrow {
+  max-width: 30px;
+}

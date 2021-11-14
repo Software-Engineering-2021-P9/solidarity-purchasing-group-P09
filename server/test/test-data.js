@@ -16,6 +16,19 @@ exports.employeesCollection = {
     },
   ],
 };
+exports.ordersCollection = {
+  orders: [
+    {
+      _id: ObjectID("6187c957b288576ca26f8251"),
+      clientId: "6187c957b288576ca26f8257",
+      products: [
+        { productId: "6187c957b288576ca26f8258", quantity: 3 },
+        { productId: "6187c957b288576ca26f8259", quantity: 1 },
+        { productId: "6187c957b288576ca26f8250", quantity: 2 },
+      ],
+    },
+  ],
+};
 
 
 exports.clientsCollection = {

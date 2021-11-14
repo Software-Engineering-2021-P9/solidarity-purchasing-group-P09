@@ -31,17 +31,17 @@ function ProductListPage(props) {
   //updated only when clicked on search
   const [searcString, setSearchString] = useState();
 
-  async function updateProducts() {
-    try {
-      const fromServer = await findProducts(category, searcString);
-      setProducts(fromServer);
-    } catch (err) {
-      console.error(`findProducts() -> couldn't retrieve products: ${err}`);
-    }
-  }
-
   useEffect(() => {
     //call from props the function for fetching the new products
+    async function updateProducts() {
+      try {
+        const fromServer = await findProducts(category, searcString);
+        setProducts(fromServer);
+      } catch (err) {
+        console.error(`findProducts() -> couldn't retrieve products: ${err}`);
+      }
+    }
+
     updateProducts();
   }, [category, searcString]);
 

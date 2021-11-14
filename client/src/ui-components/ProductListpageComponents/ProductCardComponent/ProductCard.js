@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Container, Card, CardImg, Row, Col } from "react-bootstrap";
 import returnImage from "../../../services/RequestImages";
 

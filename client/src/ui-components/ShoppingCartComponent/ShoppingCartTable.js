@@ -44,7 +44,7 @@ function CartRow(props) {
       });
     };
     getProduct();
-  }, []);
+  }, [props]);
 
   return (
     <tr>

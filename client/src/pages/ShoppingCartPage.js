@@ -50,7 +50,7 @@ function ShoppingCartPage(props) {
     for (let key of cart.keys()) {
       getInitialAmount(key);
     }
-  }, [amount, cart]);
+  }, []);
 
   const [show, setShow] = useState(false);
   const [submitted, setSubmitted] = useState(false);

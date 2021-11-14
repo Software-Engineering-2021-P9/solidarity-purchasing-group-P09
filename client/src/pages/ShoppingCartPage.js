@@ -1,5 +1,5 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Container, Row } from "react-bootstrap";
 import { Redirect } from "react-router-dom";
 
@@ -37,16 +37,22 @@ function ShoppingCartPage(props) {
 
   // Convert array to Map in here for next processes
   const [cart, setCart] = useState(propsMap);
+  const [amount, setAmount] = useState(0);
 
-  var sum = 0;
-  Array.from(cart.entries()).map(async (entry) => {
-    const key = entry[0];
-    //const product = await getProductByID(key);
-    sum += 1;
-    return entry;
-  });
+  useEffect(() => {
+    var sum = 0;
+    const getInitialAmount = (id) => {
+      getProductByID(id).then(function (res) {
+        const prev = amount;
+        sum += res.price;
+        setAmount(sum);
+      });
+    };
+    for (let [key, value] of cart) {
+      getInitialAmount(key);
+    }
+  }, []);
 
-  const [amount, setAmount] = useState(sum);
   const [show, setShow] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 

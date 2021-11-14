@@ -10,6 +10,7 @@ function ShoppingCartTable(props) {
         <tr>
           <th>Item</th>
           <th>Description</th>
+          <th>Packaging</th>
           <th>Price</th>
           <th>Quantity</th>
           <th>Total</th>
@@ -49,6 +50,7 @@ function CartRow(props) {
     <tr>
       <td className="item-cart">{product.name}</td>
       <td>{product.description}</td>
+      <td>{product.packaging}</td>
       <td>
         {product.price}
         {" €"}

@@ -3,16 +3,16 @@ const { Order } = require("../models/order");
 const { validationResult } = require("express-validator");
 const {
   clientIDPathValidator,
-  productIDPathValidator,
-  productQtyPathValidator,
+  orderProductIDsBodyValidator,
+  orderProductQtysBodyValidator,
   productsValidator,
 } = require("./shared_validators");
 
 exports.createOrderValidatorChain = [
   clientIDPathValidator,
   productsValidator,
-  productIDPathValidator,
-  productQtyPathValidator,
+  orderProductIDsBodyValidator,
+  orderProductQtysBodyValidator,
 ];
 
 exports.createOrderHandler = async function (req, res, next) {
@@ -24,18 +24,10 @@ exports.createOrderHandler = async function (req, res, next) {
   var totalPrice = 0;
   var productPrice = 1;
 
-  var isNegativeQuantity = false;
   req.body.products.forEach((product) => {
-    totalPrice = totalPrice + product.quantity * productPrice;
-    if (product.quantity < 0) {
-      isNegativeQuantity = true;
-    }
+    totalPrice += product.quantity * productPrice;
   });
 
-  if (isNegativeQuantity) {
-    console.error(`Negative Quantity is found: ${err}`);
-    return res.status(400).end();
-  }
   var obj = {
     clientId: req.body.clientId.toString(),
     products: req.body.products,

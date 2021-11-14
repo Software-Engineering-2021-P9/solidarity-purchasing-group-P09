@@ -49,5 +49,5 @@ exports.createProductsTextSearchIndexes = () => {
 
 exports.deleteEmployee = (employeeID) => deleteEmployee(db, employeeID);
 
-exports.createOrder = (clientId, products, status, totalPrice) =>
-  createOrder(db, clientId, products, status, totalPrice);
+exports.createOrder = (clientID, products, status, totalPrice) =>
+  createOrder(db, clientID, products, status, totalPrice);

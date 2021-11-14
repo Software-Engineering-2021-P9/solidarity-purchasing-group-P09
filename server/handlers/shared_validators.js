@@ -12,11 +12,11 @@ exports.checkValidationErrorMiddleware = (req, res, next) => {
 
 exports.clientIDPathValidator = body("clientId").isMongoId();
 exports.productsValidator = body("products").isArray();
-exports.productIDPathValidator = body(
+exports.orderProductIDsBodyValidator = body(
   "products.*.productId",
   "productId must be a Mongo ID"
 ).isMongoId();
-exports.productQtyPathValidator = body(
+exports.orderProductQtysBodyValidator = body(
   "products.*.quantity",
   "quantity must be a positive integer"
 )

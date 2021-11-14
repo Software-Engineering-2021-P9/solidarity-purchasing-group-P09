@@ -6,9 +6,9 @@ const orderCollectionName = "orders";
 // Create Order
 // --------------
 
-exports.createOrder = async (db, clientId, products, status, totalPrice) => {
+exports.createOrder = async (db, clientID, products, status, totalPrice) => {
   const newOrder = {
-    clientId: clientId.toString(),
+    clientID: clientID.toString(),
     products: products.toString(),
     status: status.toString(),
     totalPrice: totalPrice.toString(),

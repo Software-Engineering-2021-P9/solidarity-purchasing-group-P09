@@ -332,242 +332,17 @@ describe("Products API tests: ", () => {
   });
 });
 
-
-// Orders API tests
-describe("Orders API tests:", () => {
-  beforeEach(() => {
-    dao.open();
-    mongoUnit.load(testData.ordersCollection);
-
 // Clients API tests
 describe("Clients API tests:", () => {
   beforeEach(() => {
     dao.open();
     mongoUnit.load(testData.clientsCollection);
     dao.createClientsTextSearchIndexes();
-
   });
 
   afterEach(() => {
     mongoUnit.drop();
     dao.close();
-  });
-
-
-  describe("POST /orders", () => {
-    it("it should create a new order", (done) => {
-      chai
-        .request(app)
-        .post("/api/orders")
-        .send({
-          clientID: "6187c957b288576ca26f8257",
-          products: [
-            { productID: "6187c957b288576ca26f8258", quantity: 3 },
-            { productID: "6187c957b288576ca26f8259", quantity: 1 },
-            { productID: "6187c957b288576ca26f8250", quantity: 2 },
-          ],
-        })
-
-  describe("GET /clients/:clientID", () => {
-    it("it should retrieve the client associated to the given ID", (done) => {
-      chai
-        .request(app)
-        .get("/api/clients/6a8fc927bb88c762a26f0000")
-
-        .end((err, res) => {
-          expect(err).to.be.null;
-          expect(res.status).to.be.equal(200);
-          expect(res.body).to.be.an("object");
-
-          expect(res.body.clientID).to.be.equal("6187c957b288576ca26f8257");
-          expect(res.body.products).to.be.an.string;
-          expect(res.body.status).to.be.equal(OrderStatus.WAITING);
-          expect(res.body.totalPrice).to.be.equal(6);
-
-          done();
-        });
-    });
-    it("it should give Bad request error when clientID is not mongo db id", (done) => {
-      chai
-        .request(app)
-        .post("/api/orders")
-        .send({
-          clientID: "1",
-          products: [
-            { productID: "6187c957b288576ca26f8258", quantity: 3 },
-            { productID: "6187c957b288576ca26f8259", quantity: 1 },
-            { productID: "6187c957b288576ca26f8250", quantity: 2 },
-          ],
-        })
-        .end((err, res) => {
-          expect(err).to.be.null;
-          expect(res.status).to.be.equal(400);
-          expect(res.body).to.be.an("object");
-          done();
-        });
-    });
-
-    it("it should give Bad request error when clientID is integer", (done) => {
-      chai
-        .request(app)
-        .post("/api/orders")
-        .send({
-          clientID: 1,
-          products: [{ productID: "6187c957b288576ca26f8258", quantity: 3 }],
-        })
-        .end((err, res) => {
-          expect(err).to.be.null;
-          expect(res.status).to.be.equal(400);
-          expect(res.body).to.be.an("object");
-
-          expect(res.body).to.be.eql({
-            id: "6a8fc927bb88c762a26f0000",
-            email: "client2@test.com",
-            fullName: "Andrea Diprè",
-            phoneNumber: 3205755555,
-            address: "via Andrea Dipre,24 Torino,10538",
-            wallet: 0
-          });
-          done();
-        });
-    });
-
-    it("it should return 404 not found given a non existing ID", (done) => {
-      chai
-        .request(app)
-        .get("/api/clients/6a8fc927bb88c7fff26f0000")
-        .end((err, res) => {
-          expect(err).to.be.null;
-          expect(res.status).to.be.equal(404);
-          done();
-        });
-    });
-
-    it("it must fail when mongo fails", (done) => {
-      dao.close();
-      chai
-        .request(app)
-        .get("/api/clients/6a8fc927bb88c762a26f0000")
-        .end((err, res) => {
-          expect(err).to.be.null;
-          expect(res.status).to.be.equal(500);
-
-          done();
-        });
-    });
-  });
-
-  describe("PATCH /clients/:clientID/wallet", () => {
-
-    it("it must fail when mongo fails", (done) => {
-      dao.close();
-      chai
-        .request(app)
-        .patch("/api/clients/6187c957b288576ca26f8257/wallet")
-        .send({
-          increaseBy: 24.30
-        })
-        .end((err, res) => {
-          expect(err).to.be.null;
-          expect(res.status).to.be.equal(500);
-
-
-          done();
-        });
-    });
-
-
-    it("it should give Bad request error because object is not correct", (done) => {
-      chai
-        .request(app)
-        .post("/api/orders")
-        .send({
-          clientID: "6187c957b288576ca26f8257",
-          products: [
-            { wrongId: "6187c957b288576ca26f8258", quantity: 3 },
-            { wrongId: "6187c957b288576ca26f8259", quantity: 1 },
-            { wrongId: "6187c957b288576ca26f8250", quantity: 2 },
-          ],
-
-    it("it must fail when a wrong clientID is given", (done) => {
-      chai
-        .request(app)
-        .patch("/api/clients/6187c957b288521ca26f8257/wallet")
-        .send({
-          increaseBy: 24.30
-
-        })
-        .end((err, res) => {
-          expect(err).to.be.null;
-          expect(res.status).to.be.equal(400);
-
-          expect(res.body).to.be.an("object");
-
-
-
-          done();
-        });
-    });
-
-
-    it("it should give Bad request error because product is integer", (done) => {
-      chai
-        .request(app)
-        .post("/api/orders")
-        .send({
-          clientID: "6187c957b288576ca26f8257",
-          products: [{ productID: 1, quantity: 3 }],
-
-    it("it must return 400 when a negative float is given as increaseBy", (done) => {
-      chai
-        .request(app)
-        .patch("/api/clients/6187c957b28sfb6ca26f8257/wallet")
-        .send({
-          increaseBy: -2.4
-
-        })
-        .end((err, res) => {
-          expect(err).to.be.null;
-          expect(res.status).to.be.equal(400);
-
-          expect(res.body).to.be.an("object");
-
-
-
-          done();
-        });
-    });
-
-
-    it("it should give Bad request error because quantity is negative", (done) => {
-      chai
-        .request(app)
-        .post("/api/orders")
-        .send({
-          clientID: "6187c957b288576ca26f8257",
-          products: [{ productID: "6187c957b288576ca26f8258", quantity: -2 }],
-        })
-        .end((err, res) => {
-          expect(err).to.be.null;
-          expect(res.status).to.be.equal(400);
-          expect(res.body).to.be.an("object");
-
-    it("it should update the client wallet", (done) => {
-      chai
-        .request(app)
-        .patch("/api/clients/6187c957b288576ca26f8257/wallet")
-        .send({
-          increaseBy: 24.30
-        })
-        .end((err, res) => {
-          expect(err).to.be.null;
-          expect(res.status).to.be.equal(200);
-          expect(res.body).to.be.an("object");
-          expect(res.body.newWalletValue).to.be.equal(79.8);
-
-          done();
-        })
-    });
   });
 
   describe("GET /clients[?searchString=:searchString]", () => {
@@ -592,14 +367,16 @@ describe("Clients API tests:", () => {
           expect(err).to.be.null;
           expect(res.body).to.be.an("array");
           expect(res.body.length).to.be.equal(1);
-          expect(res.body).to.be.eql([{
-            id: "6187c957b288576ca26f8257",
-            email: "client1@test.com",
-            fullName: " Domenico Bini",
-            phoneNumber: 3205708803,
-            address: "via Domenico Bini,26 Torino,10538",
-            wallet: 55.50
-          }])
+          expect(res.body).to.be.eql([
+            {
+              id: "6187c957b288576ca26f8257",
+              email: "client1@test.com",
+              fullName: " Domenico Bini",
+              phoneNumber: 3205708803,
+              address: "via Domenico Bini,26 Torino,10538",
+              wallet: 55.5,
+            },
+          ]);
           expect(res.status).to.be.equal(200);
 
           done();
@@ -629,13 +406,253 @@ describe("Clients API tests:", () => {
           expect(err).to.be.null;
           expect(res.status).to.be.equal(500);
 
+          done();
+        });
+    });
+  });
+
+  describe("GET /clients/:clientID", () => {
+    it("it should retrieve the client associated to the given ID", (done) => {
+      chai
+        .request(app)
+        .get("/api/clients/6a8fc927bb88c762a26f0000")
+
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          expect(res.body).to.be.an("object");
+
+          expect(res.body).to.be.eql({
+            id: "6a8fc927bb88c762a26f0000",
+            email: "client2@test.com",
+            fullName: "Andrea Diprè",
+            phoneNumber: 3205755555,
+            address: "via Andrea Dipre,24 Torino,10538",
+            wallet: 0,
+          });
+
+          done();
+        });
+    });
+
+    it("it should return 404 not found given a non existing ID", (done) => {
+      chai
+        .request(app)
+        .get("/api/clients/6a8fc927bb88c7fff26f0000")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(404);
+          done();
+        });
+    });
+
+    it("it must fail when mongo fails", (done) => {
+      dao.close();
+      chai
+        .request(app)
+        .get("/api/clients/6a8fc927bb88c762a26f0000")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(500);
+
+          done();
+        });
+    });
+  });
+  describe("PATCH /clients/:clientID/wallet", () => {
+    it("it must fail when mongo fails", (done) => {
+      dao.close();
+      chai
+        .request(app)
+        .patch("/api/clients/6187c957b288576ca26f8257/wallet")
+        .send({
+          increaseBy: 24.3,
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(500);
+
+          done();
+        });
+    });
+
+    it("it must fail when a wrong clientID is given", (done) => {
+      chai
+        .request(app)
+        .patch("/api/clients/6187c957b288521ca26f8257/wallet")
+        .send({
+          increaseBy: 24.3,
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(400);
+
+          expect(res.body).to.be.an("object");
+
+          done();
+        });
+    });
+    it("it should update the client wallet", (done) => {
+      chai
+        .request(app)
+        .patch("/api/clients/6187c957b288576ca26f8257/wallet")
+        .send({
+          increaseBy: 24.3,
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          expect(res.body).to.be.an("object");
+          expect(res.body.newWalletValue).to.be.equal(79.8);
+
+          done();
+        });
+    });
+
+    it("it must return 400 when a negative float is given as increaseBy", (done) => {
+      chai
+        .request(app)
+        .patch("/api/clients/6187c957b28sfb6ca26f8257/wallet")
+        .send({
+          increaseBy: -2.4,
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(400);
+
+          expect(res.body).to.be.an("object");
 
           done();
         });
     });
   });
 
-});
+  // Orders API tests
+  describe("Orders API tests:", () => {
+    beforeEach(() => {
+      dao.open();
+      mongoUnit.load(testData.ordersCollection);
+    });
 
-});
+    afterEach(() => {
+      mongoUnit.drop();
+      dao.close();
+    });
 
+    describe("POST /orders", () => {
+      it("it should create a new order", (done) => {
+        chai
+          .request(app)
+          .post("/api/orders")
+          .send({
+            clientID: "6187c957b288576ca26f8257",
+            products: [
+              { productID: "6187c957b288576ca26f8258", quantity: 3 },
+              { productID: "6187c957b288576ca26f8259", quantity: 1 },
+              { productID: "6187c957b288576ca26f8250", quantity: 2 },
+            ],
+          })
+          .end((err, res) => {
+            expect(err).to.be.null;
+            expect(res.status).to.be.equal(200);
+            expect(res.body.clientID).to.be.equal("6187c957b288576ca26f8257");
+            expect(res.body.products).to.be.an.string;
+            expect(res.body.status).to.be.equal(OrderStatus.WAITING);
+            expect(res.body.totalPrice).to.be.equal(6);
+
+            done();
+          });
+      });
+
+      it("it should give Bad request error because quantity is negative", (done) => {
+        chai
+          .request(app)
+          .post("/api/orders")
+          .send({
+            clientID: "6187c957b288576ca26f8257",
+            products: [{ productID: "6187c957b288576ca26f8258", quantity: -2 }],
+          })
+          .end((err, res) => {
+            expect(err).to.be.null;
+            expect(res.status).to.be.equal(400);
+            expect(res.body).to.be.an("object");
+            done();
+          });
+      });
+      it("it should give Bad request error when clientID is not mongo db id", (done) => {
+        chai
+          .request(app)
+          .post("/api/orders")
+          .send({
+            clientID: "1",
+            products: [
+              { productID: "6187c957b288576ca26f8258", quantity: 3 },
+              { productID: "6187c957b288576ca26f8259", quantity: 1 },
+              { productID: "6187c957b288576ca26f8250", quantity: 2 },
+            ],
+          })
+          .end((err, res) => {
+            expect(err).to.be.null;
+            expect(res.status).to.be.equal(400);
+            expect(res.body).to.be.an("object");
+            done();
+          });
+      });
+
+      it("it should give Bad request error when clientID is integer", (done) => {
+        chai
+          .request(app)
+          .post("/api/orders")
+          .send({
+            clientID: 1,
+            products: [{ productID: "6187c957b288576ca26f8258", quantity: 3 }],
+          })
+          .end((err, res) => {
+            expect(err).to.be.null;
+            expect(res.status).to.be.equal(400);
+            expect(res.body).to.be.an("object");
+
+            done();
+          });
+      });
+
+      it("it should give Bad request error when product ID is integer", (done) => {
+        chai
+          .request(app)
+          .post("/api/orders")
+          .send({
+            clientID: 1,
+            products: [{ productID: 1, quantity: 3 }],
+          })
+          .end((err, res) => {
+            expect(err).to.be.null;
+            expect(res.status).to.be.equal(400);
+            expect(res.body).to.be.an("object");
+
+            done();
+          });
+      });
+
+      it("it should give Bad request error because object is not correct", (done) => {
+        chai
+          .request(app)
+          .post("/api/orders")
+          .send({
+            clientID: "6187c957b288576ca26f8257",
+            products: [
+              { wrongId: "6187c957b288576ca26f8258", quantity: 3 },
+              { wrongId: "6187c957b288576ca26f8259", quantity: 1 },
+              { wrongId: "6187c957b288576ca26f8250", quantity: 2 },
+            ],
+          })
+          .end((err, res) => {
+            expect(err).to.be.null;
+            expect(res.status).to.be.equal(400);
+            expect(res.body).to.be.an("object");
+
+            done();
+          });
+      });
+    });
+  });
+});

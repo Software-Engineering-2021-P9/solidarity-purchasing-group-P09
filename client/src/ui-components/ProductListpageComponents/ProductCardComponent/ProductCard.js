@@ -6,11 +6,9 @@ import "./ProductCard.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 function ProductCard(props) {
-  const [product, setProduct] = useState([]);
+  const product = props.product;
 
-  useEffect(() => {
-    setProduct(props.product);
-  }, [props.product]);
+  useEffect(() => {}, [props.product]);
 
   return (
     <Container>
@@ -23,7 +21,9 @@ function ProductCard(props) {
               <Card.Text className="text">
                 {product.description}
                 <br />
-                Price: 1 € MOCK PRICE
+                Packaging: 1Kg MOCK
+                <br />
+                Price: 1 € MOCK
               </Card.Text>
             </Col>
           </Row>

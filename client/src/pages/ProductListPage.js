@@ -31,7 +31,7 @@ function ProductListPage(props) {
   //updated only when clicked on search
   const [searcString, setSearchString] = useState();
 
-  async function updateProducts(category, searcString) {
+  async function updateProducts() {
     try {
       const fromServer = await findProducts(category, searcString);
       setProducts(fromServer);
@@ -42,7 +42,7 @@ function ProductListPage(props) {
 
   useEffect(() => {
     //call from props the function for fetching the new products
-    updateProducts(category, searcString);
+    updateProducts();
   }, [category, searcString]);
 
   const handleOnSearchSubmit = () => {

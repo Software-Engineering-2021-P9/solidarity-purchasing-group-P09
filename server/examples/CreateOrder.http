@@ -2,9 +2,15 @@ POST http://localhost:3001/api/orders HTTP/1.1
 Content-Type: application/json
 
 {
-    "clientId" : "318d971d89d6240eb03742d7",
-   "products": {
-        "718d971d89d6240eb03742d7":3,
-        "298d971d89d6240eb03742d7":4,
-    }
+    "clientID": "318d971d89d6240eb03742d7",
+    "products": [
+        {
+            "productID": "718d971d89d6240eb03742d7",
+            "quantity": 3
+        },
+        {
+            "productID": "298d971d89d6240eb03742d7",
+            "quantity": 4
+        }
+    ]
 }

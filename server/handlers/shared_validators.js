@@ -10,20 +10,7 @@ exports.checkValidationErrorMiddleware = (req, res, next) => {
   next();
 };
 
-exports.clientIDPathValidator = body("clientId").isMongoId();
-exports.productsValidator = body("products").isArray();
-exports.orderProductIDsBodyValidator = body(
-  "products.*.productId",
-  "productId must be a Mongo ID"
-).isMongoId();
-exports.orderProductQtysBodyValidator = body(
-  "products.*.quantity",
-  "quantity must be a positive integer"
-)
-  .notEmpty()
-  .isInt({ min: 1, max: 100 });
-
-exports.employeeIDPathValidator = param("employeeID").isMongoId();
+// shared validators
 exports.emailBodyValidator = body("email")
   .notEmpty()
   .bail()
@@ -47,8 +34,13 @@ exports.passwordBodyValidator = body("password")
   .trim()
   .escape();
 
-//products
+// client validators
+exports.clientIDBodyValidator = body("clientID").isMongoId();
 
+// employee validators
+exports.employeeIDPathValidator = param("employeeID").isMongoId();
+
+// product validators
 exports.productCategoryValidator = query("category")
   .optional()
   .notEmpty()
@@ -83,3 +75,21 @@ exports.idsValidator = query("ids")
     );
   })
   .escape();
+
+// order validators
+exports.orderProductsBodyValidator = body("products")
+  .exists()
+  .isArray()
+  .bail()
+  .isLength({ min: 1, max: 20 });
+
+exports.orderProductIDsBodyValidator = body("products.*.productID")
+  .exists()
+  .isMongoId();
+
+exports.orderProductQtysBodyValidator = body("products.*.quantity")
+  .exists()
+  .isInt({
+    min: 1,
+    max: 100,
+  });

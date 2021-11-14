@@ -10,14 +10,13 @@ class Product {
   }
 
   static fromJSON(json) {
-    const res = new Product(
+    return new Product(
       json[0].id,
       json[0].farmerID,
       json[0].name,
       json[0].description,
       json[0].category
     );
-    return res;
   }
 }
 

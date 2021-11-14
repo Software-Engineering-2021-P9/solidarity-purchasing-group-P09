@@ -10,9 +10,12 @@ import { ShoppingCartTotAmount } from "../ui-components/ShoppingCartComponent/Sh
 import { ShoppingCartControls } from "../ui-components/ShoppingCartComponent/ShoppingCartControls";
 import { ModalOrderConfirmed } from "../ui-components/ShoppingCartComponent/ModalOrderConfirmed";
 
-import { getClientByID, getProductByID } from "../services/ApiClient";
+import {
+  getClientByID,
+  getProductByID,
+  createOrder,
+} from "../services/ApiClient";
 
-import { createOrder } from "../services/ApiClient";
 function ShoppingCartPage(props) {
   // as props, ShoppingCartPage receives
   //      - a Map <ItemID, Qty>
@@ -40,8 +43,6 @@ function ShoppingCartPage(props) {
 
   var sum = 0;
   Array.from(cart.entries()).map((entry) => {
-    //const key = entry[0];
-    //const product = await getProductByID(key);
     sum += 1;
     return entry;
   });

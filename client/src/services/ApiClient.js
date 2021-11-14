@@ -58,21 +58,7 @@ export async function getProductByID(productID) {
 // Client
 // --------
 
-/* TODO: 
-export async function getClientById(clientID) {
-  const response = await fetch("/api/clients/" + clientID);
-
-  switch (response.status) {
-    case 400:
-      throw new Error("Validation error occurred");
-    case 200:
-      let responseBody;
-      responseBody = await response.json();
-      return Client.fromJSON(responseBody);
-    default:
-      throw new Error("An error occurred during client fetch");
-  }
-}*/
+/* MOCK getClientById*/
 
 export function getClientByID(clientID) {
   const json = {

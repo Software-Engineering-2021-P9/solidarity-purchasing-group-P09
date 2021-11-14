@@ -1,8 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./ShoppingCartControlsCSS.css";
 import React, { useState, useEffect } from "react";
-import { Button, Modal } from "react-bootstrap";
-import { Container, Row, Col } from "react-bootstrap";
+import { Button, Modal, Container, Row, Col} from "react-bootstrap";
 
 function ModalOrderConfirmation(props) {
   return (

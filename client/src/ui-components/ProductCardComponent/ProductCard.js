@@ -1,9 +1,9 @@
 import React from "react";
 import { Container, Card, CardImg, Row, Col } from "react-bootstrap";
-import returnImage from "../../../services/ReturnImage";
 
 import "./ProductCard.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import ImageService from "../../services/ImageService/ImageService";
 
 function ProductCard(props) {
   const product = props.product;
@@ -11,7 +11,7 @@ function ProductCard(props) {
   return (
     <Container>
       <Card>
-        <CardImg src={returnImage(product.category)} />
+        <CardImg src={ImageService.returnImageByCategory(product.category)} />
         <Card.Body className="body">
           <Card.Title className="card-title">{product.name}</Card.Title>
           <Row>

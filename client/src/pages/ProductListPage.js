@@ -6,15 +6,16 @@ import {
   Form,
   CardGroup,
   FormControl,
+  InputGroup,
 } from "react-bootstrap";
 import { employeeNavbarLinks } from "../Routes";
 import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponent";
 import Product from "../services/models/Product";
-import ProductCard from "../ui-components/ProductListpageComponents/ProductCardComponent/ProductCard";
-import { RedButton } from "../ui-components/ProductListpageComponents/RedButtonComponent/RedButton";
-import { RedDropdown } from "../ui-components/ProductListpageComponents/RedDropdownComponent/RedDropdown";
+import ProductCard from "../ui-components/ProductCardComponent/ProductCard";
+import { RedButton } from "../ui-components/RedButtonComponent/RedButton";
+import { RedDropdown } from "../ui-components/RedDropdownComponent/RedDropdown";
 
-import "../ui-components/ProductListpageComponents/Title.css";
+import "../ui-components/Title.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import { findProducts } from "../services/ApiClient";
@@ -60,21 +61,18 @@ function ProductListPage(props) {
   };
 
   return (
-    <Container>
-      <Row>
-        <NavbarComponent
-          links={employeeNavbarLinks}
-          showShoppingCart
-          shoppingCartItems="1"
-        />
-      </Row>
-
-      <Row fluid>
-        <Row>
+    <>
+      <NavbarComponent
+        links={employeeNavbarLinks}
+        showShoppingCart
+        shoppingCartItems="1"
+      />
+      <Container fluid>
+        <Row className="align-items-center">
           <h1 className="title">Available products</h1>
         </Row>
         <Row>
-          <Col>
+          <Col xs={{ span: 4 }}>
             <RedDropdown
               items={Object.values(Product.Categories)}
               title={category ? category : "Categories"}
@@ -82,11 +80,10 @@ function ProductListPage(props) {
               activeElement={category}
             />
           </Col>
-
-          <Col>
+          <Col xs={{ span: 4, offset: 4 }}>
             <Form onSubmit={(ev) => handleFormSubmit(ev)}>
               <Row>
-                <Col>
+                <Col xs={{ span: 8 }}>
                   <FormControl
                     type="textarea"
                     placeholder="Filter"
@@ -94,7 +91,7 @@ function ProductListPage(props) {
                     onChange={(ev) => setText(ev.target.value)}
                   />
                 </Col>
-                <Col>
+                <Col xs={{ span: 1, offset: 1 }}>
                   <RedButton text="Search" onClick={handleOnSearchSubmit} />
                 </Col>
               </Row>
@@ -113,8 +110,8 @@ function ProductListPage(props) {
               })
             : {}}
         </Row>
-      </Row>
-    </Container>
+      </Container>
+    </>
   );
 }
 

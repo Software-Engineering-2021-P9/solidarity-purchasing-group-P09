@@ -53,21 +53,21 @@ app.post(
 
 app.get(
   buildAPIPath("/clients/:clientID"),
-  clientHandlers.getclientIDPathValidator,
+  clientHandlers.getClientByIDValidatorChain,
   checkValidationErrorMiddleware,
   clientHandlers.getClientByIDHandler
 );
 
 app.patch(
   buildAPIPath("/clients/:clientID/wallet"),
-  clientHandlers.getAddFundToWalletBodyValidator,
+  clientHandlers.addFundToWalletValidatorChain,
   checkValidationErrorMiddleware,
   clientHandlers.addFundToWalletHandler
 );
 
 app.get(
   buildAPIPath("/clients"),
-  clientHandlers.getSearchStringValidator,
+  clientHandlers.findClientValidatorChain,
   checkValidationErrorMiddleware,
   clientHandlers.findClientsHandler
 );

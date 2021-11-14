@@ -12,7 +12,7 @@ exports.checkValidationErrorMiddleware = (req, res, next) => {
 };
 
 exports.employeeIDPathValidator = param("employeeID").isMongoId();
-exports.clientIDPathValidator = param("clientID").isMongoId();
+exports.clientIDPathValidator = param("clientID").exists().isMongoId();
 exports.emailBodyValidator = body("email")
   .notEmpty()
   .bail()
@@ -39,8 +39,6 @@ exports.passwordBodyValidator = body("password")
 exports.addFundToWalletBodyValidator = body("increaseBy")
   .notEmpty()
   .bail()
-  .trim()
-  .escape()
   .isFloat({ min: 0 });
 
 

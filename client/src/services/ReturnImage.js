@@ -4,7 +4,7 @@ import creams from "../assets/spreadableCreams.jpg";
 import meat from "../assets/meat.jpg";
 import milk from "../assets/milk.jpg";
 import vegetables from "../assets/vegetables.jpg";
-import Product from "../services/models/Product";
+import Product from "./models/Product";
 
 const returnImage = (category) => {
   let toReturn;

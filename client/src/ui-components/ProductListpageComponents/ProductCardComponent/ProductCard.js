@@ -1,14 +1,12 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Container, Card, CardImg, Row, Col } from "react-bootstrap";
-import returnImage from "../../../services/RequestImages";
+import returnImage from "../../../services/ReturnImage";
 
 import "./ProductCard.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 function ProductCard(props) {
   const product = props.product;
-
-  useEffect(() => {}, [props.product]);
 
   return (
     <Container>

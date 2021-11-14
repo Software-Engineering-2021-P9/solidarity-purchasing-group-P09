@@ -43,15 +43,14 @@ function ShoppingCartPage(props) {
     var sum = 0;
     const getInitialAmount = (id) => {
       getProductByID(id).then(function (res) {
-        const prev = amount;
         sum += res.price;
         setAmount(sum);
       });
     };
-    for (let [key, value] of cart) {
+    for (let key of cart.keys()) {
       getInitialAmount(key);
     }
-  }, []);
+  }, [amount, cart]);
 
   const [show, setShow] = useState(false);
   const [submitted, setSubmitted] = useState(false);

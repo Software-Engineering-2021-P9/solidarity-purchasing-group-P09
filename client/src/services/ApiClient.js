@@ -25,9 +25,8 @@ export async function getEmployeeByID(employeeID) {
 // Order
 // --------
 
-export async function createOrder(clientId, products) {
-  var obj = { clientId: clientId, products: products };
-  console.log(obj);
+export async function createOrder(clientID, products) {
+  var obj = { clientID: clientID, products: products };
 
   await fetch("/api/orders", {
     method: "POST",

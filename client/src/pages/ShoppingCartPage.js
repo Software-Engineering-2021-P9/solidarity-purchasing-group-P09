@@ -8,7 +8,7 @@ import { ShoppingCartTitle } from "../ui-components/ShoppingCartComponent/Shoppi
 import { ShoppingCartTable } from "../ui-components/ShoppingCartComponent/ShoppingCartTable";
 import { ShoppingCartTotAmount } from "../ui-components/ShoppingCartComponent/ShoppingCartTotAmount";
 import { ShoppingCartControls } from "../ui-components/ShoppingCartComponent/ShoppingCartControls";
-import { ModalOrderConfirmed } from "../ui-components/ShoppingCartComponent/ModalOrderConfirmed";
+import { ModalOrderConfirmation } from "../ui-components/ShoppingCartComponent/ModalOrderConfirmation";
 
 import {
   getClientByID,
@@ -34,7 +34,7 @@ function ShoppingCartPage(props) {
   propsMap.set("618e96edb16465325a18a8c7", 1);
   propsMap.set("618ed939f67c1e1c11764bbf", 1);
 
-  const propsClientId = "918d971d89d6240eb03742d7";
+  const propsClientId = "618ff47695dcd5ef2aba4281";
 
   /* END MOCK DATA */
 
@@ -63,8 +63,8 @@ function ShoppingCartPage(props) {
   const handleSubmit = () => {
     //call create order
     //convert back to array format for backend side!
-    var products = Array.from(cart, ([productId, quantity]) => ({
-      productId,
+    var products = Array.from(cart, ([productID, quantity]) => ({
+      productID,
       quantity,
     }));
 
@@ -100,9 +100,10 @@ function ShoppingCartPage(props) {
       </Row>
 
       <Row>
-        <ModalOrderConfirmed
+        <ModalOrderConfirmation
           show={show}
           handleClose={handleClose}
+          getProductById={getProductByID}
           cart={cart}
           handleSubmit={handleSubmit}
         />

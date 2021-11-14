@@ -4,7 +4,6 @@ import React from "react";
 import { Button, Modal } from "react-bootstrap";
 
 function ModalOrderConfirmed(props) {
-
   return (
     <Modal show={props.show} onHide={props.handleClose}>
       <Modal.Header closeButton>
@@ -14,7 +13,7 @@ function ModalOrderConfirmed(props) {
         <li>Output map to send to createOrder:</li>
         {Array.from(props.cart.entries()).map((entry) => {
           return (
-            <li>
+            <li key={entry[0]}>
               {entry[0]}
               {"->"}
               {entry[1]}

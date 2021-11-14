@@ -1,6 +1,6 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./ShoppingCartTableCSS.css";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Table } from "react-bootstrap";
 
 function ShoppingCartTable(props) {
@@ -20,10 +20,11 @@ function ShoppingCartTable(props) {
           const [key, val] = entry;
           return (
             <CartRow
-              product={props.getProductById(key)}
+              getProductById={props.getProductById}
+              productId={key}
               quantity={val}
-              key={key}
               updateQuantity={props.updateQuantity}
+              key={key}
             ></CartRow>
           );
         })}
@@ -33,18 +34,29 @@ function ShoppingCartTable(props) {
 }
 
 function CartRow(props) {
+  const [product, setProduct] = useState({});
+
+  useEffect(() => {
+    const getProduct = () => {
+      props.getProductById(props.productId).then(function (res) {
+        setProduct(res);
+      });
+    };
+    getProduct();
+  }, []);
+
   return (
     <tr>
-      <td className="item-cart">{props.product.item}</td>
-      <td>{props.product.description}</td>
+      <td className="item-cart">{product.name}</td>
+      <td>{product.description}</td>
       <td>
-        {props.product.price}
+        {product.price}
         {" €"}
       </td>
       <td>
         <span
           onClick={() => {
-            props.updateQuantity(props.product, -1);
+            props.updateQuantity(product.id, -1);
           }}
         >
           <svg
@@ -62,7 +74,7 @@ function CartRow(props) {
         <span className="mx-2">{props.quantity}</span>
         <span
           onClick={() => {
-            props.updateQuantity(props.product, 1);
+            props.updateQuantity(product.id, 1);
           }}
         >
           <svg
@@ -79,7 +91,7 @@ function CartRow(props) {
         </span>
       </td>
       <td>
-        {(props.product.price * props.quantity).toFixed(2)}
+        {(product.price * props.quantity).toFixed(2)}
         {" €"}
       </td>
     </tr>

@@ -10,6 +10,8 @@ import { ShoppingCartTotAmount } from "../ui-components/ShoppingCartComponent/Sh
 import { ShoppingCartControls } from "../ui-components/ShoppingCartComponent/ShoppingCartControls";
 import { ModalOrderConfirmed } from "../ui-components/ShoppingCartComponent/ModalOrderConfirmed";
 
+import { getClientByID, getProductByID } from "../services/ApiClient";
+
 import { createOrder } from "../services/ApiClient";
 function ShoppingCartPage(props) {
   // as props, ShoppingCartPage receives
@@ -21,76 +23,26 @@ function ShoppingCartPage(props) {
   // it uses function getProductById(id) -> product object
   // it uses function getClientById(id) -> client object
 
-  /* MOCK DATA (Map, client, getProductById) */
+  /* MOCK DATA (Map, client) */
+
   const propsMap = new Map();
-  propsMap.set(1, 1);
-  propsMap.set(2, 1);
-  propsMap.set(3, 1);
-  propsMap.set(4, 1);
-
-  // This is the format for the backend, I am not sure if can we use this format????
-  // Mock data, same with the postman request
-  // If we can get this format from props, then we are totally done!
-
-  const mockProductQuantity = [
-    { productId: "718d971d89d6240eb03742d7", quantity: 1 },
-    { productId: "298d971d89d6240eb03742d7", quantity: 1 },
-    { productId: "318d971d89d6240eb03742d7", quantity: 1 },
-    { productId: "418d971d89d6240eb03742d7", quantity: 1 },
-  ];
+  propsMap.set("618e935fb16465325a18a8bc", 1);
+  propsMap.set("618e969eb16465325a18a8c6", 1);
+  propsMap.set("618e96edb16465325a18a8c7", 1);
+  propsMap.set("618ed939f67c1e1c11764bbf", 1);
 
   const propsClientId = "918d971d89d6240eb03742d7";
-
-  const getProductById = (id) => {
-    const staticProducts = [
-      {
-        id: "718d971d89d6240eb03742d7",
-        item: "Eggplant",
-        description: "Origin: Italy, packaging: 1kg",
-        price: 2.5,
-      },
-      {
-        id: "298d971d89d6240eb03742d7",
-        item: "Zucchini",
-        description: "Origin: Italy, packaging: 1kg",
-        price: 3,
-      },
-      {
-        id: "318d971d89d6240eb03742d7",
-        item: "Eggs",
-        description: "Origin: Italy, packaging: 6 eggs",
-        price: 1.6,
-      },
-      {
-        id: "418d971d89d6240eb03742d7",
-        item: "Milk",
-        description: "Origin: Italy, packaging: 2l",
-        price: 1,
-      },
-    ];
-    return staticProducts.filter((p) => p.id === id)[0];
-  };
-
-  const getClientById = (id) => {
-    return {
-      id: id,
-      name: "John",
-      surname: "Smith",
-    };
-  };
 
   /* END MOCK DATA */
 
   // Convert array to Map in here for next processes
-  const [cart, setCart] = useState(
-    new Map(mockProductQuantity.map((i) => [i.productId, i.quantity]))
-  );
+  const [cart, setCart] = useState(propsMap);
 
   var sum = 0;
-  Array.from(cart.entries()).map((entry) => {
+  Array.from(cart.entries()).map(async (entry) => {
     const key = entry[0];
-    const product = getProductById(key);
-    sum += product.price;
+    //const product = await getProductByID(key);
+    sum += 1;
     return entry;
   });
 
@@ -99,10 +51,10 @@ function ShoppingCartPage(props) {
   const [submitted, setSubmitted] = useState(false);
 
   const updateQuantity = (product, quantity) => {
-    const prev_qty = cart.get(product.id);
+    const prev_qty = cart.get(product);
     if ((quantity < 0 && prev_qty > 0) || quantity > 0) {
-      setCart(new Map(cart.set(product.id, prev_qty + quantity)));
-      setAmount(amount + quantity * product.price);
+      setCart(new Map(cart.set(product, prev_qty + quantity)));
+      setAmount(amount + quantity * 1);
     }
   };
   const handleClose = () => setShow(false);
@@ -126,12 +78,12 @@ function ShoppingCartPage(props) {
         <NavbarComponent />
       </Row>
       <Row>
-        <ShoppingCartTitle client={getClientById(propsClientId)} />
+        <ShoppingCartTitle client={getClientByID(propsClientId)} />
       </Row>
       <Row>
         <ShoppingCartTable
           cart={cart}
-          getProductById={getProductById}
+          getProductById={getProductByID}
           updateQuantity={updateQuantity}
         />
       </Row>

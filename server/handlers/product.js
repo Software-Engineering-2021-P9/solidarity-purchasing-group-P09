@@ -42,6 +42,5 @@ exports.getProductsByIDHandler = async function (req, res, next) {
     );
     return res.status(500).end();
   }
-
   return res.json(products);
 };

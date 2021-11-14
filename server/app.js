@@ -10,6 +10,8 @@ const {
 } = require("./handlers/shared_validators");
 var employeeHandlers = require("./handlers/employee");
 var clientHandlers = require("./handlers/client");
+var productHandlers = require("./handlers/product");
+
 
 const port = process.env.PORT || 3001;
 const buildAPIPath = (apiPath) => "/api" + apiPath;
@@ -44,6 +46,7 @@ app.post(
 );
 
 
+
 // --------
 // /clients
 // --------
@@ -67,6 +70,17 @@ app.get(
   clientHandlers.getSearchStringValidator,
   checkValidationErrorMiddleware,
   clientHandlers.findClientsHandler
+);
+
+
+// ----------
+// /products
+// ----------
+app.get(
+  buildAPIPath("/products"),
+  productHandlers.getProductsByIDValidatorChain,
+  checkValidationErrorMiddleware,
+  productHandlers.getProductsByIDHandler
 );
 
 

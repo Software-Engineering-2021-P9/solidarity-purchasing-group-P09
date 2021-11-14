@@ -1,3 +1,6 @@
+const { ObjectId } = require("bson");
+const { ProductCategory } = require("../models/product");
+
 const { body, param, validationResult, query } = require("express-validator");
 
 exports.checkValidationErrorMiddleware = (req, res, next) => {
@@ -32,12 +35,26 @@ exports.passwordBodyValidator = body("password")
   .isLength({ min: 6 })
   .trim()
   .escape();
+
 exports.addFundToWalletBodyValidator = body("increaseBy")
   .notEmpty()
   .bail()
   .trim()
   .escape()
   .isFloat({ min: 0 });
+
+
+//products
+
+exports.productCategoryValidator = query("category")
+  .optional()
+  .notEmpty()
+  .bail()
+  .isString()
+  .bail()
+  .isIn(Object.values(ProductCategory));
+
+
 exports.searchStringValidator = query("searchString")
   .optional()
   .notEmpty()
@@ -46,4 +63,21 @@ exports.searchStringValidator = query("searchString")
   .bail()
   .isLength({ max: 100 })
   .trim()
+  .escape();
+
+exports.idsValidator = query("ids")
+  .optional()
+  .notEmpty()
+  .bail()
+  .isString()
+  .bail()
+  .isLength({ max: 100 })
+  .trim()
+  .custom((value) => {
+    const splittedIDs = value.split(",");
+    return (
+      splittedIDs.length ==
+      splittedIDs.filter((id) => ObjectId.isValid(id)).length
+    );
+  })
   .escape();

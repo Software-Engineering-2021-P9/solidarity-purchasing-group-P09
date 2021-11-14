@@ -6,7 +6,6 @@ import {
   Form,
   CardGroup,
   FormControl,
-  InputGroup,
 } from "react-bootstrap";
 import { employeeNavbarLinks } from "../Routes";
 import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponent";

@@ -20,26 +20,26 @@ function ClientOrderTableRow(props) {
         modalIsOpen={modalIsOpen}
         setModalIsOpen={setModalIsOpen}
       />
-      <tr>
-        <td className="table-row">{props.order.id}</td>
-        <td className="table-row">{props.order.totalPrice}€</td>
-        <td className="table-row"> {props.order.createdAt}</td>
-        <td className="table-row"> {props.order.location}</td>
+      <tr className='border-bottom'>
+        <td className='table-row'>{props.order.id}</td>
+        <td className='table-row'>{props.order.totalPrice}€</td>
+        <td className='table-row'> {props.order.createdAt}</td>
+        <td className='table-row'> {props.order.location}</td>
         {status === "PREPARED" ? (
-          <td className="table-row-status-prepared">{status}</td>
+          <td className='table-row-status-prepared'>{status}</td>
         ) : (
-          <td className="table-row-status-done">{status}</td>
+          <td className='table-row-status-done'>{status}</td>
         )}
 
         {status === "PREPARED" ? (
           <td>
             <RedButton
-              text="Change Status"
+              text='Change Status'
               onClick={() => setModalIsOpen(true)}
             />
           </td>
         ) : (
-          <td className="table-row"></td>
+          <td className='table-row'></td>
         )}
       </tr>
     </>

@@ -1,6 +1,6 @@
 import { ShoppingCartPage } from "./pages/ShoppingCartPage";
 import { ClientDetailsPage } from "./pages/ClientDetailsPage";
-import { ClientManagementPage } from "./pages/ClientManagementPage";
+import { ClientManagementPage } from "./pages/ClientManagementPage/ClientManagementPage";
 import { ClientSignupPage } from "./pages/ClientSignupPage";
 import { ProductListPage } from "./pages/ProductListPage";
 

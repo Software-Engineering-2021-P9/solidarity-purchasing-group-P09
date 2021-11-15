@@ -14,10 +14,10 @@ function ClientOrders(props) {
   }, []);
 
   return (
-    <div className="container-orders">
-      <h3 className="header-orders">Client Previous Orders</h3>
-      <Table className="table-orders">
-        <thead>
+    <div>
+      <h3 className='header-orders'>Client Previous Orders</h3>
+      <Table borderless className='table-orders'>
+        <thead className='border-bottom'>
           <tr>
             <th>Order Code</th>
             <th>Amount</th>

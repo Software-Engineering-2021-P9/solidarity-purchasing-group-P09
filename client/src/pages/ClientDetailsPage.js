@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import { useHistory, useParams } from "react-router";
 import { employeeNavbarLinks } from "../Routes";
+import { ClientOrders } from "../ui-components/ClientOrdersComponent/ClientOrders";
 
 import {
   Col,
@@ -127,7 +128,9 @@ function ClientDetailsPage(props) {
           <Container>
             <Divider size={2} />
           </Container>
-          {/*TODO:Client orders list goes here*/}
+          <Row>
+            <ClientOrders />
+          </Row>
         </>
       )}
       <ErrorToast

@@ -4,20 +4,31 @@ class Product {
     this.farmerID = farmerID;
     this.name = name;
     this.description = description;
-    this.category = category;
+    if (Object.values(Product.Categories).includes(category))
+      this.category = category;
+    //Mock price
     this.price = 1.0;
     this.packaging = "packaging: 1kg";
   }
 
   static fromJSON(json) {
     return new Product(
-      json[0].id,
-      json[0].farmerID,
-      json[0].name,
-      json[0].description,
-      json[0].category
+      json.id,
+      json.farmerID,
+      json.name,
+      json.description,
+      json.category
     );
   }
+
+  static Categories = {
+    Fruit: "fruit",
+    Vegetables: "vegetables",
+    SpreadableCreams: "spreadable creams",
+    Meat: "meat",
+    Eggs: "eggs",
+    Milk: "milk",
+  };
 }
 
 export default Product;

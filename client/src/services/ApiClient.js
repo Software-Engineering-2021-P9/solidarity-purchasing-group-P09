@@ -71,3 +71,32 @@ export async function getClientByID(clientID) {
   }
 }
 
+// --------
+// products
+// --------
+
+export async function findProducts(category, searchString) {
+  let urlRequest = "/api/products?";
+
+  if (searchString) {
+    urlRequest += "searchString=" + searchString;
+  }
+  if (searchString && category) {
+    urlRequest += "&";
+  }
+  if (category) {
+    urlRequest += "category=" + category;
+  }
+
+  const response = await fetch(urlRequest);
+  switch (response.status) {
+    case 400:
+      throw new Error("Validation error occurred");
+    case 200:
+      let responseBody;
+      responseBody = await response.json(); 
+      return responseBody.map((product) => Product.fromJSON(product));
+    default:
+      throw new Error("An error occurred during product fetch");
+  }
+}

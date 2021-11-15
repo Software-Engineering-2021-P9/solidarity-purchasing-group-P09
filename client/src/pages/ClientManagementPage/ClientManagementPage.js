@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useHistory } from "react-router";
 import {
   employeeClientDetailsRouteName,
+  employeeClientSignupRouteName,
   employeeNavbarLinks,
   routes,
 } from "../../Routes";
@@ -26,6 +27,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./ClientManagementPage.css";
 
 import { findClients } from "../../services/ApiClient";
+import ErrorToast from "../../ui-components/ErrorToast/ErrorToast";
 
 function ClientManagementPage(props) {
   const history = useHistory();
@@ -67,6 +69,7 @@ function ClientManagementPage(props) {
   }
 
   function onCreateClientButtonClick(index) {
+    history.push(routes[employeeClientSignupRouteName].path);
     console.log("new client");
   }
 
@@ -104,16 +107,10 @@ function ClientManagementPage(props) {
           </Button>
         </Container>
       </Container>
-      {requestError && (
-        <ToastContainer position='bottom-start' className='p-3'>
-          <Toast autohide onClose={() => setRequestError("")}>
-            <Toast.Header>
-              <strong>Error</strong>
-            </Toast.Header>
-            <Toast.Body>{requestError}</Toast.Body>
-          </Toast>
-        </ToastContainer>
-      )}
+      <ErrorToast
+        onClose={() => setRequestError("")}
+        errorMessage={requestError}
+      />
     </>
   );
 }

@@ -1,0 +1,13 @@
+.text {
+  color: #68717a !important;
+}
+
+.card-title {
+  color: black !important;
+  font-weight: 600 !important;
+  font-size: x-large !important;
+}
+
+.body {
+  min-height: 170px !important;
+}

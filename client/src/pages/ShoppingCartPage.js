@@ -33,7 +33,6 @@ function ShoppingCartPage(props) {
   propsMap.set("618e969eb16465325a18a8c6", 1);
   propsMap.set("618e96edb16465325a18a8c7", 1);
   propsMap.set("618ed939f67c1e1c11764bbf", 1);
-
   const propsClientID = "618d4ad3736f2caf2d3b3ca5";
 
   /* END MOCK DATA */

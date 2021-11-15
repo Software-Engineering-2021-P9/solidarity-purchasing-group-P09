@@ -20,11 +20,11 @@ exports.ordersCollection = {
   orders: [
     {
       _id: ObjectID("6187c957b288576ca26f8251"),
-      clientID: "6187c957b288576ca26f8257",
+      clientId: "6187c957b288576ca26f8257",
       products: [
-        { productID: "6187c957b288576ca26f8258", quantity: 3 },
-        { productID: "6187c957b288576ca26f8259", quantity: 1 },
-        { productID: "6187c957b288576ca26f8250", quantity: 2 },
+        { productId: "6187c957b288576ca26f8258", quantity: 3 },
+        { productId: "6187c957b288576ca26f8259", quantity: 1 },
+        { productId: "6187c957b288576ca26f8250", quantity: 2 },
       ],
     },
   ],

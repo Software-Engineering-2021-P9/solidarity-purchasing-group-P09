@@ -99,13 +99,7 @@ function ClientDetailsPage(props) {
   return (
     <>
       <NavbarComponent links={employeeNavbarLinks} />
-      {!isInitialized ? (
-        <Container className="pt-5 d-flex justify-content-center">
-          <Spinner variant="dark" animation="border" />
-        </Container>
-      ) : (
-        <>
-          {props.location.state != null && show ? (
+      {props.location.state != null && show ? (
               <Row>
                 <Alert
                   variant="success"
@@ -124,6 +118,12 @@ function ClientDetailsPage(props) {
                 </Alert>
               </Row>
           ) : "" }
+      {!isInitialized ? (
+        <Container className="pt-5 d-flex justify-content-center">
+          <Spinner variant="dark" animation="border" />
+        </Container>
+      ) : (
+        <>
           <Row>
             <h1 className="title">Client Details</h1>
           </Row>

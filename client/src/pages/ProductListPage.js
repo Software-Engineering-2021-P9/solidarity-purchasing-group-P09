@@ -1,12 +1,5 @@
 import { React, useEffect, useState } from "react";
-import {
-  Container,
-  Row,
-  Col,
-  Form,
-  CardGroup,
-  FormControl,
-} from "react-bootstrap";
+import { Row, Col, Form, CardGroup, FormControl } from "react-bootstrap";
 import { employeeNavbarLinks } from "../Routes";
 import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponent";
 import Product from "../services/models/Product";

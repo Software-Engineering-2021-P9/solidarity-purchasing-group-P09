@@ -1,8 +1,18 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { ClientOrderTableRow } from "./ClientOrderTableRow";
 import { Table } from "react-bootstrap";
 import "./ClientOrders.css";
+import { getOrders } from "../../services/ApiClient";
 function ClientOrders(props) {
+  const [orders, setOrders] = useState([]);
+
+  useEffect(() => {
+    // getOrder retrieves mock data!
+    getOrders().then((newO) => {
+      setOrders(newO);
+    });
+  }, []);
+
   return (
     <div className="container-orders">
       <h3 className="header-orders">Client Previous Orders</h3>
@@ -17,7 +27,7 @@ function ClientOrders(props) {
           </tr>
         </thead>
         <tbody>
-          {props.orders.map((order) => (
+          {orders.map((order) => (
             <ClientOrderTableRow key={order.id} order={order} />
           ))}
         </tbody>

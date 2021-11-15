@@ -30,6 +30,7 @@ exports.ordersCollection = {
   ],
 };
 
+
 exports.clientsCollection = {
   clients: [
     {
@@ -38,7 +39,7 @@ exports.clientsCollection = {
       fullName: " Domenico Bini",
       phoneNumber: 3205708803,
       address: "via Domenico Bini,26 Torino,10538",
-      wallet: 55.5,
+      wallet: 55.50
     },
     {
       _id: ObjectID("6a8fc927bb88c762a26f0000"),
@@ -46,10 +47,10 @@ exports.clientsCollection = {
       fullName: "Andrea Diprè",
       phoneNumber: 3205755555,
       address: "via Andrea Dipre,24 Torino,10538",
-      wallet: 0,
-    },
-  ],
-};
+      wallet: 0
+    }
+  ]
+}
 
 exports.productsCollection = {
   products: [
@@ -228,3 +229,4 @@ exports.productsCollectionWithCategoryError = {
     },
   ],
 };
+

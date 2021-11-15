@@ -8,7 +8,7 @@ class Product {
       this.category = category;
 
     //Mock price: random value from 1 to 11
-    this.price = (Math.random() * 10 + 1).toFixed(2);
+    this.price = 1;
   }
 
   static fromJSON(json) {

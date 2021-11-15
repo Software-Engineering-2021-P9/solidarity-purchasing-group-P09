@@ -12,7 +12,7 @@ import { ModalOrderConfirmation } from "../ui-components/ShoppingCartComponent/M
 
 import {
   getClientByID,
-  getProductByID,
+  getProductsByIDs,
   createOrder,
 } from "../services/ApiClient";
 
@@ -23,7 +23,7 @@ function ShoppingCartPage(props) {
   // it mantains as main states
   //      - a cart (Map <ItemID, Qty>)
   //      - the total amount of the current cart
-  // it uses function getProductByID(id) -> product object
+  // it uses function getProductsByIDs(id) -> product object
   // it uses function getClientByID(id) -> client object
   // it uses function createOrder(clientID, cart) -> POST /api/orders
 
@@ -91,7 +91,7 @@ function ShoppingCartPage(props) {
       <Row>
         <ShoppingCartTable
           cart={cart}
-          getProductByID={getProductByID}
+          getProductsByIDs={getProductsByIDs}
           updateQuantity={updateQuantity}
         />
       </Row>
@@ -110,7 +110,7 @@ function ShoppingCartPage(props) {
         <ModalOrderConfirmation
           show={show}
           handleClose={handleClose}
-          getProductByID={getProductByID}
+          getProductsByIDs={getProductsByIDs}
           cart={cart}
           tot={amount}
           handleSubmit={handleSubmit}

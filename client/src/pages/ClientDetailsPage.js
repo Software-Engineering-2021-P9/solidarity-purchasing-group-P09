@@ -106,7 +106,6 @@ function ClientDetailsPage(props) {
       ) : (
         <>
           {props.location.state != null && show ? (
-            <>
               <Row>
                 <Alert
                   variant="success"
@@ -124,10 +123,7 @@ function ClientDetailsPage(props) {
                   Your order was successfully created!
                 </Alert>
               </Row>
-            </>
-          ) : (
-            ""
-          )}
+          ) : "" }
           <Row>
             <h1 className="title">Client Details</h1>
           </Row>

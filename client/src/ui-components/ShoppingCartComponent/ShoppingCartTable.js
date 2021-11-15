@@ -5,6 +5,19 @@ import { Table } from "react-bootstrap";
 import ImageService from "../../services/ImageService/ImageService";
 
 function ShoppingCartTable(props) {
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    const getProducts = () => {
+      const keys = Array.from( props.cart.keys() );
+      props.getProductsByIDs(keys).then(function (res) {
+        console.log(res);
+        setProducts(res);
+      });
+    };
+    getProducts();
+  }, [props]);
+
   return (
     <Table responsive="sm" borderless>
       <thead className="table-heading">
@@ -19,15 +32,13 @@ function ShoppingCartTable(props) {
         </tr>
       </thead>
       <tbody>
-        {Array.from(props.cart.entries()).map((entry) => {
-          const [key, val] = entry;
+        {products.map((item) => {
           return (
             <CartRow
-              getProductByID={props.getProductByID}
-              productID={key}
-              quantity={val}
+              product={item}
+              quantity={props.cart.get(item.id)}
               updateQuantity={props.updateQuantity}
-              key={key}
+              key={item.id}
             ></CartRow>
           );
         })}
@@ -37,33 +48,26 @@ function ShoppingCartTable(props) {
 }
 
 function CartRow(props) {
-  const [product, setProduct] = useState({});
-
-  useEffect(() => {
-    const getProduct = () => {
-      props.getProductByID(props.productID).then(function (res) {
-        setProduct(res);
-      });
-    };
-    getProduct();
-  }, [props]);
-
   return (
     <tr>
       <td>
-      <img alt="" width="100" src={ImageService.returnImageByCategory(product.category)}/>
+        <img
+          alt=""
+          width="100"
+          src={ImageService.returnImageByCategory(props.product.category)}
+        />
       </td>
-      <td className="item-cart">{product.name}</td>
-      <td>{product.description}</td>
-      <td>{product.packaging}</td>
+      <td className="item-cart">{props.product.name}</td>
+      <td>{props.product.description}</td>
+      <td>{props.product.packaging}</td>
       <td>
-        {product.price}
+        {props.product.price}
         {" €"}
       </td>
       <td>
         <span
           onClick={() => {
-            props.updateQuantity(product.id, -1, product.price);
+            props.updateQuantity(props.product.id, -1, props.product.price);
           }}
         >
           <svg
@@ -81,7 +85,7 @@ function CartRow(props) {
         <span className="mx-2">{props.quantity}</span>
         <span
           onClick={() => {
-            props.updateQuantity(product.id, 1, product.price);
+            props.updateQuantity(props.product.id, 1, props.product.price);
           }}
         >
           <svg
@@ -98,7 +102,7 @@ function CartRow(props) {
         </span>
       </td>
       <td>
-        {(product.price * props.quantity).toFixed(2)}
+        {(props.product.price * props.quantity).toFixed(2)}
         {" €"}
       </td>
     </tr>

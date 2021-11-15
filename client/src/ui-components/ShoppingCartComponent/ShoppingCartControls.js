@@ -15,7 +15,7 @@ function ShoppingCartControls(props) {
       >
         <Button className="btn-light mx-3">CONTINUE SHOPPING</Button>
       </Link>
-      <Button className="cart-button" onClick={props.handleShow}>
+      <Button className="btn-primary" onClick={props.handleShow}>
         PLACE ORDER
       </Button>
     </div>

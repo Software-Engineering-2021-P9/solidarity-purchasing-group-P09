@@ -5,7 +5,7 @@ import ClientInfoListItem from "./ClientInfoListItem";
 function ClientInfoList(props) {
   function getEmptyListText() {
     if (props.clientInfoList === null)
-      return "Use the form above to search for a registered client";
+      return "Search for a registered client using the form above.\nClients can be retrieved using one between: email, name, address and phone number.";
     if (props.clientInfoList?.length === 0) return "No client found";
     return "";
   }
@@ -22,7 +22,13 @@ function ClientInfoList(props) {
           <>
             {getEmptyListText() !== "" ? (
               <Row className='justify-content-center pt-3'>
-                {getEmptyListText()}
+                <Col sm='6'>
+                  {getEmptyListText()
+                    .split("\n")
+                    .map((line) => (
+                      <div>{line}</div>
+                    ))}
+                </Col>
               </Row>
             ) : (
               <>

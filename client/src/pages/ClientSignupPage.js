@@ -90,7 +90,7 @@ function ClientForm(props) {
   );
 
   //added
-  const [client, setClient] = useState({ firstName: "", lastName: "",phoneNumber: "", email: " ", address:"", number:"", city:"", postCode:""  });
+  const [client, setClient] = useState({ firstName: "", lastName: "",phoneNumber: "", email: " ", address:"", number:"", city:"", postCode:"" });
         const handleChange = e => {
             const { name, value } = e.target;
             setClient(prevState => ({
@@ -102,10 +102,12 @@ function ClientForm(props) {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+   
    try {
     props.addClient(client);
-    setSuccess(true);
    
+    setSuccess(true);
+    
      }catch(err){
       setError("error");
      }
@@ -187,6 +189,8 @@ if(success){<Redirect to = "/"/>}
               <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
             </Form.Group>
           </Row>
+
+          
           <Row></Row>
 
           <h4>Residential Address</h4>
@@ -255,7 +259,7 @@ if(success){<Redirect to = "/"/>}
 
           <Link to="/">
             <Button className="button1" type="cancel">
-              Reset
+              Cancel
             </Button>
           </Link>
         </Form>
@@ -264,6 +268,5 @@ if(success){<Redirect to = "/"/>}
   );
 }
 export { ClientSignupPage };
-
 
 

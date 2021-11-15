@@ -70,3 +70,45 @@ exports.idsValidator = query("ids")
     );
   })
   .escape();
+
+
+    //Clients
+
+
+    exports.clientIDPathValidator = param("clientID").isMongoId();
+    fullNameBodyValidator = body("fullName")
+    .notEmpty()
+    .bail()
+    .isString()
+    .bail()
+    .isLength({ max: 40 })
+    .trim()
+    .escape();
+    
+    exports.phoneNumberBodyValidator = body("phoneNumber")
+    .notEmpty()
+    .bail()
+    .isString()
+    .isLength({ max: 20 })
+    .trim()
+    .escape();
+     exports.emailBodyValidator = body("email")
+     .notEmpty()
+     .bail()
+     .trim()
+     .escape()
+     .isEmail();
+    exports.addressBodyValidator = body("address")
+    .notEmpty()
+    .isString()
+    .bail()
+    .isLength({ max: 100 })
+    .trim()
+    .escape();
+
+    exports.walletBodyValidator = body("wallet")
+  .notEmpty()
+  .bail()
+  .isLength({ max: 10 })
+  .trim()
+  .escape();

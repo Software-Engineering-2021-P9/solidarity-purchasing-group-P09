@@ -1,0 +1,11 @@
+POST http://localhost:3001/api/clients HTTP/1.1
+Content-Type: application/json
+
+{
+   
+    "fullName": "Ansari Ansari",
+     "phoneNumber": "1236678",
+     "email": "ansari@email.com",
+     "address": "via giacinto,22 Torino, 10127",
+     "wallet": 0.0
+}

@@ -1,4 +1,5 @@
 import Employee from "./models/Employee";
+const url = "http://localhost:3000";
 
 // --------
 // Employee
@@ -25,10 +26,10 @@ async function addClient(client) {
   const response = await fetch(url + "/api/clients", {
     method : 'POST',
     headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({...client, fullName: client.firstname +" "+ client.lastname,
-     address: client.address +", "+ client.number+" "+ client.city+ ", "+client.postCode})
+    body: JSON.stringify({...client, fullName: client.firstName +" "+ client.lastName,
+     address: client.address +", "+ client.number+" "+ client.city+ ", "+client.postCode, wallet: 0})
   });
-  console.log("here");
+  
 
   if(response.OK)
   return null;

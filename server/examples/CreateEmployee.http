@@ -2,7 +2,7 @@ POST http://localhost:3001/api/employees HTTP/1.1
 Content-Type: application/json
 
 {
-    "email":"test@email.com",
-    "password":"Ciaociao1234",
-    "fullName":"Mario Biondi"
+    "email":"ehsannnn@email.com",
+    "password":"Ciaosdf1234",
+    "fullName":"Ehsan Ansari"
 }

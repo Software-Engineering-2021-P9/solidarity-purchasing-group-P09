@@ -2,6 +2,7 @@
 
 const { MongoClient } = require("mongodb");
 const { getEmployeeByID, createEmployee } = require("./employee");
+const { getClientByID, createClient } = require("./client");
 const {
   getProductsByIDs,
   findProducts,
@@ -44,3 +45,10 @@ exports.createProductsTextSearchIndexes = () => {
   createProductsTextSearchIndexes(db);
 };
 exports.deleteEmployee = (employeeID) => deleteEmployee(db, employeeID);
+
+  // --------------
+// CreateClient
+// --------------
+exports.getClientByID = (clientID) => getClientByID(db, clientID);
+exports.createClient = (fullName, phoneNumber, email, address, wallet) => 
+createClient(db, fullName, phoneNumber, email, address, wallet);

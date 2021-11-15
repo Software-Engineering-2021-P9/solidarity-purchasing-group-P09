@@ -6,7 +6,6 @@ function ShoppingCartTitle(props) {
   const [client, setClient] = useState({});
 
   useEffect(() => {
-    console.log(props.propsClientID); 
     const getClient = () => {
       props.getClientByID(props.client).then(function (res) {
         setClient(res);

@@ -44,7 +44,7 @@ function CartRow(props) {
       });
     };
     getProduct();
-  }, [props]);
+  }, [props])
 
   return (
     <tr>
@@ -58,7 +58,7 @@ function CartRow(props) {
       <td>
         <span
           onClick={() => {
-            props.updateQuantity(product.id, -1);
+            props.updateQuantity(product.id, -1, product.price);
           }}
         >
           <svg
@@ -76,7 +76,7 @@ function CartRow(props) {
         <span className="mx-2">{props.quantity}</span>
         <span
           onClick={() => {
-            props.updateQuantity(product.id, 1);
+            props.updateQuantity(product.id, 1, product.price);
           }}
         >
           <svg

@@ -19,12 +19,13 @@ import {
 function ShoppingCartPage(props) {
   // as props, ShoppingCartPage receives
   //      - a Map <ItemID, Qty>
-  //      - the client
-  // it mantains as state
+  //      - the clientID
+  // it mantains as main states
   //      - a cart (Map <ItemID, Qty>)
   //      - the total amount of the current cart
   // it uses function getProductByID(id) -> product object
   // it uses function getClientByID(id) -> client object
+  // it uses function createOrder(clientID, cart) -> POST /api/orders
 
   /* MOCK DATA (Map, client) */
 
@@ -33,16 +34,17 @@ function ShoppingCartPage(props) {
   propsMap.set("618e969eb16465325a18a8c6", 1);
   propsMap.set("618e96edb16465325a18a8c7", 1);
   propsMap.set("618ed939f67c1e1c11764bbf", 1);
+
   const propsClientID = "618d4ad3736f2caf2d3b3ca5";
 
   /* END MOCK DATA */
 
-  // Convert array to Map in here for next processes
   const [cart, setCart] = useState(propsMap);
 
+  /* compute initial total amount */
   var sum = 0;
   Array.from(cart.entries()).map((entry) => {
-    sum += 1;
+    sum += 1.0;   // mock price
     return entry;
   });
 
@@ -50,23 +52,36 @@ function ShoppingCartPage(props) {
   const [show, setShow] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-  const updateQuantity = (product, quantity) => {
+  const updateQuantity = (product, quantity, price) => {
     const prev_qty = cart.get(product);
-    if ((quantity < 0 && prev_qty > 0) || quantity > 0) {
-      setCart(new Map(cart.set(product, prev_qty + quantity)));
-      setAmount(amount + quantity * 1);
+    // remove from cart
+    if (quantity < 0 && prev_qty === 1) {
+      const newMap = new Map();
+      Array.from(cart.entries()).map((entry) => {
+        const [key, val] = entry;
+        if (key === product) return entry;
+        newMap.set(key, val);
+        return entry;
+      });
+      setCart(newMap);
     }
+    // decrease qty which is still > 0 || increase it
+    else if ((quantity < 0 && prev_qty > 1) || quantity > 0) {
+      setCart(new Map(cart.set(product, prev_qty + quantity)));
+    }
+    // update total amount
+    setAmount(amount + quantity * price);
   };
+
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const handleSubmit = () => {
-    //call create order
     //convert back to array format for backend side!
     var products = Array.from(cart, ([productID, quantity]) => ({
       productID,
       quantity,
     }));
-
+    //call create order
     createOrder(propsClientID, products);
     handleClose();
     setSubmitted(true);
@@ -78,7 +93,10 @@ function ShoppingCartPage(props) {
         <NavbarComponent />
       </Row>
       <Row>
-        <ShoppingCartTitle client={propsClientID} getClientByID={getClientByID} />
+        <ShoppingCartTitle
+          client={propsClientID}
+          getClientByID={getClientByID}
+        />
       </Row>
       <Row>
         <ShoppingCartTable
@@ -104,21 +122,19 @@ function ShoppingCartPage(props) {
           handleClose={handleClose}
           getProductByID={getProductByID}
           cart={cart}
+          tot={amount}
           handleSubmit={handleSubmit}
         />
       </Row>
       {submitted ? (
         <Redirect
           to={{
-            pathname: "/employee/clients/"+propsClientID,
-            state: { clientID: propsClientID },
+            pathname: "/employee/clients/" + propsClientID,
           }}
         />
       ) : (
         ""
       )}
-      {/*REDIRECT TO /clients/propsClientID when "PLACE ORDER is clicked pass props-> cart, propsClientID*/}
-      {/*call createOrder*/}
     </Container>
   );
 }

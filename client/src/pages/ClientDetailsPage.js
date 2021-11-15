@@ -1,5 +1,5 @@
-import React from "react";
-import { Container, Row } from "react-bootstrap";
+import React, { useState } from "react";
+import { Container, Row, Alert } from "react-bootstrap";
 import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponent";
 import { CreateNewOrderButton } from "../ui-components/ClientDetailsComponent/CreateNewOrderButton";
 import { employeeNavbarLinks } from "../Routes";
@@ -7,32 +7,25 @@ import { employeeNavbarLinks } from "../Routes";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 function ClientDetailsPage(props) {
+  const [show, setShow] = useState(true);
+
   return (
     <Container>
       <Row>
         <NavbarComponent links={employeeNavbarLinks} />
       </Row>
+      {props.location.state != null && show ? (
+        <>
+          <Row>
+            <Alert variant="success" style={{color: "#635F46", fontWeight:"bold", backgroundColor:"#7465132f", position: "fixed", top:100, width:"auto"}} onClose={() => setShow(false)} dismissible>
+              Your order was successfully created!
+            </Alert>
+          </Row>
+        </>
+      ) : ''}
       <Row>
         <h1>ClientDetailsPage</h1>
       </Row>
-      {/* this part is only for debug pruposes 
-      { props.location.state != null ? (
-        <>
-          <Row>
-            <p>
-              Order is recorded to database!! Client with id:
-              {props.location.state.clientId}{" "}
-            </p>
-          </Row>
-          <Row>
-            <CreateNewOrderButton clientId={props.location.state.clientId} />
-          </Row>
-        </>
-      ) : (
-        <Row>
-          <CreateNewOrderButton />
-      </Row>
-       )} */}
       <Row>
         <CreateNewOrderButton />
       </Row>

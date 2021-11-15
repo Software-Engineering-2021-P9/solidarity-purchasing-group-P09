@@ -1,7 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./ShoppingCartControlsCSS.css";
 import React, { useState, useEffect } from "react";
-import { Button, Modal, Container, Row, Col} from "react-bootstrap";
+import { Button, Modal, Container, Row, Col } from "react-bootstrap";
 
 function ModalOrderConfirmation(props) {
   return (
@@ -17,9 +17,18 @@ function ModalOrderConfirmation(props) {
               getProductByID={props.getProductByID}
               productID={key}
               quantity={val}
+              key={key}
             />
           );
         })}
+        <br />
+        <Row>
+          <Col xs={5}>
+            Total amount: {props.tot.toFixed(2)}
+            {" €"}
+          </Col>
+          <Col></Col>
+        </Row>
       </Container>
       <Modal.Footer>
         <Button onClick={props.handleClose} className="cart-inverse-button">

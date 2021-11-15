@@ -58,7 +58,6 @@ export async function getProductByID(productID) {
 // --------
 
 export async function getClientByID(clientID) {
-  console.log(clientID); 
   const response = await fetch("/api/clients/" + clientID);
   switch (response.status) {
     case 400:

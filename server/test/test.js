@@ -656,3 +656,104 @@ describe("Clients API tests:", () => {
     });
   });
 });
+
+//
+//create client test
+//
+
+describe("Clients API tests:", () => {
+  beforeEach(() => {
+    dao.open();
+    mongoUnit.load(testData.clientsCollection);
+    dao.createClientsTextSearchIndexes();
+  });
+
+  afterEach(() => {
+    mongoUnit.drop();
+    dao.close();
+
+    describe("POST /clients", () => {
+      it("it should create a new client", (done) => {
+        chai
+          .request(app)
+          .post("/api/clients")
+          .send({
+            fullName: "Ehsan Ansari",
+            phoneNumber: "1236678",
+            email: "ansari@email.com",
+            address: "via giacinto,22 Torino, 10127",
+            wallet: 0.0,
+          })
+          .end((err, res) => {
+            expect(err).to.be.null;
+            expect(res.status).to.be.equal(200);
+            expect(res.body).to.be.an("object");
+            expect(res.body.email).to.be.equal("ansari@email.com");
+            expect(res.body.fullName).to.be.equal("Ehsan Ansari");
+  
+            done();
+          });
+      });
+  
+      it("it must fail when an invalid email is passed", (done) => {
+        chai
+          .request(app)
+          .post("/api/clients")
+          .send({
+            fullName: "Ehsan Ansari",
+            phoneNumber: "1236678",
+            email: "nomail",
+            address: "via giacinto,22 Torino, 10127",
+            wallet: 0.0,
+          })
+          .end((err, res) => {
+            expect(err).to.be.null;
+            expect(res.status).to.be.equal(400);
+  
+            done();
+          });
+      });
+  
+  
+      it("it must fail when a fullName too long is passed", (done) => {
+        chai
+          .request(app)
+          .post("/api/clients")
+          .send({
+            fullName: "Ehsan Ansari Mario VerdiMario VerdiMario VerdiMario VerdiMario Verdi",
+            phoneNumber: "1236678",
+            email: "ansari@email.com",
+            address: "via giacinto,22 Torino, 10127",
+            wallet: 0.0,
+            
+          })
+          .end((err, res) => {
+            expect(err).to.be.null;
+            expect(res.status).to.be.equal(400);
+  
+            done();
+          });
+      });
+  
+      it("it must fail when mongo fails", (done) => {
+        dao.close();
+        chai
+          .request(app)
+          .post("/api/clients")
+          .send({
+            fullName: "Ehsan Ansari",
+            phoneNumber: "1236678",
+            email: "ansari@email.com",
+            address: "via giacinto,22 Torino, 10127",
+            wallet: 0.0,
+          })
+          .end((err, res) => {
+            expect(err).to.be.null;
+            expect(res.status).to.be.equal(500);
+  
+            done();
+          });
+      });
+    });
+  });
+});

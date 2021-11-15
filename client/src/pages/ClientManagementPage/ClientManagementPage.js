@@ -70,7 +70,7 @@ function ClientManagementPage(props) {
         <Col md='5'>
           <h1 className='title'>Manage Clients</h1>
         </Col>
-        <Col>
+        <Col className='pt-2'>
           <InputGroup className='my-3'>
             <FormControl
               placeholder='Mario Rossi'

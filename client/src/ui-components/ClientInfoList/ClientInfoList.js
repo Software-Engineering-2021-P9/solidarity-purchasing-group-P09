@@ -28,6 +28,7 @@ function ClientInfoList(props) {
               <>
                 {props.clientInfoList?.map((item, index) => (
                   <ClientInfoListItem
+                    key={"client-info-item-" + index}
                     clientInfo={item}
                     onClick={() => props.onItemClick(index)}
                   />

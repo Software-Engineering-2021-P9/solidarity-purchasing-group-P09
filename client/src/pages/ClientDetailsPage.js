@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 
 import { useHistory, useParams } from "react-router";
 import { employeeNavbarLinks } from "../Routes";
-import { ClientOrders } from "../ui-components/ClientOrdersComponent/ClientOrders";
 
 import {
   Col,
@@ -15,6 +14,7 @@ import {
 import ActionConfirmationModal from "../ui-components/ActionConfirmationModal/ActionConfirmationModal";
 import Button from "../ui-components/Button/Button";
 import ClientDetails from "../ui-components/ClientDetails/ClientDetails";
+import { ClientOrders } from "../ui-components/ClientOrdersComponent/ClientOrders";
 import Divider from "../ui-components/Divider/Divider";
 import ErrorToast from "../ui-components/ErrorToast/ErrorToast";
 import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponent";

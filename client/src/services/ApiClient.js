@@ -6,7 +6,7 @@ import ClientInfo from "./models/ClientInfo";
 // --------
 
 export async function getEmployeeByID(employeeID) {
-  const response = await fetch("/api/employees/" + employeeID);
+  let response = await fetch("/api/employees/" + employeeID);
 
   switch (response.status) {
     case 400:
@@ -24,12 +24,16 @@ export async function getEmployeeByID(employeeID) {
 // ------
 
 export async function findClients(searchString) {
-  const response = await fetch("/api/clients");
-  if (searchString) response += `?searchString=${searchString}`;
+  let path = "/api/clients";
+  if (searchString) path += `?searchString=${searchString}`;
 
+  let response = await fetch(path);
+
+  console.log(response.status);
   switch (response.status) {
     case 200:
       let responseBody = await response.json();
+      console.log(responseBody);
       return responseBody.map((clientJson) => ClientInfo.fromJSON(clientJson));
     case 400:
       throw new Error("Validation error occurred");
@@ -43,7 +47,7 @@ export async function findClients(searchString) {
 }
 
 export async function getClientByID(clientID) {
-  const response = await fetch("/api/clients/" + clientID);
+  let response = await fetch("/api/clients/" + clientID);
 
   switch (response.status) {
     case 200:
@@ -62,7 +66,7 @@ export async function getClientByID(clientID) {
 
 export async function addFundToWallet(clientID, increaseBy) {
   const response = await fetch(`/api/clients/${clientID}/wallet`, {
-    method: "POST",
+    method: "PATCH",
     headers: {
       "Content-Type": "application/json",
     },

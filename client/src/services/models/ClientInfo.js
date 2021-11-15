@@ -5,7 +5,7 @@ class ClientInfo {
     this.password = password;
     this.fullName = fullName;
     this.address = address;
-    this.wallet = wallet;
+    this.wallet = parseFloat(wallet);
   }
 
   static fromJSON(json) {

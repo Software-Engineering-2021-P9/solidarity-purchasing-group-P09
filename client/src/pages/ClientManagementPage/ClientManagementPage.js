@@ -1,4 +1,12 @@
 import React, { useState } from "react";
+
+import { useHistory } from "react-router";
+import {
+  employeeClientDetailsRouteName,
+  employeeNavbarLinks,
+  routes,
+} from "../../Routes";
+
 import {
   Container,
   FormControl,
@@ -8,7 +16,7 @@ import {
   Toast,
   ToastContainer,
 } from "react-bootstrap";
-import { employeeNavbarLinks } from "../../Routes";
+
 import { NavbarComponent } from "../../ui-components/NavbarComponent/NavbarComponent";
 import ClientInfoList from "../../ui-components/ClientInfoList/ClientInfoList";
 import Button from "../../ui-components/Button/Button";
@@ -16,32 +24,25 @@ import Divider from "../../ui-components/Divider/Divider";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./ClientManagementPage.css";
+
 import { findClients } from "../../services/ApiClient";
 
 function ClientManagementPage(props) {
+  const history = useHistory();
   const [searchString, setSearchString] = useState("");
+  const [clientInfoList, setClientInfoList] = useState(null);
   const [isClientInfoListLoading, setIsClientInfoListLoading] = useState(false);
-  const [searchClientError, setSearchClientError] = useState("");
-  const [clientInfoList, setClientInfoList] = useState([
-    {
-      fullName: "Pippo Peppe",
-      address: "Via dei drogati 7",
-      phoneNumber: "12323232323",
-      wallet: 50.0,
-    },
-    {
-      fullName: "Pippe Peppo",
-      address: "Via dei drogati 7",
-      phoneNumber: "12323232323",
-      wallet: 50.0,
-    },
-  ]);
+  const [requestError, setRequestError] = useState("");
 
   function onSearchClientButtonClick() {
+    console.log(searchString);
     setIsClientInfoListLoading(true);
     findClients(searchString)
       .then(setClientInfoList)
-      .catch((err) => setSearchClientError(err.message))
+      .catch((err) => {
+        setRequestError(err.message);
+        setClientInfoList([]);
+      })
       .finally(() => setIsClientInfoListLoading(false));
   }
 
@@ -57,6 +58,12 @@ function ClientManagementPage(props) {
 
   function onClientInfoListItemClick(index) {
     console.log(clientInfoList[index].fullName);
+    history.push(
+      routes[employeeClientDetailsRouteName].path.replace(
+        ":id",
+        clientInfoList[index].id
+      )
+    );
   }
 
   function onCreateClientButtonClick(index) {
@@ -97,13 +104,13 @@ function ClientManagementPage(props) {
           </Button>
         </Container>
       </Container>
-      {searchClientError && (
+      {requestError && (
         <ToastContainer position='bottom-start' className='p-3'>
-          <Toast autohide onClose={() => setSearchClientError("")}>
+          <Toast autohide onClose={() => setRequestError("")}>
             <Toast.Header>
               <strong>Error</strong>
             </Toast.Header>
-            <Toast.Body>{searchClientError}</Toast.Body>
+            <Toast.Body>{requestError}</Toast.Body>
           </Toast>
         </ToastContainer>
       )}

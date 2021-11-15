@@ -1,48 +1,23 @@
 "use strict";
 
-const OrderStatus = {
-  WAITING: "waiting",
-  CONFIRMED: "confirmed",
-  PREPARED: "prepared",
-  DONE: "done",
-};
-
-class OrderProduct {
-  constructor(productID, quantity) {
-    this.productID = productID;
-    this.quantity = quantity;
-  }
-
-  static fromMongoJSON(json) {
-    return new OrderProduct(json.productID, json.quantity);
-  }
-}
-
 class Order {
-  constructor(id, clientID, products, status, totalPrice, createdAt) {
+  constructor(id, clientId, products, status, totalPrice) {
     this.id = id;
-    this.clientID = clientID;
+    this.clientId = clientId;
     this.products = products;
     this.status = status;
     this.totalPrice = totalPrice;
-    this.createdAt = createdAt;
   }
 
   static fromMongoJSON(json) {
-    const orderProducts = [];
-    json.products?.forEach((orderProductJson) =>
-      orderProducts.push(OrderProduct.fromMongoJSON(orderProductJson))
-    );
-
     return new Order(
       json._id,
-      json.clientID,
-      orderProducts,
+      json.clientId,
+      json.products,
       json.status,
-      json.totalPrice,
-      json.createdAt
+      json.totalPrice
     );
   }
 }
 
-module.exports = { Order, OrderProduct, OrderStatus };
+module.exports = { Order };

@@ -12,7 +12,7 @@ function App() {
   return (
     <Router>
       <Container>
-        <Row className="vh-100 justify-content-center align-items-center">
+        <Row className='vh-100 justify-content-center align-items-center'>
           <Switch>
             {Object.values(routes).map((route, i) => (
               <Route
@@ -23,8 +23,9 @@ function App() {
               />
             ))}
 
-            <Route path="/">
-              <Redirect to="/" />
+            <Route path='/'>
+              <Redirect to='/' />
+
             </Route>
           </Switch>
         </Row>

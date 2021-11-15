@@ -1,53 +1,56 @@
-const dayjs = require("dayjs");
 var dao = require("../dao/dao");
-const { Order, OrderStatus } = require("../models/order");
+const { Order } = require("../models/order");
+const { validationResult } = require("express-validator");
 const {
-  clientIDBodyValidator,
-  orderProductIDsBodyValidator,
-  orderProductQtysBodyValidator,
-  orderProductsBodyValidator,
+  clientIDPathValidator,
+  productIDPathValidator,
+  productQtyPathValidator,
+  productsValidator,
 } = require("./shared_validators");
 
 exports.createOrderValidatorChain = [
-  clientIDBodyValidator,
-  orderProductsBodyValidator,
-  orderProductIDsBodyValidator,
-  orderProductQtysBodyValidator,
+  clientIDPathValidator,
+  productsValidator,
+  productIDPathValidator,
+  productQtyPathValidator,
 ];
 
 exports.createOrderHandler = async function (req, res, next) {
-  // productPrice is hardcoded to 1 as a tempoarary solution for now, will be fixed in the next sprints
-  const productPrice = 1;
+  // Insert the new order
 
-  var totalPrice = 0.0;
+  // productPrice is hardcoded to 1 as a tempoarary solution for now, will be fixed in the next sprints
+
+  var result;
+  var totalPrice = 0;
+  var productPrice = 1;
+
+  var isNegativeQuantity = false;
   req.body.products.forEach((product) => {
-    totalPrice += product.quantity * productPrice;
+    totalPrice = totalPrice + product.quantity * productPrice;
+    if (product.quantity < 0) {
+      isNegativeQuantity = true;
+    }
   });
 
-  // Insert the new order
-  var result;
+  if (isNegativeQuantity) {
+    console.error(`Negative Quantity is found: ${err}`);
+    return res.status(400).end();
+  }
+  var obj = {
+    clientId: req.body.clientId.toString(),
+    products: JSON.stringify(req.body.products),
+    status: "WAITING",
+    totalPrice: totalPrice.toString(),
+  };
   try {
     result = await dao.createOrder(
-      req.body.clientID.toString(),
-      req.body.products,
-      OrderStatus.WAITING,
-      totalPrice,
-      dayjs().toISOString()
+      obj.clientId,
+      obj.products,
+      obj.status,
+      obj.totalPrice
     );
   } catch (err) {
     console.error(`CreateOrder() -> couldn't create order: ${err}`);
-    return res.status(500).end();
-  }
-
-  // Fetch the newly created order
-  try {
-    result = await dao.getOrderByID(result.insertedId);
-  } catch (err) {
-    // Try reverting the changes made until now, using a best-effort strategy
-    dao.deleteOrder(result.insertedId);
-    console.error(
-      `CreateOrder() -> couldn't retrieve newly created order: ${err}`
-    );
     return res.status(500).end();
   }
 
@@ -56,5 +59,5 @@ exports.createOrderHandler = async function (req, res, next) {
     return res.status(404).end();
   }
 
-  return res.json(Order.fromMongoJSON(result));
+  res.json(Order.fromMongoJSON(obj));
 };

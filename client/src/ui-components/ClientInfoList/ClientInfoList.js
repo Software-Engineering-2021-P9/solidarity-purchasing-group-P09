@@ -26,7 +26,7 @@ function ClientInfoList(props) {
                   {getEmptyListText()
                     .split("\n")
                     .map((line) => (
-                      <div>{line}</div>
+                      <h6 className='title text-center'>{line}</h6>
                     ))}
                 </Col>
               </Row>

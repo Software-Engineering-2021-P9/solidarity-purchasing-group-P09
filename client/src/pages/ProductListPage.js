@@ -7,7 +7,6 @@ import {
   FormControl,
   Modal,
   Container,
-  Button,
 } from "react-bootstrap";
 import { employeeNavbarLinks } from "../Routes";
 import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponent";
@@ -15,6 +14,7 @@ import Product from "../services/models/Product";
 import ProductCard from "../ui-components/ProductCardComponent/ProductCard";
 import { RedButton } from "../ui-components/RedButtonComponent/RedButton";
 import { RedDropdown } from "../ui-components/RedDropdownComponent/RedDropdown";
+import  Button  from "../ui-components/Button/Button";
 import "../ui-components/ShoppingCartComponent/ShoppingCartControlsCSS.css";
 import "../ui-components/Title.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -122,10 +122,10 @@ function ProductListPage(props) {
           </Row>
         </Container>
         <Modal.Footer>
-          <Button className="cart-inverse-button" onClick={handleClose}>
+          <Button className="btn-light" onClick={handleClose}>
             Close
           </Button>
-          <Button className="cart-button" onClick={() => addItem(modalProduct.id, modalQuantity)}>
+          <Button className="btn-primary" onClick={() => addItem(modalProduct.id, modalQuantity)}>
             Submit
           </Button>
         </Modal.Footer>

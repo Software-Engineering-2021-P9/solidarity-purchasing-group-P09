@@ -1,7 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./ShoppingCartControlsCSS.css";
 import React from "react";
-import { Button } from "react-bootstrap";
+import  Button  from "../Button/Button";
 import { Link } from "react-router-dom";
 
 function ShoppingCartControls(props) {
@@ -10,10 +10,10 @@ function ShoppingCartControls(props) {
       <Link
         to={{
           pathname: "/",
-          state: { shoppingCart: props.cart, clientID:props.clientID },
+          state: { cart: props.cart, clientID:props.clientID },
         }}
       >
-        <Button className="cart-inverse-button">CONTINUE SHOPPING</Button>
+        <Button className="btn-light mx-3">CONTINUE SHOPPING</Button>
       </Link>
       <Button className="cart-button" onClick={props.handleShow}>
         PLACE ORDER

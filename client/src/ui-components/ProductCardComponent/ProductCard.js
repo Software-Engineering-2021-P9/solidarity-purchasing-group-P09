@@ -25,6 +25,8 @@ function ProductCard(props) {
               </Card.Text>
             </Col>
           </Row>
+          </Card.Body>
+          <Card.Footer className="footer">
           {props.creatingOrderMode ? (
             <Row className="d-flex align-items-end">
               <Button className="add-to-cart-button" onClick={()=>props.handleShow(product)}>
@@ -45,7 +47,8 @@ function ProductCard(props) {
           ) : (
             ""
           )}
-        </Card.Body>
+          </Card.Footer>
+        
       </Card>
     </Container>
   );

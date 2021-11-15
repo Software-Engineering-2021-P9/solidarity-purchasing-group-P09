@@ -2,12 +2,14 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./ShoppingCartTableCSS.css";
 import React, { useState, useEffect } from "react";
 import { Table } from "react-bootstrap";
+import ImageService from "../../services/ImageService/ImageService";
 
 function ShoppingCartTable(props) {
   return (
-    <Table responsive="sm">
+    <Table responsive="sm" borderless>
       <thead className="table-heading">
         <tr>
+          <th>Category</th>
           <th>Item</th>
           <th>Description</th>
           <th>Packaging</th>
@@ -44,10 +46,13 @@ function CartRow(props) {
       });
     };
     getProduct();
-  }, [props])
+  }, [props]);
 
   return (
     <tr>
+      <td>
+      <img alt="" width="100" src={ImageService.returnImageByCategory(product.category)}/>
+      </td>
       <td className="item-cart">{product.name}</td>
       <td>{product.description}</td>
       <td>{product.packaging}</td>

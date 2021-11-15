@@ -2,7 +2,11 @@
 
 const { MongoClient } = require("mongodb");
 const { getEmployeeByID, createEmployee } = require("./employee");
-const { createOrder } = require("./order");
+
+const { createOrder, getOrderByID, deleteOrder } = require("./order");
+
+const { getClientByID, addFundToWallet, findClients, createClientsTextSearchIndexes } = require("./client");
+
 
 const {
   getProductsByIDs,
@@ -35,10 +39,13 @@ exports.close = () => {
 };
 
 // Exported database access methods
+// Employee
 exports.getEmployeeByID = (employeeID) => getEmployeeByID(db, employeeID);
 exports.createEmployee = (email, hashedPassword, fullName) =>
   createEmployee(db, email, hashedPassword, fullName);
+exports.deleteEmployee = (employeeID) => deleteEmployee(db, employeeID);
 
+// Product
 exports.getProductsByIDs = (ids) => getProductsByIDs(db, ids);
 exports.findProducts = (searchString, category) =>
   findProducts(db, searchString, category);
@@ -47,7 +54,18 @@ exports.createProductsTextSearchIndexes = () => {
   createProductsTextSearchIndexes(db);
 };
 
-exports.deleteEmployee = (employeeID) => deleteEmployee(db, employeeID);
 
-exports.createOrder = (clientId, products, status, totalPrice) =>
-  createOrder(db, clientId, products, status, totalPrice);
+// Order
+exports.createOrder = (clientID, products, status, totalPrice, createdAt) =>
+  createOrder(db, clientID, products, status, totalPrice, createdAt);
+exports.getOrderByID = (orderID) => getOrderByID(db, orderID);
+exports.deleteOrder = (orderID) => deleteOrder(db, orderID);
+
+exports.deleteEmployee = (employeeID) => deleteEmployee(db, employeeID);
+exports.getClientByID = (clientID) => getClientByID(db, clientID);
+exports.addFundToWallet = (clientID, increaseBy) => addFundToWallet(db, clientID, increaseBy);
+exports.findClients = (searchString) => findClients(db, searchString);
+
+exports.createClientsTextSearchIndexes = () =>
+  createClientsTextSearchIndexes(db);
+

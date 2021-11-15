@@ -2,11 +2,18 @@
 
 const { MongoClient } = require("mongodb");
 const { getEmployeeByID, createEmployee } = require("./employee");
+
+const { createOrder, getOrderByID, deleteOrder } = require("./order");
+
+const { getClientByID, addFundToWallet, findClients, createClientsTextSearchIndexes } = require("./client");
+
+
 const {
   getProductsByIDs,
   findProducts,
   createProductsTextSearchIndexes,
 } = require("./products");
+
 // DAO initialization
 // Only one instance can be open at a time. Subsequent calls has no effect.
 var client;
@@ -32,10 +39,13 @@ exports.close = () => {
 };
 
 // Exported database access methods
+// Employee
 exports.getEmployeeByID = (employeeID) => getEmployeeByID(db, employeeID);
 exports.createEmployee = (email, hashedPassword, fullName) =>
   createEmployee(db, email, hashedPassword, fullName);
+exports.deleteEmployee = (employeeID) => deleteEmployee(db, employeeID);
 
+// Product
 exports.getProductsByIDs = (ids) => getProductsByIDs(db, ids);
 exports.findProducts = (searchString, category) =>
   findProducts(db, searchString, category);
@@ -43,4 +53,19 @@ exports.findProducts = (searchString, category) =>
 exports.createProductsTextSearchIndexes = () => {
   createProductsTextSearchIndexes(db);
 };
+
+
+// Order
+exports.createOrder = (clientID, products, status, totalPrice, createdAt) =>
+  createOrder(db, clientID, products, status, totalPrice, createdAt);
+exports.getOrderByID = (orderID) => getOrderByID(db, orderID);
+exports.deleteOrder = (orderID) => deleteOrder(db, orderID);
+
 exports.deleteEmployee = (employeeID) => deleteEmployee(db, employeeID);
+exports.getClientByID = (clientID) => getClientByID(db, clientID);
+exports.addFundToWallet = (clientID, increaseBy) => addFundToWallet(db, clientID, increaseBy);
+exports.findClients = (searchString) => findClients(db, searchString);
+
+exports.createClientsTextSearchIndexes = () =>
+  createClientsTextSearchIndexes(db);
+

@@ -16,7 +16,6 @@ import ProductCard from "../ui-components/ProductCardComponent/ProductCard";
 import { RedButton } from "../ui-components/RedButtonComponent/RedButton";
 import { RedDropdown } from "../ui-components/RedDropdownComponent/RedDropdown";
 import "../ui-components/ShoppingCartComponent/ShoppingCartControlsCSS.css";
-
 import "../ui-components/Title.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -100,6 +99,7 @@ function ProductListPage(props) {
         showShoppingCart
         shoppingCartItems={cart.size}
         shoppingCart={cart}
+        clientID={props.location.state ? props.location.state.clientID: ''}
       />
 
       <Modal show={show} onHide={handleClose}>

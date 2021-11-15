@@ -13,7 +13,7 @@
 }
 
 .add-to-cart-button{
-  background-color: transparent;
+  background-color: transparent !important;
   color:  #635f46;
   width: auto;
   margin: auto;

@@ -27,11 +27,7 @@ function ShoppingCartPage(props) {
   // it uses function getClientByID(id) -> client object
   // it uses function createOrder(clientID, cart) -> POST /api/orders
 
-  /* MOCK DATA (Map, client) */
-
-  const propsClientID = "618d4ad3736f2caf2d3b3ca5";
-
-  /* END MOCK DATA */
+  const propsClientID = props.location.state? props.location.state.clientID : ''; 
 
   const [cart, setCart] = useState(props.location.state.shoppingCart);
 

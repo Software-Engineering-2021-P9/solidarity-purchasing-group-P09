@@ -1,6 +1,6 @@
 .cart-inverse-button {
-  border: 2px solid black;
-  background-color: whitesmoke;
+  border: 2px solid black ;
+  background-color: whitesmoke !important;
   color: #db9471;
   width: auto;
   margin-left: 1%;
@@ -8,16 +8,16 @@
 }
 .cart-inverse-button:hover {
   border: 2px solid black;
-  background-color: #ece6e2;
-  color: #db9471;
+  background-color: #ece6e2 !important;
+  color: #db9471 !important;
   width: auto;
   margin-left: 1%;
   border-color: #db9471;
 }
 .cart-inverse-button:focus {
   border: 2px solid black;
-  background-color: #ece6e2;
-  color: #db9471;
+  background-color: #ece6e2 !important;
+  color: #db9471 !important;
   width: auto;
   margin-left: 1%;
   border-color: #db9471;
@@ -30,15 +30,15 @@
 }
 .cart-button:hover {
   border: 2px solid black;
-  background-color: #d88054;
+  background-color: #d88054 !important;
   width: auto;
-  border-color: #db9471;
+  border-color: #db9471 !important;
 }
 .cart-button:focus {
   border: 2px solid black;
-  background-color: #d88054;
+  background-color: #d88054 !important;
   width: auto;
-  border-color: #db9471;
+  border-color: #db9471 ; 
 }
 .modal-title {
   color: #635f46 !important;

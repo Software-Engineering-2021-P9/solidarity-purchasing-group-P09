@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 
 function CreateNewOrderButton(props) {
   return (
-    <Link to={{ pathname: "/", state: { clientId: props.clientId, shoppingCart: new Map()} }}>
+    <Link to={{ pathname: "/", state: { clientID: props.clientID, shoppingCart: new Map()} }}>
       <Button className="cart-button">CREATE NEW ORDER</Button>
     </Link>
   );

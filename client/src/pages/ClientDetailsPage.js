@@ -20,6 +20,13 @@ function ClientDetailsPage(props) {
       ],
       status: "WAITING",
       totalPrice: 31,
+      createdAt:
+        new Date().getUTCMonth() +
+        1 +
+        "-" +
+        new Date().getUTCDate() +
+        "-" +
+        new Date().getUTCFullYear(),
     },
 
     {
@@ -33,6 +40,13 @@ function ClientDetailsPage(props) {
       ],
       status: "COMPLETED",
       totalPrice: 14,
+      createdAt:
+        new Date().getUTCMonth() +
+        1 +
+        "-" +
+        new Date().getUTCDate() +
+        "-" +
+        new Date().getUTCFullYear(),
     },
 
     {
@@ -41,6 +55,13 @@ function ClientDetailsPage(props) {
       products: [{ productId: "718d971d89d6240eb03742d7", quantity: 3 }],
       status: "WAITING",
       totalPrice: 7,
+      createdAt:
+        new Date().getUTCMonth() +
+        1 +
+        "-" +
+        new Date().getUTCDate() +
+        "-" +
+        new Date().getUTCFullYear(),
     },
   ];
   return (

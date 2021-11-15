@@ -5,11 +5,12 @@ function ClientOrders(props) {
   return (
     <div style={{ marginTop: "80px" }}>
       <h3>Client Previous Orders</h3>
-      <Table striped bordered>
+      <Table striped bordered style={{ marginTop: "50px" }}>
         <thead>
           <tr>
             <th>Order Code</th>
             <th>Amount</th>
+            <th>Date</th>
             <th>Status</th>
           </tr>
         </thead>

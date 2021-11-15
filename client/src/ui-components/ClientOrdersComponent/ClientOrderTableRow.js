@@ -13,8 +13,9 @@ function ClientOrderTableRow(props) {
 
   return (
     <tr>
-      <td style={{ width: "300px" }}>{props.order.id}</td>
-      <td style={{ width: "300px" }}>{props.order.totalPrice}€</td>
+      <td style={{ width: "200px" }}>{props.order.id}</td>
+      <td style={{ width: "200px" }}>{props.order.totalPrice}€</td>
+      <td style={{ width: "200px" }}> {props.order.createdAt}</td>
       {status === "WAITING" ? (
         <td style={{ width: "300px", color: "#FF9E0A" }}>{status}</td>
       ) : (

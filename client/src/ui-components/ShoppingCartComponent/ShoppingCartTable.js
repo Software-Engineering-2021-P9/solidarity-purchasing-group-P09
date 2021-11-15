@@ -21,8 +21,8 @@ function ShoppingCartTable(props) {
           const [key, val] = entry;
           return (
             <CartRow
-              getProductById={props.getProductById}
-              productId={key}
+              getProductByID={props.getProductByID}
+              productID={key}
               quantity={val}
               updateQuantity={props.updateQuantity}
               key={key}
@@ -39,7 +39,7 @@ function CartRow(props) {
 
   useEffect(() => {
     const getProduct = () => {
-      props.getProductById(props.productId).then(function (res) {
+      props.getProductByID(props.productID).then(function (res) {
         setProduct(res);
       });
     };

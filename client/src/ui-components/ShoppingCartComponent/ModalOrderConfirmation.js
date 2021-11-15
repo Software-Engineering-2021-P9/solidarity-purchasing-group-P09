@@ -14,8 +14,8 @@ function ModalOrderConfirmation(props) {
           const [key, val] = entry;
           return (
             <OrderRecapRow
-              getProductById={props.getProductById}
-              productId={key}
+              getProductByID={props.getProductByID}
+              productID={key}
               quantity={val}
             />
           );
@@ -37,7 +37,7 @@ function OrderRecapRow(props) {
   const [product, setProduct] = useState({});
   useEffect(() => {
     const getProduct = () => {
-      props.getProductById(props.productId).then(function (res) {
+      props.getProductByID(props.productID).then(function (res) {
         setProduct(res);
       });
     };

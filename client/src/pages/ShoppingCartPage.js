@@ -23,8 +23,8 @@ function ShoppingCartPage(props) {
   // it mantains as state
   //      - a cart (Map <ItemID, Qty>)
   //      - the total amount of the current cart
-  // it uses function getProductById(id) -> product object
-  // it uses function getClientById(id) -> client object
+  // it uses function getProductByID(id) -> product object
+  // it uses function getClientByID(id) -> client object
 
   /* MOCK DATA (Map, client) */
 
@@ -34,7 +34,7 @@ function ShoppingCartPage(props) {
   propsMap.set("618e96edb16465325a18a8c7", 1);
   propsMap.set("618ed939f67c1e1c11764bbf", 1);
 
-  const propsClientId = "618ff47695dcd5ef2aba4281";
+  const propsClientID = "618d4ad3736f2caf2d3b3ca5";
 
   /* END MOCK DATA */
 
@@ -68,7 +68,7 @@ function ShoppingCartPage(props) {
       quantity,
     }));
 
-    createOrder(propsClientId, products);
+    createOrder(propsClientID, products);
     handleClose();
     setSubmitted(true);
   };
@@ -79,12 +79,12 @@ function ShoppingCartPage(props) {
         <NavbarComponent />
       </Row>
       <Row>
-        <ShoppingCartTitle client={getClientByID(propsClientId)} />
+        <ShoppingCartTitle client={propsClientID} getClientByID={getClientByID} />
       </Row>
       <Row>
         <ShoppingCartTable
           cart={cart}
-          getProductById={getProductByID}
+          getProductByID={getProductByID}
           updateQuantity={updateQuantity}
         />
       </Row>
@@ -94,7 +94,7 @@ function ShoppingCartPage(props) {
       <Row>
         <ShoppingCartControls
           handleShow={handleShow}
-          clientId={propsClientId}
+          clientID={propsClientID}
           cart={cart}
         />
       </Row>
@@ -103,7 +103,7 @@ function ShoppingCartPage(props) {
         <ModalOrderConfirmation
           show={show}
           handleClose={handleClose}
-          getProductById={getProductByID}
+          getProductByID={getProductByID}
           cart={cart}
           handleSubmit={handleSubmit}
         />
@@ -111,14 +111,14 @@ function ShoppingCartPage(props) {
       {submitted ? (
         <Redirect
           to={{
-            pathname: "/employee/clients/1",
-            state: { clientId: propsClientId },
+            pathname: "/employee/clients/"+propsClientID,
+            state: { clientID: propsClientID },
           }}
         />
       ) : (
         ""
       )}
-      {/*REDIRECT TO /clients/propsClientId when "PLACE ORDER is clicked pass props-> cart, propsClientId*/}
+      {/*REDIRECT TO /clients/propsClientID when "PLACE ORDER is clicked pass props-> cart, propsClientID*/}
       {/*call createOrder*/}
     </Container>
   );

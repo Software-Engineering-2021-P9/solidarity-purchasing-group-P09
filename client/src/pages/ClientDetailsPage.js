@@ -95,41 +95,41 @@ function ClientDetailsPage(props) {
 
   return (
     <>
-      <Container>
-        <NavbarComponent links={employeeNavbarLinks} />
-        {!isInitialized ? (
-          <Container className='pt-5 d-flex justify-content-center'>
-            <Spinner variant='dark' animation='border' />
-          </Container>
-        ) : (
-          <>
-            <Row>
-              <h1 className='title'>Client Details</h1>
-            </Row>
-            <Row className='justify-content-around pt-2'>
-              <Col md='5' className='ms-5'>
-                <ClientDetails clientInfo={clientInfo} />
-              </Col>
-              <Col md='5'>
-                <InputGroup className='mb-3 pt-4'>
-                  <FormControl
-                    type='number'
-                    placeholder='50€'
-                    value={fundsToAddAmount}
-                    onChange={onFundsToAddAmountChange}
-                    required
-                  />
-                  <Button onClick={onAddFundsToWalletButtonClick}>
-                    Add funds
-                  </Button>
-                </InputGroup>
-              </Col>
-            </Row>
+      <NavbarComponent links={employeeNavbarLinks} />
+      {!isInitialized ? (
+        <Container className='pt-5 d-flex justify-content-center'>
+          <Spinner variant='dark' animation='border' />
+        </Container>
+      ) : (
+        <>
+          <Row>
+            <h1 className='title'>Client Details</h1>
+          </Row>
+          <Row className='justify-content-around pt-2'>
+            <Col md='5' className='ms-5'>
+              <ClientDetails clientInfo={clientInfo} />
+            </Col>
+            <Col md='5'>
+              <InputGroup className='mb-3 pt-4'>
+                <FormControl
+                  type='number'
+                  placeholder='50€'
+                  value={fundsToAddAmount}
+                  onChange={onFundsToAddAmountChange}
+                  required
+                />
+                <Button onClick={onAddFundsToWalletButtonClick}>
+                  Add funds
+                </Button>
+              </InputGroup>
+            </Col>
+          </Row>
+          <Container>
             <Divider size={2} />
-            {/*TODO:Client orders list goes here*/}
-          </>
-        )}
-      </Container>
+          </Container>
+          {/*TODO:Client orders list goes here*/}
+        </>
+      )}
       <ErrorToast
         errorMessage={requestError}
         onClose={() => setRequestError("")}

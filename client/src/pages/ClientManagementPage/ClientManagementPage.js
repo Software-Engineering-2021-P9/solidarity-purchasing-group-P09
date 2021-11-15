@@ -65,37 +65,37 @@ function ClientManagementPage(props) {
 
   return (
     <>
+      <NavbarComponent links={employeeNavbarLinks} />
+      <Row>
+        <Col md='5'>
+          <h1 className='title'>Manage Clients</h1>
+        </Col>
+        <Col>
+          <InputGroup className='my-3'>
+            <FormControl
+              placeholder='Mario Rossi'
+              value={searchString}
+              onChange={onSearchStringChange}
+            />
+            <Button onClick={onSearchClientButtonClick}>Search</Button>
+          </InputGroup>
+        </Col>
+      </Row>
       <Container>
-        <NavbarComponent links={employeeNavbarLinks} />
-        <Row>
-          <Col md='5'>
-            <h1 className='title'>Manage Clients</h1>
-          </Col>
-          <Col>
-            <InputGroup className='my-3'>
-              <FormControl
-                placeholder='Mario Rossi'
-                value={searchString}
-                onChange={onSearchStringChange}
-              />
-              <Button onClick={onSearchClientButtonClick}>Search</Button>
-            </InputGroup>
-          </Col>
-        </Row>
         <Divider size={2} />
-        <Row>
-          <ClientInfoList
-            isLoading={isClientInfoListLoading}
-            clientInfoList={clientInfoList}
-            onItemClick={onClientInfoListItemClick}
-          />
-        </Row>
-        <Container className='client-management-page-bottom-space' />
-        <Container className='d-flex position-fixed bottom-0 justify-content-end mb-4 '>
-          <Button className='p-4' onClick={onCreateClientButtonClick}>
-            Add a new client
-          </Button>
-        </Container>
+      </Container>
+      <Row>
+        <ClientInfoList
+          isLoading={isClientInfoListLoading}
+          clientInfoList={clientInfoList}
+          onItemClick={onClientInfoListItemClick}
+        />
+      </Row>
+      <Container className='client-management-page-bottom-space' />
+      <Container className='d-flex position-fixed bottom-0 justify-content-end mb-4 '>
+        <Button className='p-4' onClick={onCreateClientButtonClick}>
+          Add a new client
+        </Button>
       </Container>
       <ErrorToast
         onClose={() => setRequestError("")}

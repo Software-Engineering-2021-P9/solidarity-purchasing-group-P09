@@ -11,8 +11,8 @@ import { routes } from "./Routes";
 function App() {
   return (
     <Router>
-      <Container>
-        <Row className='vh-100'>
+      <Container fluid>
+        <Row className='justify-content-center align-items-center'>
           <Switch>
             {Object.values(routes).map((route, i) => (
               <Route

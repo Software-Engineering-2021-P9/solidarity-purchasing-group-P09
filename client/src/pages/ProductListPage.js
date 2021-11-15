@@ -15,6 +15,7 @@ import Product from "../services/models/Product";
 import ProductCard from "../ui-components/ProductCardComponent/ProductCard";
 import { RedButton } from "../ui-components/RedButtonComponent/RedButton";
 import { RedDropdown } from "../ui-components/RedDropdownComponent/RedDropdown";
+import "../ui-components/ShoppingCartComponent/ShoppingCartControlsCSS.css";
 
 import "../ui-components/Title.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -121,10 +122,10 @@ function ProductListPage(props) {
           </Row>
         </Container>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
+          <Button className="cart-inverse-button" onClick={handleClose}>
             Close
           </Button>
-          <Button variant="primary" onClick={() => addItem(modalProduct.id, modalQuantity)}>
+          <Button className="cart-button" onClick={() => addItem(modalProduct.id, modalQuantity)}>
             Submit
           </Button>
         </Modal.Footer>

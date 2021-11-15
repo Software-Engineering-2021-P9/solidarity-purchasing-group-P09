@@ -30,11 +30,9 @@ export async function findClients(searchString) {
 
   let response = await fetch(path);
 
-  console.log(response.status);
   switch (response.status) {
     case 200:
       let responseBody = await response.json();
-      console.log(responseBody);
       return responseBody.map((clientJson) => ClientInfo.fromJSON(clientJson));
     case 400:
       throw new Error("Validation error occurred");

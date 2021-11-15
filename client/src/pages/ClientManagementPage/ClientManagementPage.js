@@ -37,7 +37,6 @@ function ClientManagementPage(props) {
   const [requestError, setRequestError] = useState("");
 
   function onSearchClientButtonClick() {
-    console.log(searchString);
     setIsClientInfoListLoading(true);
     findClients(searchString)
       .then(setClientInfoList)
@@ -59,7 +58,6 @@ function ClientManagementPage(props) {
   }
 
   function onClientInfoListItemClick(index) {
-    console.log(clientInfoList[index].fullName);
     history.push(
       routes[employeeClientDetailsRouteName].path.replace(
         ":id",
@@ -70,7 +68,6 @@ function ClientManagementPage(props) {
 
   function onCreateClientButtonClick(index) {
     history.push(routes[employeeClientSignupRouteName].path);
-    console.log("new client");
   }
 
   return (

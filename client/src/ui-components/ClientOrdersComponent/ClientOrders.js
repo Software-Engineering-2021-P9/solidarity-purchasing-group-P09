@@ -1,16 +1,18 @@
 import React from "react";
 import { ClientOrderTableRow } from "./ClientOrderTableRow";
 import { Table } from "react-bootstrap";
+import "./ClientOrders.css";
 function ClientOrders(props) {
   return (
-    <div style={{ marginTop: "80px" }}>
-      <h3>Client Previous Orders</h3>
-      <Table striped bordered style={{ marginTop: "50px" }}>
+    <div className="container-orders">
+      <h3 className="header-orders">Client Previous Orders</h3>
+      <Table className="table-orders">
         <thead>
           <tr>
             <th>Order Code</th>
             <th>Amount</th>
             <th>Date</th>
+            <th>Pick up location</th>
             <th>Status</th>
           </tr>
         </thead>

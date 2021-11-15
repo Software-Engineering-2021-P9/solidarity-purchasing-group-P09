@@ -1,3 +1,18 @@
 tr {
   text-align: center !important;
 }
+
+.table-row {
+  width: 200px;
+  height: 50px;
+}
+.table-row-status-prepared {
+  width: 200px;
+  height: 50px;
+  color: #ff9e0a !important;
+}
+.table-row-status-done {
+  width: 200px;
+  height: 50px;
+  color: green !important;
+}

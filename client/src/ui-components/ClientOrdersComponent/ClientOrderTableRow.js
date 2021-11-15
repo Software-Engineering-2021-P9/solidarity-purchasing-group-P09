@@ -1,32 +1,46 @@
 import React, { useState } from "react";
+import { PopUpForCompleteOrder } from "./PopUpForCompleteOrder";
 import "./ClientOrderTableRow.css";
+
 function ClientOrderTableRow(props) {
   const [status, setStatus] = useState(props.order.status);
-
+  const [modalIsOpen, setModalIsOpen] = useState(false);
   const handleSubmit = () => {
-    if (status === "WAITING") {
-      setStatus("COMPLETED");
-    } else if (status === "COMPLETED") {
-      setStatus("WAITING");
+    if (status === "PREPARED") {
+      setStatus("DONE");
+    } else if (status === "DONE") {
+      setStatus("PREPARED");
     }
+    setModalIsOpen(false);
   };
 
   return (
-    <tr>
-      <td style={{ width: "200px" }}>{props.order.id}</td>
-      <td style={{ width: "200px" }}>{props.order.totalPrice}€</td>
-      <td style={{ width: "200px" }}> {props.order.createdAt}</td>
-      {status === "WAITING" ? (
-        <td style={{ width: "300px", color: "#FF9E0A" }}>{status}</td>
-      ) : (
-        <td style={{ width: "300px", color: "green" }}>{status}</td>
-      )}
+    <>
+      <PopUpForCompleteOrder
+        handleSubmit={handleSubmit}
+        modalIsOpen={modalIsOpen}
+        setModalIsOpen={setModalIsOpen}
+      />
+      <tr>
+        <td className="table-row">{props.order.id}</td>
+        <td className="table-row">{props.order.totalPrice}€</td>
+        <td className="table-row"> {props.order.createdAt}</td>
+        <td className="table-row"> {props.order.location}</td>
+        {status === "PREPARED" ? (
+          <td className="table-row-status-prepared">{status}</td>
+        ) : (
+          <td className="table-row-status-done">{status}</td>
+        )}
 
-      <td>
-        {" "}
-        <button onClick={handleSubmit}>Change Status</button>
-      </td>
-    </tr>
+        {status === "PREPARED" ? (
+          <td>
+            <button onClick={() => setModalIsOpen(true)}>Change Status</button>
+          </td>
+        ) : (
+          <td className="table-row"></td>
+        )}
+      </tr>
+    </>
   );
 }
 

@@ -3,6 +3,7 @@ import { Container, Row, Alert } from "react-bootstrap";
 import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponent";
 import { CreateNewOrderButton } from "../ui-components/ClientDetailsComponent/CreateNewOrderButton";
 import { employeeNavbarLinks } from "../Routes";
+import { ClientOrders } from "../ui-components/ClientOrdersComponent/ClientOrders";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -28,6 +29,9 @@ function ClientDetailsPage(props) {
       </Row>
       <Row>
         <CreateNewOrderButton />
+      </Row>
+      <Row>
+        <ClientOrders />
       </Row>
     </Container>
   );

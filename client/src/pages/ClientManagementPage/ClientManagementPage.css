@@ -1,0 +1,9 @@
+.create-client-button {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+
+.client-management-page-bottom-space {
+  height: 150px;
+}

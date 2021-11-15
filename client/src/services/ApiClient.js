@@ -44,7 +44,7 @@ export async function findProducts(category, searchString) {
     case 200:
       let responseBody;
       responseBody = await response.json();
-      return responseBody.map((product) => Product.fromMongoJSON(product));
+      return responseBody.map((product) => Product.fromJSON(product));
     default:
       throw new Error("An error occurred during employee fetch");
   }

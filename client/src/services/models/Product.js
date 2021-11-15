@@ -6,9 +6,12 @@ class Product {
     this.description = description;
     if (Object.values(Product.Categories).includes(category))
       this.category = category;
+
+    //Mock price: random value from 1 to 11
+    this.price = (Math.random() * 10 + 1).toFixed(2);
   }
 
-  static fromMongoJSON(json) {
+  static fromJSON(json) {
     return new Product(
       json.id,
       json.farmerID,

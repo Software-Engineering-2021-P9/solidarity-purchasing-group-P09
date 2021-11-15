@@ -12,16 +12,16 @@ function ProductCard(props) {
     <Container>
       <Card>
         <CardImg src={ImageService.returnImageByCategory(product.category)} />
-        <Card.Body className="body">
-          <Card.Title className="card-title">{product.name}</Card.Title>
+        <Card.Body className='body'>
+          <Card.Title className='card-title'>{product.name}</Card.Title>
           <Row>
             <Col>
-              <Card.Text className="text">
+              <Card.Text className='text'>
                 {product.description}
                 <br />
                 Packaging: 1Kg MOCK
                 <br />
-                Price: 1 € MOCK
+                Price: {product.price} € MOCK
               </Card.Text>
             </Col>
           </Row>

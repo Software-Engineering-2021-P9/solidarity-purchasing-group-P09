@@ -2,16 +2,14 @@ import React, { useState } from "react";
 import { PopUpForCompleteOrder } from "./PopUpForCompleteOrder";
 import "./ClientOrderTableRow.css";
 import { RedButton } from "../RedButtonComponent/RedButton";
-
+import { updateStatus } from "../../services/ApiClient";
 function ClientOrderTableRow(props) {
   const [status, setStatus] = useState(props.order.status);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const handleSubmit = () => {
-    if (status === "PREPARED") {
-      setStatus("DONE");
-    } else if (status === "DONE") {
-      setStatus("PREPARED");
-    }
+    updateStatus(status).then((newS) => {
+      setStatus(newS);
+    });
     setModalIsOpen(false);
   };
 

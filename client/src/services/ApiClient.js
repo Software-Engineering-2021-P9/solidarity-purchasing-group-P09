@@ -100,6 +100,13 @@ export async function getOrders() {
   return mockOrders;
 }
 
+export async function updateStatus(status) {
+  // again another mock function for frontend
+  if (status === "PREPARED") {
+    return "DONE";
+  }
+}
+
 // --------
 // products
 // --------

@@ -6,9 +6,9 @@ class Product {
     this.description = description;
     if (Object.values(Product.Categories).includes(category))
       this.category = category;
-
-    //Mock price: random value from 1 to 11
-    this.price = 1;
+    //Mock price
+    this.price = 1.0;
+    this.packaging = "packaging: 1kg";
   }
 
   static fromJSON(json) {

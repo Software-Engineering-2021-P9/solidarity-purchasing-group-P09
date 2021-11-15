@@ -19,14 +19,16 @@
 }
 
 .btn-light {
-  background-color: #fcf5ee !important;
-  border-color: #fcf5ee !important;
+  background-color: whitesmoke !important;
+  border-color: #db9471 !important;
+  color: #db9471;
 }
 
 .btn-light:hover,
 .btn-light:focus {
-  background-color: #d1cac3 !important;
+  background-color: #ece6e2 !important;
   border-color: #d1cac3 !important;
+  color: #db9471; 
 }
 
 .btn-light:active {

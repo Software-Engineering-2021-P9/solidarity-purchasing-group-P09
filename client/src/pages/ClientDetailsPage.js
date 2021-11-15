@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-
+import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponent";
+import { CreateNewOrderButton } from "../ui-components/ClientDetailsComponent/CreateNewOrderButton";
 import { useHistory, useParams } from "react-router";
 import { employeeNavbarLinks } from "../Routes";
 
@@ -10,6 +11,7 @@ import {
   InputGroup,
   Row,
   Spinner,
+  Alert,
 } from "react-bootstrap";
 import ActionConfirmationModal from "../ui-components/ActionConfirmationModal/ActionConfirmationModal";
 import Button from "../ui-components/Button/Button";
@@ -17,7 +19,6 @@ import ClientDetails from "../ui-components/ClientDetails/ClientDetails";
 import { ClientOrders } from "../ui-components/ClientOrdersComponent/ClientOrders";
 import Divider from "../ui-components/Divider/Divider";
 import ErrorToast from "../ui-components/ErrorToast/ErrorToast";
-import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponent";
 
 import { addFundToWallet, getClientByID } from "../services/ApiClient";
 
@@ -27,6 +28,7 @@ import "../ui-components/Title.css";
 function ClientDetailsPage(props) {
   const params = useParams();
   const clientID = params.id;
+  const [show, setShow] = useState(true);
 
   const history = useHistory();
 
@@ -97,24 +99,43 @@ function ClientDetailsPage(props) {
   return (
     <>
       <NavbarComponent links={employeeNavbarLinks} />
+      {props.location.state != null && show ? (
+              <Row>
+                <Alert
+                  variant="success"
+                  style={{
+                    color: "#635F46",
+                    fontWeight: "bold",
+                    backgroundColor: "#7465132f",
+                    width: "auto",
+                    marginTop: "1%",
+                    marginLeft: "1%",
+                  }}
+                  onClose={() => setShow(false)}
+                  dismissible
+                >
+                  Your order was successfully created!
+                </Alert>
+              </Row>
+          ) : "" }
       {!isInitialized ? (
-        <Container className='pt-5 d-flex justify-content-center'>
-          <Spinner variant='dark' animation='border' />
+        <Container className="pt-5 d-flex justify-content-center">
+          <Spinner variant="dark" animation="border" />
         </Container>
       ) : (
         <>
           <Row>
-            <h1 className='title'>Client Details</h1>
+            <h1 className="title">Client Details</h1>
           </Row>
-          <Row className='justify-content-around pt-2'>
-            <Col md='5' className='ms-5'>
+          <Row className="justify-content-around pt-2">
+            <Col md="5" className="ms-5">
               <ClientDetails clientInfo={clientInfo} />
             </Col>
-            <Col md='5'>
-              <InputGroup className='mb-3 pt-4'>
+            <Col md="5">
+              <InputGroup className="mb-3 pt-4">
                 <FormControl
-                  type='number'
-                  placeholder='50€'
+                  type="number"
+                  placeholder="50€"
                   value={fundsToAddAmount}
                   onChange={onFundsToAddAmountChange}
                   required
@@ -124,6 +145,9 @@ function ClientDetailsPage(props) {
                 </Button>
               </InputGroup>
             </Col>
+          </Row>
+          <Row className="my-3">
+            <CreateNewOrderButton clientID={clientID} />
           </Row>
           <Container>
             <Divider size={2} />

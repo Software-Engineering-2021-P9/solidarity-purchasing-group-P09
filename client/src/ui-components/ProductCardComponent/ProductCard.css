@@ -11,3 +11,37 @@
 .body {
   min-height: 170px !important;
 }
+
+.footer{
+  background-color: transparent;
+}
+
+.add-to-cart-button{
+  background-color: transparent !important;
+  color:  #635f46;
+  width: auto;
+  margin: auto;
+  margin-left: 40%;
+  border: 1px solid black;
+  border-color: #635f46 ;
+}
+
+.add-to-cart-button:hover{
+  background-color:  #7465132f;
+  color:  #635f46;
+  width: auto;
+  margin: auto;
+  margin-left: 40%;
+  border: 1px solid black;
+  border-color: #635f46 ;
+}
+
+.add-to-cart-button:focus{
+  background-color:  #74651365;
+  color:  #635f46;
+  width: auto;
+  margin: auto;
+  margin-left: 40%;
+  border: 1px solid black;
+  border-color: #635f46 ;
+}

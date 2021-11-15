@@ -21,7 +21,9 @@ function ClientInfoList(props) {
         ) : (
           <>
             {getEmptyListText() !== "" ? (
-              <Row className='justify-content-center'>{getEmptyListText()}</Row>
+              <Row className='justify-content-center pt-3'>
+                {getEmptyListText()}
+              </Row>
             ) : (
               <>
                 {props.clientInfoList?.map((item, index) => (

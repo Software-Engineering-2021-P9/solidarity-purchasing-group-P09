@@ -14,14 +14,16 @@ import {
   Toast,
   ToastContainer,
 } from "react-bootstrap";
-import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponent";
+import ActionConfirmationModal from "../ui-components/ActionConfirmationModal/ActionConfirmationModal";
 import Button from "../ui-components/Button/Button";
 import ClientDetails from "../ui-components/ClientDetails/ClientDetails";
 import Divider from "../ui-components/Divider/Divider";
+import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponent";
 
 import { addFundToWallet, getClientByID } from "../services/ApiClient";
 
 import "bootstrap/dist/css/bootstrap.min.css";
+import ErrorToast from "../ui-components/ErrorToast/ErrorToast";
 
 function ClientDetailsPage(props) {
   const params = useParams();
@@ -130,43 +132,18 @@ function ClientDetailsPage(props) {
           </>
         )}
       </Container>
-      {requestError && (
-        <ToastContainer position='bottom-start' className='p-3'>
-          <Toast autohide onClose={() => setRequestError("")}>
-            <Toast.Header>
-              <strong>Error</strong>
-            </Toast.Header>
-            <Toast.Body>{requestError}</Toast.Body>
-          </Toast>
-        </ToastContainer>
-      )}
-      {actionConfirmationModalMessage && (
-        <Modal
-          centered
-          show={actionConfirmationModalMessage}
-          onHide={onActionConfirmationModalHide}>
-          <Modal.Header closeButton>
-            <Modal.Title>Action Confirmation Required</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <p>{actionConfirmationModalMessage}</p>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button onClick={actionConfirmationModalCallback}>
-              {isActionLoading ? (
-                <span className='px-3'>
-                  <Spinner variant='light' animation='border' size='sm' />
-                </span>
-              ) : (
-                "Confirm"
-              )}
-            </Button>
-            <Button variant='light' onClick={onActionConfirmationModalHide}>
-              Cancel
-            </Button>
-          </Modal.Footer>
-        </Modal>
-      )}
+      <ErrorToast
+        errorMessage={requestError}
+        onClose={() => setRequestError("")}
+      />
+      <ActionConfirmationModal
+        show={actionConfirmationModalMessage}
+        onHide={onActionConfirmationModalHide}
+        message={actionConfirmationModalMessage}
+        onConfirm={actionConfirmationModalCallback}
+        onCancel={onActionConfirmationModalHide}
+        isLoading={isActionLoading}
+      />
     </>
   );
 }

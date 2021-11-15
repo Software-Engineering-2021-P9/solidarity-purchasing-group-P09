@@ -49,8 +49,8 @@ function ClientDetailsPage(props) {
 
     const getClientInfo = () => {
       getClientByID(clientID)
-        .then((clientInfo) => {
-          setClientInfo(clientInfo);
+        .then((result) => {
+          setClientInfo(result);
           setIsInitialized(true);
           setMustReload(false);
         })

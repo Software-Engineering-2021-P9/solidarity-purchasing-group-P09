@@ -5,8 +5,8 @@ function Divider(props) {
     switch (variant) {
       case "light":
         return "#f4bfa7";
-      default:
       case "primary":
+      default:
         return "#db9471";
     }
   }

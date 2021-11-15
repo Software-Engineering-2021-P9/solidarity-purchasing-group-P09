@@ -41,6 +41,7 @@ function CartRow(props) {
     const getProduct = () => {
       props.getProductByID(props.productID).then(function (res) {
         setProduct(res);
+        console.log(props.productID);
       });
     };
     getProduct();

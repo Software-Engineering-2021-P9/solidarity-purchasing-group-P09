@@ -29,17 +29,11 @@ function ShoppingCartPage(props) {
 
   /* MOCK DATA (Map, client) */
 
-  const propsMap = new Map();
-  propsMap.set("618e935fb16465325a18a8bc", 1);
-  propsMap.set("618e969eb16465325a18a8c6", 2);
-  propsMap.set("618e96edb16465325a18a8c7", 3);
-  propsMap.set("618ed939f67c1e1c11764bbf", 1);
-
   const propsClientID = "618d4ad3736f2caf2d3b3ca5";
 
   /* END MOCK DATA */
 
-  const [cart, setCart] = useState(propsMap);
+  const [cart, setCart] = useState(props.location.state.shoppingCart);
 
   /* compute initial total amount */
   var sum = 0;
@@ -82,7 +76,7 @@ function ShoppingCartPage(props) {
       quantity,
     }));
     //call create order
-    createOrder(propsClientID, products);
+    createOrder(propsClientID, products); 
     handleClose();
     setSubmitted(true);
   };
@@ -129,7 +123,7 @@ function ShoppingCartPage(props) {
       {submitted ? (
         <Redirect
           to={{
-            pathname: "/employee/clients/" + propsClientID,
+            pathname: "/employee/clients/" + propsClientID,  state: { orderAmount: amount}
           }}
         />
       ) : (

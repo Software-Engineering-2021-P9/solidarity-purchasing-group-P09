@@ -10,7 +10,7 @@ function ShoppingCartControls(props) {
       <Link
         to={{
           pathname: "/",
-          state: { cart: props.cart, clientID:props.clientID },
+          state: { shoppingCart: props.cart, clientID:props.clientID },
         }}
       >
         <Button className="cart-inverse-button">CONTINUE SHOPPING</Button>

@@ -1,6 +1,7 @@
 import Employee from "./models/Employee";
 import Product from "./models/Product";
 import Client from "./models/Client";
+import Order from "./models/Order"; 
 
 // --------
 // Employee
@@ -28,11 +29,22 @@ export async function getEmployeeByID(employeeID) {
 export async function createOrder(clientID, products) {
   var obj = { clientID: clientID, products: products };
 
-  await fetch("/api/orders", {
+  const response = await fetch("/api/orders", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ ...obj }),
   });
+
+  switch (response.status) {
+    case 400:
+      throw new Error("Validation error occurred");
+    case 200:
+      let responseBody;
+      responseBody = await response.json();
+      return Order.fromJSON(responseBody);
+    default:
+      throw new Error("An error occurred during order fetch");
+  }
 }
 
 // --------
@@ -47,7 +59,7 @@ export async function getProductByID(productID) {
     case 200:
       let responseBody;
       responseBody = await response.json();
-      return Product.fromJSON(responseBody);
+      return Product.fromJSON(responseBody[0]);
     default:
       throw new Error("An error occurred during product fetch");
   }

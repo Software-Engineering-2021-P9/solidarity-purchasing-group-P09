@@ -17,7 +17,7 @@ function ClientDetailsPage(props) {
       {props.location.state != null && show ? (
         <>
           <Row>
-            <Alert variant="success" style={{color: "#635F46", fontWeight:"bold", backgroundColor:"#7465132f", position: "fixed", top:100, width:"auto"}} onClose={() => setShow(false)} dismissible>
+            <Alert variant="success" style={{color: "#635F46", fontWeight:"bold", backgroundColor:"#7465132f", width:"auto", marginTop:"1%", marginLeft:"1%"}} onClose={() => setShow(false)} dismissible>
               Your order was successfully created!
             </Alert>
           </Row>

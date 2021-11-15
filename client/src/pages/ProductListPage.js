@@ -12,7 +12,7 @@ function ProductListPage(props) {
         <NavbarComponent
           links={employeeNavbarLinks}
           showShoppingCart
-          shoppingCartItems='1'
+          shoppingCartItems="1"
         />
       </Row>
       <Row>

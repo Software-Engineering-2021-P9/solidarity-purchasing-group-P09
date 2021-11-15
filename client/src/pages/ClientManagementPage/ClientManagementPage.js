@@ -8,15 +8,7 @@ import {
   routes,
 } from "../../Routes";
 
-import {
-  Container,
-  FormControl,
-  InputGroup,
-  Row,
-  Col,
-  Toast,
-  ToastContainer,
-} from "react-bootstrap";
+import { Container, FormControl, InputGroup, Row, Col } from "react-bootstrap";
 
 import { NavbarComponent } from "../../ui-components/NavbarComponent/NavbarComponent";
 import ClientInfoList from "../../ui-components/ClientInfoList/ClientInfoList";
@@ -25,6 +17,7 @@ import Divider from "../../ui-components/Divider/Divider";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./ClientManagementPage.css";
+import "../../ui-components/Title.css";
 
 import { findClients } from "../../services/ApiClient";
 import ErrorToast from "../../ui-components/ErrorToast/ErrorToast";
@@ -74,12 +67,12 @@ function ClientManagementPage(props) {
     <>
       <Container>
         <NavbarComponent links={employeeNavbarLinks} />
-        <Row className='position-relative pt-4'>
+        <Row>
           <Col md='5'>
-            <h1>Manage Clients</h1>
+            <h1 className='title'>Manage Clients</h1>
           </Col>
           <Col>
-            <InputGroup className='mb-3'>
+            <InputGroup className='my-3'>
               <FormControl
                 placeholder='Mario Rossi'
                 value={searchString}

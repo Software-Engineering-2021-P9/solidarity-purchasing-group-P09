@@ -8,22 +8,20 @@ import {
   Container,
   FormControl,
   InputGroup,
-  Modal,
   Row,
   Spinner,
-  Toast,
-  ToastContainer,
 } from "react-bootstrap";
 import ActionConfirmationModal from "../ui-components/ActionConfirmationModal/ActionConfirmationModal";
 import Button from "../ui-components/Button/Button";
 import ClientDetails from "../ui-components/ClientDetails/ClientDetails";
 import Divider from "../ui-components/Divider/Divider";
+import ErrorToast from "../ui-components/ErrorToast/ErrorToast";
 import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponent";
 
 import { addFundToWallet, getClientByID } from "../services/ApiClient";
 
 import "bootstrap/dist/css/bootstrap.min.css";
-import ErrorToast from "../ui-components/ErrorToast/ErrorToast";
+import "../ui-components/Title.css";
 
 function ClientDetailsPage(props) {
   const params = useParams();
@@ -105,8 +103,8 @@ function ClientDetailsPage(props) {
           </Container>
         ) : (
           <>
-            <Row className='pt-4'>
-              <h1>Client Details</h1>
+            <Row>
+              <h1 className='title'>Client Details</h1>
             </Row>
             <Row className='justify-content-around pt-2'>
               <Col md='5' className='ms-5'>

@@ -76,6 +76,13 @@ app.get(
   clientHandlers.findClientsHandler
 );
 
+app.post(
+  buildAPIPath("/clients"),
+  clientHandlers.createClientHandlerValidatorChain,
+  checkValidationErrorMiddleware,
+  clientHandlers.createClientHandler
+);
+
 
 // ----------
 // /orders

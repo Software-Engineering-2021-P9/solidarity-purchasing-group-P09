@@ -5,7 +5,7 @@ const { getEmployeeByID, createEmployee } = require("./employee");
 
 const { createOrder, getOrderByID, deleteOrder } = require("./order");
 
-const { getClientByID, addFundToWallet, findClients, createClientsTextSearchIndexes } = require("./client");
+const { getClientByID, addFundToWallet, findClients, createClientsTextSearchIndexes, createClient } = require("./client");
 
 
 const {
@@ -68,4 +68,11 @@ exports.findClients = (searchString) => findClients(db, searchString);
 
 exports.createClientsTextSearchIndexes = () =>
   createClientsTextSearchIndexes(db);
+
+    // --------------
+// CreateClient
+// --------------
+exports.getClientByID = (clientID) => getClientByID(db, clientID);
+exports.createClient = (fullName, phoneNumber, email, address, wallet) => 
+createClient(db, fullName, phoneNumber, email, address, wallet);
 

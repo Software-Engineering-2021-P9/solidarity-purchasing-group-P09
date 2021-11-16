@@ -47,3 +47,13 @@ exports.createClientsTextSearchIndexes = (db) => {
         phoneNumber: "text"
     })
 }
+
+// --------------
+// CreateClient
+// --------------
+
+exports.createClient = (db, fullName, phoneNumber, email, address, wallet) => {
+    return db
+      .collection(clientCollectionName)
+      .insertOne({ fullName: fullName, phoneNumber: phoneNumber, email: email, address: address, wallet: wallet});
+  };

@@ -3,7 +3,11 @@ const { ClientInfo } = require("../models/ClientInfo");
 const {
     clientIDPathValidator,
     addFundToWalletBodyValidator,
-    searchStringValidator
+    searchStringValidator,
+   fullNameBodyValidator,
+   phoneNumberBodyValidator,
+    emailBodyValidator,
+    addressBodyValidator
 } = require("./shared_validators");
 
 
@@ -61,3 +65,42 @@ exports.findClientsHandler = async function (req, res, next) {
 
     return res.json(result.map((clientMongoJSON) => ClientInfo.fromMongoJSON(clientMongoJSON)));
 }
+
+exports.createClientHandlerValidatorChain = [
+    fullNameBodyValidator,
+    phoneNumberBodyValidator,
+    emailBodyValidator,
+    addressBodyValidator,
+  
+  ];
+exports.createClientHandler = async function (req, res, next) {
+  // Insert the new client
+  let result;
+  try {
+    result = await dao.createClient(
+      req.body.fullName.toString(),
+      req.body.phoneNumber.toString(),
+      req.body.email.toString(),
+      req.body.address.toString(),
+      0.0
+    );
+  } catch (err) {
+    console.error(`CreateClient() -> couldn't create client: ${err}`);
+    return res.status(500).end();
+  }
+
+  // Fetch the newly created client
+  try {
+    result = await dao.getClientByID(result.insertedId);
+  } catch (err) {
+    
+    return res.status(500).end();
+  }
+
+  if (!result) {
+    console.error(
+      `CreateClient() -> couldn't retrieve newly created client`
+    );
+
+  return res.json(ClientInfo.fromMongoJSON(result));
+};

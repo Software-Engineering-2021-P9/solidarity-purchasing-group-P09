@@ -4,7 +4,7 @@ import { employeeNavbarLinks } from "../Routes";
 import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponent";
 import "../App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { useState} from "react";
+import { useState, useEffect} from "react";
 import { Button, Col, Form ,Alert, } from "react-bootstrap";
 import { Link, Redirect} from "react-router-dom";
 import { createClient } from "../services/ApiClient";
@@ -36,10 +36,15 @@ function ClientPage(props) {
 
 
 function ClientForm(props) {
-  const [validated, setValidated] = useState(false);
+  
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  
+useEffect(()=>{
+  
+},[success]);
+
 
 
   
@@ -59,7 +64,7 @@ function ClientForm(props) {
     if(client.firstName === '' || client.lastName === '' || client.phoneNumber === '' || client.email === '' || client.address === '' || 
     client.number === '' || client.city === '' || client.fpostCode === ''  )
     valid = false;
-    
+   
   
    
    try {
@@ -67,6 +72,7 @@ function ClientForm(props) {
     setErrorMessage("");
     createClient(client);
     setSuccess(true);
+
     setClient("");
      }
      else{
@@ -88,7 +94,7 @@ if(success){<Redirect to = "/"/>}
             </Alert>
           )}</div>
       <Container flex className="content">
-        <Form noValidate validated={validated} onSubmit={handleSubmit}>
+        <Form noValidate onSubmit={handleSubmit}>
           <h4>User Information</h4>
           <Row className="mb-3">
             <Form.Group as={Col} md="3" controlId="validationCustom01">

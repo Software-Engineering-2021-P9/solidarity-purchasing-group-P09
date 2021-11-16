@@ -1,3 +1,2 @@
 GET http://localhost:3001/api/employees/6187c957b288576ca26f8257 HTTP/1.1
-Content-Type: application/json
 

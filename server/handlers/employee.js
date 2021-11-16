@@ -6,31 +6,23 @@ const {
   fullNameBodyValidator,
   passwordBodyValidator,
 } = require("./shared_validators");
-const { validationResult } = require("express-validator");
 
 exports.getEmployeeByIDValidatorChain = [employeeIDPathValidator];
 exports.getEmployeeByIDHandler = async function (req, res, next) {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
+  let result;
+  try {
+    result = await dao.getEmployeeByID(req.params.employeeID);
+  } catch (err) {
+    console.error(`GetEmployeeByID() -> couldn't retrieve employee: ${err}`);
+    return res.status(500).end();
   }
 
-  await dao
-    .getEmployeeByID(req.params.employeeID)
-    .catch((e) => {
-      console.error(`GetEmployeeByID() -> couldn't retrieve employee: ${e}`);
-      res.status(500).end();
-    })
-    .then((json) => {
-      if (!json) {
-        console.error(
-          `GetEmployeeByID() -> couldn't retrieve employee: not found`
-        );
-        res.status(404).end();
-      }
-      let employee = Employee.fromMongoJSON(json);
-      res.json(employee);
-    });
+  if (!result) {
+    console.error(`GetEmployeeByID() -> couldn't retrieve employee: not found`);
+    return res.status(404).end();
+  }
+
+  return res.json(Employee.fromMongoJSON(result));
 };
 
 exports.createEmployeeHandlerValidatorChain = [
@@ -39,40 +31,37 @@ exports.createEmployeeHandlerValidatorChain = [
   fullNameBodyValidator,
 ];
 exports.createEmployeeHandler = async function (req, res, next) {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
-  let insertedEmployeeID;
-  await dao
-    .createEmployee(
+  // Insert the new employee
+  let result;
+  try {
+    result = await dao.createEmployee(
       req.body.email.toString(),
       req.body.password.toString(),
       req.body.fullName.toString()
-    )
-    .catch((e) => {
-      console.error(`CreateEmployee() -> couldn't create employee: ${e}`);
-      res.status(500).end();
-    })
-    .then((result) => (insertedEmployeeID = result.insertedId));
+    );
+  } catch (err) {
+    console.error(`CreateEmployee() -> couldn't create employee: ${err}`);
+    return res.status(500).end();
+  }
 
-  await dao
-    .getEmployeeByID(insertedEmployeeID)
-    .catch((e) => {
-      console.error(
-        `CreateEmployee() -> couldn't retrieve newly created employee: ${e}`
-      );
-      res.status(500).end();
-    })
-    .then((json) => {
-      if (!json) {
-        console.error(
-          `CreateEmployee() -> couldn't retrieve newly created employee`
-        );
-        res.status(404).end();
-      }
-      let employee = Employee.fromMongoJSON(json);
-      res.json(employee);
-    });
+  // Fetch the newly created employee
+  try {
+    result = await dao.getEmployeeByID(result.insertedId);
+  } catch (err) {
+    // Try reverting the changes made until now, using a best-effort strategy
+    dao.deleteEmployee(result.insertedId);
+    console.error(
+      `CreateEmployee() -> couldn't retrieve newly created employee: ${err}`
+    );
+    return res.status(500).end();
+  }
+
+  if (!result) {
+    console.error(
+      `CreateEmployee() -> couldn't retrieve newly created employee`
+    );
+    return res.status(404).end();
+  }
+
+  return res.json(Employee.fromMongoJSON(result));
 };

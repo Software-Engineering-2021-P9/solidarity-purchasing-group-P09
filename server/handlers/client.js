@@ -103,4 +103,5 @@ exports.createClientHandler = async function (req, res, next) {
     );
 
   return res.json(ClientInfo.fromMongoJSON(result));
+  }
 };

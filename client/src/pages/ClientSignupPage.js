@@ -66,17 +66,10 @@ function ClientForm(props) {
     client.number === '' || client.city === '' || client.fpostCode === ''  )
     valid = false;
     
-    let validPhoneNo=false;
-
-    
-
-    var phoneno = /^\d{10}$/;
-    if(client.phoneNumber.match(phoneno)){
-      validPhoneNo = true;
-    }
+  
    
    try {
-     if(valid && validPhoneNo){
+     if(valid){
     setErrorMessage("");
     createClient(client);
     setSuccess(true);
@@ -231,13 +224,11 @@ if(success){<Redirect to = "/"/>}
               </Row>
             </Form.Group>
           </Row>
-
-          <Button className="button" type="submit" onClick={handleSubmit}>
+         
+          <Button className="button" type="submit" onClick={handleSubmit} >
             Submit
           </Button>
-
-          <> </>
-
+          
           <Link to="/">
             <Button className="button1" type="cancel">
               Cancel

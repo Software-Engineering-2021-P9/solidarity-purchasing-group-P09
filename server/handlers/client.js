@@ -101,6 +101,7 @@ exports.createClientHandler = async function (req, res, next) {
     console.error(
       `CreateClient() -> couldn't retrieve newly created client`
     );
+  }
 
   return res.json(ClientInfo.fromMongoJSON(result));
   }

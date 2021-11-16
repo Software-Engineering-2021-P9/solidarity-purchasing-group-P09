@@ -45,8 +45,6 @@ function ProductListPage(props) {
 
   const [modalProduct, setModalProduct] = useState({});
   
-  const [modalQuantity, setModalQuantity] = useState(1);
-
   useEffect(() => {
     //call from props the function for fetching the new products
     async function updateProducts() {
@@ -77,12 +75,11 @@ function ProductListPage(props) {
   const handleClose = () => setShow(false);
 
   const handleShow = (product) => {
-    setModalProduct(product);
     if(cart.get(product.id)){
-      setModalQuantity(parseInt(cart.get(modalProduct.id))); 
+      setModalProduct({productName: product.name, productId: product.id, productQty: cart.get(product.id)});
     }
     else
-      setModalQuantity(1); 
+      setModalProduct({productName: product.name, productId: product.id, productQty: 1});
     setShow(true);
   };
 
@@ -90,7 +87,6 @@ function ProductListPage(props) {
     setCart(new Map(cart.set(productID, parseInt(quantity))));
     setShow(false); 
   };
-
 
   return (
     <>
@@ -104,7 +100,7 @@ function ProductListPage(props) {
 
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>{modalProduct.name}</Modal.Title>
+          <Modal.Title>{modalProduct.productName}</Modal.Title>
         </Modal.Header>
         <Container>
           <Row>
@@ -114,8 +110,8 @@ function ProductListPage(props) {
             <FormControl
               type="number"
               step={1}
-              value={modalQuantity}
-              onChange={(e) => setModalQuantity(e.target.value)}
+              value={modalProduct.productQty}
+              onChange={(e) => setModalProduct({...modalProduct, productQty:e.target.value})}
               max={100}
               min={1}
             />
@@ -125,7 +121,7 @@ function ProductListPage(props) {
           <Button className="btn-light" onClick={handleClose}>
             Close
           </Button>
-          <Button className="btn-primary" onClick={() => addItem(modalProduct.id, modalQuantity)}>
+          <Button className="btn-primary" onClick={() => addItem(modalProduct.productId, modalProduct.productQty)}>
             Submit
           </Button>
         </Modal.Footer>

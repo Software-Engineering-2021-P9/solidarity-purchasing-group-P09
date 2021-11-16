@@ -36,3 +36,27 @@
     transform: rotate(360deg);
   }
 }
+
+
+/*related to signUp Client*/
+.button{
+  background-color: #b36237 !important;
+  color: white;
+  border-color: #b36237;
+}
+
+.button1{
+  background-color: #f0ebe8 !important;
+  color: #b36237;
+  border-color: #b36237;
+}
+.content{
+display:flex;
+justify-content : center;
+
+}
+
+.row {
+  --bs-gutter-x: 0rem; 
+  --bs-gutter-y: 0;
+  }

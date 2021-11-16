@@ -4,10 +4,9 @@ import { employeeNavbarLinks } from "../Routes";
 import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponent";
 import "../App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import dayjs from "dayjs";
-import { useState, useEffect } from "react";
+import { useState} from "react";
 import { Button, Col, Form ,Alert, } from "react-bootstrap";
-import { Link, Redirect, Route, Switch, useLocation } from "react-router-dom";
+import { Link, Redirect} from "react-router-dom";
 import { createClient } from "../services/ApiClient";
 
 function ClientSignupPage(props) {
@@ -41,12 +40,7 @@ function ClientForm(props) {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [date, setDate] = useState(
-    window.location.state
-      ? window.location.state.date.format("YYYY-MM-DD")
-      : dayjs().format("YYYY-MM-DD")
-  );
+
 
   
   const [client, setClient] = useState({ firstName: "", lastName: "",phoneNumber: "", email: " ", address:"", number:"", city:"", postCode:"" });

@@ -31,7 +31,7 @@ sections:
 |   [Enter new client](https://polito-se2-21-09.myjetbrains.com/youtrack/issue/S202109SPG-2)    | 2       |    5 |      8 h    |        15 h    |
 | [Enter client order](https://polito-se2-21-09.myjetbrains.com/youtrack/issue/S202109SPG-1)     |       2  |      8 |       10 h     |       15 h 30 m      |
 | [Wallet top-up](https://polito-se2-21-09.myjetbrains.com/youtrack/issue/S202109SPG-5)   |  2       |  8     |      10 h     |    8 h 50m       |
-|  [Product given to client](https://polito-se2-21-09.myjetbrains.com/youtrack/issue/S202109SPG-4)    | 2         |  3 h    |    7 h 30 m         | 6 h 30 m         | 
+|  [Product given to client](https://polito-se2-21-09.myjetbrains.com/youtrack/issue/S202109SPG-4)    | 2         |  3    |    7 h 30 m         | 6 h 30 m         | 
 |   [Browse products in shop](https://polito-se2-21-09.myjetbrains.com/youtrack/issue/S202109SPG-3) |  2 |3 | 6 h | 11 h 15 m
    
 

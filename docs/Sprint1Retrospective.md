@@ -67,23 +67,27 @@ sections:
 
 ## ASSESSMENT
 
-- What caused your errors in estimation (if any)? The majority of us have never estimated tasks so we overestimated our velocity. We also underestimated time to get used (again) to technologies. We didn't plan properly the design of the application (simple frontend sketch and APIs details). 
+- What caused your errors in estimation (if any)? 
+We overestimated our velocity by a little. We spent some time to build a valid base architecture, and we understimated the time to get confortable with it. 
 
-- What lessons did you learn (both positive and negative) in this sprint? We need to plan in advance the application. We need to communicate more both before and during the development to align our work.
+- What lessons did you learn (both positive and negative) in this sprint? 
+Reviews take time, and also we need to insert a deadline to open a pull request and ask for a review (To give time to other team members to organize their time).  Spending a little time for design helps a lot.
 
-- Which improvement goals set in the previous retrospective were you able to achieve? This is our first retrospective.
+- Which improvement goals set in the previous retrospective were you able to achieve?
+We were able to define a usefull template for writing understandable coding for everyone and spent time for design and planning in advance
   
-- Which ones you were not able to achieve? Why? N/A
+- Which ones you were not able to achieve? Why? 
+We did not do enough Daily scrums, because we did think it was not necessary for how the work was going on
 
 - Improvement goals for the next sprint and how to achieve them (technical tasks, team coordination, etc.)
 
 1) We should align our work through daily scrums.
-2) We need to add a task related to planning.
-3) We need to decide general conventions to write code easily understandable by everyone.
+2) Defining a deadline for opening PR reviews
+3) When someone need help (s)he should ask to everyone 
+4) Everyone should be more present when somebody needs help
 
 - One thing you are proud of as a Team!!
 1) We work very hard and never give up. 
 2) We can learn new thing really fast.
 3) We solve internal conflicts (personal and code related) with calm. 
-4) We used new technologies (heroku, mongoDB, mocha)
-5) We helped each other
+4) We used new technologies (handlers, shared-validators, OpenAPI, FIGMA)

@@ -757,3 +757,27 @@ describe("Clients API tests:", () => {
     });
   });
 });
+
+
+
+//tests on time
+describe("Time tests:",()=>{
+  it("checks on timeManager Object", () => {
+
+    var timeManagerObj = require('../models/timeManager');
+
+    expect(timeManagerObj).to.not.be.null;
+    expect(timeManagerObj).to.be.an("object");
+
+    expect(timeManagerObj.phaseList).to.not.be.null;
+    expect(timeManagerObj.phaseList.length).to.be.equal(2);
+
+
+    expect(timeManagerObj.activePhase).to.not.be.null;
+    expect(timeManagerObj.activePhase).to.be.an("object");
+
+    expect(timeManagerObj.phaseIDOverride).to.be.null;
+
+    expect(timeManagerObj.cronTask).to.not.be.null;
+  });
+});

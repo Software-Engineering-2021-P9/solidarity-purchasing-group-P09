@@ -5,6 +5,14 @@ var logger = require("morgan");
 var cors = require("cors");
 var dao = require("./dao/dao");
 
+// ----------
+// /timeManager
+// ----------
+
+const { Time } = require("./timeModel");
+const { WeekPhase } = require("./WeekPhase");
+//var timeManagerObj = require('./models/timeManager'); 
+
 const {
   checkValidationErrorMiddleware,
 } = require("./handlers/shared_validators");
@@ -30,14 +38,6 @@ app.use(cookieParser());
 app.use(cors());
 
 dao.open();
-
-// ----------
-// /timeManager
-// ----------
-
-const { Time } = require("./timeModel");
-const { WeekPhase } = require("./WeekPhase");
-//var timeManagerObj = require('./models/timeManager'); 
 
 // ----------
 // /employees

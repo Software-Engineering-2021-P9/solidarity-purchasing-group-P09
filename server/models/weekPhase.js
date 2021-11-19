@@ -28,7 +28,7 @@ class WeekPhase {
   }*/
 }
 
-//module.exports = { WeekPhase };
+module.exports = { WeekPhase };
 
 
 
@@ -38,22 +38,4 @@ class WeekPhase {
 
 
 
-
-
-//PROVE VARIE
-
-class costruttoreDiWeekPhase{
-  constructor(){
-
-  }
-
-  constructWeekPhase(ID, startTime, endTime, description, handler){
-    return new WeekPhase(ID, startTime, endTime, description, handler);
-  }
-}
-
-let costruttoreDiWeekPhaseObj = new costruttoreDiWeekPhase();
-module.exports = timeManagerObj;
-
-//FINE PROVE VARIE
 

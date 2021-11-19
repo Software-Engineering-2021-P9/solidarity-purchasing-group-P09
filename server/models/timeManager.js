@@ -1,8 +1,11 @@
 //const { Time } = require("./timeModel");
-const { WeekPhase } = require("./WeekPhase");
-//var WeekPhase = require('./WeekPhase.js');
+//const { WeekPhase } = require("./WeekPhase");
 var cron = require('node-cron');
 const dayjs = require("dayjs");
+
+//PROVE VARIE
+var costruttoreDiWeekPhaseObj = require('./WeekPhase'); 
+//FINE PROVE VARIE
 
 //Handle of phase called only when phase is enabled
 

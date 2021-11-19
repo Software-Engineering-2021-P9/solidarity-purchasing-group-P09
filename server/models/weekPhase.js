@@ -1,6 +1,6 @@
 "use strict";
 
-module.exports = class WeekPhase {
+class WeekPhase {
   constructor(ID, startTime, endTime, description, handler) {
     /*this.ID = ID;
     this.startTime = startTime;
@@ -29,3 +29,31 @@ module.exports = class WeekPhase {
 }
 
 //module.exports = { WeekPhase };
+
+
+
+
+
+
+
+
+
+
+
+//PROVE VARIE
+
+class costruttoreDiWeekPhase{
+  constructor(){
+
+  }
+
+  constructWeekPhase(ID, startTime, endTime, description, handler){
+    return new WeekPhase(ID, startTime, endTime, description, handler);
+  }
+}
+
+let costruttoreDiWeekPhaseObj = new costruttoreDiWeekPhase();
+module.exports = timeManagerObj;
+
+//FINE PROVE VARIE
+

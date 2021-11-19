@@ -9,9 +9,9 @@ var dao = require("./dao/dao");
 // /timeManager
 // ----------
 
-const { Time } = require("./timeModel");
-const { WeekPhase } = require("./WeekPhase");
-//var timeManagerObj = require('./models/timeManager'); 
+//const { Time } = require("./timeModel");
+//const { WeekPhase } = require("./WeekPhase");
+var timeManagerObj = require('./models/timeManager'); 
 
 const {
   checkValidationErrorMiddleware,

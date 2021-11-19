@@ -761,11 +761,38 @@ describe("Clients API tests:", () => {
 
 
 //tests on time
-describe("timeManager",()=>{
-  const { TimeManager } = require("../models/timeManager");
-  const { WeekPhase } = require("../models/weekPhase");
-  const { Time } = require("../models/timeModel");
 
+const { TimeManager } = require("../models/timeManager");
+const { WeekPhase } = require("../models/weekPhase");
+const { Time } = require("../models/timeModel");
+
+describe("timeModel",()=>{
+  it("check time",()=>{
+    let day = new Time("Monday","00","00","00");
+    expect(day.dayNumber).to.be.equal("1");
+
+    day = new Time("Tuesday","00","00","00");
+    expect(day.dayNumber).to.be.equal("2");
+
+    day = new Time("Wednesday","00","00","00");
+    expect(day.dayNumber).to.be.equal("3");
+
+    day = new Time("Thursday","00","00","00");
+    expect(day.dayNumber).to.be.equal("4");
+
+    day = new Time("Friday","00","00","00");
+    expect(day.dayNumber).to.be.equal("5");
+
+    day = new Time("Saturday","00","00","00");
+    expect(day.dayNumber).to.be.equal("6");
+
+    day = new Time("Sunday","00","00","00");
+    expect(day.dayNumber).to.be.equal("7");
+  });
+});
+
+
+describe("timeManager",()=>{
   describe("check on timeManager object", ()=>{
     let timeManagerObj = new TimeManager();
 

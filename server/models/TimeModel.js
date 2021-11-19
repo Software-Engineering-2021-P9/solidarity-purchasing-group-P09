@@ -1,4 +1,3 @@
-/*
 class Time{
     constructor(day, hour, min, sec){
         this.day = day;
@@ -41,4 +40,4 @@ class Time{
     }
 }
 
-module.exports = { Time };*/
+module.exports = { Time };

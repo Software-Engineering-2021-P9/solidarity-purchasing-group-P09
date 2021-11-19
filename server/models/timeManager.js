@@ -8,13 +8,13 @@ const dayjs = require("dayjs");
 
 class TimeManager {
     constructor(){
-        /*this.phaseList = this.getPhaseList();
+        this.phaseList = this.getPhaseList();
         this.activePhase = this.getTrueActivePhase();
         this.activePhase.handler();
         this.phaseIDOverride = null;
-        this.enableCron(); //set this.cronTask*/
+        this.enableCron(); //set this.cronTask
     }
-/*
+
     getPhaseList(){
         return [
             //ID, StartTime, EndTime, Description, Handler
@@ -76,7 +76,7 @@ class TimeManager {
         if(this.phaseIDOverride != null)
             return this.phaseIDOverride.ID;
         return this.activePhase.ID;
-    }*/
+    }
 }
 
 let timeManagerObj = new TimeManager();

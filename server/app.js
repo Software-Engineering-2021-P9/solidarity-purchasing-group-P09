@@ -35,7 +35,9 @@ dao.open();
 // /timeManager
 // ----------
 
-var timeManagerObj = require('./models/timeManager'); 
+const { Time } = require("./timeModel");
+const { WeekPhase } = require("./WeekPhase");
+//var timeManagerObj = require('./models/timeManager'); 
 
 // ----------
 // /employees

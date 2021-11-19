@@ -2,13 +2,13 @@
 
 class WeekPhase {
   constructor(ID, startTime, endTime, description, handler) {
-    /*this.ID = ID;
+    this.ID = ID;
     this.startTime = startTime;
     this.endTime = endTime;
     this.description = description || "no description";
-    this.handler = handler;*/
+    this.handler = handler;
   }
-/*
+
   //METHODS
   getTimeRange(){
     return [this.startTime, this.endTime];
@@ -25,7 +25,7 @@ class WeekPhase {
     }else{//phase is cross weeks
       return (dateString>=startTimeString || dateString<endTimeString);
     }
-  }*/
+  }
 }
 
 module.exports = { WeekPhase };

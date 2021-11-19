@@ -1,4 +1,4 @@
-/*"use strict";
+"use strict";
 
 class WeekPhase {
   constructor(ID, startTime, endTime, description, handler) {
@@ -28,4 +28,4 @@ class WeekPhase {
   }
 }
 
-module.exports = { WeekPhase };*/
+module.exports = { WeekPhase };

@@ -74,7 +74,7 @@ class TimeManager {
 
     getCurrentPhaseID(){
         if(this.phaseIDOverride != null)
-            return this.phaseIDOverride.ID;
+            return this.phaseIDOverride;
         return this.activePhase.ID;
     }
 }

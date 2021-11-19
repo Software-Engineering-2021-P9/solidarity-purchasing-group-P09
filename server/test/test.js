@@ -851,14 +851,21 @@ describe("timeManager",()=>{
       let timeManagerObj = new TimeManager();
       expect(timeManagerObj.phaseIDOverride).to.be.null;
 
+      timeManagerObj.setPhaseOverride(null);
+      expect(timeManagerObj.phaseIDOverride).to.be.null;
+
       timeManagerObj.setPhaseOverride("ID1");
       expect(timeManagerObj.phaseIDOverride).to.be.equal("ID1");
+      expect(timeManagerObj.getCurrentPhaseID()).to.be.equal("ID1");
+
 
       timeManagerObj.setPhaseOverride("ID2");
       expect(timeManagerObj.phaseIDOverride).to.be.equal("ID2");
+      expect(timeManagerObj.getCurrentPhaseID()).to.be.equal("ID2");
 
       timeManagerObj.setPhaseOverride(null);
       expect(timeManagerObj.phaseIDOverride).to.be.null;
+    
     });
   });
 

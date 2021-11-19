@@ -791,6 +791,26 @@ describe("timeModel",()=>{
   });
 });
 
+describe("weekPhase",()=>{
+  let startTime =  new Time("Monday","00","00","00");
+  let endTime = new Time("Saturday","19","30","00");
+  let phase = new WeekPhase("ID3", startTime, endTime, null, ()=>{console.log("try handle 3")});
+
+  expect(phase.description).to.be.equal("no description");
+  expect(phase.getTimeRange()[0].toString()).to.be.equal("1000000");
+  expect(phase.getTimeRange()[1].toString()).to.be.equal("6193000");
+
+  expect(phase.isActiveDuringData( new Time("Wednesday","00","00","00")) ).to.be.equal(true);
+  expect(phase.isActiveDuringData( new Time("Sunday","00","00","00")) ).to.be.equal(false);
+
+  startTime = new Time("Saturday","19","30","00");
+  endTime = new Time("Monday","00","00","00");
+  let crossWeekPhase = new WeekPhase("ID3", startTime, endTime, null, ()=>{console.log("try handle 3")});
+  
+  expect(crossWeekPhase.isActiveDuringData( new Time("Wednesday","00","00","00")) ).to.be.equal(false);
+  expect(crossWeekPhase.isActiveDuringData( new Time("Sunday","00","00","00")) ).to.be.equal(true);
+});
+
 
 describe("timeManager",()=>{
   describe("check on timeManager object", ()=>{

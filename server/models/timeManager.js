@@ -1,6 +1,6 @@
-//const { WeekPhase } = require("./WeekPhase");
-var cron = require('node-cron');
 //const { Time } = require("./timeModel");
+const { WeekPhase } = require("./WeekPhase");
+var cron = require('node-cron');
 const dayjs = require("dayjs");
 
 //Handle of phase called only when phase is enabled

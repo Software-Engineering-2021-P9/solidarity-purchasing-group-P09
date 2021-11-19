@@ -45,10 +45,10 @@ class TimeManager {
             return;
         }
         //this means we are setting the time to "virtual"
-        if(phaseID != phaseIDOverride){
+        if(phaseID != this.phaseIDOverride){
             this.phaseIDOverride = phaseID;
             this.disableCron();
-            this.phaseList.filter(phase.ID == phaseID).handler();
+            this.phaseList.filter((phase)=> phaseID==phase.ID )[0].handler();
         }
     }
 
@@ -82,6 +82,7 @@ class TimeManager {
 let timeManagerObj = new TimeManager();
 
 module.exports = timeManagerObj;
+module.exports = { TimeManager };
 
 /********************************
   MARCO INPUT:

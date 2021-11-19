@@ -4,7 +4,7 @@ var cron = require('node-cron');
 const dayjs = require("dayjs");
 
 //PROVE VARIE
-var costruttoreDiWeekPhaseObj = require('./WeekPhase'); 
+var costruttoreDiWeekPhaseObj = require('./models/WeekPhase'); 
 //FINE PROVE VARIE
 
 //Handle of phase called only when phase is enabled

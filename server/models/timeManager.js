@@ -1,5 +1,6 @@
 //const { Time } = require("./timeModel");
-const { WeekPhase } = require("./WeekPhase");
+//const { WeekPhase } = require("./WeekPhase");
+var WeekPhase = require('./WeekPhase.js');
 var cron = require('node-cron');
 const dayjs = require("dayjs");
 

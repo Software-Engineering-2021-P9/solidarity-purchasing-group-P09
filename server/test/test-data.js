@@ -20,16 +20,23 @@ exports.ordersCollection = {
   orders: [
     {
       _id: ObjectID("6187c957b288576ca26f8251"),
-      clientId: "6187c957b288576ca26f8257",
+      clientID: ObjectID("6187c957b288576ca26f8257"),
       products: [
         { productId: "6187c957b288576ca26f8258", quantity: 3 },
         { productId: "6187c957b288576ca26f8259", quantity: 1 },
         { productId: "6187c957b288576ca26f8250", quantity: 2 },
       ],
     },
+    {
+      _id: ObjectID("6187c957b288576ca26f8999"),
+      clientID: ObjectID("6187c957b288576ca26f8257"),
+      products: [
+        { productId: "6187c957b288576ca26f8258", quantity: 10 },
+        { productId: "6187c957b288576ca26f8259", quantity: 2 },
+      ],
+    },
   ],
 };
-
 
 exports.clientsCollection = {
   clients: [
@@ -39,7 +46,7 @@ exports.clientsCollection = {
       fullName: " Domenico Bini",
       phoneNumber: 3205708803,
       address: "via Domenico Bini,26 Torino,10538",
-      wallet: 55.50
+      wallet: 55.5,
     },
     {
       _id: ObjectID("6a8fc927bb88c762a26f0000"),
@@ -47,10 +54,10 @@ exports.clientsCollection = {
       fullName: "Andrea Diprè",
       phoneNumber: 3205755555,
       address: "via Andrea Dipre,24 Torino,10538",
-      wallet: 0
-    }
-  ]
-}
+      wallet: 0,
+    },
+  ],
+};
 
 exports.productsCollection = {
   products: [
@@ -229,4 +236,3 @@ exports.productsCollectionWithCategoryError = {
     },
   ],
 };
-

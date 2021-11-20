@@ -32,6 +32,12 @@ exports.createOrder = async (
   return db.collection(orderCollectionName).insertOne(newOrder);
 };
 
+exports.getOrdersByClientID = async (db, clientID) => {
+  return db
+    .collection(orderCollectionName)
+    .find({ clientID: ObjectId(clientID) })
+    .toArray();
+};
 // ------------
 // GetOrderByID
 // ------------

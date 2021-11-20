@@ -6,6 +6,7 @@ const {
   orderProductIDsBodyValidator,
   orderProductQtysBodyValidator,
   orderProductsBodyValidator,
+  orderClientIDQueryValidator,
 } = require("./shared_validators");
 
 exports.createOrderValidatorChain = [
@@ -57,4 +58,33 @@ exports.createOrderHandler = async function (req, res, next) {
   }
 
   return res.json(Order.fromMongoJSON(result));
+};
+
+exports.getOrdersByClientIDValidator = [orderClientIDQueryValidator];
+
+exports.getOrdersByClientID = async function (req, res, next) {
+  let result;
+
+  try {
+    result = await dao.getProductsByIDs(req.query.clientID);
+  } catch (err) {
+    console.error(`getProductsByIDs() -> couldn't retrieve products: ${err}`);
+    return res.status(500).end();
+  }
+
+  let orders = [];
+  try {
+    orders = result.map((element) => Order.fromMongoJSON(element));
+  } catch (err) {
+    console.error(
+      `fromMongoJSON() -> couldn't convert Mongo result to Product: ${err}`
+    );
+    return res.status(500).end();
+  }
+
+  if (!orders.length) {
+    return res.status(404).end();
+  }
+
+  return res.json(orders);
 };

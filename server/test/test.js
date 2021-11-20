@@ -654,6 +654,65 @@ describe("Clients API tests:", () => {
           });
       });
     });
+
+    describe("GET /orders", () => {
+      it("it should retrieve the client's orders with given ClientID", (done) => {
+        chai
+          .request(app)
+          .get("/api/orders?clientID=6187c957b288576ca26f8257")
+          .end((err, res) => {
+            expect(err).to.be.null;
+            expect(res.status).to.be.equal(200);
+            expect(res.body).to.be.an("object");
+
+            expect(res.body).to.be.eql([
+              {
+                id: "6187c957b288576ca26f8251",
+                clientID: "6187c957b288576ca26f8257",
+                products: [
+                  { productId: "6187c957b288576ca26f8258", quantity: 3 },
+                  { productId: "6187c957b288576ca26f8259", quantity: 1 },
+                  { productId: "6187c957b288576ca26f8250", quantity: 2 },
+                ],
+              },
+              {
+                id: "6187c957b288576ca26f8999",
+                clientId: "6187c957b288576ca26f8257",
+                products: [
+                  { productId: "6187c957b288576ca26f8258", quantity: 10 },
+                  { productId: "6187c957b288576ca26f8259", quantity: 2 },
+                ],
+              },
+            ]);
+
+            done();
+          });
+      });
+
+      it("it should return 404 not found given a non existing ID", (done) => {
+        chai
+          .request(app)
+          .get("/api/orders?clientID=6187c957b288576ca26f8000")
+          .end((err, res) => {
+            expect(err).to.be.null;
+            expect(res.status).to.be.equal(404);
+            done();
+          });
+      });
+
+      it("it must fail when mongo fails", (done) => {
+        dao.close();
+        chai
+          .request(app)
+          .get("/api/orders?clientID=6187c957b288576ca26f8257")
+          .end((err, res) => {
+            expect(err).to.be.null;
+            expect(res.status).to.be.equal(500);
+
+            done();
+          });
+      });
+    });
   });
 });
 
@@ -690,11 +749,11 @@ describe("Clients API tests:", () => {
             expect(res.body).to.be.an("object");
             expect(res.body.email).to.be.equal("ansari@email.com");
             expect(res.body.fullName).to.be.equal("Ehsan Ansari");
-  
+
             done();
           });
       });
-  
+
       it("it must fail when an invalid email is passed", (done) => {
         chai
           .request(app)
@@ -709,32 +768,31 @@ describe("Clients API tests:", () => {
           .end((err, res) => {
             expect(err).to.be.null;
             expect(res.status).to.be.equal(400);
-  
+
             done();
           });
       });
-  
-  
+
       it("it must fail when a fullName too long is passed", (done) => {
         chai
           .request(app)
           .post("/api/clients")
           .send({
-            fullName: "Ehsan Ansari Mario VerdiMario VerdiMario VerdiMario VerdiMario Verdi",
+            fullName:
+              "Ehsan Ansari Mario VerdiMario VerdiMario VerdiMario VerdiMario Verdi",
             phoneNumber: "1236678",
             email: "ansari@email.com",
             address: "via giacinto,22 Torino, 10127",
             wallet: 0.0,
-            
           })
           .end((err, res) => {
             expect(err).to.be.null;
             expect(res.status).to.be.equal(400);
-  
+
             done();
           });
       });
-  
+
       it("it must fail when mongo fails", (done) => {
         dao.close();
         chai
@@ -750,7 +808,7 @@ describe("Clients API tests:", () => {
           .end((err, res) => {
             expect(err).to.be.null;
             expect(res.status).to.be.equal(500);
-  
+
             done();
           });
       });

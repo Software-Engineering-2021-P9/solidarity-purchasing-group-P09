@@ -663,25 +663,31 @@ describe("Clients API tests:", () => {
           .end((err, res) => {
             expect(err).to.be.null;
             expect(res.status).to.be.equal(200);
-            expect(res.body).to.be.an("object");
+            expect(res.body).to.be.an("array");
 
             expect(res.body).to.be.eql([
               {
                 id: "6187c957b288576ca26f8251",
                 clientID: "6187c957b288576ca26f8257",
                 products: [
-                  { productId: "6187c957b288576ca26f8258", quantity: 3 },
-                  { productId: "6187c957b288576ca26f8259", quantity: 1 },
-                  { productId: "6187c957b288576ca26f8250", quantity: 2 },
+                  { productID: "6187c957b288576ca26f8258", quantity: 3 },
+                  { productID: "6187c957b288576ca26f8259", quantity: 1 },
+                  { productID: "6187c957b288576ca26f8250", quantity: 2 },
                 ],
+                status: "waiting",
+                totalPrice: "6",
+                createdAt: "2021-11-16T13:00:07.616Z",
               },
               {
                 id: "6187c957b288576ca26f8999",
-                clientId: "6187c957b288576ca26f8257",
+                clientID: "6187c957b288576ca26f8257",
                 products: [
-                  { productId: "6187c957b288576ca26f8258", quantity: 10 },
-                  { productId: "6187c957b288576ca26f8259", quantity: 2 },
+                  { productID: "6187c957b288576ca26f8258", quantity: 10 },
+                  { productID: "6187c957b288576ca26f8259", quantity: 2 },
                 ],
+                status: "done",
+                totalPrice: "12",
+                createdAt: "2021-12-16T13:00:07.616Z",
               },
             ]);
 

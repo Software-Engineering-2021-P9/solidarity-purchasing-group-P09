@@ -66,9 +66,11 @@ exports.getOrdersByClientID = async function (req, res, next) {
   let result;
 
   try {
-    result = await dao.getProductsByIDs(req.query.clientID);
+    result = await dao.getOrdersByClientID(req.query.clientID);
   } catch (err) {
-    console.error(`getProductsByIDs() -> couldn't retrieve products: ${err}`);
+    console.error(
+      `getOrdersByClientID() -> couldn't retrieve client's orders: ${err}`
+    );
     return res.status(500).end();
   }
 
@@ -77,7 +79,7 @@ exports.getOrdersByClientID = async function (req, res, next) {
     orders = result.map((element) => Order.fromMongoJSON(element));
   } catch (err) {
     console.error(
-      `fromMongoJSON() -> couldn't convert Mongo result to Product: ${err}`
+      `fromMongoJSON() -> couldn't convert Mongo result to Order: ${err}`
     );
     return res.status(500).end();
   }

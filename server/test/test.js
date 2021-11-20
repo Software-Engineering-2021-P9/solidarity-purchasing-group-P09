@@ -653,6 +653,27 @@ describe("Clients API tests:", () => {
             done();
           });
       });
+
+      it("it must fail when mongo fails", (done) => {
+        dao.close();
+        chai
+          .request(app)
+          .post("/api/orders")
+          .send({
+            clientID: "6187c957b288576ca26f8257",
+            products: [
+              { productID: "6187c957b288576ca26f8258", quantity: 3 },
+              { productID: "6187c957b288576ca26f8259", quantity: 1 },
+              { productID: "6187c957b288576ca26f8250", quantity: 2 },
+            ],
+          })
+          .end((err, res) => {
+            expect(err).to.be.null;
+            expect(res.status).to.be.equal(500);
+
+            done();
+          });
+      });
     });
 
     describe("GET /orders", () => {

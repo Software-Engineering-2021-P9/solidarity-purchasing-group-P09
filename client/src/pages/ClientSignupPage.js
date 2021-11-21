@@ -1,11 +1,12 @@
+
+
 import React from "react";
-import { Container, Row } from "react-bootstrap";
 import { employeeNavbarLinks } from "../Routes";
 import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponent";
 import "../App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { useState, useEffect} from "react";
-import { Button, Col, Form ,Alert, } from "react-bootstrap";
+import { useState} from "react";
+import { Button, Col, Form, Alert, Container, Row} from "react-bootstrap";
 import { Link, Redirect} from "react-router-dom";
 import { createClient } from "../services/ApiClient";
 
@@ -41,11 +42,6 @@ function ClientForm(props) {
   const [error, setError] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   
-useEffect(()=>{
-  
-},[success]);
-
-
 
   
   const [client, setClient] = useState({ firstName: "", lastName: "",phoneNumber: "", email: " ", address:"", number:"", city:"", postCode:"" });

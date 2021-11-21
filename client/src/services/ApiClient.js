@@ -90,6 +90,21 @@ export async function addFundToWallet(clientID, increaseBy) {
   }
 }
 
+export async function createClient(client) {
+ 
+  const response = await fetch("http://localhost:3000/api/clients", {
+    method : 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({...client, fullName: client.firstName +" "+ client.lastName,
+     address: client.address +", "+ client.number+" "+ client.city+ ", "+client.postCode, wallet: 0})
+  });
+  
+
+  if(response.OK)
+  return null;
+  else return {'err': 'POST error'};
+}
+
 // --------
 // Products
 // --------

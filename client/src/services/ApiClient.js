@@ -100,9 +100,11 @@ export async function createClient(client) {
   });
   
 
-  if(response.OK)
+  if(response.OK){
   return null;
-  else return {'err': 'POST error'};
+  }
+  else{ return {'err': 'POST error'};
+      }
 }
 
 // --------

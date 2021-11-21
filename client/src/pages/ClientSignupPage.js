@@ -1,11 +1,10 @@
 
 
-import React from "react";
+import {React, useState} from "react";
 import { employeeNavbarLinks } from "../Routes";
 import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponent";
 import "../App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { useState} from "react";
 import { Button, Col, Form, Alert, Container, Row} from "react-bootstrap";
 import { Link, Redirect} from "react-router-dom";
 import { createClient } from "../services/ApiClient";
@@ -58,10 +57,10 @@ function ClientForm(props) {
     event.preventDefault();
     let valid = true;
     if(client.firstName === '' || client.lastName === '' || client.phoneNumber === '' || client.email === '' || client.address === '' || 
-    client.number === '' || client.city === '' || client.fpostCode === ''  )
+    client.number === '' || client.city === '' || client.fpostCode === ''  ){
     valid = false;
    
-  
+    }
    
    try {
      if(valid){

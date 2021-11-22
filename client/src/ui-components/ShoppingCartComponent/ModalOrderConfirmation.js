@@ -33,7 +33,7 @@ function ModalOrderConfirmation(props) {
             product={item}
             quantity={props.cart.get(item.id)}
             key={item.id}
-            />
+          />
           );
         })}
         <br />

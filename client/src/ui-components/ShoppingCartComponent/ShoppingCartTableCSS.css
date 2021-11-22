@@ -1,6 +1,17 @@
 .item-cart{
     font-weight:500;
 }
+.my-pl-3{
+    padding-left: 4%;
+}
 .table-heading{
     background-color: #7465132f;
+    border-bottom: #635f4646 solid 1px;
+    font-weight: bold;
+    vertical-align: middle;
+}
+.shopping-cart-row{
+    padding-bottom: 1%;
+    padding-top: 1%;
+    border-bottom: #635f4646 solid 1px;
 }

@@ -1,7 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./ShoppingCartTableCSS.css";
 import React, { useState, useEffect } from "react";
-import { Table } from "react-bootstrap";
+import { Container, Col, Row} from "react-bootstrap";
 import ImageService from "../../services/ImageService/ImageService";
 
 function ShoppingCartTable(props) {
@@ -9,7 +9,7 @@ function ShoppingCartTable(props) {
 
   useEffect(() => {
     const getProducts = () => {
-      const keys = Array.from( props.cart.keys() );
+      const keys = Array.from(props.cart.keys());
       props.getProductsByIDs(keys).then(function (res) {
         console.log(res);
         setProducts(res);
@@ -19,19 +19,17 @@ function ShoppingCartTable(props) {
   }, [props]);
 
   return (
-    <Table responsive="sm" borderless>
-      <thead className="table-heading">
-        <tr>
-          <th>Category</th>
-          <th>Item</th>
-          <th>Description</th>
-          <th>Packaging</th>
-          <th>Price</th>
-          <th>Quantity</th>
-          <th>Total</th>
-        </tr>
-      </thead>
-      <tbody>
+    <Container>
+      <Col>
+        <Row className="table-heading p-2 mb-3">
+          <Col md={1}>Category</Col>
+          <Col md={2} className="my-pl-3">Item</Col>
+          <Col md={4}>Description</Col>
+          <Col md={2}>Packaging</Col>
+          <Col md={1}>Price</Col>
+          <Col md={1}>Quantity</Col>
+          <Col md={1}>Total</Col>
+        </Row>
         {products.map((item) => {
           return (
             <CartRow
@@ -42,29 +40,29 @@ function ShoppingCartTable(props) {
             ></CartRow>
           );
         })}
-      </tbody>
-    </Table>
+      </Col>
+    </Container>
   );
 }
 
 function CartRow(props) {
   return (
-    <tr>
-      <td>
+    <Row className="shopping-cart-row">
+      <Col md={1} >
         <img
           alt=""
           width="100"
           src={ImageService.returnImageByCategory(props.product.category)}
         />
-      </td>
-      <td className="item-cart">{props.product.name}</td>
-      <td>{props.product.description}</td>
-      <td>{props.product.packaging}</td>
-      <td>
+      </Col>
+      <Col className="item-cart my-pl-3" md={2}>{props.product.name}</Col>
+      <Col md={4}>{props.product.description}</Col>
+      <Col md={2}>{props.product.packaging}</Col>
+      <Col md={1}> 
         {props.product.price}
         {" €"}
-      </td>
-      <td>
+      </Col>
+      <Col md={1}>
         <span
           onClick={() => {
             props.updateQuantity(props.product.id, -1, props.product.price);
@@ -100,12 +98,12 @@ function CartRow(props) {
             <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
           </svg>
         </span>
-      </td>
-      <td>
+      </Col>
+      <Col md={1}>
         {(props.product.price * props.quantity).toFixed(2)}
         {" €"}
-      </td>
-    </tr>
+      </Col>
+    </Row>
   );
 }
 export { ShoppingCartTable };

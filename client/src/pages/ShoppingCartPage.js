@@ -78,7 +78,7 @@ function ShoppingCartPage(props) {
   };
 
   return (
-    <Container>
+    <Container className="px-5 py-3">
       <Row>
         <NavbarComponent />
       </Row>

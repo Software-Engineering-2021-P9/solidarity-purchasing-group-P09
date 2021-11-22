@@ -12,7 +12,6 @@ function ModalOrderConfirmation(props) {
     const getProducts = () => {
       const keys = Array.from( props.cart.keys() );
       props.getProductsByIDs(keys).then(function (res) {
-        console.log(res);
         setProducts(res);
       });
     };

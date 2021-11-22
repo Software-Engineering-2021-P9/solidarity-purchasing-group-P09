@@ -27,12 +27,12 @@ function ModalOrderConfirmation(props) {
         <Modal.Title className="modal-title">Are you sure?</Modal.Title>
       </Modal.Header>
       <Container>
-        {products.map((item) => {
+      {products.map((item) => {
           return (
             <OrderRecapRow
-              product={item}
-              quantity={props.cart.get(item.id)}
-              key={item.id}
+            product={item}
+            quantity={props.cart.get(item.id)}
+            key={item.id}
             />
           );
         })}

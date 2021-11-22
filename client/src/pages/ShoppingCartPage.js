@@ -47,12 +47,14 @@ function ShoppingCartPage(props) {
     // remove from cart
     if (quantity < 0 && prev_qty === 1) {
       const newMap = new Map();
-      Array.from(cart.entries()).map((entry) => {
-        const [key, val] = entry;
-        if (key === product) return null;
-        newMap.set(key, val);
-        return entry;
-      });
+      if(cart.size>1){
+        Array.from(cart.entries()).map((entry) => {
+          const [key, val] = entry;
+          if (key === product) return null;
+          newMap.set(key, val);
+          return entry;
+        });
+      }
       setCart(newMap);
     }
     // decrease qty which is still > 0 || increase it

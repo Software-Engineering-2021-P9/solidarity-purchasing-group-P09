@@ -9,13 +9,16 @@ function ModalOrderConfirmation(props) {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    const getProducts = () => {
-      const keys = Array.from( props.cart.keys() );
-      props.getProductsByIDs(keys).then(function (res) {
-        setProducts(res);
-      });
-    };
-    getProducts();
+    if (props.cart.size === 0) return;
+    else {
+      const getProducts = () => {
+        const keys = Array.from(props.cart.keys());
+        props.getProductsByIDs(keys).then(function (res) {
+          setProducts(res);
+        });
+      };
+      getProducts();
+    }
   }, [props]);
 
   return (
@@ -24,13 +27,13 @@ function ModalOrderConfirmation(props) {
         <Modal.Title className="modal-title">Are you sure?</Modal.Title>
       </Modal.Header>
       <Container>
-      {products.map((item) => {
+        {products.map((item) => {
           return (
             <OrderRecapRow
-            product={item}
-            quantity={props.cart.get(item.id)}
-            key={item.id}
-          />
+              product={item}
+              quantity={props.cart.get(item.id)}
+              key={item.id}
+            />
           );
         })}
         <br />

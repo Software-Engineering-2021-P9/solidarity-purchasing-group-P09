@@ -8,13 +8,17 @@ function ShoppingCartTable(props) {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    const getProducts = () => {
-      const keys = Array.from(props.cart.keys());
-      props.getProductsByIDs(keys).then(function (res) {
-        setProducts(res);
-      });
-    };
-    getProducts();
+    if(props.cart.size===0)
+      setProducts([]);  
+    else {
+      const getProducts = () => {
+        const keys = Array.from(props.cart.keys());
+        props.getProductsByIDs(keys).then(function (res) {
+          setProducts(res);
+        });
+      };
+      getProducts();
+    }
   }, [props]);
 
   return (

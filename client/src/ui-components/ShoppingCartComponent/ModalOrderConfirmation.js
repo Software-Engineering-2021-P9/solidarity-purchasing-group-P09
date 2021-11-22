@@ -1,5 +1,5 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import "./ShoppingCartControlsCSS.css";
+import "./ModalOrderConfirmationCSS.css";
 import React, { useState, useEffect } from "react";
 import { Modal, Container, Row, Col } from "react-bootstrap";
 import  Button  from "../Button/Button";
@@ -37,8 +37,8 @@ function ModalOrderConfirmation(props) {
           );
         })}
         <br />
-        <Row>
-          <Col xs={5}>
+        <Row className="px-2 pb-2">
+          <Col xs={5} className="amount">
             Total amount: {props.tot.toFixed(2)}
             {" €"}
           </Col>
@@ -59,15 +59,14 @@ function ModalOrderConfirmation(props) {
 
 function OrderRecapRow(props) {
   return (
-    <Row className="d-flex justify-content-between">
+    <Row className="d-flex justify-content-between px-2 py-1">
       <Col>
         {props.quantity}
         {"x "} {props.product.name}
       </Col>
-      <Col xs={6}></Col>
-      <Col>
+      <Col className="align-end">
         {(props.product.price * props.quantity).toFixed(2)}
-        {" €"};
+        {" €"}
       </Col>
     </Row>
   );

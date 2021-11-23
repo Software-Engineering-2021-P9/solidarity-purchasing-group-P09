@@ -15,9 +15,11 @@ function ShoppingCartControls(props) {
       >
         <Button className="btn-light mx-3">CONTINUE SHOPPING</Button>
       </Link>
-      <Button className="btn-primary" onClick={props.handleShow}>
+      {props.cart.size===0 ? <Button className="btn-primary" disabled >
         PLACE ORDER
-      </Button>
+      </Button> : <Button className="btn-primary" onClick={props.handleShow}>
+        PLACE ORDER
+      </Button>}
     </div>
   );
 }

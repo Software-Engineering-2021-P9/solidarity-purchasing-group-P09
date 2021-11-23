@@ -1,0 +1,11 @@
+.modal-title {
+    color: #635f46 !important;
+    font-weight: bold;
+  }
+ .amount{
+    color: #635f46 !important;
+    font-weight:600;
+ } 
+ .align-end{
+     text-align: end;
+ }

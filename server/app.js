@@ -8,7 +8,8 @@ var dao = require("./dao/dao");
 // ----------
 // /timeManager
 // ----------
-var timeManagerObj = require('./models/timeManager'); 
+const { TimeManager } = require("./models/timeManager");
+var timeManagerObj = new TimeManager(); 
 
 const {
   checkValidationErrorMiddleware,

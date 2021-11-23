@@ -64,6 +64,7 @@ class TimeManager {
                 this.activePhase = phase;
                 this.activePhase.handler();
             }
+            console.log("No new phase");
         });
         this.cronTask.start();
     }
@@ -79,9 +80,6 @@ class TimeManager {
     }
 }
 
-let timeManagerObj = new TimeManager();
-
-module.exports = timeManagerObj;
 module.exports = { TimeManager };
 
 /********************************

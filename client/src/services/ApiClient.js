@@ -1,8 +1,22 @@
 import Employee from "./models/Employee";
 import ClientInfo from "./models/ClientInfo";
 import Product from "./models/Product";
-import Order from "./models/Order"; 
+import Order from "./models/Order";
+import ProductAvailability from "./models/ProductAvailability";
 
+// Builds the query parameters for an URL from the passed object
+function buildQueryParametersString(queryParams) {
+  if (Object.keys(queryParams).length === 0) {
+    return "";
+  }
+
+  queryParamsString = "?";
+
+  for (const [key, value] of Object.entries(queryParams)) {
+    queryParamsString += `${key}=${value}&`;
+  }
+  return queryParamsString.slice(0, -1);
+}
 
 // --------
 // Employee
@@ -118,6 +132,94 @@ export async function findProducts(category, searchString) {
       return responseBody.map((product) => Product.fromJSON(product));
     default:
       throw new Error("An error occurred during employee fetch");
+  }
+}
+
+export async function getFarmerProducts(
+  farmerID,
+  category = null,
+  searchString = null,
+  isAvailable = null
+) {
+  var queryParams = {};
+  if (category) queryParams["category"] = category;
+  if (searchString) queryParams["searchString"] = searchString;
+  if (isAvailable) queryParams["isAvailable"] = isAvailable;
+
+  let response = await fetch(
+    `/api/farmers/${farmerID}/products` +
+      buildQueryParametersString(queryParams)
+  );
+
+  switch (response.status) {
+    case 200:
+      let responseBody = await response.json();
+      return responseBody.map((productJson) => Product.fromJSON(productJson));
+    case 400:
+      throw new Error("Validation error occurred");
+    case 401:
+      throw new Error("Unauthorized");
+    case 500:
+      throw new Error("Internal Server Error");
+    default:
+      throw new Error("An error occurred during farmer products retrieval");
+  }
+}
+
+export async function getProductByID(productID) {
+  let response = await fetch(`/api/products/${productID}`);
+
+  switch (response.status) {
+    case 200:
+      let responseBody = await response.json();
+      return Product.fromJSON(responseBody);
+    case 400:
+      throw new Error("Validation error occurred");
+    case 401:
+      throw new Error("Unauthorized");
+    case 404:
+      throw new Error("Not Found");
+    case 500:
+      throw new Error("Internal Server Error");
+    default:
+      throw new Error("An error occurred during product retrieval");
+  }
+}
+
+export async function setNextWeekProductAvailability(
+  productID,
+  price,
+  packaging,
+  quantity
+) {
+  var obj = {
+    price: price,
+    packaging: packaging,
+    quantity: quantity,
+  };
+
+  const response = await fetch(`/api/products/${productID}/availability`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ ...obj }),
+  });
+
+  switch (response.status) {
+    case 200:
+      let responseBody = await response.json();
+      return ProductAvailability.fromJSON(responseBody);
+    case 400:
+      throw new Error("Validation error occurred");
+    case 401:
+      throw new Error("Unauthorized");
+    case 404:
+      throw new Error("Not Found");
+    case 500:
+      throw new Error("Internal Server Error");
+    default:
+      throw new Error(
+        "An error occurred setting products' next week availability"
+      );
   }
 }
 
@@ -243,8 +345,8 @@ export async function createOrder(clientID, products) {
 // --------
 
 export async function getProductsByIDs(productIDs) {
-  console.log(productIDs); 
-  let productIDsString = productIDs.join(","); 
+  console.log(productIDs);
+  let productIDsString = productIDs.join(",");
   const response = await fetch("/api/products?ids=" + productIDsString);
 
   switch (response.status) {
@@ -258,5 +360,3 @@ export async function getProductsByIDs(productIDs) {
       throw new Error("An error occurred during products fetch");
   }
 }
-
-

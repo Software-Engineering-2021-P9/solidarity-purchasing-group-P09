@@ -3,10 +3,20 @@
 const { MongoClient } = require("mongodb");
 const { getEmployeeByID, createEmployee } = require("./employee");
 
-const { createOrder, getOrderByID, deleteOrder } = require("./order");
+const {
+  createOrder,
+  getOrderByID,
+  deleteOrder,
+  getOrdersByClientID,
+} = require("./order");
 
-const { getClientByID, addFundToWallet, findClients, createClientsTextSearchIndexes, createClient } = require("./client");
-
+const {
+  getClientByID,
+  addFundToWallet,
+  findClients,
+  createClientsTextSearchIndexes,
+  createClient,
+} = require("./client");
 
 const {
   getProductsByIDs,
@@ -54,25 +64,25 @@ exports.createProductsTextSearchIndexes = () => {
   createProductsTextSearchIndexes(db);
 };
 
-
 // Order
 exports.createOrder = (clientID, products, status, totalPrice, createdAt) =>
   createOrder(db, clientID, products, status, totalPrice, createdAt);
 exports.getOrderByID = (orderID) => getOrderByID(db, orderID);
 exports.deleteOrder = (orderID) => deleteOrder(db, orderID);
+exports.getOrdersByClientID = (clientID) => getOrdersByClientID(db, clientID);
 
 exports.deleteEmployee = (employeeID) => deleteEmployee(db, employeeID);
 exports.getClientByID = (clientID) => getClientByID(db, clientID);
-exports.addFundToWallet = (clientID, increaseBy) => addFundToWallet(db, clientID, increaseBy);
+exports.addFundToWallet = (clientID, increaseBy) =>
+  addFundToWallet(db, clientID, increaseBy);
 exports.findClients = (searchString) => findClients(db, searchString);
 
 exports.createClientsTextSearchIndexes = () =>
   createClientsTextSearchIndexes(db);
 
-    // --------------
+// --------------
 // CreateClient
 // --------------
 exports.getClientByID = (clientID) => getClientByID(db, clientID);
-exports.createClient = (fullName, phoneNumber, email, address, wallet) => 
-createClient(db, fullName, phoneNumber, email, address, wallet);
-
+exports.createClient = (fullName, phoneNumber, email, address, wallet) =>
+  createClient(db, fullName, phoneNumber, email, address, wallet);

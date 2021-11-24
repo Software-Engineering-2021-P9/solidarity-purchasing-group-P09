@@ -1,4 +1,4 @@
-swagger: '2.0'
+swagger: "2.0"
 info:
   description: >-
     The APIs definitions for the Solidarity Purchasing Group application.
@@ -9,6 +9,7 @@ basePath: /api
 tags:
   - name: client
   - name: employee
+  - name: farmer
   - name: order
   - name: product
   - name: week-phase
@@ -21,8 +22,8 @@ paths:
     get:
       tags:
         - product
-      summary: List all the products
-      description: 'Products can be filtered by name and farmer or/and selecting a category. It can also accept a list of productIDs to be retrieved. Filters will not be applied.'
+      summary: List all the available products
+      description: "Products can be filtered by name and farmer or/and selecting a category. It can also accept a list of productIDs to be retrieved. Filters will not be applied and it will also return unavailable products."
       operationId: getProducts
       produces:
         - application/json
@@ -38,25 +39,25 @@ paths:
         - in: query
           name: IDs
           type: string
-          description: String of productsID commas separated
+          description: String of productsID commas separated. If this is set, other filters are not applied and it will also return unavailable products.
       responses:
-        '200':
+        "200":
           description: Success
           schema:
             type: array
             items:
-              $ref: '#/definitions/Product'
-        '400':
+              $ref: "#/definitions/ProductResult"
+        "400":
           description: Bad Request - The request contains invalid parameters
-        '500':
-          description: Internal Server Error         
-          
+        "500":
+          description: Internal Server Error
+
   /orders:
     get:
       tags:
         - order
       summary: List all the existing client's orders
-      description: 'Retrieve all the orders for the client associated to the given ID'
+      description: "Retrieve all the orders for the client associated to the given ID"
       operationId: getClientOrders
       produces:
         - application/json
@@ -66,82 +67,80 @@ paths:
           type: string
           description: Get Client Orders given ClientID
       responses:
-        '200':
+        "200":
           description: Success
           schema:
             type: array
             items:
-              $ref: '#/definitions/Order'
-        '400':
+              $ref: "#/definitions/Order"
+        "400":
           description: Bad Request - The request contains invalid parameters
-        '401':
+        "401":
           description: Unauthorized - The user is not logged or is not allowed to make this action
-        '500':
+        "500":
           description: Internal Server Error
-    post: 
-      tags: 
+    post:
+      tags:
         - order
       summary: Create a new order
-      description: 'Insert a new order into the system'
+      description: "Insert a new order into the system"
       operationId: createOrder
-      consumes: 
+      consumes:
         - application/json
-      parameters: 
+      parameters:
         - in: body
           name: body
           description: Order object to be added to the database
           required: true
           schema:
-            $ref: '#/definitions/CreateOrderParams'
+            $ref: "#/definitions/CreateOrderParams"
       responses:
-        '200':
+        "200":
           description: Success
           schema:
-            $ref: '#/definitions/Order'
-        '400':
+            $ref: "#/definitions/Order"
+        "400":
           description: Bad Request - The request contains invalid parameters
-        '401': 
+        "401":
           description: Unauthorized - The user is not logged or is not allowed to make this action
-        '403':
+        "403":
           description: Forbidden - The action cannot be executed in the current week phase
-        '500':
+        "500":
           description: Internal Server Error
-        
-      
+
   /orders/{orderID}/complete:
-      patch:
-        tags:
-          - order
-        summary: Set an order as completed
-        description: Set the order associated to the given orderID as completed
-        operationId: completeOrder
-        produces:
-          - application/json
-        parameters:
-          - in: path
-            required: true
-            name: orderID 
-            type: string
-            description: The ID of the order to set as completed
-        responses:
-          '204':
-            description: Success
-          '400':
-            description: Bad Request - The request contains invalid parameters
-          '401':
-            description: Unauthorized - The user is not logged or is not allowed to make this action
-          '403':
-            description: Forbidden - The action cannot be executed in the current week phase
-          '500':
-            description: Internal Server Error
-  
-          
+    patch:
+      tags:
+        - order
+      summary: Set an order as completed
+      description: Set the order associated to the given orderID as completed
+      operationId: completeOrder
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          required: true
+          name: orderID
+          type: string
+          description: The ID of the order to set as completed
+      responses:
+        "204":
+          description: Success
+        "400":
+          description: Bad Request - The request contains invalid parameters
+        "401":
+          description: Unauthorized - The user is not logged or is not allowed to make this action
+        "403":
+          description: Forbidden - The action cannot be executed in the current week phase
+        "500":
+          description: Internal Server Error
+
   /clients/{clientID}:
     get:
       tags:
         - client
       summary: Get a registered client details
-      description: 'Get the client details given its ID.'
+      description: "Get the client details given its ID."
       operationId: getClientByID
       produces:
         - application/json
@@ -152,17 +151,17 @@ paths:
           type: string
           description: Parameter that identify and select the Client
       responses:
-        '200':
+        "200":
           description: Success
           schema:
-            $ref: '#/definitions/ClientInfoResult'
-        '400':
+            $ref: "#/definitions/ClientInfoResult"
+        "400":
           description: Bad Request - The request contains invalid parameters
-        '404':
+        "404":
           description: Not Found
-        '500':
+        "500":
           description: Internal Server Error
-          
+
   /clients/{clientID}/wallet:
     patch:
       tags:
@@ -170,7 +169,7 @@ paths:
       summary: Increase the wallet of a client
       description: in the body there will be the value
       operationId: addFundToWallet
-      consumes: 
+      consumes:
         - application/json
       parameters:
         - in: path
@@ -183,60 +182,59 @@ paths:
           required: true
           schema:
             type: object
-            properties: 
+            properties:
               increaseBy:
                 type: number
                 example: 55.50
           description: The value to be added to the wallet
-      responses: 
-        '200':
+      responses:
+        "200":
           description: Success
           schema:
             type: object
-            properties: 
+            properties:
               newWalletValue:
                 type: number
                 example: 1023.23
-        '400': 
+        "400":
           description: Bad Request - The request contains invalid parameters
-        '401': 
+        "401":
           description: Unauthorized - The user is not logged or is not allowed to make this action
-        '500':
+        "500":
           description: Internal Server Error
 
-          
   /clients:
-    post: 
-      tags: 
+    post:
+      tags:
         - client
       summary: Create a new client
-      description: 'Insert a new client into the system'
+      description: "Insert a new client into the system"
       operationId: createClient
-      consumes: 
+      consumes:
         - application/json
-      parameters: 
+      parameters:
         - in: body
           name: body
           description: Client object to be added to the database
           required: true
           schema:
-             $ref: '#/definitions/SignupClientParams'
+            $ref: "#/definitions/SignupClientParams"
       responses:
-        '200':
+        "200":
           description: Success
           schema:
-            $ref: '#/definitions/ClientInfoResult'
-        '400':
+            $ref: "#/definitions/ClientInfoResult"
+        "400":
           description: Bad Request - The request contains invalid parameters
-        '401': 
+        "401":
           description: Unauthorized - The user is not logged or is not allowed to make this action
-        '500':
+        "500":
           description: Internal Server Error
     get:
       tags:
         - client
       summary: Find matching clients
-      description: 'Find matching clients given a search string'
+      description: "Find matching clients given a search string"
       operationId: findClients
       produces:
         - application/json
@@ -246,19 +244,19 @@ paths:
           type: string
           description: Parameter used in searching matching Clients (in any way, i.e. address, fullname, etc...)
       responses:
-        '200':
+        "200":
           description: Success
           schema:
             type: array
             items:
-              $ref: '#/definitions/ClientInfoResult'
-        '400':
+              $ref: "#/definitions/ClientInfoResult"
+        "400":
           description: Bad Request - The request contains invalid parameters
-        '401': 
+        "401":
           description: Unauthorized - The user is not logged or is not allowed to make this action
-        '500':
-          description: Internal Server Error   
-          
+        "500":
+          description: Internal Server Error
+
   /clients/login:
     post:
       tags:
@@ -274,9 +272,9 @@ paths:
         - in: body
           name: credentials
           required: true
-          schema: 
+          schema:
             type: object
-            properties: 
+            properties:
               email:
                 type: string
                 format: email
@@ -287,39 +285,37 @@ paths:
                 description: Password of the user to login
                 example: password
       responses:
-        '200':
+        "200":
           description: Success
           schema:
-            $ref: '#/definitions/ClientInfoResult'
-        '400':
+            $ref: "#/definitions/ClientInfoResult"
+        "400":
           description: Bad Request - The request contains invalid parameters
-        '500':
-          description: Internal Server Error  
-          
+        "500":
+          description: Internal Server Error
 
-
-  /clients/signup: 
-    post: 
-      tags: 
+  /clients/signup:
+    post:
+      tags:
         - client
       summary: Allows a client to signup
       description: Allows a client to signup storing his details and credentials
       operationId: signupClient
-      consumes: 
+      consumes:
         - application/json
       parameters:
         - in: body
           name: body
           required: true
           description: details and credentials object to signup
-          schema: 
-            $ref: '#/definitions/SignupClientParams'
-      responses: 
-        '204':
+          schema:
+            $ref: "#/definitions/SignupClientParams"
+      responses:
+        "204":
           description: No Content
-        '400':
+        "400":
           description: Bad Request - The request contains invalid parameters
-        '500': 
+        "500":
           description: Internal Server Error
 
   /employee/login:
@@ -329,7 +325,7 @@ paths:
       summary: Allow an employee to login
       description: Allows a client to login based on the provided credentials
       operationId: loginEmployee
-      consumes: 
+      consumes:
         - application/json
       parameters:
         - in: body
@@ -338,7 +334,7 @@ paths:
           name: credentials
           schema:
             type: object
-            properties: 
+            properties:
               email:
                 type: string
                 format: email
@@ -349,15 +345,15 @@ paths:
                 description: Password of the employee to login
                 example: password
       responses:
-        '200':
+        "200":
           description: Success
           schema:
-            $ref: '#/definitions/EmployeeInfoResult'
-        '400':
+            $ref: "#/definitions/EmployeeInfoResult"
+        "400":
           description: Bad Request - The request contains invalid parameters
-        '401': 
+        "401":
           description: Unauthorized - The user is not logged or is not allowed to make this action
-        '500':
+        "500":
           description: Internal Server Error
 
   /weekPhases/current:
@@ -370,7 +366,7 @@ paths:
       produces:
         - application/json
       responses:
-        '200':
+        "200":
           description: Success
           schema:
             type: object
@@ -378,7 +374,106 @@ paths:
               activePhase:
                 type: string
                 example: "order-creation"
-        '500':
+        "500":
+          description: Internal Server Error
+
+  /farmers/{farmerID}/products:
+    get:
+      tags:
+        - farmer
+      summary: Get the filtered products associated to a specific farmer
+      description: Get all the products associated to a specific farmer, filtered by category a searchString and/or if it has a productAvailability associated for the current week
+      operationId: getFarmerProducts
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: category
+          type: string
+          description: Filter the products by category
+        - in: query
+          name: searchString
+          type: string
+          description: Filter the products by any substring related to the product (name of the product, name of the farmer, description)
+        - in: query
+          name: isAvailable
+          type: boolean
+          description: Return only the products with (true) or without (false) availability set. If this field is not defined, all the products will be returned.
+      responses:
+        "200":
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/ProductResult"
+        "400":
+          description: Bad Request - The request contains invalid parameters
+        "401":
+          description: Unauthorized - The user is not logged or is not allowed to make this action
+        "500":
+          description: Internal Server Error
+
+  /products/{productID}:
+    get:
+      tags:
+        - product
+      summary: Get a product details
+      description: "Get the product details given its ID."
+      operationId: getProductByID
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          required: true
+          name: productID
+          type: string
+          description: Parameter that identify and select the Product
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/ProductResult"
+        "400":
+          description: Bad Request - The request contains invalid parameters
+        "404":
+          description: Not Found
+        "401":
+          description: Unauthorized
+        "500":
+          description: Internal Server Error
+
+  /products/{productID}/availability:
+    post:
+      tags:
+        - product
+      summary: Set a product availability for the next week.
+      description: Set a product availability for the next week.
+      operationId: setNextWeekProductAvailability
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          required: true
+          name: productID
+          type: string
+          description: Parameter that identify and select the Product
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: "#/definitions/SetNextWeekProductAvailabilityParams"
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/ProductAvailability"
+        "400":
+          description: Bad Request - The request contains invalid parameters
+        "404":
+          description: Not Found
+        "401":
+          description: Unauthorized
+        "500":
           description: Internal Server Error
 
   /testing/weekPhases/current:
@@ -391,11 +486,11 @@ paths:
       produces:
         - application/json
       responses:
-        '204':
+        "204":
           description: Success
-        '400':
+        "400":
           description: Bad Request - The request contains invalid parameters
-        '500':
+        "500":
           description: Internal Server Error
 
   /testing/database/reset:
@@ -408,11 +503,10 @@ paths:
       produces:
         - application/json
       responses:
-        '204':
+        "204":
           description: Success
-        '500':
+        "500":
           description: Internal Server Error
-
 
 definitions:
   ClientInfo:
@@ -433,46 +527,72 @@ definitions:
       password:
         type: string
         minLength: 6
-        example:
-          basePassword
+        example: basePassword
       email:
         type: string
         format: email
-        example: 
-          mariorossi@gmail.com
+        example: mariorossi@gmail.com
       fullName:
         type: string
         maxLength: 35
-        example: 
-          Mario Rossi
+        example: Mario Rossi
       address:
         type: string
         maxLength: 60
-        example:
-          Via dei castagni 7a|Torino|TO|10140
+        example: Via dei castagni 7a|Torino|TO|10140
       wallet:
         type: number
   EmployeeInfo:
-      type: object
-      additionalProperties: false
-      required:
-        - id
-        - password
-        - email
-        - fullname
-      properties:
-        id:
-          type: string
-          format: bsonID
-        password:
-          type: string
-          minLength: 6
-        email:
-          type: string
-          format: email
-        fullname:
-          type: string
-          maxLength: 35
+    type: object
+    additionalProperties: false
+    required:
+      - id
+      - password
+      - email
+      - fullname
+    properties:
+      id:
+        type: string
+        format: bsonID
+      password:
+        type: string
+        minLength: 6
+      email:
+        type: string
+        format: email
+      fullname:
+        type: string
+        maxLength: 35
+  FarmerInfo:
+    description: "At least one between email and (fullName, address) are required"
+    type: object
+    additionalProperties: false
+    required:
+      - id
+      - password
+      - email
+      - fullName
+      - address
+    properties:
+      id:
+        type: string
+        format: bsonID
+      password:
+        type: string
+        minLength: 6
+        example: basePassword
+      email:
+        type: string
+        format: email
+        example: mariorossi@gmail.com
+      fullName:
+        type: string
+        maxLength: 35
+        example: Mario Rossi
+      address:
+        type: string
+        maxLength: 60
+        example: Via dei castagni 7a|Torino|TO|10140
   Order:
     type: object
     additionalProperties: false
@@ -499,49 +619,84 @@ definitions:
               format: bsonID
             quantity:
               type: integer
-        example:
-          "{$productID:$quantity,...}"
+        example: "{$productID:$quantity,...}"
       totalPrice:
         type: number
       status:
         type: string
         enum:
           - WAITING
+          - NOT-COVERED
           - CONFIRMED
           - PREPARED
           - DONE
   Product:
-      type: object
-      additionalProperties: false
-      required:
-        - id
-        - farmerID
-        - name
-        - description
-        - category
-      properties: 
-        id:
-          type: string
-          format: bsonID
-        farmerID:
-          type: string
-          format: bsonID
-        name: 
-          type: string
-          maxLength: 25
-          example: Potato
-        description: 
-          type: string
-          maxLength: 100
-        category: 
-          type: string
-          enum:
-            - fruit
-            - vegetables
-            - spreadable creams
-            - meat
-            - eggs
-            - milk
+    type: object
+    additionalProperties: false
+    required:
+      - id
+      - farmerID
+      - name
+      - description
+      - category
+    properties:
+      id:
+        type: string
+        format: bsonID
+      farmerID:
+        type: string
+        format: bsonID
+      name:
+        type: string
+        maxLength: 25
+        example: Potato
+      description:
+        type: string
+        maxLength: 100
+      category:
+        type: string
+        enum:
+          - fruit
+          - vegetables
+          - spreadable creams
+          - meat
+          - eggs
+          - milk
+  ProductAvailability:
+    type: object
+    additionalProperties: false
+    required:
+      - id
+      - farmerID
+      - productID
+      - week
+      - year
+      - price
+      - packaging
+      - quantity
+    properties:
+      id:
+        type: string
+        format: bsonID
+      farmerID:
+        type: string
+        format: bsonID
+      productID:
+        type: string
+        format: bsonID
+      week:
+        type: integer
+        example: 34
+      year:
+        type: integer
+        example: 2021
+      price:
+        type: number
+      packaging:
+        type: string
+        example: "'2lt', '1kg', '100g', '6 pcs', '4 units'"
+      quantity:
+        type: integer
   CreateOrderParams:
     type: object
     additionalProperties: false
@@ -562,8 +717,7 @@ definitions:
               format: bsonID
             quantity:
               type: integer
-        example:
-          "{$productID:$quantity,...}"
+        example: "{$productID:$quantity,...}"
   SignupClientParams:
     type: object
     additionalProperties: false
@@ -576,23 +730,34 @@ definitions:
       password:
         type: string
         minLength: 6
-        example:
-          basePassword
+        example: basePassword
       email:
         type: string
         format: email
-        example: 
-          mariorossi@gmail.com
+        example: mariorossi@gmail.com
       fullName:
         type: string
         maxLength: 35
-        example: 
-         Mario Rossi
+        example: Mario Rossi
       address:
         type: string
         maxLength: 60
-        example:
-          Via dei castagni 7a|Torino|TO|10140
+        example: Via dei castagni 7a|Torino|TO|10140
+  SetNextWeekProductAvailabilityParams:
+    type: object
+    additionalProperties: false
+    required:
+      - price
+      - packaging
+      - quantity
+    properties:
+      price:
+        type: number
+      packaging:
+        type: string
+        example: "'2lt', '1kg', '100g', '6 pcs', '4 units'"
+      quantity:
+        type: integer
   ClientInfoResult:
     description: "Return model for methods which return ClientInfo (sensitive data is stripped). At least one between email and (fullName, address) are required"
     type: object
@@ -610,35 +775,103 @@ definitions:
       email:
         type: string
         format: email
-        example: 
-          mariorossi@gmail.com
+        example: mariorossi@gmail.com
       fullName:
         type: string
         maxLength: 35
-        example: 
-          Mario Rossi
+        example: Mario Rossi
       address:
         type: string
         maxLength: 60
-        example:
-          Via dei castagni 7a|Torino|TO|10140
+        example: Via dei castagni 7a|Torino|TO|10140
       wallet:
         type: number
   EmployeeInfoResult:
-      description: Return model for methods which return EmployeeInfo (sensitive data is stripped).
-      type: object
-      additionalProperties: false
-      required:
-        - id
-        - email
-        - fullname
-      properties:
-        id:
-          type: string
-          format: bsonID
-        email:
-          type: string
-          format: email
-        fullname:
-          type: string
-          maxLength: 35
+    description: Return model for methods which return EmployeeInfo (sensitive data is stripped).
+    type: object
+    additionalProperties: false
+    required:
+      - id
+      - email
+      - fullname
+    properties:
+      id:
+        type: string
+        format: bsonID
+      email:
+        type: string
+        format: email
+      fullname:
+        type: string
+        maxLength: 35
+  ProductResult:
+    description: Return model for methods which return Product. It also contains the information about current week availability.
+    type: object
+    additionalProperties: false
+    required:
+      - id
+      - farmerID
+      - name
+      - description
+      - category
+    properties:
+      id:
+        type: string
+        format: bsonID
+      farmerID:
+        type: string
+        format: bsonID
+      name:
+        type: string
+        maxLength: 25
+        example: Potato
+      description:
+        type: string
+        maxLength: 100
+      category:
+        type: string
+        enum:
+          - fruit
+          - vegetables
+          - spreadable creams
+          - meat
+          - eggs
+          - milk
+      productAvailability:
+        $ref: "#/definitions/ProductAvailabilityResult"
+  ProductAvailabilityResult:
+    description: Return model for methods which return ProductAvailability.
+    type: object
+    additionalProperties: false
+    required:
+      - id
+      - farmerID
+      - productID
+      - week
+      - year
+      - price
+      - packaging
+      - quantity
+    properties:
+      id:
+        type: string
+        format: bsonID
+      farmerID:
+        type: string
+        format: bsonID
+      productID:
+        type: string
+        format: bsonID
+      week:
+        type: integer
+        example: 34
+      year:
+        type: integer
+        example: 2021
+      price:
+        type: number
+      packaging:
+        type: string
+        example: "'2lt', '1kg', '100g', '6 pcs', '4 units'"
+      quantity:
+        type: integer

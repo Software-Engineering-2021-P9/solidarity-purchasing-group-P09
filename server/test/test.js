@@ -716,13 +716,15 @@ describe("Clients API tests:", () => {
           });
       });
 
-      it("it should return 404 not found given a non existing ID", (done) => {
+      it("it should return an empty array if there are no orders for given clientID", (done) => {
         chai
           .request(app)
           .get("/api/orders?clientID=6187c957b288576ca26f8000")
           .end((err, res) => {
             expect(err).to.be.null;
-            expect(res.status).to.be.equal(404);
+            expect(res.status).to.be.equal(200);
+            expect(res.body).to.be.an("array");
+            expect(res.body.length).to.be.equal(0);
             done();
           });
       });

@@ -74,12 +74,12 @@ exports.getOrdersByClientID = async function (req, res, next) {
     return res.status(500).end();
   }
 
-  let orders = [];
-  orders = result.map((element) => Order.fromMongoJSON(element));
-
-  if (!orders.length) {
+  if (!result.length) {
+    console.error(
+      `getOrdersByClientID() -> couldn't retrieve any order for the client`
+    );
     return res.status(404).end();
   }
-
+  const orders = result.map((element) => Order.fromMongoJSON(element));
   return res.json(orders);
 };

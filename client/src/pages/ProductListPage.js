@@ -50,7 +50,7 @@ function ProductListPage(props) {
 
   // modal states
   const [show, setShow] = useState(false);
-  const [showAlert, setShowAlert] = useState(false); 
+  const [showAlert, setShowAlert] = useState(true); 
 
   const [modalProduct, setModalProduct] = useState({});
 
@@ -154,7 +154,8 @@ function ProductListPage(props) {
           </Button>
         </Modal.Footer>
       </Modal>
-      {props.location.state != null && props.location.state.orderAmount != null ? (
+      
+      {props.location.state != null && props.location.state.orderAmount != null && showAlert ? (
         <Row>
           <Alert
             variant="success"
@@ -175,6 +176,7 @@ function ProductListPage(props) {
       ) : (
         ""
       )}
+
       <Row className="align-items-center">
         <h1 className="title">Available products</h1>
       </Row>

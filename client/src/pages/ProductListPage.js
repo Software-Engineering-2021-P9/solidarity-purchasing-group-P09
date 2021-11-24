@@ -7,6 +7,7 @@ import {
   FormControl,
   Modal,
   Container,
+  Alert
 } from "react-bootstrap";
 import { employeeNavbarLinks } from "../Routes";
 import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponent";
@@ -14,7 +15,7 @@ import Product from "../services/models/Product";
 import ProductCard from "../ui-components/ProductCardComponent/ProductCard";
 import { RedButton } from "../ui-components/RedButtonComponent/RedButton";
 import { RedDropdown } from "../ui-components/RedDropdownComponent/RedDropdown";
-import  Button  from "../ui-components/Button/Button";
+import Button from "../ui-components/Button/Button";
 import "../ui-components/ShoppingCartComponent/ShoppingCartControlsCSS.css";
 import "../ui-components/Title.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -22,7 +23,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { findProducts } from "../services/ApiClient";
 
 function ProductListPage(props) {
-  
   const [products, setProducts] = useState([]);
 
   //used for storing the content of the search form
@@ -35,16 +35,25 @@ function ProductListPage(props) {
   const [searchString, setSearchString] = useState();
 
   //current cart
-  const [cart, setCart] = useState(props.location.state ? props.location.state.shoppingCart : new Map());
+  const [cart, setCart] = useState(
+    props.location.state ? props.location.state.shoppingCart : new Map()
+  );
 
   // if the employee is creating a new order or is just showing available products
-  const creatingOrderMode = props.location.state ? true : false; 
+  var creatingOrderMode = props.location.state ? true : false;
+
+  // MOCK DATA
+  var isAClient = true;
+  // END DATA
+
+  if (isAClient) creatingOrderMode = true;
 
   // modal states
   const [show, setShow] = useState(false);
+  const [showAlert, setShowAlert] = useState(false); 
 
   const [modalProduct, setModalProduct] = useState({});
-  
+
   useEffect(() => {
     //call from props the function for fetching the new products
     async function updateProducts() {
@@ -75,17 +84,24 @@ function ProductListPage(props) {
   const handleClose = () => setShow(false);
 
   const handleShow = (product) => {
-    if(cart.get(product.id)){
-      setModalProduct({productName: product.name, productId: product.id, productQty: cart.get(product.id)});
-    }
-    else
-      setModalProduct({productName: product.name, productId: product.id, productQty: 1});
+    if (cart.get(product.id)) {
+      setModalProduct({
+        productName: product.name,
+        productId: product.id,
+        productQty: cart.get(product.id),
+      });
+    } else
+      setModalProduct({
+        productName: product.name,
+        productId: product.id,
+        productQty: 1,
+      });
     setShow(true);
   };
 
   const addItem = (productID, quantity) => {
     setCart(new Map(cart.set(productID, parseInt(quantity))));
-    setShow(false); 
+    setShow(false);
   };
 
   return (
@@ -95,7 +111,12 @@ function ProductListPage(props) {
         showShoppingCart
         shoppingCartItems={cart.size}
         shoppingCart={cart}
-        clientID={props.location.state ? props.location.state.clientID: ''}
+        clientID={
+          props.location.state
+            ? props.location.state.clientID
+            : "619d06384d6847a9a1eb77cd"
+        }
+        isAClient={isAClient}
       />
 
       <Modal show={show} onHide={handleClose}>
@@ -111,7 +132,9 @@ function ProductListPage(props) {
               type="number"
               step={1}
               value={modalProduct.productQty}
-              onChange={(e) => setModalProduct({...modalProduct, productQty:e.target.value})}
+              onChange={(e) =>
+                setModalProduct({ ...modalProduct, productQty: e.target.value })
+              }
               max={100}
               min={1}
             />
@@ -121,12 +144,37 @@ function ProductListPage(props) {
           <Button className="btn-light" onClick={handleClose}>
             Close
           </Button>
-          <Button className="btn-primary" onClick={() => addItem(modalProduct.productId, modalProduct.productQty)}>
+          <Button
+            className="btn-primary"
+            onClick={() =>
+              addItem(modalProduct.productId, modalProduct.productQty)
+            }
+          >
             Submit
           </Button>
         </Modal.Footer>
       </Modal>
-
+      {props.location.state != null && props.location.state.orderAmount != null ? (
+        <Row>
+          <Alert
+            variant="success"
+            style={{
+              color: "#635F46",
+              fontWeight: "bold",
+              backgroundColor: "#7465132f",
+              width: "auto",
+              marginTop: "1%",
+              marginLeft: "1%",
+            }}
+            onClose={() => setShowAlert(false)}
+            dismissible
+          >
+            Your order was successfully created!
+          </Alert>
+        </Row>
+      ) : (
+        ""
+      )}
       <Row className="align-items-center">
         <h1 className="title">Available products</h1>
       </Row>

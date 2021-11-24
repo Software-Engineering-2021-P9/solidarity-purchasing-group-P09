@@ -41,7 +41,7 @@ function NavbarComponent(props) {
         <div className='navbar-logo d-flex justify-content-end '>
             {props.shoppingCartItems > 0 ? (
                <Link className='navbar-logo mx-2'
-               to={{ pathname: routes[shoppingCartRouteName].path, state: { shoppingCart: props.shoppingCart, clientID:props.clientID}}}>
+               to={{ pathname: routes[shoppingCartRouteName].path, state: { shoppingCart: props.shoppingCart, clientID:props.clientID, isAClient:props.isAClient}}}>
               <svg
                 xmlns='http://www.w3.org/2000/svg'
                 width='30'

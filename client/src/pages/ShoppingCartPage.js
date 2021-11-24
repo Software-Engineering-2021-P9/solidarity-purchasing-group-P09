@@ -20,14 +20,20 @@ function ShoppingCartPage(props) {
   // as props, ShoppingCartPage receives
   //      - a Map <ItemID, Qty>
   //      - the clientID
+ 
+  //  - the fact that the user is a client (maybe boolean client=true)    NEW!
+  
   // it mantains as main states
   //      - a cart (Map <ItemID, Qty>)
   //      - the total amount of the current cart
+  // some other states for showing/hidding the modal and submitting the order  
   // it uses function getProductsByIDs(id) -> product object
   // it uses function getClientByID(id) -> client object
   // it uses function createOrder(clientID, cart) -> POST /api/orders
 
   const propsClientID = props.location.state? props.location.state.clientID : ''; 
+
+  const isAClient = props.location.state? props.location.state.isAClient : false; 
 
   const [cart, setCart] = useState(props.location.state.shoppingCart);
 
@@ -88,6 +94,7 @@ function ShoppingCartPage(props) {
         <ShoppingCartTitle
           client={propsClientID}
           getClientByID={getClientByID}
+          isAClient={isAClient}
         />
       </Row>
       <Row>
@@ -118,7 +125,7 @@ function ShoppingCartPage(props) {
           handleSubmit={handleSubmit}
         />
       </Row>
-      {submitted ? (
+      {submitted && !isAClient ? (
         <Redirect
           to={{
             pathname: "/employee/clients/" + propsClientID,  state: { orderAmount: amount}
@@ -127,8 +134,14 @@ function ShoppingCartPage(props) {
       ) : (
         ""
       )}
+      {submitted && isAClient ? (
+        <Redirect
+          to={{
+            pathname: "/",  state: { orderAmount: amount, clientID:propsClientID, shoppingCart:new Map()}
+          }}
+        />
+      ):""}
     </Container>
   );
 }
-
 export { ShoppingCartPage };

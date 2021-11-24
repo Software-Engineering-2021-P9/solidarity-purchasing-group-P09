@@ -98,6 +98,13 @@ app.get(
   orderHandlers.getOrdersByClientID
 );
 
+app.patch(
+  buildAPIPath("/orders/:orderID/complete"),
+  orderHandlers.completeOrderValidator,
+  checkValidationErrorMiddleware,
+  orderHandlers.completeOrder
+);
+
 // /products
 // ----------
 app.get(

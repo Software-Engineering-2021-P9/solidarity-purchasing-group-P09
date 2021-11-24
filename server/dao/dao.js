@@ -8,6 +8,7 @@ const {
   getOrderByID,
   deleteOrder,
   getOrdersByClientID,
+  completeOrder,
 } = require("./order");
 
 const {
@@ -70,6 +71,7 @@ exports.createOrder = (clientID, products, status, totalPrice, createdAt) =>
 exports.getOrderByID = (orderID) => getOrderByID(db, orderID);
 exports.deleteOrder = (orderID) => deleteOrder(db, orderID);
 exports.getOrdersByClientID = (clientID) => getOrdersByClientID(db, clientID);
+exports.completeOrder = (orderID) => completeOrder(db, orderID);
 
 exports.deleteEmployee = (employeeID) => deleteEmployee(db, employeeID);
 exports.getClientByID = (clientID) => getClientByID(db, clientID);

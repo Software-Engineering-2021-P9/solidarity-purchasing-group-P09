@@ -7,6 +7,7 @@ const {
   orderProductQtysBodyValidator,
   orderProductsBodyValidator,
   orderClientIDQueryValidator,
+  orderIDParamValidator,
 } = require("./shared_validators");
 
 exports.createOrderValidatorChain = [
@@ -76,4 +77,19 @@ exports.getOrdersByClientID = async function (req, res, next) {
 
   const orders = result.map((element) => Order.fromMongoJSON(element));
   return res.json(orders);
+};
+
+exports.completeOrderValidator = [orderIDParamValidator];
+
+exports.completeOrder = async function (req, res, next) {
+  // Insert the new order
+  var result;
+  try {
+    result = await dao.completeOrder(req.params.orderID);
+  } catch (err) {
+    console.error(`CompleteOrder() -> couldn't patch the order: ${err}`);
+    return res.status(500).end();
+  }
+
+  return res.json(Order.fromMongoJSON(result.value));
 };

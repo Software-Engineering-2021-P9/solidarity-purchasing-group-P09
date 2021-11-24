@@ -729,11 +729,61 @@ describe("Clients API tests:", () => {
           });
       });
 
+      it("it should return an error if the ID passed is not valid", (done) => {
+        chai
+          .request(app)
+          .get("/api/orders?clientID=68000")
+          .end((err, res) => {
+            expect(err).to.be.null;
+            expect(res.status).to.be.equal(400);
+            done();
+          });
+      });
+
       it("it must fail when mongo fails", (done) => {
         dao.close();
         chai
           .request(app)
           .get("/api/orders?clientID=6187c957b288576ca26f8257")
+          .end((err, res) => {
+            expect(err).to.be.null;
+            expect(res.status).to.be.equal(500);
+
+            done();
+          });
+      });
+    });
+
+    describe("PATCH /orders", () => {
+      it("it should update the order's status with given orderID", (done) => {
+        chai
+          .request(app)
+          .patch("/api/orders/6187c957b288576ca26f8251/complete")
+          .end((err, res) => {
+            expect(err).to.be.null;
+            expect(res.status).to.be.equal(200);
+            expect(res.body.status).to.be.equal(OrderStatus.DONE);
+            expect(res.body.id).to.be.equal("6187c957b288576ca26f8251");
+            done();
+          });
+      });
+
+      it("it should return an error if the ID passed is not valid", (done) => {
+        chai
+          .request(app)
+          .patch("/api/orders/12/complete")
+          .end((err, res) => {
+            expect(err).to.be.null;
+            expect(res.status).to.be.equal(400);
+            done();
+          });
+      });
+
+      it("it must fail when mongo fails", (done) => {
+        dao.close();
+        chai
+          .request(app)
+          .patch("/api/orders/6187c957b288576ca26f8251/complete")
           .end((err, res) => {
             expect(err).to.be.null;
             expect(res.status).to.be.equal(500);

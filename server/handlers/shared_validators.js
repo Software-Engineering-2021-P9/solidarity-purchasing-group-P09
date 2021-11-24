@@ -108,6 +108,8 @@ exports.orderProductQtysBodyValidator = body("products.*.quantity")
 
 exports.orderClientIDQueryValidator = query("clientID").isMongoId();
 
+exports.orderIDParamValidator = param("orderID").isMongoId();
+
 //Clients
 
 exports.clientIDPathValidator = param("clientID").isMongoId();

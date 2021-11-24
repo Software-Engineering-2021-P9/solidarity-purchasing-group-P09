@@ -152,9 +152,12 @@ exports.orderProductQtysBodyValidator = body("products.*.quantity")
   .isLength({ min: 0 })
  
   exports.checkLoggedClientMiddleware = (req, res, next) => {
+    /* MOCK DATA ... waiting for login */ 
     var isLoggedIn = true; 
     var isAClient = true ; 
-    var loggedClientID = '6192f033a08afa2e3a480c01'; 
+    var loggedClientID = '6187c957b288576ca26f8257'; 
+    /* END MOCK DATA */ 
+    
     if(isLoggedIn && isAClient){
       if(loggedClientID != req.body.clientID)
        return res.status(400).json({ error: `You can't perform this action for someone else` });

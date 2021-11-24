@@ -243,7 +243,6 @@ export async function createOrder(clientID, products) {
 // --------
 
 export async function getProductsByIDs(productIDs) {
-  console.log(productIDs); 
   let productIDsString = productIDs.join(","); 
   const response = await fetch("/api/products?ids=" + productIDsString);
 

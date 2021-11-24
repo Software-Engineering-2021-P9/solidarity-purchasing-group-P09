@@ -90,6 +90,10 @@ exports.completeOrder = async function (req, res, next) {
     console.error(`CompleteOrder() -> couldn't patch the order: ${err}`);
     return res.status(500).end();
   }
+  if (!result.value) {
+    console.error(`CompleteOrder() -> couldn't find the requested order`);
+    return res.status(400).end();
+  }
 
-  return res.json(Order.fromMongoJSON(result.value));
+  return res.status(200).end();
 };

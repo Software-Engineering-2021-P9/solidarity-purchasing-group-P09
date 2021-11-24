@@ -26,7 +26,7 @@ exports.ordersCollection = {
         { productID: "6187c957b288576ca26f8259", quantity: 1 },
         { productID: "6187c957b288576ca26f8250", quantity: 2 },
       ],
-      status: "waiting",
+      status: "prepared",
       totalPrice: "6",
       createdAt: "2021-11-16T13:00:07.616Z",
     },

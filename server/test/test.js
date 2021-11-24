@@ -695,7 +695,7 @@ describe("Clients API tests:", () => {
                   { productID: "6187c957b288576ca26f8259", quantity: 1 },
                   { productID: "6187c957b288576ca26f8250", quantity: 2 },
                 ],
-                status: "waiting",
+                status: "prepared",
                 totalPrice: "6",
                 createdAt: "2021-11-16T13:00:07.616Z",
               },
@@ -762,8 +762,27 @@ describe("Clients API tests:", () => {
           .end((err, res) => {
             expect(err).to.be.null;
             expect(res.status).to.be.equal(200);
-            expect(res.body.status).to.be.equal(OrderStatus.DONE);
-            expect(res.body.id).to.be.equal("6187c957b288576ca26f8251");
+            done();
+          });
+      });
+      it("it should return 400 if the order with given orderID is not in PREPARING status", (done) => {
+        chai
+          .request(app)
+          .patch("/api/orders/6187c957b288576ca26f8999/complete")
+          .end((err, res) => {
+            expect(err).to.be.null;
+            expect(res.status).to.be.equal(400);
+            done();
+          });
+      });
+
+      it("it should return an status=400 if the ID passed is valid but not present in the collection", (done) => {
+        chai
+          .request(app)
+          .patch("/api/orders/6187c957b288576ca26f8259/complete")
+          .end((err, res) => {
+            expect(err).to.be.null;
+            expect(res.status).to.be.equal(400);
             done();
           });
       });

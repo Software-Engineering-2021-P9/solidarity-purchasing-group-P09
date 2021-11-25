@@ -33,7 +33,7 @@ function ShoppingCartPage(props) {
 
   const propsClientID = props.location.state? props.location.state.clientID : ''; 
 
-  const isAClient = props.location.state? props.location.state.isAClient : false; 
+  const isClientLogged = props.location.state? props.location.state.isClientLogged : false; 
 
   const [cart, setCart] = useState(props.location.state.shoppingCart);
 
@@ -94,7 +94,7 @@ function ShoppingCartPage(props) {
         <ShoppingCartTitle
           client={propsClientID}
           getClientByID={getClientByID}
-          isAClient={isAClient}
+          isClientLogged={isClientLogged}
         />
       </Row>
       <Row>
@@ -125,7 +125,7 @@ function ShoppingCartPage(props) {
           handleSubmit={handleSubmit}
         />
       </Row>
-      {submitted && !isAClient ? (
+      {submitted && !isClientLogged ? (
         <Redirect
           to={{
             pathname: "/employee/clients/" + propsClientID,  state: { orderAmount: amount}
@@ -134,10 +134,10 @@ function ShoppingCartPage(props) {
       ) : (
         ""
       )}
-      {submitted && isAClient ? (
+      {submitted && isClientLogged ? (
         <Redirect
           to={{
-            pathname: "/",  state: { orderAmount: amount, clientID:propsClientID, shoppingCart:new Map()}
+            pathname: "/clientID="+propsClientID,  state: { orderAmount: amount, clientID:propsClientID, shoppingCart:new Map()}
           }}
         />
       ):""}

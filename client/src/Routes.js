@@ -5,6 +5,7 @@ import { ClientSignupPage } from "./pages/ClientSignupPage";
 import { ProductListPage } from "./pages/ProductListPage";
 
 const productListRouteName = "product-list-page";
+const productListClientRouteName = "product-list-client-page";
 const shoppingCartRouteName = "shopping-cart-page";
 const employeeClientManagementRouteName = "employee-client-management-page";
 const employeeClientDetailsRouteName = "employee-client-details-page";
@@ -40,6 +41,12 @@ const routes = {
     component: ClientSignupPage,
     exact: false,
     linkTitle: "Signup Client",
+  },
+  [productListClientRouteName]: {
+    path: "/clientID=:clientID",
+    component: ProductListPage,
+    exact: false,
+    linkTitle: "Show Product List for a client",
   },
 };
 

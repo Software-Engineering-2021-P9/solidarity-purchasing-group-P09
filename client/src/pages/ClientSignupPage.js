@@ -100,13 +100,14 @@ function ClientForm(props) {
  || !(validator.isAlpha(clientParams.city)) 
  || !(validator.isAlpha(clientParams.address, 'it-IT', {ignore:"\s"}))
   || !(validator.isNumeric(clientParams.number)) 
-  || !(validator.isNumeric(clientParams.postCode)))
+  || !(validator.isNumeric(clientParams.postCode))){
   return false;
+  }
   return true;
   
         }
 
-        const updateErrorMessage = function(clientParams1){
+        const updateErrorMessage1 = function(clientParams1){
           if(clientParams1.firstName === '' || clientParams1.lastName === '' || clientParams1.phoneNumber === '' || clientParams1.email === '' || clientParams1.address === '' || 
           clientParams1.number === '' || clientParams1.city === '' || clientParams1.postCode === ''  ){
             setErrorMessage("*Fill in all the fields!");
@@ -117,23 +118,31 @@ function ClientForm(props) {
          if(!(validator.isMobilePhone(clientParams1.phoneNumber)) && !(validator.isEmpty(clientParams1.phoneNumber))){
           setErrorMessage2("*The phone number is invalid!  ");
          }
-         if(!(validator.isAlpha(clientParams1.firstName)) && !(validator.isEmpty(clientParams1.firstName))){
-          setErrorMessage3("*The first name is incorrect!  ");
-         }
-         if(!(validator.isAlpha(clientParams1.lastName)) && !(validator.isEmpty(clientParams1.lastName))){
-          setErrorMessage4("*The last name is incorrect!  ");
-         }
-         if(!(validator.isAlpha(clientParams1.city)) && !(validator.isEmpty(clientParams1.city))){
-          setErrorMessage5("*The city is incorrect!  ");
-         }
+      
+        }
+        const updateErrorMessage2 = function(clientParams2){
+          if(!(validator.isAlpha(clientParams2.firstName)) && !(validator.isEmpty(clientParams2.firstName))){
+            setErrorMessage3("*The first name is incorrect!  ");
+           }
+           if(!(validator.isAlpha(clientParams2.lastName)) && !(validator.isEmpty(clientParams2.lastName))){
+            setErrorMessage4("*The last name is incorrect!  ");
+           }
+           if(!(validator.isAlpha(clientParams2.city)) && !(validator.isEmpty(clientParams2.city))){
+            setErrorMessage5("*The city is incorrect!  ");
+           }
+      
+        }
+
+        const updateErrorMessage3 = function(clientParams3){
+  
          /* eslint-disable no-useless-escape */
-         if(!(validator.isAlpha(clientParams1.address, 'it-IT', {ignore:"\s"})) && !(validator.isEmpty(clientParams1.address))){
+         if(!(validator.isAlpha(clientParams3.address, 'it-IT', {ignore:"\s"})) && !(validator.isEmpty(clientParams3.address))){
           setErrorMessage6("*The address is incorrect!  ");
          }
-         if(!(validator.isNumeric(clientParams1.number)) && !(validator.isEmpty(clientParams1.number))){
+         if(!(validator.isNumeric(clientParams3.number)) && !(validator.isEmpty(clientParams3.number))){
           setErrorMessage7("*The number is incorrect!  ");
          }
-         if(!(validator.isNumeric(clientParams1.postCode)) && !(validator.isEmpty(clientParams1.postCode))){
+         if(!(validator.isNumeric(clientParams3.postCode)) && !(validator.isEmpty(clientParams3.postCode))){
           setErrorMessage8("*The postCode must be a number!  ");
          }
 
@@ -161,7 +170,9 @@ function ClientForm(props) {
      else{
        
        setError(true);
-     updateErrorMessage(client);
+     updateErrorMessage1(client);
+     updateErrorMessage2(client);
+     updateErrorMessage3(client);
      }
      }catch(err){
       setError(true);

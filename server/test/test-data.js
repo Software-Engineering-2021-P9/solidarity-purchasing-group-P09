@@ -1,5 +1,5 @@
 const { ObjectID } = require("bson");
-
+var config = require("./test-passport.json");
 exports.employeesCollection = {
   employees: [
     {
@@ -49,7 +49,7 @@ exports.clientsCollection = {
     {
       _id: ObjectID("618d4ad3736f2caf2d3b3ca5"),
       email: "ehsanansari@gmail.com",
-      password: "$2a$10$AU6PIEG1tq1467LUurqOjuoKzdvdtZHTFnCh00YzNGm7zzf7wa0rq",
+      password: config.secret,
       fullName: "Ehsan",
       phoneNumber: 3205755555,
       address: "via Andrea Dipre,24 Torino,10538",

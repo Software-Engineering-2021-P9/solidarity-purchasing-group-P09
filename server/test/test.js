@@ -870,6 +870,8 @@ describe("Client Login API tests:", () => {
           expect(err).to.be.null;
           expect(res.status).to.be.equal(200);
           expect(res.body).to.be.an("object");
+          expect(res.body.email).to.be.an.string;
+          expect(res.body.password).to.be.an.string;
           expect(res.body.email).to.be.equal("ehsanansari@gmail.com");
           expect(res.body.password).to.be.equal(
             "$2a$10$AU6PIEG1tq1467LUurqOjuoKzdvdtZHTFnCh00YzNGm7zzf7wa0rq"

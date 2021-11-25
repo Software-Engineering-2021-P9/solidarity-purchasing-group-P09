@@ -12,16 +12,16 @@
 
 /*selected */
 .dropdown:focus {
-  background-color: #db9471 !important;
-  border-color: black !important;
-  color: black !important;
+  background-color: #f0a47e !important;
+  border-color: #f0a47e !important;
+}
+.dropdown:focus:not(.focus-visible) {
+  box-shadow: 0 0 0 0.15rem #c48566 !important;
 }
 
 .dropdown-content {
   /* dropdownItems */
-
   padding: 8px 16px !important;
-  /*background: #ffffff !important;*/
 }
 
 .dropdown-content:hover {

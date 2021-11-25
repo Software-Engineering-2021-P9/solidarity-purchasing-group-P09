@@ -1,7 +1,7 @@
 "use strict";
 
 class Product {
-  constructor(id, farmerID, name, description, category) {
+  constructor(id, farmerID, name, description, category, availability) {
     this.id = id;
     this.farmerID = farmerID;
     this.name = name;
@@ -9,6 +9,11 @@ class Product {
     if (Object.values(ProductCategory).includes(category))
       this.category = category;
     else throw new Error("Unknown category (" + category + ")");
+
+    if (availability)
+      this.availability = availability;
+    else
+      this.availability = null;
   }
 
   static fromMongoJSON(json) {
@@ -17,7 +22,8 @@ class Product {
       json.farmerID,
       json.name,
       json.description,
-      json.category
+      json.category,
+      json.availability
     );
   }
 }

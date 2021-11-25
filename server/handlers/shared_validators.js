@@ -16,6 +16,7 @@ exports.checkValidationErrorMiddleware = (req, res, next) => {
 
 exports.employeeIDPathValidator = param("employeeID").isMongoId();
 exports.clientIDPathValidator = param("clientID").exists().isMongoId();
+exports.productIDPathValidator = param("productID").exists().isMongoId();
 
 exports.emailBodyValidator = body("email")
   .notEmpty()
@@ -112,43 +113,43 @@ exports.orderProductQtysBodyValidator = body("products.*.quantity")
   });
 
 
-    //Clients
+//Clients
 
 
-    exports.clientIDPathValidator = param("clientID").isMongoId();
-    fullNameBodyValidator = body("fullName")
-    .notEmpty()
-    .bail()
-    .isString()
-    .bail()
-    .isLength({ max: 40 })
-    .trim()
-    .escape();
-    
-    exports.phoneNumberBodyValidator = body("phoneNumber")
-    .notEmpty()
-    .bail()
-    .isString()
-    .isLength({ max: 20 })
-    .trim()
-    .escape();
-     exports.emailBodyValidator = body("email")
-     .notEmpty()
-     .bail()
-     .trim()
-     .escape()
-     .isEmail();
-    exports.addressBodyValidator = body("address")
-    .notEmpty()
-    .isString()
-    .bail()
-    .isLength({ max: 100 })
-    .trim()
-    .escape();
+exports.clientIDPathValidator = param("clientID").isMongoId();
+fullNameBodyValidator = body("fullName")
+  .notEmpty()
+  .bail()
+  .isString()
+  .bail()
+  .isLength({ max: 40 })
+  .trim()
+  .escape();
 
-    exports.walletBodyValidator = body("wallet")
+exports.phoneNumberBodyValidator = body("phoneNumber")
+  .notEmpty()
+  .bail()
+  .isString()
+  .isLength({ max: 20 })
+  .trim()
+  .escape();
+exports.emailBodyValidator = body("email")
+  .notEmpty()
+  .bail()
+  .trim()
+  .escape()
+  .isEmail();
+exports.addressBodyValidator = body("address")
+  .notEmpty()
+  .isString()
+  .bail()
+  .isLength({ max: 100 })
+  .trim()
+  .escape();
+
+exports.walletBodyValidator = body("wallet")
   .notEmpty()
   .bail()
   .isLength({ min: 0 })
- 
+
 

@@ -7,11 +7,14 @@ const { createOrder, getOrderByID, deleteOrder } = require("./order");
 
 const { getClientByID, addFundToWallet, findClients, createClientsTextSearchIndexes, createClient } = require("./client");
 
+const { getProductsAvailability, getProductAvailability } = require("./productsAvailabilities");
+
 
 const {
   getProductsByIDs,
   findProducts,
   createProductsTextSearchIndexes,
+  getProductByID
 } = require("./products");
 
 // DAO initialization
@@ -54,6 +57,9 @@ exports.createProductsTextSearchIndexes = () => {
   createProductsTextSearchIndexes(db);
 };
 
+exports.getProductsAvailability = (listOfIDs, week, year) => getProductsAvailability(db, listOfIDs, week, year);
+exports.getProductAvailability = (productID, week, year) => getProductAvailability(db, productID, week, year);
+exports.getProductByID = (productID) => getProductByID(db, productID);
 
 // Order
 exports.createOrder = (clientID, products, status, totalPrice, createdAt) =>
@@ -69,10 +75,10 @@ exports.findClients = (searchString) => findClients(db, searchString);
 exports.createClientsTextSearchIndexes = () =>
   createClientsTextSearchIndexes(db);
 
-    // --------------
+// --------------
 // CreateClient
 // --------------
 exports.getClientByID = (clientID) => getClientByID(db, clientID);
-exports.createClient = (fullName, phoneNumber, email, address, wallet) => 
-createClient(db, fullName, phoneNumber, email, address, wallet);
+exports.createClient = (fullName, phoneNumber, email, address, wallet) =>
+  createClient(db, fullName, phoneNumber, email, address, wallet);
 

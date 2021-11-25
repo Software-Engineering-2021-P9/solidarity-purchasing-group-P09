@@ -3,7 +3,7 @@ let expect = chai.expect;
 let chaiHttp = require("chai-http");
 let dao = require("../dao/dao");
 chai.use(chaiHttp);
-
+const { ObjectId } = require("bson");
 // This will contain the main server app, needed to listen for requests.
 // This is initialized when the mock MongoDB initialization is completed.
 let app;
@@ -184,6 +184,7 @@ describe("Products API tests: ", () => {
   beforeEach(() => {
     dao.open();
     mongoUnit.load(testData.productsCollection);
+    mongoUnit.load(testData.productsAvailabilityCollection);
     dao.createProductsTextSearchIndexes();
   });
 
@@ -193,23 +194,42 @@ describe("Products API tests: ", () => {
   });
 
   describe("GET /products", () => {
-    it("it should retrieve the list of products based on the filters sent: CATEGORY", (done) => {
+    it("it should retrieve the list of available products based on the filters sent: CATEGORY", (done) => {
       chai
         .request(app)
-        .get("/api/products?category=meat")
+        .get("/api/products?category=spreadable creams")
         .end((err, res) => {
           expect(err).to.be.null;
           expect(res.status).to.be.equal(200);
           expect(res.body).to.be.an("array");
           expect(res.body.length).to.be.equal(2);
-          expect(
-            res.body.filter((product) => product.category == "meat").length
-          ).to.be.equal(2);
+          expect(res.body.map((product) => product.availability)).to.be.eql([
+            {
+              id: "000000000000000000000004",
+              farmerID: "67696f76616a6a6a31a23334",
+              productID: "000000000000000000000006",
+              week: 48,
+              year: 2021,
+              price: 4.50,
+              packaging: "1 units",
+              quantity: 27
+            },
+            {
+              id: "000000000000000000000005",
+              farmerID: "4c7564443132333435363738",
+              productID: "000000000000000000000012",
+              week: 48,
+              year: 2021,
+              price: 6,
+              packaging: "1 units",
+              quantity: 30
+            }
+          ]);
           done();
         });
     });
 
-    it("it should retrieve the list of products based on the filters sent: SEARCHSTRING", (done) => {
+    it("it should retrieve the list of available products based on the filters sent: SEARCHSTRING", (done) => {
       chai
         .request(app)
         .get("/api/products?searchString=Nutella")
@@ -226,7 +246,7 @@ describe("Products API tests: ", () => {
         });
     });
 
-    it("it should retrieve the list of products based on the filters sent: ids", (done) => {
+    it("it should retrieve the list of all (available and not available) products based on the filters sent: ids", (done) => {
       chai
         .request(app)
         .get(
@@ -246,7 +266,7 @@ describe("Products API tests: ", () => {
         });
     });
 
-    it("it should retrieve the list of products based on the filters sent: CATEGORY, SEARCHSTRING", (done) => {
+    it("it should retrieve the list of available products based on the filters sent: CATEGORY, SEARCHSTRING", (done) => {
       chai
         .request(app)
         .get("/api/products?category=fruit&searchString=Italy")
@@ -262,7 +282,7 @@ describe("Products API tests: ", () => {
         });
     });
 
-    it("If no filter are passed then all the products should be retrieved", (done) => {
+    it("If no filter are passed then all the available products should be retrieved", (done) => {
       chai
         .request(app)
         .get("/api/products")
@@ -270,12 +290,12 @@ describe("Products API tests: ", () => {
           expect(err).to.be.null;
           expect(res.status).to.be.equal(200);
           expect(res.body).to.be.an("array");
-          expect(res.body.length).to.be.equal(12);
+          expect(res.body.length).to.be.equal(4);
           done();
         });
     });
 
-    it("If there are no products with applied filters then it should return an empty array", (done) => {
+    it("If there are no available products with applied filters then it should return an empty array", (done) => {
       chai
         .request(app)
         .get("/api/products?category=meat&searchString=Do not find")
@@ -322,10 +342,83 @@ describe("Products API tests: ", () => {
       dao.createProductsTextSearchIndexes();
       chai
         .request(app)
-        .get("/api/products")
+        .get("/api/products?ids=000000000000000000000001,000000000000000000000002")
         .end((err, res) => {
           expect(err).to.be.null;
           expect(res.status).to.be.equal(500);
+          done();
+        });
+    });
+
+    it("It should return the product 000000000000000000000012 with availability set: ", (done) => {
+      chai
+        .request(app)
+        .get("/api/products/000000000000000000000012")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          expect(res.body.id).to.be.equal("000000000000000000000012");
+          expect(res.body.availability).to.be.not.null;
+          expect(res.body.availability.price).to.be.equal(6);
+          expect(res.body.availability.quantity).to.be.equal(30);
+          done();
+        })
+    });
+
+    it("It should return the product 000000000000000000000010 without availability set: ", (done) => {
+      chai
+        .request(app)
+        .get("/api/products/000000000000000000000010")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          expect(res.body.id).to.be.equal("000000000000000000000010");
+          expect(res.body.availability).to.be.null;
+          done();
+        })
+    });
+
+    it("it should return 404 not found given a non existing ID", (done) => {
+      chai
+        .request(app)
+        .get("/api/products/00000ab00000000000000010")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(404);
+          done();
+        });
+    });
+
+    it("it must fail when mongo fails", (done) => {
+      dao.close();
+      chai
+        .request(app)
+        .get("/api/products/000000000000000000000010")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(500);
+          done();
+        });
+    });
+
+    it("it must fail when a wrong productID is given", (done) => {
+      chai
+        .request(app)
+        .get("/api/products/aaaa")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(400);
+          done();
+        });
+    });
+
+    it("it must return 404 not found when a non existing productID is given", (done) => {
+      chai
+        .request(app)
+        .get("/api/products/00000000000a00b000c00010")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(404);
           done();
         });
     });
@@ -690,11 +783,11 @@ describe("Clients API tests:", () => {
             expect(res.body).to.be.an("object");
             expect(res.body.email).to.be.equal("ansari@email.com");
             expect(res.body.fullName).to.be.equal("Ehsan Ansari");
-  
+
             done();
           });
       });
-  
+
       it("it must fail when an invalid email is passed", (done) => {
         chai
           .request(app)
@@ -709,12 +802,12 @@ describe("Clients API tests:", () => {
           .end((err, res) => {
             expect(err).to.be.null;
             expect(res.status).to.be.equal(400);
-  
+
             done();
           });
       });
-  
-  
+
+
       it("it must fail when a fullName too long is passed", (done) => {
         chai
           .request(app)
@@ -725,16 +818,16 @@ describe("Clients API tests:", () => {
             email: "ansari@email.com",
             address: "via giacinto,22 Torino, 10127",
             wallet: 0.0,
-            
+
           })
           .end((err, res) => {
             expect(err).to.be.null;
             expect(res.status).to.be.equal(400);
-  
+
             done();
           });
       });
-  
+
       it("it must fail when mongo fails", (done) => {
         dao.close();
         chai
@@ -750,7 +843,7 @@ describe("Clients API tests:", () => {
           .end((err, res) => {
             expect(err).to.be.null;
             expect(res.status).to.be.equal(500);
-  
+
             done();
           });
       });

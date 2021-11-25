@@ -1,6 +1,7 @@
 "use strict";
 
 const { ObjectID } = require("bson");
+const { productsCollection } = require("../test/test-data");
 
 const productsCollectionName = "products";
 
@@ -35,6 +36,11 @@ exports.findProducts = (db, searchString, category) => {
     query = { $text: { $search: searchString.toString() } };
   }
   return db.collection(productsCollectionName).find(query).toArray();
+};
+
+exports.getProductByID = (db, productID) => {
+
+  return db.collection(productsCollectionName).findOne({ _id: ObjectID(productID) });
 };
 
 //Method used for testing

@@ -1,4 +1,6 @@
 const { ObjectID } = require("bson");
+const dayjs = require("dayjs");
+const { getNextWeek } = require("../utils/time");
 
 exports.employeesCollection = {
   employees: [
@@ -56,84 +58,84 @@ exports.productsCollection = {
   products: [
     {
       _id: ObjectID("000000000000000000000001"),
-      farmerID: ObjectID("giovanni1234"),
+      farmerID: ObjectID("67696f76616a6a6a31a23334"),
       name: "Banana",
       description: "Origin: Italy",
       category: "fruit",
     },
     {
       _id: ObjectID("000000000000000000000002"),
-      farmerID: ObjectID("giovanni1234"),
+      farmerID: ObjectID("67696f76616a6a6a31a23334"),
       name: "Zucchini",
       description: "Origin: Italy",
       category: "vegetables",
     },
     {
       _id: ObjectID("000000000000000000000003"),
-      farmerID: ObjectID("giovanni1234"),
+      farmerID: ObjectID("67696f76616a6a6a31a23334"),
       name: "Ham",
       description: "Origin: Italy",
       category: "meat",
     },
     {
       _id: ObjectID("000000000000000000000004"),
-      farmerID: ObjectID("giovanni1234"),
+      farmerID: ObjectID("67696f76616a6a6a31a23334"),
       name: "Egg",
       description: "Origin: Italy",
       category: "eggs",
     },
     {
       _id: ObjectID("000000000000000000000005"),
-      farmerID: ObjectID("giovanni1234"),
+      farmerID: ObjectID("67696f76616a6a6a31a23334"),
       name: "Almond Milk",
       description: "Origin: Italy",
       category: "milk",
     },
     {
       _id: ObjectID("000000000000000000000006"),
-      farmerID: ObjectID("giovanni1234"),
+      farmerID: ObjectID("67696f76616a6a6a31a23334"),
       name: "Nutella",
       description: "Origin: Italy",
       category: "spreadable creams",
     },
     {
       _id: ObjectID("000000000000000000000007"),
-      farmerID: ObjectID("Luca12345678"),
+      farmerID: ObjectID("4c7564443132333435363738"),
       name: "Banana",
       description: "Origin: France",
       category: "fruit",
     },
     {
       _id: ObjectID("000000000000000000000008"),
-      farmerID: ObjectID("Luca12345678"),
+      farmerID: ObjectID("4c7564443132333435363738"),
       name: "Zucchini",
       description: "Origin: France",
       category: "vegetables",
     },
     {
       _id: ObjectID("000000000000000000000009"),
-      farmerID: ObjectID("Luca12345678"),
+      farmerID: ObjectID("4c7564443132333435363738"),
       name: "Ham",
       description: "Origin: France",
       category: "meat",
     },
     {
       _id: ObjectID("000000000000000000000010"),
-      farmerID: ObjectID("Luca12345678"),
+      farmerID: ObjectID("4c7564443132333435363738"),
       name: "Egg",
       description: "Origin: France",
       category: "eggs",
     },
     {
       _id: ObjectID("000000000000000000000011"),
-      farmerID: ObjectID("Luca12345678"),
+      farmerID: ObjectID("4c7564443132333435363738"),
       name: "Almond Milk",
       description: "Origin: France",
       category: "milk",
     },
     {
       _id: ObjectID("000000000000000000000012"),
-      farmerID: ObjectID("Luca12345678"),
+      farmerID: ObjectID("4c7564443132333435363738"),
       name: "Nutella",
       description: "Origin: France",
       category: "spreadable creams",
@@ -145,88 +147,156 @@ exports.productsCollectionWithCategoryError = {
   products: [
     {
       _id: ObjectID("000000000000000000000001"),
-      farmerID: ObjectID("giovanni1234"),
+      farmerID: ObjectID("67696f76616a6a6a31a23334"),
       name: "Banana",
       description: "Origin: Italy",
       category: "Wrong Category",
     },
     {
       _id: ObjectID("000000000000000000000002"),
-      farmerID: ObjectID("giovanni1234"),
+      farmerID: ObjectID("67696f76616a6a6a31a23334"),
       name: "Zucchini",
       description: "Origin: Italy",
       category: "vegetables",
     },
     {
       _id: ObjectID("000000000000000000000003"),
-      farmerID: ObjectID("giovanni1234"),
+      farmerID: ObjectID("67696f76616a6a6a31a23334"),
       name: "Ham",
       description: "Origin: Italy",
       category: "meat",
     },
     {
       _id: ObjectID("000000000000000000000004"),
-      farmerID: ObjectID("giovanni1234"),
+      farmerID: ObjectID("67696f76616a6a6a31a23334"),
       name: "Egg",
       description: "Origin: Italy",
       category: "eggs",
     },
     {
       _id: ObjectID("000000000000000000000005"),
-      farmerID: ObjectID("giovanni1234"),
+      farmerID: ObjectID("67696f76616a6a6a31a23334"),
       name: "Almond Milk",
       description: "Origin: Italy",
       category: "milk",
     },
     {
       _id: ObjectID("000000000000000000000006"),
-      farmerID: ObjectID("giovanni1234"),
+      farmerID: ObjectID("67696f76616a6a6a31a23334"),
       name: "Nutella",
       description: "Origin: Italy",
       category: "spreadable creams",
     },
     {
       _id: ObjectID("000000000000000000000007"),
-      farmerID: ObjectID("Luca12345678"),
+      farmerID: ObjectID("4c7564443132333435363738"),
       name: "Banana",
       description: "Origin: France",
       category: "fruit",
     },
     {
       _id: ObjectID("000000000000000000000008"),
-      farmerID: ObjectID("Luca12345678"),
+      farmerID: ObjectID("4c7564443132333435363738"),
       name: "Zucchini",
       description: "Origin: France",
       category: "vegetables",
     },
     {
       _id: ObjectID("000000000000000000000009"),
-      farmerID: ObjectID("Luca12345678"),
+      farmerID: ObjectID("4c7564443132333435363738"),
       name: "Ham",
       description: "Origin: France",
       category: "meat",
     },
     {
       _id: ObjectID("000000000000000000000010"),
-      farmerID: ObjectID("Luca12345678"),
+      farmerID: ObjectID("4c7564443132333435363738"),
       name: "Egg",
       description: "Origin: France",
       category: "eggs",
     },
     {
       _id: ObjectID("000000000000000000000011"),
-      farmerID: ObjectID("Luca12345678"),
+      farmerID: ObjectID("4c7564443132333435363738"),
       name: "Almond Milk",
       description: "Origin: France",
       category: "milk",
     },
     {
       _id: ObjectID("000000000000000000000012"),
-      farmerID: ObjectID("Luca12345678"),
+      farmerID: ObjectID("4c7564443132333435363738"),
       name: "Nutella",
       description: "Origin: France",
       category: "spreadable creams",
     },
   ],
+};
+
+
+const [nextWeek, currentYear] = getNextWeek(dayjs());
+
+exports.productsAvailabilityCollection = {
+  productsAvailability: [
+    {
+      _id: ObjectID("000000000000000000000001"),
+      farmerID: ObjectID("67696f76616a6a6a31a23334"),
+      productID: ObjectID("000000000000000000000001"),
+      week: nextWeek,
+      year: currentYear,
+      price: 3.5,
+      packaging: "100g",
+      quantity: 5
+    },
+    {
+      _id: ObjectID("000000000000000000000002"),
+      farmerID: ObjectID("4c7564443132333435363738"),
+      productID: ObjectID("000000000000000000000010"),
+      week: 15,
+      year: 2020,
+      price: 2.3,
+      packaging: "4 units",
+      quantity: 25
+    },
+    {
+      _id: ObjectID("000000000000000000000003"),
+      farmerID: ObjectID("67696f76616a6a6a31a23334"),
+      productID: ObjectID("000000000000000000000004"),
+      week: nextWeek,
+      year: currentYear,
+      price: 2.3,
+      packaging: "4 units",
+      quantity: 25
+    },
+    {
+      _id: ObjectID("000000000000000000000004"),
+      farmerID: ObjectID("67696f76616a6a6a31a23334"),
+      productID: ObjectID("000000000000000000000006"),
+      week: nextWeek,
+      year: currentYear,
+      price: 4.50,
+      packaging: "1 units",
+      quantity: 27
+    },
+    {
+      _id: ObjectID("000000000000000000000005"),
+      farmerID: ObjectID("4c7564443132333435363738"),
+      productID: ObjectID("000000000000000000000012"),
+      week: nextWeek,
+      year: currentYear,
+      price: 6,
+      packaging: "1 units",
+      quantity: 30
+    },
+    {
+      _id: ObjectID("000000000000000000000005"),
+      farmerID: ObjectID("4c7564443132333435363738"),
+      productID: ObjectID("000000000000000000000012"),
+      week: 1,
+      year: 2021,
+      price: 6,
+      packaging: "1 units",
+      quantity: 90
+    }
+  ]
 };
 

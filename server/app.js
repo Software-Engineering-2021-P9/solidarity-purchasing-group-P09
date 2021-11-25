@@ -104,6 +104,13 @@ app.get(
   productHandlers.getProductsByIDHandler
 );
 
+app.get(
+  buildAPIPath("/products/:productID"),
+  productHandlers.getProductByIDValidatorChain,
+  checkValidationErrorMiddleware,
+  productHandlers.getProductByIDHandler
+);
+
 
 // Serve client app
 app.use("/", express.static(path.resolve(__dirname, "../client/build")));

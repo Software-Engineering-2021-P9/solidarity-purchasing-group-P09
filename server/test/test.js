@@ -960,6 +960,23 @@ describe("Client Login API tests:", () => {
           done();
         });
     });
+
+    it("it must fail when mongo fails", (done) => {
+      dao.close();
+      chai
+        .request(app)
+        .post("/api/clients/session")
+        .send({
+          username: "ehsanansari@gmail.com",
+          password: config.password1,
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(500);
+
+          done();
+        });
+    });
     it("it should create a new client", (done) => {
       chai
         .request(app)

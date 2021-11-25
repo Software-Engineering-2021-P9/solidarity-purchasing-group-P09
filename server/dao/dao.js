@@ -16,6 +16,7 @@ const {
   findClients,
   createClientsTextSearchIndexes,
   createClient,
+  getClientByEmail,
 } = require("./client");
 
 const {
@@ -86,3 +87,9 @@ exports.createClientsTextSearchIndexes = () =>
 exports.getClientByID = (clientID) => getClientByID(db, clientID);
 exports.createClient = (fullName, phoneNumber, email, address, wallet) =>
   createClient(db, fullName, phoneNumber, email, address, wallet);
+
+// --------
+// Login
+// --------
+
+exports.getClientByEmail = (email) => getClientByEmail(db, email);

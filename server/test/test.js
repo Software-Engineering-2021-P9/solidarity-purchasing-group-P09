@@ -844,3 +844,81 @@ describe("Clients API tests:", () => {
     });
   });
 });
+
+// Login API tests
+describe("Client Login API tests:", () => {
+  beforeEach(() => {
+    dao.open();
+    mongoUnit.load(testData.clientsCollection);
+  });
+
+  afterEach(() => {
+    mongoUnit.drop();
+    dao.close();
+  });
+
+  describe("POST /clients/login", () => {
+    it("it must fail when an invalid email is passed", (done) => {
+      chai
+        .request(app)
+        .post("/api/clients/login")
+        .send({
+          email: "nomail",
+          password: "123456789",
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(400);
+
+          done();
+        });
+    });
+    it("it must fail when a not recorded email is entered ", (done) => {
+      chai
+        .request(app)
+        .post("/api/clients/login")
+        .send({
+          email: "notrecorded@gmail.com",
+          password: "123456789",
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(404);
+
+          done();
+        });
+    });
+    it("it must fail when password is entered wrong", (done) => {
+      dao.close();
+      chai
+        .request(app)
+        .post("/api/clients/login")
+        .send({
+          email: "ehsanansari@gmail.com",
+          password: "wrongpassword",
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(404);
+
+          done();
+        });
+    });
+    it("it must fail when mongo fails", (done) => {
+      dao.close();
+      chai
+        .request(app)
+        .post("/api/clients/login")
+        .send({
+          email: "ehsanansari@gmail.com",
+          password: "123456789",
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(404);
+
+          done();
+        });
+    });
+  });
+});

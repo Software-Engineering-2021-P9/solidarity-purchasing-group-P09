@@ -47,6 +47,15 @@ exports.ordersCollection = {
 exports.clientsCollection = {
   clients: [
     {
+      _id: ObjectID("618d4ad3736f2caf2d3b3ca5"),
+      email: "ehsanansari@gmail.com",
+      password: "123456789",
+      fullName: "Ehsan",
+      phoneNumber: 3205755555,
+      address: "via Andrea Dipre,24 Torino,10538",
+      wallet: 0,
+    },
+    {
       _id: ObjectID("6187c957b288576ca26f8257"),
       email: "client1@test.com",
       fullName: " Domenico Bini",

@@ -5,6 +5,43 @@ var logger = require("morgan");
 var cors = require("cors");
 var dao = require("./dao/dao");
 
+const session = require("express-session"); // session middleware
+const passport = require("passport");
+const passportLocal = require("passport-local");
+
+// initialize and configure passport
+passport.use(
+  new passportLocal.Strategy((username, password, done) => {
+    // verification callback for authentication
+
+    db.getUser(username, password)
+      .then((user) => {
+        if (user) done(null, user);
+        else done(null, false, { message: "Username or password wrong" });
+      })
+      .catch((err) => {
+        done(err);
+      });
+  })
+);
+
+// serialize and de-serialize the user (user object <-> session)
+// we serialize the user id and we store it in the session: the session is very small in this way
+passport.serializeUser((user, done) => {
+  done(null, user.id);
+});
+
+// starting from the data in the session, we extract the current (logged-in) user
+passport.deserializeUser((id, done) => {
+  db.getUserById(id)
+    .then((user) => {
+      done(null, user); // this will be available in req.user
+    })
+    .catch((err) => {
+      done(err, null);
+    });
+});
+
 const {
   checkValidationErrorMiddleware,
 } = require("./handlers/shared_validators");
@@ -27,6 +64,19 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(cors());
+
+// initialize and configure HTTP sessions
+app.use(
+  session({
+    secret: "this and that and other",
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+
+// tell passport to use session cookies
+app.use(passport.initialize());
+app.use(passport.session());
 
 dao.open();
 
@@ -78,6 +128,15 @@ app.post(
   clientHandlers.createClientHandlerValidatorChain,
   checkValidationErrorMiddleware,
   clientHandlers.createClientHandler
+);
+
+// login
+
+app.post(
+  buildAPIPath("/clients/login"),
+  clientHandlers.loginEmailValidatorChain,
+  checkValidationErrorMiddleware,
+  clientHandlers.getClientByEmailPasswordHandler
 );
 
 // ----------

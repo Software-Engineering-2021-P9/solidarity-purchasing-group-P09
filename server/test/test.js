@@ -780,6 +780,7 @@ describe("Clients API tests:", () => {
             expect(res.body).to.be.an("object");
             expect(res.body.email).to.be.equal("ansari@email.com");
             expect(res.body.fullName).to.be.equal("Ehsan Ansari");
+            expect(res.body.wallet).to.be.equal(0.0);
 
             done();
           });
@@ -871,8 +872,10 @@ describe("Client Login API tests:", () => {
           expect(res.body).to.be.an("object");
           expect(res.body.email).to.be.equal("ehsanansari@gmail.com");
           expect(res.body._id).to.be.equal("618d4ad3736f2caf2d3b3ca5");
-
           expect(res.body.wallet).to.be.equal(55.5);
+          expect(res.body.address).to.be.equal(
+            "fsfsaf dsafsa fsafsa,26 Milano,12342"
+          );
 
           done();
         });
@@ -996,6 +999,7 @@ describe("Client Login API tests:", () => {
           expect(res.body).to.be.an("object");
           expect(res.body.email).to.be.equal("ansari@email.com");
           expect(res.body.fullName).to.be.equal("Ehsan Ansari");
+          expect(res.body.address).to.be.equal("via giacinto,22 Torino, 10127");
 
           done();
         });

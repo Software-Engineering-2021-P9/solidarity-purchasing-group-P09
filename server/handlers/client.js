@@ -18,8 +18,8 @@ exports.loginHandler = async function (req, res, next) {
     if (!user) {
       return res.status(401).json(info);
     }
-    req.login(user, (err) => {
-      if (err) return next(err);
+    req.login(user, (e) => {
+      if (e) return next(e);
       return res.json(req.user);
     });
   })(req, res, next);

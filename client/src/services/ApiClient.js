@@ -2,6 +2,7 @@ import Employee from "./models/Employee";
 import ClientInfo from "./models/ClientInfo";
 import Product from "./models/Product";
 import Order from "./models/Order"; 
+import Client from "./models/Client"; 
 
 
 // --------
@@ -96,13 +97,20 @@ export async function createClient(client) {
     method : 'POST',
     headers: {'Content-Type': 'application/json'},
     body: JSON.stringify({...client, fullName: client.firstName +" "+ client.lastName,
-     address: client.address +", "+ client.number+" "+ client.city+ ", "+client.postCode, wallet: 0})
+    address: client.address +", "+ client.number+" "+ client.city+ ", "+client.postCode, wallet: 0})
   });
   
 
-  if(response.OK)
-  return null;
-  else return {'err': 'POST error'};
+  switch (response.status) {
+    case 400:
+      throw new Error("Validation error occurred");
+    case 200:
+      let responseBody;
+      responseBody = await response.json();
+      return Client.fromJSON(responseBody);
+    default:
+      throw new Error("An error occurred during client fetch");
+  }
 }
 
 // --------

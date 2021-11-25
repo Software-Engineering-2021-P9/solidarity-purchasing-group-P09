@@ -5,9 +5,14 @@ import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponen
 import "../App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useState, useEffect} from "react";
-import { Button, Col, Form ,Alert, } from "react-bootstrap";
-import { Link, Redirect} from "react-router-dom";
+import { Col, Form ,Alert, } from "react-bootstrap";
+import { Redirect} from "react-router-dom";
 import { createClient } from "../services/ApiClient";
+import  Button  from "../ui-components/Button/Button";
+import validator from 'validator';
+
+
+
 
 function ClientSignupPage(props) {
   return (
@@ -38,8 +43,18 @@ function ClientPage(props) {
 function ClientForm(props) {
   
   const [success, setSuccess] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessage1, setErrorMessage1] = useState("");
+  const [errorMessage2, setErrorMessage2] = useState("");
+  const [errorMessage3, setErrorMessage3] = useState("");
+  const [errorMessage4, setErrorMessage4] = useState("");
+  const [errorMessage5, setErrorMessage5] = useState("");
+  const [errorMessage6, setErrorMessage6] = useState("");
+  const [errorMessage7, setErrorMessage7] = useState("");
+  const [errorMessage8, setErrorMessage8] = useState("");
+  
+  
   
 useEffect(()=>{
   
@@ -56,57 +71,142 @@ useEffect(()=>{
                 [name]: value
             }));
         };
-        
+
+
+        const handleCancel =(event)=>{
+          event.preventDefault();
+        setClient({
+        firstName:"",
+        lastName:"",
+        phoneNumber:"",
+        email:"",
+        address:"",
+        number:"",
+        city:"",
+        postCode:"",
+        }
+        );
+        } 
 
   const handleSubmit = (event) => {
     event.preventDefault();
     let valid = true;
-    if(client.firstName === '' || client.lastName === '' || client.phoneNumber === '' || client.email === '' || client.address === '' || 
-    client.number === '' || client.city === '' || client.fpostCode === ''  )
-    valid = false;
-   
+    setErrorMessage("");
+    setErrorMessage1("");
+    setErrorMessage2("");
+    setErrorMessage3("");
+    setErrorMessage4("");
+    setErrorMessage5("");
+    setErrorMessage6("");
+    setErrorMessage7("");
+    setErrorMessage8("");
   
-   
+    if(client.firstName === '' 
+    || client.lastName === '' 
+    || client.phoneNumber === '' 
+    || client.email === '' 
+    || client.address === '' 
+    || 
+    client.number === '' 
+    || client.city === '' 
+    || client.postCode === ''
+   || !(validator.isEmail(client.email)) || !(validator.isMobilePhone(client.phoneNumber) )
+   || !(validator.isAlpha(client.firstName)) || !(validator.isAlpha(client.lastName)) 
+   || !(validator.isAlpha(client.city)) 
+   || (validator.isAlpha(client.address))
+    || !(validator.isNumeric(client.number)) 
+    || !(validator.isNumeric(client.postCode))){
+    valid = false;
+  
+      }
    try {
      if(valid){
-    setErrorMessage("");
+      
     createClient(client);
     setSuccess(true);
 
     setClient("");
      }
      else{
-       setErrorMessage("Error in the form!");
+       
+       setError(true);
+       if(client.firstName === '' || client.lastName === '' || client.phoneNumber === '' || client.email === '' || client.address === '' || 
+    client.number === '' || client.city === '' || client.postCode === ''  ){
+      setErrorMessage("Fill in all the fields!");
+    }
+
+   if(!(validator.isEmail(client.email)) ){
+    setErrorMessage1("The Email is invalid!");
+   }
+
+   if(!(validator.isMobilePhone(client.phoneNumber))){
+    setErrorMessage2("*The phone number is invalid!  ");
+   }
+   if(!(validator.isAlpha(client.firstName) && !(client.firstName === '' ))){
+    setErrorMessage3("*The first name is incorrect!  ");
+   }
+   if(!(validator.isAlpha(client.lastName) )){
+    setErrorMessage4("*The last name is incorrect!  ");
+   }
+   if(!(validator.isAlpha(client.city))){
+    setErrorMessage5("*The city is incorrect!  ");
+   }
+   if(!(validator.isAlpha(client.address))){
+    setErrorMessage6("*The address is incorrect!  ");
+   }
+   if(!(validator.isNumeric(client.number))){
+    setErrorMessage7("*The number is incorrect!  ");
+   }
+   if(!(validator.isNumeric(client.postCode))){
+    setErrorMessage8("*The postCode must be a number!  ");
+   }
+ 
      }
     
      }catch(err){
-      setError("error");
+      setError(true);
+       setErrorMessage("Error in the form!");
      }
     
    
   };
-if(success){<Redirect to = "/"/>}
+
+ 
+
+
   return (
     <>
-    <div>{error && (
+    {success ? <Redirect to = "/"/> : ""}
+    {error ? (
             <Alert variant="danger" onClose={() => setError("")} dismissible>
-              {error}
+              {errorMessage}
+              {errorMessage1}
+              {errorMessage2}
+              {errorMessage3}
+              {errorMessage4}
+              {errorMessage5}
+              {errorMessage6}
+              {errorMessage7}
+              {errorMessage8}
+              
+              
             </Alert>
-          )}</div>
-      <Container flex className="content">
+          ) : " "}
+      <Container flex className="content my-3">
         <Form noValidate onSubmit={handleSubmit}>
-          <h4>User Information</h4>
+          <h4 className="my-3">User Information</h4>
           <Row className="mb-3">
             <Form.Group as={Col} md="3" controlId="validationCustom01">
               <Row flex className>
                 <Col>
-                  <Form.Label >First name</Form.Label>
+                  <Form.Label >First Name:</Form.Label>
                 </Col>
                 <Col>
                   <Form.Control value ={client.firstName}  onChange={handleChange} name = "firstName" required type="text"/>
+                
                 </Col>
               </Row>
-              <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+              
             </Form.Group>
           </Row>
 
@@ -114,7 +214,7 @@ if(success){<Redirect to = "/"/>}
             <Form.Group as={Col} md="3" controlId="validationCustom01">
               <Row>
                 <Col>
-                  <Form.Label>Last name</Form.Label>
+                  <Form.Label>Last Name:</Form.Label>
                 </Col>
                 <Col>
                   <Form.Control value ={client.lastName}  onChange={handleChange} name = "lastName" 
@@ -125,7 +225,7 @@ if(success){<Redirect to = "/"/>}
                   />
                 </Col>
               </Row>
-              <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+              
             </Form.Group>
           </Row>
 
@@ -133,7 +233,7 @@ if(success){<Redirect to = "/"/>}
             <Form.Group as={Col} md="3" controlId="validationCustom01">
               <Row>
                 <Col>
-                  <Form.Label>Phone Number</Form.Label>
+                  <Form.Label>Phone Number:</Form.Label>
                 </Col>
                 <Col>
                   <Form.Control value ={client.phoneNumber}  onChange={handleChange} name = "phoneNumber" 
@@ -143,7 +243,7 @@ if(success){<Redirect to = "/"/>}
                   />
                 </Col>
               </Row>
-              <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+              
             </Form.Group>
           </Row>
 
@@ -151,7 +251,7 @@ if(success){<Redirect to = "/"/>}
             <Form.Group as={Col} md="3" controlId="validationCustom02">
               <Row>
                 <Col>
-                  <Form.Label>Email</Form.Label>
+                  <Form.Label>Email:</Form.Label>
                 </Col>
                 <Col>
                   <Form.Control value ={client.email}  onChange={handleChange} name = "email" 
@@ -160,21 +260,21 @@ if(success){<Redirect to = "/"/>}
                     />
                 </Col>
               </Row>
-              <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+              
             </Form.Group>
           </Row>
 
           
           <Row></Row>
 
-          <h4>Residential Address</h4>
+          <h4 className = "my-3">Residential Address</h4>
 
           <Row className="mb-3">
-            <Row>
+            <Row className="mb-3">
               <Form.Group as={Col} md="6" controlId="validationCustom03">
                 <Row>
                   <Col>
-                    <Form.Label>Address</Form.Label>
+                    <Form.Label>Address:</Form.Label>
                   </Col>
                   <Col>
                     <Form.Control value ={client.address}  onChange={handleChange} name = "address"  type="text"  required />
@@ -184,7 +284,7 @@ if(success){<Redirect to = "/"/>}
                   </Col>
 
                   <Col>
-                    <Form.Label> Number </Form.Label>
+                    <Form.Label className = "mx-3"> Number: </Form.Label>
                   </Col>
                   <Col>
                     <Form.Control value ={client.number}  onChange={handleChange} name = "number"  type="text"  required />
@@ -200,7 +300,7 @@ if(success){<Redirect to = "/"/>}
             <Form.Group as={Col} md="3" controlId="validationCustom04">
               <Row>
                 <Col>
-                  <Form.Label>City</Form.Label>
+                  <Form.Label>City:</Form.Label>
                 </Col>
                 <Col>
                   <Form.Control  value ={client.city}  onChange={handleChange} name = "city" type="text" required />
@@ -213,7 +313,7 @@ if(success){<Redirect to = "/"/>}
             <Form.Group as={Col} md="3" controlId="validationCustom05">
               <Row>
                 <Col>
-                  <Form.Label> Post code </Form.Label>
+                  <Form.Label className = "mx-3"> Post code: </Form.Label>
                 </Col>
                 <Col>
                   <Form.Control value ={client.postCode}  onChange={handleChange} name = "postCode" type="text"  required />
@@ -225,16 +325,16 @@ if(success){<Redirect to = "/"/>}
             </Form.Group>
           </Row>
          
-          <Button className="button" type="submit" onClick={handleSubmit} >
+          <Button className="btn-primary" type="submit" onClick={handleSubmit} >
             Submit
           </Button>
           
-          <Link to="/">
-            <Button className="button1" type="cancel">
-              Cancel
+          
+            <Button className="btn-light mx-3" type="cancel" onClick={handleCancel} >
+              reset
             </Button><br/>
-          {errorMessage}
-          </Link>
+          
+          
         </Form>
       </Container>
     </>

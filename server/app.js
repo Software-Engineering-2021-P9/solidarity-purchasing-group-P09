@@ -47,11 +47,6 @@ passport.deserializeUser((id, done) => {
     });
 });
 
-const isLoggedIn = (req, res, next) => {
-  if (req.isAuthenticated()) return next();
-  return res.status(401).json({ error: "not authenticated" });
-};
-
 const port = process.env.PORT || 3001;
 const buildAPIPath = (apiPath) => "/api" + apiPath;
 

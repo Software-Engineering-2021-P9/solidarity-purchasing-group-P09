@@ -1,4 +1,4 @@
-import { Row, Col, Form, FormControl } from "react-bootstrap";
+import { Row, Col, FormControl, InputGroup } from "react-bootstrap";
 import Product from "../../services/models/Product";
 import { RedDropdown } from "../RedDropdownComponent/RedDropdown";
 import Button from "../Button/Button";
@@ -11,12 +11,7 @@ function FilterRow(props) {
       </Row>
 
       <Row className='sticky'>
-        <Col
-          xs={{ span: 6 }}
-          sm={{ span: 6 }}
-          md={{ span: 3 }}
-          lg={{ span: 4 }}
-        >
+        <Col sm={{ span: 6, order: "first" }} md={{ span: 3 }} lg={{ span: 4 }}>
           <RedDropdown
             items={Object.values(Product.Categories)}
             title={props.category ? props.category : "Categories"}
@@ -24,22 +19,20 @@ function FilterRow(props) {
             activeElement={props.category}
           />
         </Col>
-        <Col md={{ offset: 2 }}>
-          <Form onSubmit={(ev) => props.handleFormSubmit(ev)}>
-            <Row>
-              <Col>
-                <FormControl
-                  type='textarea'
-                  placeholder='Filter'
-                  value={props.text}
-                  onChange={(ev) => props.setText(ev.target.value)}
-                />
-              </Col>
-              <Col md={{ span: 3 }}>
-                <Button onClick={props.handleOnSearchSubmit}> Search </Button>
-              </Col>
-            </Row>
-          </Form>
+        <Col md={{ offset: 2 }} xs={{ order: "first" }}>
+          <InputGroup
+            classname='padding'
+            onSubmit={(ev) => props.handleFormSubmit(ev)}
+          >
+            <FormControl
+              type='textarea'
+              placeholder='Filter'
+              value={props.text}
+              onChange={(ev) => props.setText(ev.target.value)}
+            />
+
+            <Button onClick={props.handleOnSearchSubmit}> Search </Button>
+          </InputGroup>
         </Col>
         <hr className='line' />
       </Row>

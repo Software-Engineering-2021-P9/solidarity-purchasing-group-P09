@@ -133,7 +133,7 @@ exports.emailBodyValidator = body("email")
   .trim()
   .escape()
   .isEmail();
-  exports.addressBodyValidator = body("address")
+exports.addressBodyValidator = body("address")
   .notEmpty()
   .isString()
   .bail()

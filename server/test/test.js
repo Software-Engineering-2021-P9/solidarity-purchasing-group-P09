@@ -858,6 +858,26 @@ describe("Client Login API tests:", () => {
   });
 
   describe("POST /clients/login", () => {
+    it("it should complete login", (done) => {
+      chai
+        .request(app)
+        .post("/api/clients/login")
+        .send({
+          email: "ehsanansari@gmail.com",
+          password: "123456789",
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          expect(res.body).to.be.an("object");
+          expect(res.body.email).to.be.equal("ehsanansari@gmail.com");
+          expect(res.body.password).to.be.equal(
+            "$2a$10$AU6PIEG1tq1467LUurqOjuoKzdvdtZHTFnCh00YzNGm7zzf7wa0rq"
+          );
+
+          done();
+        });
+    });
     it("it must fail when an invalid email is passed", (done) => {
       chai
         .request(app)

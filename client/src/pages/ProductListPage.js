@@ -10,12 +10,10 @@ import {
 } from "react-bootstrap";
 import { employeeNavbarLinks } from "../Routes";
 import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponent";
-import Product from "../services/models/Product";
+import { FilterRow } from "../ui-components/FilterRow/FilterRow";
 import ProductCard from "../ui-components/ProductCardComponent/ProductCard";
-import { RedDropdown } from "../ui-components/RedDropdownComponent/RedDropdown";
 import Button from "../ui-components/Button/Button";
 import "../ui-components/ShoppingCartComponent/ShoppingCartControlsCSS.css";
-import "../ui-components/Title.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import { findProducts } from "../services/ApiClient";
@@ -141,42 +139,14 @@ function ProductListPage(props) {
         </Modal.Footer>
       </Modal>
 
-      <Row className='align-items-center'>
-        <h1 className='title'>Available products</h1>
-      </Row>
-      <Row className='sticky'>
-        <Col
-          xs={{ span: 6 }}
-          sm={{ span: 6 }}
-          md={{ span: 3 }}
-          lg={{ span: 4 }}
-        >
-          <RedDropdown
-            items={Object.values(Product.Categories)}
-            title={category ? category : "Categories"}
-            updateSelectedItem={handleCategoryChanged}
-            activeElement={category}
-          />
-        </Col>
-        <Col md={{ offset: 2 }}>
-          <Form onSubmit={(ev) => handleFormSubmit(ev)}>
-            <Row>
-              <Col>
-                <FormControl
-                  type='textarea'
-                  placeholder='Filter'
-                  value={text}
-                  onChange={(ev) => setText(ev.target.value)}
-                />
-              </Col>
-              <Col md={{ span: 3 }}>
-                <Button onClick={handleOnSearchSubmit}> Search </Button>
-              </Col>
-            </Row>
-          </Form>
-        </Col>
-        <hr className='line' />
-      </Row>
+      <FilterRow
+        text={text}
+        handleCategoryChanged={handleCategoryChanged}
+        handleFormSubmit={handleFormSubmit}
+        category={category}
+        setText={setText}
+        handleOnSearchSubmit={handleOnSearchSubmit}
+      />
 
       <Row lg={4} md={3} sm={2} xs={1} className='g-4'>
         {products

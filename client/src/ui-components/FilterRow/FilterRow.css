@@ -1,0 +1,17 @@
+.title {
+  color: #635f46 !important;
+  margin-top: 25px !important;
+}
+
+.line {
+  color: #635f46 !important;
+  margin-top: 2.5% !important;
+}
+
+.sticky {
+  position: sticky;
+  padding: 2% !important;
+  padding-bottom: 0% !important;
+  z-index: 100;
+  background-color: #fcf5ee;
+}

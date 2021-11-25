@@ -117,7 +117,6 @@ exports.createClientHandler = async function (req, res, next) {
       0.0
     );
   } catch (err) {
-    console.error(`CreateClient() -> couldn't create client: ${err}`);
     return res.status(500).end();
   }
 

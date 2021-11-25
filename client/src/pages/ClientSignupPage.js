@@ -84,6 +84,29 @@ function ClientForm(props) {
         }
         );
         } 
+       const  validate = function(client){
+           /* eslint-disable no-useless-escape */
+  if(client.firstName === '' 
+  || client.lastName === '' 
+  || client.phoneNumber === '' 
+  || client.email === '' 
+  || client.address === '' 
+  || 
+  client.number === '' 
+  || client.city === '' 
+  || client.postCode === ''
+ || !(validator.isEmail(client.email)) || !(validator.isMobilePhone(client.phoneNumber) )
+ || !(validator.isAlpha(client.firstName)) || !(validator.isAlpha(client.lastName)) 
+ || !(validator.isAlpha(client.city)) 
+ || !(validator.isAlpha(client.address, 'it-IT', {ignore:"\s"}))
+  || !(validator.isNumeric(client.number)) 
+  || !(validator.isNumeric(client.postCode))){
+  return false;
+  }
+  else {
+    return true;
+  }
+        }
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -98,25 +121,8 @@ function ClientForm(props) {
     setErrorMessage6("");
     setErrorMessage7("");
     setErrorMessage8("");
-  /* eslint-disable no-useless-escape */
-    if(client.firstName === '' 
-    || client.lastName === '' 
-    || client.phoneNumber === '' 
-    || client.email === '' 
-    || client.address === '' 
-    || 
-    client.number === '' 
-    || client.city === '' 
-    || client.postCode === ''
-   || !(validator.isEmail(client.email)) || !(validator.isMobilePhone(client.phoneNumber) )
-   || !(validator.isAlpha(client.firstName)) || !(validator.isAlpha(client.lastName)) 
-   || !(validator.isAlpha(client.city)) 
-   || !(validator.isAlpha(client.address, 'it-IT', {ignore:"\s"}))
-    || !(validator.isNumeric(client.number)) 
-    || !(validator.isNumeric(client.postCode))){
-    valid = false;
-  
-      }
+     
+    valid = validate(client);
 
    try {
      if(valid){

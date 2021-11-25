@@ -938,7 +938,7 @@ describe("Client Login API tests:", () => {
         })
         .end((err, res) => {
           expect(err).to.be.null;
-          expect(res.status).to.be.equal(401);
+          expect(res.statusCode).to.be.equal(401);
 
           done();
         });
@@ -962,6 +962,7 @@ describe("Client Login API tests:", () => {
         .end((err, res) => {
           expect(err).to.be.null;
           expect(res.status).to.be.equal(401);
+          expect(res.statusCode).to.be.equal(401);
           done();
         });
     });

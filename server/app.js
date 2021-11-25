@@ -37,11 +37,9 @@ passport.serializeUser((user, done) => {
 });
 
 passport.deserializeUser((id, done) => {
-  console.log(id);
   dao
     .getUserById(id)
     .then((user) => {
-      console.log(user);
       done(null, user);
     })
     .catch((err) => {

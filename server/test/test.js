@@ -922,5 +922,21 @@ describe("Client Login API tests:", () => {
           done();
         });
     });
+    it("it must fail when email and  password is entered wrong", (done) => {
+      dao.close();
+      chai
+        .request(app)
+        .post("/api/clients/login")
+        .send({
+          email: "blabla@gmail.com",
+          password: config.password2,
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(401);
+
+          done();
+        });
+    });
   });
 });

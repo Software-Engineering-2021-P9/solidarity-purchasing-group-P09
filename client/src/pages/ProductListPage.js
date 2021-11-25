@@ -1,4 +1,5 @@
 import { React, useEffect, useState } from "react";
+import {useParams } from "react-router";
 import {
   Row,
   Col,
@@ -23,6 +24,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { findProducts } from "../services/ApiClient";
 
 function ProductListPage(props) {
+  const params = useParams();
+
   const [products, setProducts] = useState([]);
 
   //used for storing the content of the search form
@@ -43,10 +46,14 @@ function ProductListPage(props) {
   var creatingOrderMode = props.location.state ? true : false;
 
   // MOCK DATA
-  var isAClient = true;
+  console.log(params.clientID)
+  const paramClientID = params.clientID;
+  var isClientLogged = false; 
+  if(paramClientID) {
+    creatingOrderMode = true;
+    isClientLogged = true; 
+  }
   // END DATA
-
-  if (isAClient) creatingOrderMode = true;
 
   // modal states
   const [show, setShow] = useState(false);
@@ -114,9 +121,9 @@ function ProductListPage(props) {
         clientID={
           props.location.state
             ? props.location.state.clientID
-            : "619d06384d6847a9a1eb77cd"
+            : paramClientID
         }
-        isAClient={isAClient}
+        isClientLogged={isClientLogged}
       />
 
       <Modal show={show} onHide={handleClose}>

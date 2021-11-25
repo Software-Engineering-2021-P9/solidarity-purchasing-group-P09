@@ -1,12 +1,14 @@
-import React from "react";
-import { Container, Row } from "react-bootstrap";
+
+
+import {React, useState} from "react";
 import { employeeNavbarLinks } from "../Routes";
 import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponent";
 import "../App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { useState, useEffect} from "react";
-import { Col, Form ,Alert, } from "react-bootstrap";
+
+import { Col, Form ,Alert, Row, Container} from "react-bootstrap";
 import { Redirect} from "react-router-dom";
+
 import { createClient } from "../services/ApiClient";
 import  Button  from "../ui-components/Button/Button";
 import validator from 'validator';
@@ -56,11 +58,6 @@ function ClientForm(props) {
   
   
   
-useEffect(()=>{
-  
-},[success]);
-
-
 
   
   const [client, setClient] = useState({ firstName: "", lastName: "",phoneNumber: "", email: " ", address:"", number:"", city:"", postCode:"" });
@@ -91,6 +88,7 @@ useEffect(()=>{
   const handleSubmit = (event) => {
     event.preventDefault();
     let valid = true;
+
     setErrorMessage("");
     setErrorMessage1("");
     setErrorMessage2("");
@@ -100,7 +98,7 @@ useEffect(()=>{
     setErrorMessage6("");
     setErrorMessage7("");
     setErrorMessage8("");
-  
+  /* eslint-disable no-useless-escape */
     if(client.firstName === '' 
     || client.lastName === '' 
     || client.phoneNumber === '' 
@@ -113,12 +111,13 @@ useEffect(()=>{
    || !(validator.isEmail(client.email)) || !(validator.isMobilePhone(client.phoneNumber) )
    || !(validator.isAlpha(client.firstName)) || !(validator.isAlpha(client.lastName)) 
    || !(validator.isAlpha(client.city)) 
-   || (validator.isAlpha(client.address))
+   || !(validator.isAlpha(client.address, 'it-IT', {ignore:"\s"}))
     || !(validator.isNumeric(client.number)) 
     || !(validator.isNumeric(client.postCode))){
     valid = false;
   
       }
+
    try {
      if(valid){
       
@@ -132,32 +131,31 @@ useEffect(()=>{
        setError(true);
        if(client.firstName === '' || client.lastName === '' || client.phoneNumber === '' || client.email === '' || client.address === '' || 
     client.number === '' || client.city === '' || client.postCode === ''  ){
-      setErrorMessage("Fill in all the fields!");
+      setErrorMessage("*Fill in all the fields!");
     }
-
-   if(!(validator.isEmail(client.email)) ){
-    setErrorMessage1("The Email is invalid!");
-   }
-
-   if(!(validator.isMobilePhone(client.phoneNumber))){
+if(!(validator.isEmail(client.email))){
+  setErrorMessage1("*The Email is invalid!");
+}
+   if(!(validator.isMobilePhone(client.phoneNumber)) && !(validator.isEmpty(client.phoneNumber))){
     setErrorMessage2("*The phone number is invalid!  ");
    }
-   if(!(validator.isAlpha(client.firstName) && !(client.firstName === '' ))){
+   if(!(validator.isAlpha(client.firstName)) && !(validator.isEmpty(client.firstName))){
     setErrorMessage3("*The first name is incorrect!  ");
    }
-   if(!(validator.isAlpha(client.lastName) )){
+   if(!(validator.isAlpha(client.lastName)) && !(validator.isEmpty(client.lastName))){
     setErrorMessage4("*The last name is incorrect!  ");
    }
-   if(!(validator.isAlpha(client.city))){
+   if(!(validator.isAlpha(client.city)) && !(validator.isEmpty(client.city))){
     setErrorMessage5("*The city is incorrect!  ");
    }
-   if(!(validator.isAlpha(client.address))){
+   /* eslint-disable no-useless-escape */
+   if(!(validator.isAlpha(client.address, 'it-IT', {ignore:"\s"})) && !(validator.isEmpty(client.address))){
     setErrorMessage6("*The address is incorrect!  ");
    }
-   if(!(validator.isNumeric(client.number))){
+   if(!(validator.isNumeric(client.number)) && !(validator.isEmpty(client.number))){
     setErrorMessage7("*The number is incorrect!  ");
    }
-   if(!(validator.isNumeric(client.postCode))){
+   if(!(validator.isNumeric(client.postCode)) && !(validator.isEmpty(client.postCode))){
     setErrorMessage8("*The postCode must be a number!  ");
    }
  

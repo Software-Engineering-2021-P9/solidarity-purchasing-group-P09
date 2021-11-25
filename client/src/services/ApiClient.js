@@ -101,6 +101,7 @@ export async function createClient(client) {
   });
   
 
+
   switch (response.status) {
     case 400:
       throw new Error("Validation error occurred");
@@ -111,8 +112,8 @@ export async function createClient(client) {
     default:
       throw new Error("An error occurred during client fetch");
   }
-}
 
+}
 // --------
 // Products
 // --------

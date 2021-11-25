@@ -89,9 +89,9 @@ function ProductListPage(props) {
   const handleClose = () => setShow(false);
 
   const handleShow = (product) => {
-    if (cart.get(product.id)) {
+    if(cart.get(product.id)){
       setModalProduct({productName: product.name, productId: product.id, productQty: cart.get(product.id)});
-    } 
+    }
     else
       setModalProduct({productName: product.name, productId: product.id, productQty: 1});
     setShow(true);

@@ -972,7 +972,7 @@ describe("Client Login API tests:", () => {
         })
         .end((err, res) => {
           expect(err).to.be.null;
-          expect(res.status).to.be.equal(500);
+          expect(res.status).to.be.equal(404);
 
           done();
         });

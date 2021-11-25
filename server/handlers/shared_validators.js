@@ -133,7 +133,6 @@ exports.emailBodyValidator = body("email")
   .trim()
   .escape()
   .isEmail();
-
   exports.addressBodyValidator = body("address")
   .notEmpty()
   .isString()
@@ -142,7 +141,7 @@ exports.emailBodyValidator = body("email")
   .trim()
   .escape();
 
-  exports.walletBodyValidator = body("wallet")
+exports.walletBodyValidator = body("wallet")
   .notEmpty()
   .bail()
   .isLength({ min: 0 });

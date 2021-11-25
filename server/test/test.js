@@ -960,5 +960,26 @@ describe("Client Login API tests:", () => {
           done();
         });
     });
+    it("it should create a new client", (done) => {
+      chai
+        .request(app)
+        .post("/api/clients")
+        .send({
+          fullName: "Ehsan Ansari",
+          phoneNumber: "1236678",
+          email: "ansari@email.com",
+          address: "via giacinto,22 Torino, 10127",
+          wallet: 0.0,
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          expect(res.body).to.be.an("object");
+          expect(res.body.email).to.be.equal("ansari@email.com");
+          expect(res.body.fullName).to.be.equal("Ehsan Ansari");
+
+          done();
+        });
+    });
   });
 });

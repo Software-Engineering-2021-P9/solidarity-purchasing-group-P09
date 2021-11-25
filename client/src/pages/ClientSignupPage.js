@@ -1,5 +1,3 @@
-
-
 import {React, useState} from "react";
 import { employeeNavbarLinks } from "../Routes";
 import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponent";
@@ -69,7 +67,7 @@ function ClientForm(props) {
             }));
         };
 
-
+    
         const handleCancel =(event)=>{
           event.preventDefault();
         setClient({
@@ -91,14 +89,13 @@ function ClientForm(props) {
   || clientParams.phoneNumber === '' 
   || clientParams.email === '' 
   || clientParams.address === '' 
-  || 
-  clientParams.number === '' 
+  || clientParams.number === '' 
   || clientParams.city === '' 
   || clientParams.postCode === ''
- || !(validator.isEmail(clientParams.email)) || !(validator.isMobilePhone(clientParams.phoneNumber) )
- || !(validator.isAlpha(clientParams.firstName)) || !(validator.isAlpha(clientParams.lastName)) 
- || !(validator.isAlpha(clientParams.city)) 
- || !(validator.isAlpha(clientParams.address, 'it-IT', {ignore:"\s"}))
+  || !(validator.isEmail(clientParams.email)) || !(validator.isMobilePhone(clientParams.phoneNumber) )
+  || !(validator.isAlpha(clientParams.firstName, 'it-IT', {ignore:"\s"})) || !(validator.isAlpha(clientParams.lastName, 'it-IT', {ignore:"\s"})) 
+  || !(validator.isAlpha(clientParams.city, 'it-IT', {ignore:"\s"})) 
+  || !(validator.isAlpha(clientParams.address, 'it-IT', {ignore:"\s"}))
   || !(validator.isNumeric(clientParams.number)) 
   || !(validator.isNumeric(clientParams.postCode))){
   return false;
@@ -108,7 +105,8 @@ function ClientForm(props) {
         }
 
         const updateErrorMessage1 = function(clientParams1){
-          if(clientParams1.firstName === '' || clientParams1.lastName === '' || clientParams1.phoneNumber === '' || clientParams1.email === '' || clientParams1.address === '' || 
+          if(clientParams1.firstName === '' || clientParams1.lastName === '' || clientParams1.phoneNumber === ''
+           || clientParams1.email === '' || clientParams1.address === '' || 
           clientParams1.number === '' || clientParams1.city === '' || clientParams1.postCode === ''  ){
             setErrorMessage("*Fill in all the fields!");
           }
@@ -121,13 +119,13 @@ function ClientForm(props) {
       
         }
         const updateErrorMessage2 = function(clientParams2){
-          if(!(validator.isAlpha(clientParams2.firstName)) && !(validator.isEmpty(clientParams2.firstName))){
+          if(!(validator.isAlpha(clientParams2.firstName, 'it-IT', {ignore:"\s"})) && !(validator.isEmpty(clientParams2.firstName))){
             setErrorMessage3("*The first name is incorrect!  ");
            }
-           if(!(validator.isAlpha(clientParams2.lastName)) && !(validator.isEmpty(clientParams2.lastName))){
+           if(!(validator.isAlpha(clientParams2.lastName, 'it-IT', {ignore:"\s"})) && !(validator.isEmpty(clientParams2.lastName))){
             setErrorMessage4("*The last name is incorrect!  ");
            }
-           if(!(validator.isAlpha(clientParams2.city)) && !(validator.isEmpty(clientParams2.city))){
+           if(!(validator.isAlpha(clientParams2.city, 'it-IT', {ignore:"\s"})) && !(validator.isEmpty(clientParams2.city))){
             setErrorMessage5("*The city is incorrect!  ");
            }
       
@@ -163,13 +161,20 @@ function ClientForm(props) {
     valid = validate(client);
    try {
      if(valid){  
-    createClient(client);
+       const user = {
+         fullName:client.firstName+" "+  client.lastName,
+         phoneNumber:client.phoneNumber,
+         email:client.email,
+         address:client.address +", "+ client.number+" "+ client.city+ ", "+client.postCode,
+         wallet:0
+       }
+    createClient(user);
     setSuccess(true);
     setClient("");
      }
      else{
        
-       setError(true);
+     setError(true);
      updateErrorMessage1(client);
      updateErrorMessage2(client);
      updateErrorMessage3(client);

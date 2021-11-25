@@ -11,7 +11,6 @@ exports.checkValidationErrorMiddleware = (req, res, next) => {
   next();
 };
 
-
 // shared validators
 
 exports.employeeIDPathValidator = param("employeeID").isMongoId();
@@ -40,7 +39,6 @@ exports.passwordBodyValidator = body("password")
   .trim()
   .escape();
 
-
 // client validators
 exports.clientIDBodyValidator = body("clientID").isMongoId();
 
@@ -52,9 +50,7 @@ exports.addFundToWalletBodyValidator = body("increaseBy")
   .bail()
   .isFloat({ min: 0 });
 
-
 //products
-
 
 // product validators
 exports.productCategoryValidator = query("category")
@@ -64,7 +60,6 @@ exports.productCategoryValidator = query("category")
   .isString()
   .bail()
   .isIn(Object.values(ProductCategory));
-
 
 exports.searchStringValidator = query("searchString")
   .optional()
@@ -111,45 +106,46 @@ exports.orderProductQtysBodyValidator = body("products.*.quantity")
     max: 100,
   });
 
+exports.orderClientIDQueryValidator = query("clientID").isMongoId();
 
-    //Clients
+//Clients
 
-
-    exports.clientIDPathValidator = param("clientID").isMongoId();
-    fullNameBodyValidator = body("fullName")
-    .notEmpty()
-    .bail()
-    .isString()
-    .bail()
-    .isLength({ max: 40 })
-    .trim()
-    .escape();
-    
-    exports.phoneNumberBodyValidator = body("phoneNumber")
-    .notEmpty()
-    .bail()
-    .isString()
-    .isLength({ max: 20 })
-    .trim()
-    .escape();
-     exports.emailBodyValidator = body("email")
-     .notEmpty()
-     .bail()
-     .trim()
-     .escape()
-     .isEmail();
-    exports.addressBodyValidator = body("address")
-    .notEmpty()
-    .isString()
-    .bail()
-    .isLength({ max: 100 })
-    .trim()
-    .escape();
-
-    exports.walletBodyValidator = body("wallet")
+exports.clientIDPathValidator = param("clientID").isMongoId();
+fullNameBodyValidator = body("fullName")
   .notEmpty()
   .bail()
-  .isLength({ min: 0 })
+  .isString()
+  .bail()
+  .isLength({ max: 40 })
+  .trim()
+  .escape();
+
+exports.phoneNumberBodyValidator = body("phoneNumber")
+  .notEmpty()
+  .bail()
+  .isString()
+  .isLength({ max: 20 })
+  .trim()
+  .escape();
+exports.emailBodyValidator = body("email")
+  .notEmpty()
+  .bail()
+  .trim()
+  .escape()
+  .isEmail();
+
+  exports.addressBodyValidator = body("address")
+  .notEmpty()
+  .isString()
+  .bail()
+  .isLength({ max: 100 })
+  .trim()
+  .escape();
+
+  exports.walletBodyValidator = body("wallet")
+  .notEmpty()
+  .bail()
+  .isLength({ min: 0 });
  
   exports.checkLoggedClientMiddleware = (req, res, next) => {
     /* MOCK DATA ... waiting for login */ 

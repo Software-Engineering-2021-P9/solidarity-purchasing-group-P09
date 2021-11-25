@@ -16,7 +16,6 @@ var clientHandlers = require("./handlers/client");
 
 var productHandlers = require("./handlers/product");
 
-
 const port = process.env.PORT || 3001;
 const buildAPIPath = (apiPath) => "/api" + apiPath;
 
@@ -48,8 +47,6 @@ app.post(
   checkValidationErrorMiddleware,
   employeeHandlers.createEmployeeHandler
 );
-
-
 
 // --------
 // /clients
@@ -83,7 +80,6 @@ app.post(
   clientHandlers.createClientHandler
 );
 
-
 // ----------
 // /orders
 // ----------
@@ -96,6 +92,13 @@ app.post(
   orderHandlers.createOrderHandler
 );
 
+app.get(
+  buildAPIPath("/orders"),
+  orderHandlers.getOrdersByClientIDValidator,
+  checkValidationErrorMiddleware,
+  orderHandlers.getOrdersByClientID
+);
+
 // /products
 // ----------
 app.get(
@@ -104,7 +107,6 @@ app.get(
   checkValidationErrorMiddleware,
   productHandlers.getProductsByIDHandler
 );
-
 
 // Serve client app
 app.use("/", express.static(path.resolve(__dirname, "../client/build")));

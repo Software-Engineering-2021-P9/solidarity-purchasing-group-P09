@@ -87,7 +87,7 @@ exports.completeOrder = async function (req, res, next) {
   try {
     result = await dao.completeOrder(req.params.orderID);
   } catch (err) {
-    console.error(`CompleteOrder() -> couldn't patch the order: ${err}`);
+    console.error(`CompleteOrder() -> couldn't complete the order: ${err}`);
     return res.status(500).end();
   }
   if (!result.value) {
@@ -95,5 +95,5 @@ exports.completeOrder = async function (req, res, next) {
     return res.status(400).end();
   }
 
-  return res.status(200).end();
+  return res.status(204).end();
 };

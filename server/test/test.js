@@ -761,7 +761,7 @@ describe("Clients API tests:", () => {
           .patch("/api/orders/6187c957b288576ca26f8251/complete")
           .end((err, res) => {
             expect(err).to.be.null;
-            expect(res.status).to.be.equal(200);
+            expect(res.status).to.be.equal(204);
             done();
           });
       });

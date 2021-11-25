@@ -1,5 +1,5 @@
 const { ObjectID } = require("bson");
-
+var config = require("./test-config.json");
 exports.employeesCollection = {
   employees: [
     {
@@ -46,6 +46,15 @@ exports.ordersCollection = {
 
 exports.clientsCollection = {
   clients: [
+    {
+      _id: ObjectID("618d4ad3736f2caf2d3b3ca5"),
+      email: "ehsanansari@gmail.com",
+      fullName: " Ehsan",
+      password: config.secret,
+      address: "fsfsaf dsafsa fsafsa,26 Milano,12342",
+      wallet: 55.5,
+    },
+
     {
       _id: ObjectID("6187c957b288576ca26f8257"),
       email: "client1@test.com",

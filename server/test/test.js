@@ -2,6 +2,7 @@ let chai = require("chai");
 let expect = chai.expect;
 let chaiHttp = require("chai-http");
 let dao = require("../dao/dao");
+var config = require("./test-config.json");
 chai.use(chaiHttp);
 
 // This will contain the main server app, needed to listen for requests.
@@ -841,6 +842,85 @@ describe("Clients API tests:", () => {
             done();
           });
       });
+    });
+  });
+});
+
+// Client Login API TESTS
+describe("Client Login API tests:", () => {
+  beforeEach(() => {
+    dao.open();
+    mongoUnit.load(testData.clientsCollection);
+  });
+
+  afterEach(() => {
+    mongoUnit.drop();
+    dao.close();
+  });
+
+  describe("POST /clients/login", () => {
+    it("it should log the user in ", (done) => {
+      chai
+        .request(app)
+        .post("/api/clients/login")
+        .send({ username: "ehsanansari@gmail.com", password: config.password1 })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          expect(res.body).to.be.an("object");
+          expect(res.body.email).to.be.equal("ehsanansari@gmail.com");
+          expect(res.body._id).to.be.equal("618d4ad3736f2caf2d3b3ca5");
+
+          expect(res.body.wallet).to.be.equal(55.5);
+
+          done();
+        });
+    });
+    it("it must fail when an invalid email is passed", (done) => {
+      chai
+        .request(app)
+        .post("/api/clients/login")
+        .send({
+          email: "nomail",
+          password: config.password1,
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(401);
+
+          done();
+        });
+    });
+    it("it must fail when a not recorded email is entered ", (done) => {
+      chai
+        .request(app)
+        .post("/api/clients/login")
+        .send({
+          email: "notrecorded@gmail.com",
+          password: config.password1,
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(401);
+
+          done();
+        });
+    });
+    it("it must fail when password is entered wrong", (done) => {
+      dao.close();
+      chai
+        .request(app)
+        .post("/api/clients/login")
+        .send({
+          email: "ehsanansari@gmail.com",
+          password: config.password2,
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(401);
+
+          done();
+        });
     });
   });
 });

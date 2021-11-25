@@ -1,0 +1,5 @@
+{
+    "secret": "$2a$10$AU6PIEG1tq1467LUurqOjuoKzdvdtZHTFnCh00YzNGm7zzf7wa0rq",
+    "password1": "123456789",
+    "password2": "wrongpassword"
+}

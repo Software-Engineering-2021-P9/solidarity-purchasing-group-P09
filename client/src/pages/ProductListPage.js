@@ -16,7 +16,7 @@ import Product from "../services/models/Product";
 import ProductCard from "../ui-components/ProductCardComponent/ProductCard";
 import { RedButton } from "../ui-components/RedButtonComponent/RedButton";
 import { RedDropdown } from "../ui-components/RedDropdownComponent/RedDropdown";
-import Button from "../ui-components/Button/Button";
+import  Button  from "../ui-components/Button/Button";
 import "../ui-components/ShoppingCartComponent/ShoppingCartControlsCSS.css";
 import "../ui-components/Title.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -38,9 +38,7 @@ function ProductListPage(props) {
   const [searchString, setSearchString] = useState();
 
   //current cart
-  const [cart, setCart] = useState(
-    props.location.state ? props.location.state.shoppingCart : new Map()
-  );
+  const [cart, setCart] = useState(props.location.state ? props.location.state.shoppingCart : new Map());
 
   // if the employee is creating a new order or is just showing available products
   var creatingOrderMode = props.location.state ? true : false;
@@ -92,23 +90,16 @@ function ProductListPage(props) {
 
   const handleShow = (product) => {
     if (cart.get(product.id)) {
-      setModalProduct({
-        productName: product.name,
-        productId: product.id,
-        productQty: cart.get(product.id),
-      });
-    } else
-      setModalProduct({
-        productName: product.name,
-        productId: product.id,
-        productQty: 1,
-      });
+      setModalProduct({productName: product.name, productId: product.id, productQty: cart.get(product.id)});
+    } 
+    else
+      setModalProduct({productName: product.name, productId: product.id, productQty: 1});
     setShow(true);
   };
 
   const addItem = (productID, quantity) => {
     setCart(new Map(cart.set(productID, parseInt(quantity))));
-    setShow(false);
+    setShow(false); 
   };
 
   return (
@@ -118,11 +109,7 @@ function ProductListPage(props) {
         showShoppingCart
         shoppingCartItems={cart.size}
         shoppingCart={cart}
-        clientID={
-          props.location.state
-            ? props.location.state.clientID
-            : paramClientID
-        }
+        clientID={props.location.state ? props.location.state.clientID : paramClientID }
         isClientLogged={isClientLogged}
       />
 
@@ -139,9 +126,7 @@ function ProductListPage(props) {
               type="number"
               step={1}
               value={modalProduct.productQty}
-              onChange={(e) =>
-                setModalProduct({ ...modalProduct, productQty: e.target.value })
-              }
+              onChange={(e) => setModalProduct({ ...modalProduct, productQty: e.target.value })}
               max={100}
               min={1}
             />
@@ -151,11 +136,7 @@ function ProductListPage(props) {
           <Button className="btn-light" onClick={handleClose}>
             Close
           </Button>
-          <Button
-            className="btn-primary"
-            onClick={() =>
-              addItem(modalProduct.productId, modalProduct.productQty)
-            }
+          <Button className="btn-primary" onClick={() => addItem(modalProduct.productId, modalProduct.productQty)}
           >
             Submit
           </Button>

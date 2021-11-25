@@ -144,4 +144,5 @@ function ShoppingCartPage(props) {
     </Container>
   );
 }
+
 export { ShoppingCartPage };

@@ -938,5 +938,27 @@ describe("Client Login API tests:", () => {
           done();
         });
     });
+
+    it("logout: res status 200", (done) => {
+      chai
+        .request(app)
+        .delete("/api/clients/session")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          done();
+        });
+    });
+
+    it("unauthorized user: res status 401", (done) => {
+      chai
+        .request(app)
+        .get("/api/clients/session")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(401);
+          done();
+        });
+    });
   });
 });

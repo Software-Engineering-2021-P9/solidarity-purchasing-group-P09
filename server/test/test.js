@@ -3,7 +3,7 @@ let expect = chai.expect;
 let chaiHttp = require("chai-http");
 let dao = require("../dao/dao");
 var config = require("./test-config.json");
-const axios = require("axios");
+
 chai.use(chaiHttp);
 
 // This will contain the main server app, needed to listen for requests.
@@ -949,29 +949,6 @@ describe("Client Login API tests:", () => {
           expect(err).to.be.null;
           expect(res.status).to.be.equal(200);
           done();
-        });
-    });
-
-    it("logout after login", (done) => {
-      const data = {
-        username: "ehsanansari@gmail.com",
-        password: "123456789",
-      };
-
-      axios
-        .post("http://localhost:3001/api/clients/login", data)
-        .then((res) => {
-          chai
-            .request(app)
-            .delete("/api/clients/session")
-            .end((err, res) => {
-              expect(err).to.be.null;
-              expect(res.status).to.be.equal(200);
-              done();
-            });
-        })
-        .catch((err) => {
-          console.error(err);
         });
     });
 

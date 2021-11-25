@@ -653,6 +653,94 @@ describe("Clients API tests:", () => {
             done();
           });
       });
+
+      it("it must fail when mongo fails", (done) => {
+        dao.close();
+        chai
+          .request(app)
+          .post("/api/orders")
+          .send({
+            clientID: "6187c957b288576ca26f8257",
+            products: [
+              { productID: "6187c957b288576ca26f8258", quantity: 3 },
+              { productID: "6187c957b288576ca26f8259", quantity: 1 },
+              { productID: "6187c957b288576ca26f8250", quantity: 2 },
+            ],
+          })
+          .end((err, res) => {
+            expect(err).to.be.null;
+            expect(res.status).to.be.equal(500);
+
+            done();
+          });
+      });
+    });
+
+    describe("GET /orders", () => {
+      it("it should retrieve the client's orders with given ClientID", (done) => {
+        chai
+          .request(app)
+          .get("/api/orders?clientID=6187c957b288576ca26f8257")
+          .end((err, res) => {
+            expect(err).to.be.null;
+            expect(res.status).to.be.equal(200);
+            expect(res.body).to.be.an("array");
+
+            expect(res.body).to.be.eql([
+              {
+                id: "6187c957b288576ca26f8251",
+                clientID: "6187c957b288576ca26f8257",
+                products: [
+                  { productID: "6187c957b288576ca26f8258", quantity: 3 },
+                  { productID: "6187c957b288576ca26f8259", quantity: 1 },
+                  { productID: "6187c957b288576ca26f8250", quantity: 2 },
+                ],
+                status: "waiting",
+                totalPrice: "6",
+                createdAt: "2021-11-16T13:00:07.616Z",
+              },
+              {
+                id: "6187c957b288576ca26f8999",
+                clientID: "6187c957b288576ca26f8257",
+                products: [
+                  { productID: "6187c957b288576ca26f8258", quantity: 10 },
+                  { productID: "6187c957b288576ca26f8259", quantity: 2 },
+                ],
+                status: "done",
+                totalPrice: "12",
+                createdAt: "2021-12-16T13:00:07.616Z",
+              },
+            ]);
+
+            done();
+          });
+      });
+
+      it("it should return an empty array if there are no orders for given clientID", (done) => {
+        chai
+          .request(app)
+          .get("/api/orders?clientID=6187c957b288576ca26f8000")
+          .end((err, res) => {
+            expect(err).to.be.null;
+            expect(res.status).to.be.equal(200);
+            expect(res.body).to.be.an("array");
+            expect(res.body.length).to.be.equal(0);
+            done();
+          });
+      });
+
+      it("it must fail when mongo fails", (done) => {
+        dao.close();
+        chai
+          .request(app)
+          .get("/api/orders?clientID=6187c957b288576ca26f8257")
+          .end((err, res) => {
+            expect(err).to.be.null;
+            expect(res.status).to.be.equal(500);
+
+            done();
+          });
+      });
     });
   });
 });
@@ -690,11 +778,11 @@ describe("Clients API tests:", () => {
             expect(res.body).to.be.an("object");
             expect(res.body.email).to.be.equal("ansari@email.com");
             expect(res.body.fullName).to.be.equal("Ehsan Ansari");
-  
+
             done();
           });
       });
-  
+
       it("it must fail when an invalid email is passed", (done) => {
         chai
           .request(app)
@@ -709,32 +797,31 @@ describe("Clients API tests:", () => {
           .end((err, res) => {
             expect(err).to.be.null;
             expect(res.status).to.be.equal(400);
-  
+
             done();
           });
       });
-  
-  
+
       it("it must fail when a fullName too long is passed", (done) => {
         chai
           .request(app)
           .post("/api/clients")
           .send({
-            fullName: "Ehsan Ansari Mario VerdiMario VerdiMario VerdiMario VerdiMario Verdi",
+            fullName:
+              "Ehsan Ansari Mario VerdiMario VerdiMario VerdiMario VerdiMario Verdi",
             phoneNumber: "1236678",
             email: "ansari@email.com",
             address: "via giacinto,22 Torino, 10127",
             wallet: 0.0,
-            
           })
           .end((err, res) => {
             expect(err).to.be.null;
             expect(res.status).to.be.equal(400);
-  
+
             done();
           });
       });
-  
+
       it("it must fail when mongo fails", (done) => {
         dao.close();
         chai
@@ -750,7 +837,7 @@ describe("Clients API tests:", () => {
           .end((err, res) => {
             expect(err).to.be.null;
             expect(res.status).to.be.equal(500);
-  
+
             done();
           });
       });

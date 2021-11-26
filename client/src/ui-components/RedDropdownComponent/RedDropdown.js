@@ -8,14 +8,14 @@ import "./RedDropdown.css";
 function RedDropdown(props) {
   return (
     <Dropdown as={ButtonGroup}>
-      <Dropdown.Toggle id="dropdown-custom-1" className="dropdown">
+      <Dropdown.Toggle id='dropdown-custom-1' className='dropdown'>
         {props.title}
       </Dropdown.Toggle>
-      <Dropdown.Menu className="dropdown-menu">
+      <Dropdown.Menu className='dropdown-menu'>
         {" "}
         {props.items.map((name, index) => (
           <Dropdown.Item
-            className="dropdown-content"
+            className='dropdown-content'
             key={index}
             onClick={() => props.updateSelectedItem(name)}
             active={props.activeElement === name}
@@ -24,7 +24,7 @@ function RedDropdown(props) {
           </Dropdown.Item>
         ))}
         <Dropdown.Item
-          className="dropdown-content"
+          className='dropdown-content'
           onClick={() => props.updateSelectedItem()}
           active={props.title === "Categories"}
         >

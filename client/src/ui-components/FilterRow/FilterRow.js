@@ -11,7 +11,11 @@ function FilterRow(props) {
       </Row>
 
       <Row className='sticky'>
-        <Col sm={{ span: 6, order: "first" }} md={{ span: 3 }} lg={{ span: 4 }}>
+        <Col
+          className='ms-auto padding'
+          sm={{ span: 4, order: "first" }}
+          xs={12}
+        >
           <RedDropdown
             items={Object.values(Product.Categories)}
             title={props.category ? props.category : "Categories"}
@@ -19,9 +23,9 @@ function FilterRow(props) {
             activeElement={props.category}
           />
         </Col>
-        <Col md={{ offset: 2 }} xs={{ order: "first" }}>
+        <Col className='me-auto' xs={{ order: "first" }}>
           <InputGroup
-            classname='padding'
+            className='padding'
             onSubmit={(ev) => props.handleFormSubmit(ev)}
           >
             <FormControl

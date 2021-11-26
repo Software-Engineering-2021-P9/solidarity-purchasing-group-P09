@@ -25,7 +25,7 @@ const {
   passportStrategy,
   serializeUser,
   deserializeUser,
-} = require("./services/AuthService");
+} = require("./services/auth_service");
 
 const port = process.env.PORT || 3001;
 const buildAPIPath = (apiPath) => "/api" + apiPath;

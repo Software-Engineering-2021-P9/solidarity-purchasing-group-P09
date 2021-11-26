@@ -13,6 +13,7 @@ const {
 const {
   getClientByID,
   addFundToWallet,
+  subtractFundToWallet,
   findClients,
   createClientsTextSearchIndexes,
   createClient,
@@ -75,6 +76,8 @@ exports.deleteEmployee = (employeeID) => deleteEmployee(db, employeeID);
 exports.getClientByID = (clientID) => getClientByID(db, clientID);
 exports.addFundToWallet = (clientID, increaseBy) =>
   addFundToWallet(db, clientID, increaseBy);
+exports.subtractFundToWallet = (clientID, subtractBy) =>
+  subtractFundToWallet(db, clientID, subtractBy);
 exports.findClients = (searchString) => findClients(db, searchString);
 
 exports.createClientsTextSearchIndexes = () =>

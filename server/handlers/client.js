@@ -34,7 +34,9 @@ exports.getClientByIDHandler = async function (req, res, next) {
 exports.addFundToWalletValidatorChain = [clientIDPathValidator, addFundToWalletBodyValidator];
 exports.addFundToWalletHandler = async function (req, res, next) {
     let result;
+    let orders;
 
+    //TOP UP WALLET
     try {
         result = await dao.addFundToWallet(req.params.clientID, parseFloat(req.body.increaseBy));
     }
@@ -42,12 +44,57 @@ exports.addFundToWalletHandler = async function (req, res, next) {
         console.error(`AddFundToWalletHandler() -> couldn't top up wallet: ${err}`);
         return res.status(500).end();
     }
-
     if (result.value == null) {
         console.error(`AddFundToWalletHandler() -> couldn't find client collection or client document`);
         return res.status(400).end();
     }
-    return res.json({ newWalletValue: result.value.wallet });
+
+    //GET CLIENT ORDERS IN "NOT COVERED" STATE, ORDER THEM BY OLDER TO NEWER, AND PAY WHAT THE WALLET CAN 
+    try{
+      orders = await dao.getOrdersByClientID(req.params.clientID);
+    }catch(err){
+      console.error(`getOrdersByClientID() -> couldn't retrieve client orders: ${err}`);
+      return res.status(500).end(); 
+    }
+
+    orders = orders.filter(order => order.status == "not covered").sort((a, b)=>{
+        if(a.createdAt < b.createdAt)
+          return -1;
+        if(a.createdAt > b.createdAt)
+          return 1;
+        if(a.createdAt == b.createdAt)
+          return 0;
+      });
+    
+    let finalWalletValue = result.value.wallet;
+
+    for(let i=0; i<orders.length; i++){
+      if(finalWalletValue >= orders[i].totalPrice){
+        finalWalletValue -= orders[i].totalPrice;
+        //TODO: CHANGE ORDER STATE TO PREPARED
+      }
+      else{
+        break;
+      }
+    }
+
+    let subtractBy = result.value.wallet - finalWalletValue;
+    if(subtractBy != 0){
+      try {
+        result = await dao.subtractFundToWallet(req.params.clientID , parseFloat(subtractBy));
+      }
+      catch (err) {
+        console.error(`SubtractFundToWalletHandler() -> couldn't subtract fund to wallet: ${err}`);
+        return res.status(500).end();
+      }
+      if (result.value == null) {
+        console.log(result);
+        console.error(`SubtractFundToWalletHandler() -> couldn't find client collection or client document`);
+        return res.status(400).end();
+      }
+    }
+
+    return res.json({ newWalletValue: finalWalletValue});
 
 }
 

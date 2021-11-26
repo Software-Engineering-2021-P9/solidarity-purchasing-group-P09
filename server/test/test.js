@@ -886,7 +886,7 @@ describe("Client Login API tests:", () => {
         .request(app)
         .post("/api/clients/login")
         .send({
-          email: "nomail",
+          username: "nomail",
           password: config.password1,
         })
         .end((err, res) => {
@@ -901,7 +901,7 @@ describe("Client Login API tests:", () => {
         .request(app)
         .post("/api/clients/login")
         .send({
-          email: "notrecorded@gmail.com",
+          username: "notrecorded@gmail.com",
           password: config.password1,
         })
         .end((err, res) => {
@@ -912,12 +912,11 @@ describe("Client Login API tests:", () => {
         });
     });
     it("it must fail when password is entered wrong", (done) => {
-      dao.close();
       chai
         .request(app)
         .post("/api/clients/login")
         .send({
-          email: "ehsanansari@gmail.com",
+          username: "ehsanansari@gmail.com",
           password: config.password2,
         })
         .end((err, res) => {
@@ -928,12 +927,11 @@ describe("Client Login API tests:", () => {
         });
     });
     it("it must fail when email and  password is entered wrong", (done) => {
-      dao.close();
       chai
         .request(app)
         .post("/api/clients/login")
         .send({
-          email: "blabla@gmail.com",
+          username: "blabla@gmail.com",
           password: config.password2,
         })
         .end((err, res) => {

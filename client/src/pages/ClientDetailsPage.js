@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponent";
 import { CreateNewOrderButton } from "../ui-components/ClientDetailsComponent/CreateNewOrderButton";
-import { useHistory, useParams } from "react-router";
+import { useHistory/*, useParams*/ } from "react-router";
 import { employeeNavbarLinks } from "../Routes";
 
 import {
@@ -26,8 +26,11 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "../ui-components/Title.css";
 
 function ClientDetailsPage(props) {
-  const params = useParams();
-  const clientID = params.id;
+  //TODO: GET CLIENT ID OF LOGGED CLIENT IF THIS PAGE IS USED ON CLIENT SIDE. For now, we'll set this hardcoded
+  //const params = useParams();
+  //const clientID = params.id;
+  const clientID = "618d4ad3736f2caf2d3b3ca5";//TODO: TO DELETE WHEN LOG IN IS DONE!
+  
   const [show, setShow] = useState(true);
 
   const history = useHistory();
@@ -46,10 +49,10 @@ function ClientDetailsPage(props) {
   const [isActionLoading, setIsActionLoading] = useState(false);
 
   useEffect(() => {
-    if (!clientID) {
+    if (!clientID && (history.location.pathname !== "/NotCoveredOrders") ) {
       history.push("/");
     }
-
+    
     const getClientInfo = () => {
       getClientByID(clientID)
         .then((result) => {
@@ -132,7 +135,10 @@ function ClientDetailsPage(props) {
               <ClientDetails clientInfo={clientInfo} />
             </Col>
             <Col md="5">
-              <InputGroup className="mb-3 pt-4">
+              {
+              history.location.pathname === "/NotCoveredOrders"?
+              (null):
+              (<InputGroup className="mb-3 pt-4">
                 <FormControl
                   type="number"
                   placeholder="50€"
@@ -143,17 +149,20 @@ function ClientDetailsPage(props) {
                 <Button onClick={onAddFundsToWalletButtonClick}>
                   Add funds
                 </Button>
-              </InputGroup>
+              </InputGroup>)
+              }
             </Col>
           </Row>
           <Row className="my-3">
-            <CreateNewOrderButton clientID={clientID} />
+            {history.location.pathname === "/NotCoveredOrders"?
+            (null):
+            <CreateNewOrderButton clientID={clientID} />}
           </Row>
           <Container>
             <Divider size={2} />
           </Container>
           <Row>
-            <ClientOrders />
+            <ClientOrders/>
           </Row>
         </>
       )}
@@ -169,7 +178,7 @@ function ClientDetailsPage(props) {
         onCancel={onActionConfirmationModalHide}
         isLoading={isActionLoading}
       />
-    </>
+      </>
   );
 }
 

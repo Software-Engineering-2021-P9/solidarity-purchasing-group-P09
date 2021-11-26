@@ -100,42 +100,44 @@ function ClientDetailsPage(props) {
     <>
       <NavbarComponent links={employeeNavbarLinks} />
       {props.location.state != null && show ? (
-              <Row>
-                <Alert
-                  variant="success"
-                  style={{
-                    color: "#635F46",
-                    fontWeight: "bold",
-                    backgroundColor: "#7465132f",
-                    width: "auto",
-                    marginTop: "1%",
-                    marginLeft: "1%",
-                  }}
-                  onClose={() => setShow(false)}
-                  dismissible
-                >
-                  Your order was successfully created!
-                </Alert>
-              </Row>
-          ) : "" }
+        <Row>
+          <Alert
+            variant='success'
+            style={{
+              color: "#635F46",
+              fontWeight: "bold",
+              backgroundColor: "#7465132f",
+              width: "auto",
+              marginTop: "1%",
+              marginLeft: "1%",
+            }}
+            onClose={() => setShow(false)}
+            dismissible
+          >
+            Your order was successfully created!
+          </Alert>
+        </Row>
+      ) : (
+        ""
+      )}
       {!isInitialized ? (
-        <Container className="pt-5 d-flex justify-content-center">
-          <Spinner variant="dark" animation="border" />
+        <Container className='pt-5 d-flex justify-content-center'>
+          <Spinner variant='dark' animation='border' />
         </Container>
       ) : (
         <>
           <Row>
-            <h1 className="title">Client Details</h1>
+            <h1 className='title'>Client Details</h1>
           </Row>
-          <Row className="justify-content-around pt-2">
-            <Col md="5" className="ms-5">
+          <Row className='justify-content-around pt-2'>
+            <Col md='5' className='ms-5'>
               <ClientDetails clientInfo={clientInfo} />
             </Col>
-            <Col md="5">
-              <InputGroup className="mb-3 pt-4">
+            <Col md='5'>
+              <InputGroup className='mb-3 pt-4'>
                 <FormControl
-                  type="number"
-                  placeholder="50€"
+                  type='number'
+                  placeholder='50€'
                   value={fundsToAddAmount}
                   onChange={onFundsToAddAmountChange}
                   required
@@ -146,14 +148,14 @@ function ClientDetailsPage(props) {
               </InputGroup>
             </Col>
           </Row>
-          <Row className="my-3">
+          <Row className='my-3'>
             <CreateNewOrderButton clientID={clientID} />
           </Row>
           <Container>
             <Divider size={2} />
           </Container>
           <Row>
-            <ClientOrders />
+            <ClientOrders clientID={clientID} />
           </Row>
         </>
       )}

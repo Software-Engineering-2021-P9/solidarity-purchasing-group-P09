@@ -2,7 +2,6 @@ let chai = require("chai");
 let expect = chai.expect;
 let chaiHttp = require("chai-http");
 let dao = require("../dao/dao");
-var config = require("./test-config.json");
 
 chai.use(chaiHttp);
 
@@ -373,6 +372,7 @@ describe("Clients API tests:", () => {
             {
               id: "6187c957b288576ca26f8257",
               email: "client1@test.com",
+              role: "client",
               fullName: " Domenico Bini",
               phoneNumber: 3205708803,
               address: "via Domenico Bini,26 Torino,10538",
@@ -427,6 +427,7 @@ describe("Clients API tests:", () => {
           expect(res.body).to.be.eql({
             id: "6a8fc927bb88c762a26f0000",
             email: "client2@test.com",
+            role: "client",
             fullName: "Andrea Diprè",
             phoneNumber: 3205755555,
             address: "via Andrea Dipre,24 Torino,10538",
@@ -860,18 +861,18 @@ describe("Client Login API tests:", () => {
     dao.close();
   });
 
-  describe("POST /clients/login", () => {
+  describe("POST /users/login", () => {
     it("it should log the user in ", (done) => {
       chai
         .request(app)
-        .post("/api/clients/login")
-        .send({ username: "ehsanansari@gmail.com", password: config.password1 })
+        .post("/api/users/login")
+        .send({ username: "ehsanansari@gmail.com", password: "123456789" })
         .end((err, res) => {
           expect(err).to.be.null;
           expect(res.status).to.be.equal(200);
           expect(res.body).to.be.an("object");
           expect(res.body.email).to.be.equal("ehsanansari@gmail.com");
-          expect(res.body._id).to.be.equal("618d4ad3736f2caf2d3b3ca5");
+          expect(res.body.id).to.be.equal("618d4ad3736f2caf2d3b3ca5");
           expect(res.body.wallet).to.be.equal(55.5);
           expect(res.body.address).to.be.equal(
             "fsfsaf dsafsa fsafsa,26 Milano,12342"
@@ -884,10 +885,10 @@ describe("Client Login API tests:", () => {
     it("it must fail when an invalid email is passed", (done) => {
       chai
         .request(app)
-        .post("/api/clients/login")
+        .post("/api/users/login")
         .send({
           username: "nomail",
-          password: config.password1,
+          password: "123456789",
         })
         .end((err, res) => {
           expect(err).to.be.null;
@@ -899,10 +900,10 @@ describe("Client Login API tests:", () => {
     it("it must fail when a not recorded email is entered ", (done) => {
       chai
         .request(app)
-        .post("/api/clients/login")
+        .post("/api/users/login")
         .send({
           username: "notrecorded@gmail.com",
-          password: config.password1,
+          password: "123456789",
         })
         .end((err, res) => {
           expect(err).to.be.null;
@@ -914,10 +915,10 @@ describe("Client Login API tests:", () => {
     it("it must fail when password is entered wrong", (done) => {
       chai
         .request(app)
-        .post("/api/clients/login")
+        .post("/api/users/login")
         .send({
           username: "ehsanansari@gmail.com",
-          password: config.password2,
+          password: "wrongpassword",
         })
         .end((err, res) => {
           expect(err).to.be.null;
@@ -929,10 +930,10 @@ describe("Client Login API tests:", () => {
     it("it must fail when email and  password is entered wrong", (done) => {
       chai
         .request(app)
-        .post("/api/clients/login")
+        .post("/api/users/login")
         .send({
           username: "blabla@gmail.com",
-          password: config.password2,
+          password: "wrongpassword",
         })
         .end((err, res) => {
           expect(err).to.be.null;
@@ -942,25 +943,25 @@ describe("Client Login API tests:", () => {
         });
     });
 
-    it("logout: res status 200", (done) => {
+    it("logout: res status 204", (done) => {
       chai
         .request(app)
-        .delete("/api/clients/session")
+        .delete("/api/users/current")
         .end((err, res) => {
           expect(err).to.be.null;
-          expect(res.status).to.be.equal(200);
+          expect(res.status).to.be.equal(204);
           done();
         });
     });
 
-    it("unauthorized user: res status 401", (done) => {
+    it("no currently logged user: res status 204", (done) => {
       chai
         .request(app)
-        .get("/api/clients/session")
+        .get("/api/users/current")
         .end((err, res) => {
           expect(err).to.be.null;
-          expect(res.status).to.be.equal(401);
-          expect(res.statusCode).to.be.equal(401);
+          expect(res.status).to.be.equal(204);
+          expect(res.statusCode).to.be.equal(204);
           done();
         });
     });
@@ -969,10 +970,10 @@ describe("Client Login API tests:", () => {
       dao.close();
       chai
         .request(app)
-        .post("/api/clients/session")
+        .post("/api/users/current")
         .send({
           username: "ehsanansari@gmail.com",
-          password: config.password1,
+          password: "123456789",
         })
         .end((err, res) => {
           expect(err).to.be.null;

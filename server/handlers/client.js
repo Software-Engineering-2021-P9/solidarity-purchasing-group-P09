@@ -91,6 +91,7 @@ exports.createClientHandler = async function (req, res, next) {
       0.0
     );
   } catch (err) {
+    console.error(`CreateClient() -> couldn't create client: ${err}`);
     return res.status(500).end();
   }
 
@@ -99,6 +100,10 @@ exports.createClientHandler = async function (req, res, next) {
     result = await dao.getClientByID(result.insertedId);
   } catch (err) {
     return res.status(500).end();
+  }
+
+  if (!result) {
+    console.error(`CreateClient() -> couldn't retrieve newly created client`);
   }
 
   return res.json(ClientInfo.fromMongoJSON(result));

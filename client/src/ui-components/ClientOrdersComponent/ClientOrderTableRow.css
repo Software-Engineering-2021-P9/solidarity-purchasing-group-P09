@@ -16,3 +16,8 @@ tr {
   height: 50px;
   color: green !important;
 }
+.table-row-status-not-covered {
+  width: 200px;
+  height: 50px;
+  color: red !important;
+}

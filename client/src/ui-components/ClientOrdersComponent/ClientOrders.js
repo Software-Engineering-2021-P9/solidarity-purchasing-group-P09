@@ -10,7 +10,7 @@ function ClientOrders(props) {
     getOrders(props.clientID).then((newO) => {
       setOrders(newO);
     });
-  }, []);
+  }, [props.clientID]);
 
   return (
     <div>

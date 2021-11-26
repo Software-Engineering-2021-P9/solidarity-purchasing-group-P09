@@ -4,38 +4,28 @@ var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 var cors = require("cors");
 const passport = require("passport");
-const LocalStrategy = require("passport-local").Strategy;
-const session = require("express-session");
+
 var dao = require("./dao/dao");
 
 const {
   checkValidationErrorMiddleware,
 } = require("./handlers/shared_validators");
-var employeeHandlers = require("./handlers/employee");
+var userHandlers = require("./handlers/user");
 
-var orderHandlers = require("./handlers/order");
+var employeeHandlers = require("./handlers/employee");
 
 var clientHandlers = require("./handlers/client");
 
+var orderHandlers = require("./handlers/order");
+
 var productHandlers = require("./handlers/product");
-const { passportStrategy } = require("./services/AuthService");
 
-passport.use(passportStrategy);
-
-passport.serializeUser((user, done) => {
-  done(null, user._id);
-});
-
-passport.deserializeUser((id, done) => {
-  dao
-    .getUserById(id)
-    .then((user) => {
-      done(null, user);
-    })
-    .catch((err) => {
-      done(err, null);
-    });
-});
+const {
+  sessionSettings,
+  passportStrategy,
+  serializeUser,
+  deserializeUser,
+} = require("./services/AuthService");
 
 const port = process.env.PORT || 3001;
 const buildAPIPath = (apiPath) => "/api" + apiPath;
@@ -49,17 +39,22 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(cors());
 
-app.use(
-  session({
-    secret: "bla bla bla",
-    resave: false,
-    saveUninitialized: false,
-  })
-);
-
+passport.use(passportStrategy);
+passport.serializeUser(serializeUser);
+passport.deserializeUser(deserializeUser);
+app.use(sessionSettings);
 app.use(passport.initialize());
 app.use(passport.session());
+
 dao.open();
+
+// -------------
+// login methods
+// -------------
+
+app.post(buildAPIPath("/users/login"), userHandlers.loginHandler(passport));
+app.get(buildAPIPath("/users/current"), userHandlers.getCurrentUserHandler);
+app.delete(buildAPIPath("/users/current"), userHandlers.logoutHandler);
 
 // ----------
 // /employees
@@ -82,16 +77,6 @@ app.post(
 // --------
 // /clients
 // --------
-
-// login
-
-app.post(buildAPIPath("/clients/login"), clientHandlers.loginHandler);
-app.get(
-  buildAPIPath("/clients/session"),
-  clientHandlers.currentLoggedInClientHandler
-);
-
-app.delete(buildAPIPath("/clients/session"), clientHandlers.logoutHandler);
 
 app.get(
   buildAPIPath("/clients/:clientID"),
@@ -139,8 +124,9 @@ app.get(
   orderHandlers.getOrdersByClientID
 );
 
+// ---------
 // /products
-// ----------
+// ---------
 app.get(
   buildAPIPath("/products"),
   productHandlers.getProductsByIDValidatorChain,

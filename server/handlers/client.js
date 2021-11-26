@@ -1,6 +1,5 @@
 var dao = require("../dao/dao");
-const passport = require("passport");
-const { ClientInfo } = require("../models/ClientInfo");
+const { ClientInfo } = require("../models/client_info");
 const {
   clientIDPathValidator,
   addFundToWalletBodyValidator,
@@ -10,31 +9,6 @@ const {
   emailBodyValidator,
   addressBodyValidator,
 } = require("./shared_validators");
-
-// login part
-
-exports.loginHandler = async function (req, res, next) {
-  passport.authenticate("local", (err, user, info) => {
-    if (!user) {
-      return res.status(401).json(info);
-    }
-    req.login(user, (e) => {
-      if (e) return next(e);
-      return res.json(req.user);
-    });
-  })(req, res, next);
-};
-
-exports.logoutHandler = async function (req, res, next) {
-  req.logout();
-  res.end();
-};
-
-exports.currentLoggedInClientHandler = async function (req, res, next) {
-  if (req.isAuthenticated()) {
-    res.status(200).json(req.user);
-  } else res.status(401).json({ error: "Unauthenticated user!" });
-};
 
 exports.getClientByIDValidatorChain = [clientIDPathValidator];
 exports.getClientByIDHandler = async function (req, res, next) {

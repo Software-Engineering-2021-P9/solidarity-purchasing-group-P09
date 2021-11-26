@@ -7,6 +7,7 @@ import Validator from "validatorjs";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { LoginForm } from "../ui-components/LoginFormComponent/LoginForm";
 import { AskToRegister } from "../ui-components/LoginFormComponent/AskToRegister";
+var config = require("../ui-components/LoginFormComponent/config.json");
 function ClientLoginPage(props) {
   const [username, setUsername] = useState("officer1");
   const [password, setPassword] = useState("officer1");
@@ -17,7 +18,7 @@ function ClientLoginPage(props) {
   let data = { username: username, password: password };
   let rules = {
     username: "required|alpha_num",
-    password: "required|min:5",
+    password: config.secret,
   };
   let validation = new Validator(data, rules, {
     required: "Enter your :attribute",

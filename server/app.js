@@ -6,7 +6,7 @@ var cors = require("cors");
 var dao = require("./dao/dao");
 
 const {
-  checkValidationErrorMiddleware, checkLoggedClientMiddleware
+  checkValidationErrorMiddleware
 } = require("./handlers/shared_validators");
 var employeeHandlers = require("./handlers/employee");
 
@@ -88,7 +88,6 @@ app.post(
   buildAPIPath("/orders"),
   orderHandlers.createOrderValidatorChain,
   checkValidationErrorMiddleware,
-  checkLoggedClientMiddleware,
   orderHandlers.createOrderHandler
 );
 

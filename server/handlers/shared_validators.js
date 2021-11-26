@@ -146,15 +146,3 @@ exports.walletBodyValidator = body("wallet")
   .bail()
   .isLength({ min: 0 });
  
-  exports.checkLoggedClientMiddleware = (req, res, next) => {
-    /* MOCK DATA ... waiting for login */ 
-    var isClientLogged = true; 
-    var loggedClientID = req.body.clientID;   // ClientID of the logged client
-    /* END MOCK DATA */ 
-    
-    if(isClientLogged){
-      if(loggedClientID != req.body.clientID)
-       return res.status(401).json({ error: `Not authorized` });
-    }
-    next();
-  };

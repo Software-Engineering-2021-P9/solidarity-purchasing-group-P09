@@ -25,6 +25,17 @@ exports.createOrderHandler = async function (req, res, next) {
     totalPrice += product.quantity * productPrice;
   });
 
+  // checking if the req.body.clientID is the same of the logged client
+
+  /* MOCK DATA ... waiting for login */
+  var isClientLogged = true;
+  var loggedClientID = req.body.clientID; // ClientID of the logged client
+  /* END MOCK DATA */
+
+  if (isClientLogged) {
+    if (loggedClientID != req.body.clientID) return res.status(401).end();
+  }
+
   // Insert the new order
   var result;
   try {

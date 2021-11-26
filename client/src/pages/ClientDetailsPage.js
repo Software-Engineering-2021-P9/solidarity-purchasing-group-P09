@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponent";
 import { CreateNewOrderButton } from "../ui-components/ClientDetailsComponent/CreateNewOrderButton";
-import { useHistory, useParams } from "react-router";
+import { useHistory, useParams, useLocation } from "react-router";
 import { employeeNavbarLinks } from "../Routes";
 
 import {
@@ -31,6 +31,7 @@ function ClientDetailsPage(props) {
   const [show, setShow] = useState(true);
 
   const history = useHistory();
+  const location = useLocation();
 
   const [isInitialized, setIsInitialized] = useState(false);
   const [mustReload, setMustReload] = useState(false);
@@ -99,25 +100,27 @@ function ClientDetailsPage(props) {
   return (
     <>
       <NavbarComponent links={employeeNavbarLinks} />
-      {props.location.state != null && show ? (
-              <Row>
-                <Alert
-                  variant="success"
-                  style={{
-                    color: "#635F46",
-                    fontWeight: "bold",
-                    backgroundColor: "#7465132f",
-                    width: "auto",
-                    marginTop: "1%",
-                    marginLeft: "1%",
-                  }}
-                  onClose={() => setShow(false)}
-                  dismissible
-                >
-                  Your order was successfully created!
-                </Alert>
-              </Row>
-          ) : "" }
+      {location.state != null && show ? (
+        <Row>
+          <Alert
+            variant="success"
+            style={{
+              color: "#635F46",
+              fontWeight: "bold",
+              backgroundColor: "#7465132f",
+              width: "auto",
+              marginTop: "1%",
+              marginLeft: "1%",
+            }}
+            onClose={() => setShow(false)}
+            dismissible
+          >
+            Your order was successfully created!
+          </Alert>
+        </Row>
+      ) : (
+        ""
+      )}
       {!isInitialized ? (
         <Container className="pt-5 d-flex justify-content-center">
           <Spinner variant="dark" animation="border" />

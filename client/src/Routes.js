@@ -3,6 +3,8 @@ import { ClientDetailsPage } from "./pages/ClientDetailsPage";
 import { ClientManagementPage } from "./pages/ClientManagementPage/ClientManagementPage";
 import { ClientSignupPage } from "./pages/ClientSignupPage";
 import { ProductListPage } from "./pages/ProductListPage";
+import ProtectedRoute from "./contexts/ProtectedRoute";
+import { UserRoles } from "./contexts/AuthContextProvider";
 
 const productListRouteName = "product-list-page";
 const shoppingCartRouteName = "shopping-cart-page";
@@ -13,31 +15,47 @@ const employeeClientSignupRouteName = "employee-client-signup-page";
 const routes = {
   [productListRouteName]: {
     path: "/",
-    component: ProductListPage,
+    component: () => <ProductListPage />,
     exact: true,
     linkTitle: "Show Product List",
   },
   [shoppingCartRouteName]: {
     path: "/currentCart",
-    component: ShoppingCartPage,
+    component: () => (
+      <ProtectedRoute requiredRoles={[UserRoles.CLIENT, UserRoles.EMPLOYEE]}>
+        <ShoppingCartPage />
+      </ProtectedRoute>
+    ),
     exact: false,
     linkTitle: "Show Current Cart",
   },
   [employeeClientManagementRouteName]: {
     path: "/employee/clients/",
-    component: ClientManagementPage,
+    component: () => (
+      <ProtectedRoute requiredRoles={[UserRoles.EMPLOYEE]}>
+        <ClientManagementPage />
+      </ProtectedRoute>
+    ),
     exact: true,
     linkTitle: "Manage Clients",
   },
   [employeeClientDetailsRouteName]: {
     path: "/employee/clients/:id",
-    component: ClientDetailsPage,
+    component: () => (
+      <ProtectedRoute requiredRoles={[UserRoles.EMPLOYEE]}>
+        <ClientDetailsPage />
+      </ProtectedRoute>
+    ),
     exact: false,
     linkTitle: "Show Client Details",
   },
   [employeeClientSignupRouteName]: {
     path: "/employee/signupClient",
-    component: ClientSignupPage,
+    component: () => (
+      <ProtectedRoute requiredRoles={[UserRoles.EMPLOYEE]}>
+        <ClientSignupPage />
+      </ProtectedRoute>
+    ),
     exact: false,
     linkTitle: "Signup Client",
   },
@@ -48,6 +66,8 @@ const employeeNavbarLinks = [
   employeeClientSignupRouteName,
 ];
 
+const guestNavbarLinks = [];
+
 export {
   productListRouteName,
   shoppingCartRouteName,
@@ -56,4 +76,5 @@ export {
   employeeClientSignupRouteName,
   routes,
   employeeNavbarLinks,
+  guestNavbarLinks,
 };

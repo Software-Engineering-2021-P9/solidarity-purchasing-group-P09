@@ -145,4 +145,3 @@ exports.walletBodyValidator = body("wallet")
   .notEmpty()
   .bail()
   .isLength({ min: 0 });
- 

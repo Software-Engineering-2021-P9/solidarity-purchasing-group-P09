@@ -6,7 +6,7 @@ var cors = require("cors");
 var dao = require("./dao/dao");
 
 const {
-  checkValidationErrorMiddleware
+  checkValidationErrorMiddleware,
 } = require("./handlers/shared_validators");
 var employeeHandlers = require("./handlers/employee");
 

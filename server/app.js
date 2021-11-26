@@ -18,19 +18,9 @@ var orderHandlers = require("./handlers/order");
 var clientHandlers = require("./handlers/client");
 
 var productHandlers = require("./handlers/product");
+const { passportStrategy } = require("./services/AuthService");
 
-passport.use(
-  new LocalStrategy(function (username, password, done) {
-    dao.getUser(username, password).then((user) => {
-      if (!user)
-        return done(null, false, {
-          message: "Incorrect username and/or password.",
-        });
-
-      return done(null, user);
-    });
-  })
-);
+passport.use(passportStrategy);
 
 passport.serializeUser((user, done) => {
   done(null, user._id);

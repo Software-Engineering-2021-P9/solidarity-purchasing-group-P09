@@ -42,25 +42,8 @@ exports.findClients = (db, searchString) => {
 // Login
 //
 
-exports.getUserById = (db, clientID) => {
-  return db.collection(clientCollectionName).findOne(ObjectID(clientID));
-};
-exports.getUser = (db, username, password) => {
-  return new Promise((resolve, reject) => {
-    db.collection(clientCollectionName).findOne(
-      { email: username },
-      function (err, user) {
-        if (user) {
-          bcrypt.compare(password, user.password).then((result) => {
-            if (result) resolve(user);
-            else resolve(false);
-          });
-        } else {
-          resolve(false);
-        }
-      }
-    );
-  });
+exports.getClientByEmail = (db, email) => {
+  return db.collection(clientCollectionName).findOne({ email: email });
 };
 
 //Method used for testing

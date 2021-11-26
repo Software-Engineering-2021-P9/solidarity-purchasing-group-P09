@@ -18,6 +18,7 @@ const {
   createClient,
   getUserById,
   getUser,
+  getClientByEmail,
 } = require("./client");
 
 const {
@@ -91,3 +92,17 @@ exports.createClient = (fullName, phoneNumber, email, address, wallet) =>
 
 exports.getUserById = (clientID) => getUserById(db, clientID);
 exports.getUser = (username, password) => getUser(db, username, password);
+
+// User (Client, Farmer, Employee)
+exports.getUserByEmail = (email) => {
+  let usersFound = await Promise.all([
+    getClientByEmail(db, email),
+    //getFarmerByEmail(db, email),
+    //getEmployeeByEmail(db, email),
+  ]);
+
+  if (usersFound.length === 0) {
+    throw new Error("no user found");
+  }
+  return usersFound[0];
+};

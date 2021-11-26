@@ -1,13 +1,14 @@
 import React from "react";
-import { Form, Button } from "react-bootstrap";
+import { Form, Row, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import "./LoginForm.css";
+import Button from "../Button/Button";
 
 function LoginForm(props) {
   return (
     <Form onSubmit={props.handleSubmit} className="form-login">
       <Form.Group className="form-group">
-        <h3>Login</h3>
+        <h2>Login</h2>
         {props.reportErrorMessage !== "" ? (
           <div className="error-message">
             <i className="fas fa-exclamation-triangle"></i>{" "}
@@ -17,7 +18,7 @@ function LoginForm(props) {
           <></>
         )}
       </Form.Group>
-
+      <h5 className="credentials">Credentials</h5>
       <Form.Group className="form-group" controlId="usernameForm">
         <Form.Label>Email/Phone</Form.Label>
         <Form.Control
@@ -60,25 +61,17 @@ function LoginForm(props) {
       </Form.Group>
 
       <Form.Group className="form-group">
-        <div>
-          <Button
-            className="button-login"
-            type="submit"
-            onClick={props.handleSubmit}
-            variant="primary"
-            size="lg"
-          >
-            Submit
-          </Button>
-          <Button
-            className="button-reset"
-            type="submit"
-            onClick={props.handleReset}
-            size="lg"
-          >
-            Reset
-          </Button>
-        </div>
+        <Row>
+          <Col>
+            <Button className="btn-primary" onClick={props.handleSubmit}>
+              Submit
+            </Button>
+            <span></span>
+            <Button className="btn-light" onClick={props.handleReset}>
+              Reset
+            </Button>
+          </Col>
+        </Row>
       </Form.Group>
     </Form>
   );

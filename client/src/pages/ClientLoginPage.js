@@ -17,7 +17,7 @@ function ClientLoginPage(props) {
 
   let data = { username: username, password: password };
   let rules = {
-    username: "required|alpha_num",
+    username: "required",
     password: config.secret,
   };
   let validation = new Validator(data, rules, {
@@ -61,7 +61,6 @@ function ClientLoginPage(props) {
         <NavbarComponent links={employeeNavbarLinks} />
       </Row>
       <Row>
-        <Col></Col>
         <Col>
           {" "}
           <LoginForm
@@ -77,7 +76,7 @@ function ClientLoginPage(props) {
           />
           <AskToRegister />
         </Col>
-        <Col></Col>
+        <Col xs lg="3"></Col>
       </Row>
     </Container>
   );

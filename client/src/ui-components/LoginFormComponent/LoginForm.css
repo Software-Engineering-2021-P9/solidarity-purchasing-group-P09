@@ -14,15 +14,16 @@
   margin: 30px;
 }
 
-.button-login {
+span {
   margin-left: 20px;
 }
 
-.button-reset {
-  margin-left: 50px;
-  color: #c48566 !important;
-  background-color: white !important;
+.credentials {
+  margin: 30px;
+  margin-top: 10px;
+  margin-bottom: -20px;
 }
+
 .forgot-password {
   color: #c48566 !important;
   font-size: 13px;

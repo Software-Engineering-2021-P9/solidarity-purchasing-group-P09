@@ -545,6 +545,23 @@ describe("Clients API tests:", () => {
           done();
         });
     });
+
+    it("it should update the client wallet with not covered orders", (done) => {
+      chai
+        .request(app)
+        .patch("/api/clients/6187c957b288576ca26f8999/wallet")
+        .send({
+          increaseBy: 100,
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          expect(res.body).to.be.an("object");
+          expect(res.body.newWalletValue).to.be.equal(100);
+
+          done();
+        });
+    });
   });
 
   // Orders API tests

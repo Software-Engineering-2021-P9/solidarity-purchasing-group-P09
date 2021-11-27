@@ -45,7 +45,7 @@ exports.ordersCollection = {
     },
     {
       _id: ObjectID("6187c957b288576ca26f8000"),
-      clientID: ObjectID("6187c957b288576ca26f8257"),
+      clientID: ObjectID("6187c957b288576ca26f8999"),
       products: [
         { productID: "6187c957b288576ca26f8258", quantity: 1 },
         { productID: "6187c957b288576ca26f8259", quantity: 2 },
@@ -56,7 +56,7 @@ exports.ordersCollection = {
     },
     {
       _id: ObjectID("6187c957b288576ca26f8001"),
-      clientID: ObjectID("6187c957b288576ca26f8257"),
+      clientID: ObjectID("6187c957b288576ca26f8999"),
       products: [
         { productID: "6187c957b288576ca26f8258", quantity: 1 },
         { productID: "6187c957b288576ca26f8259", quantity: 2 },
@@ -67,7 +67,7 @@ exports.ordersCollection = {
     },
     {
       _id: ObjectID("6187c957b288576ca26f8002"),
-      clientID: ObjectID("6187c957b288576ca26f8257"),
+      clientID: ObjectID("6187c957b288576ca26f8999"),
       products: [
         { productID: "6187c957b288576ca26f8258", quantity: 1 },
         { productID: "6187c957b288576ca26f8259", quantity: 2 },
@@ -107,6 +107,15 @@ exports.clientsCollection = {
       fullName: "Andrea Diprè",
       phoneNumber: 3205755555,
       address: "via Andrea Dipre,24 Torino,10538",
+      wallet: 0,
+    },
+    {
+      _id: ObjectID("6187c957b288576ca26f8999"),
+      email: "client3@test.com",
+      role: "client",
+      fullName: "Giorgio Mastrota",
+      phoneNumber: 3205755555,
+      address: "via X,24 Torino,10538",
       wallet: 0,
     },
   ],

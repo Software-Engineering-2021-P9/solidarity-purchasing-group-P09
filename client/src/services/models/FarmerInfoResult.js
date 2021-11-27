@@ -1,6 +1,6 @@
 import UserRoles from "./UserRoles";
 
-class EmployeeInfoResult {
+class FarmerInfoResult {
   constructor(id, email, fullName, address) {
     this.id = id;
     this.email = email;
@@ -10,7 +10,7 @@ class EmployeeInfoResult {
   }
 
   static fromJSON(json) {
-    return new EmployeeInfoResult(
+    return new FarmerInfoResult(
       json.id,
       json.email,
       json.fullName,
@@ -19,4 +19,4 @@ class EmployeeInfoResult {
   }
 }
 
-export default EmployeeInfoResult;
+export default FarmerInfoResult;

@@ -56,7 +56,6 @@ exports.createOrderHandler = async function (req, res, next) {
     console.error(`CreateOrder() -> couldn't retrieve newly created order`);
     return res.status(404).end();
   }
-
   //GET CLIENT WALLET
   let client;
 
@@ -80,7 +79,6 @@ exports.createOrderHandler = async function (req, res, next) {
       return res.status(500).end();
     }
   }
-  console.log(result);
   return res.json(Order.fromMongoJSON(result));
 };
 

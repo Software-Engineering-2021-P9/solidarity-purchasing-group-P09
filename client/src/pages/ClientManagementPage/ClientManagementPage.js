@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 
 import { useHistory } from "react-router";
 import {
   employeeClientDetailsRouteName,
   employeeClientSignupRouteName,
-  employeeNavbarLinks,
+  getAvailableNavbarLinks,
   routes,
 } from "../../Routes";
 
@@ -14,16 +14,20 @@ import { NavbarComponent } from "../../ui-components/NavbarComponent/NavbarCompo
 import ClientInfoList from "../../ui-components/ClientInfoList/ClientInfoList";
 import Button from "../../ui-components/Button/Button";
 import Divider from "../../ui-components/Divider/Divider";
+import ErrorToast from "../../ui-components/ErrorToast/ErrorToast";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./ClientManagementPage.css";
 import "../../ui-components/Title.css";
 
 import { findClients } from "../../services/ApiClient";
-import ErrorToast from "../../ui-components/ErrorToast/ErrorToast";
+
+import { AuthContext } from "../../contexts/AuthContextProvider";
 
 function ClientManagementPage(props) {
   const history = useHistory();
+  const authContext = useContext(AuthContext);
+
   const [searchString, setSearchString] = useState("");
   const [clientInfoList, setClientInfoList] = useState(null);
   const [isClientInfoListLoading, setIsClientInfoListLoading] = useState(false);
@@ -65,7 +69,10 @@ function ClientManagementPage(props) {
 
   return (
     <>
-      <NavbarComponent links={employeeNavbarLinks} />
+      <NavbarComponent
+        links={getAvailableNavbarLinks(authContext.currentUser)}
+        loggedUser={authContext.currentUser}
+      />
       <Row>
         <Col md='5'>
           <h1 className='title'>Manage Clients</h1>

@@ -7,6 +7,7 @@ info:
 host: to-be-defined.com
 basePath: /api
 tags:
+  - name: auth
   - name: client
   - name: employee
   - name: farmer
@@ -18,6 +19,76 @@ schemes:
   - https
   - http
 paths:
+
+  # ------------
+  # AUTH METHODS
+  # ------------
+
+  /users/login:
+    post:
+      tags:
+        - auth
+      summary: Allows a user to login
+      description: Allows a user to login based on the provided credentials
+      operationId: loginUser
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: credentials
+          required: true
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+                format: email
+                description: Email of the user to login
+                example: user@email.com
+              password:
+                type: string
+                description: Password of the user to login
+                example: password
+      responses:
+        "200":
+          description: Success (The return model changes according to the user type)
+          schema:
+            $ref: "#/definitions/ClientInfoResult"
+        "401":
+          description: Unauthorized - The login process failed
+        "500":
+          description: Internal Server Error
+
+  /users/current:
+    get:
+      tags:
+        - auth
+      summary: Returns the currently logged user
+      description: Returns the currently logged user, if any
+      operationId: getCurrentUser
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: Success (The return model changes according to the user type)
+          schema:
+            $ref: "#/definitions/ClientInfoResult"
+        "204":
+          description: No Content
+    delete:
+      tags:
+        - auth
+      summary: Allows the currently logged user to logout
+      description: Allows the currently logged user to logout. If no user is logged, this is a no-op.
+      operationId: logoutUser
+      produces:
+        - application/json
+      responses:
+        "204":
+          description: No Content
+
   /products:
     get:
       tags:
@@ -257,43 +328,6 @@ paths:
         "500":
           description: Internal Server Error
 
-  /clients/login:
-    post:
-      tags:
-        - client
-      summary: Allows a client to login
-      description: Allows a client to login based on the provided credentials
-      operationId: loginClient
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - in: body
-          name: credentials
-          required: true
-          schema:
-            type: object
-            properties:
-              email:
-                type: string
-                format: email
-                description: Email of the user to login
-                example: user@email.com
-              password:
-                type: string
-                description: Password of the user to login
-                example: password
-      responses:
-        "200":
-          description: Success
-          schema:
-            $ref: "#/definitions/ClientInfoResult"
-        "400":
-          description: Bad Request - The request contains invalid parameters
-        "500":
-          description: Internal Server Error
-
   /clients/signup:
     post:
       tags:
@@ -510,7 +544,7 @@ paths:
 
 definitions:
   ClientInfo:
-    description: "At least one between email and (fullName, address) are required"
+    description: "At least one between email and (fullName, address, phoneNumber) are required"
     type: object
     additionalProperties: false
     required:
@@ -518,6 +552,7 @@ definitions:
       - password
       - email
       - fullName
+      - phoneNumber
       - address
       - wallet
     properties:
@@ -536,6 +571,10 @@ definitions:
         type: string
         maxLength: 35
         example: Mario Rossi
+      phoneNumber:
+        type: string
+        maxLength: 15
+        example: "33475654545"
       address:
         type: string
         maxLength: 60
@@ -767,6 +806,7 @@ definitions:
       - email
       - fullName
       - address
+      - phoneNumber
       - wallet
     properties:
       id:
@@ -784,6 +824,10 @@ definitions:
         type: string
         maxLength: 60
         example: Via dei castagni 7a|Torino|TO|10140
+      phoneNumber:
+        type: string
+        maxLength: 15
+        example: "33475654545"
       wallet:
         type: number
   EmployeeInfoResult:
@@ -804,6 +848,31 @@ definitions:
       fullname:
         type: string
         maxLength: 35
+  FarmerInfoResult:
+    description: Return model for methods which return FarmerInfo (sensitive data is stripped).
+    type: object
+    additionalProperties: false
+    required:
+      - id
+      - email
+      - fullName
+      - address
+    properties:
+      id:
+        type: string
+        format: bsonID
+      email:
+        type: string
+        format: email
+        example: mariorossi@gmail.com
+      fullName:
+        type: string
+        maxLength: 35
+        example: Mario Rossi
+      address:
+        type: string
+        maxLength: 60
+        example: Via dei castagni 7a|Torino|TO|10140
   ProductResult:
     description: Return model for methods which return Product. It also contains the information about current week availability.
     type: object

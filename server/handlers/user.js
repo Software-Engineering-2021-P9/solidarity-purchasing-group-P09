@@ -1,16 +1,16 @@
 exports.loginHandler = (passport) =>
   async function (req, res, next) {
-    passport.authenticate("local", (err, user, info) => {
-      if (err) {
+    passport.authenticate("local", (authErr, user, info) => {
+      if (authErr) {
         console.error(
           `UserLogin() -> error during user authentication: ${info}`
         );
         return res.status(401).json(info);
       }
 
-      req.login(user, (err) => {
-        if (err) {
-          console.error(`UserLogin() -> error during user login: ${err}`);
+      req.login(user, (loginErr) => {
+        if (loginErr) {
+          console.error(`UserLogin() -> error during user login: ${loginErr}`);
           return res.status(401).json(info);
         }
 

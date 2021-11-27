@@ -5,13 +5,15 @@ exports.employeesCollection = {
     {
       _id: ObjectID("6187c957b288576ca26f8257"),
       email: "employee1@test.com",
-      password: "password",
+      password: "$2a$10$AU6PIEG1tq1467LUurqOjuoKzdvdtZHTFnCh00YzNGm7zzf7wa0rq",
+      role: "employee",
       fullName: "Mario Biondi",
     },
     {
       _id: ObjectID("6187c957b288576ca26f8259"),
       email: "employee2@test.com",
-      password: "password",
+      password: "$2a$10$AU6PIEG1tq1467LUurqOjuoKzdvdtZHTFnCh00YzNGm7zzf7wa0rq",
+      role: "employee",
       fullName: "Mario Rossi",
     },
   ],
@@ -47,8 +49,19 @@ exports.ordersCollection = {
 exports.clientsCollection = {
   clients: [
     {
+      _id: ObjectID("618d4ad3736f2caf2d3b3ca5"),
+      email: "ehsanansari@gmail.com",
+      role: "client",
+      fullName: " Ehsan",
+      password: "$2a$10$AU6PIEG1tq1467LUurqOjuoKzdvdtZHTFnCh00YzNGm7zzf7wa0rq",
+      address: "fsfsaf dsafsa fsafsa,26 Milano,12342",
+      wallet: 55.5,
+    },
+
+    {
       _id: ObjectID("6187c957b288576ca26f8257"),
       email: "client1@test.com",
+      role: "client",
       fullName: " Domenico Bini",
       phoneNumber: 3205708803,
       address: "via Domenico Bini,26 Torino,10538",
@@ -57,10 +70,24 @@ exports.clientsCollection = {
     {
       _id: ObjectID("6a8fc927bb88c762a26f0000"),
       email: "client2@test.com",
+      role: "client",
       fullName: "Andrea Diprè",
       phoneNumber: 3205755555,
       address: "via Andrea Dipre,24 Torino,10538",
       wallet: 0,
+    },
+  ],
+};
+
+exports.farmersCollection = {
+  farmers: [
+    {
+      _id: ObjectID("6187c957b288576ca24f8257"),
+      email: "farmer1@test.com",
+      password: "$2a$10$AU6PIEG1tq1467LUurqOjuoKzdvdtZHTFnCh00YzNGm7zzf7wa0rq",
+      role: "farmer",
+      fullName: " Domenico Farmer",
+      address: "via Domenico Bini,26 Torino,10538",
     },
   ],
 };

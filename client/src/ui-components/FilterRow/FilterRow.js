@@ -16,12 +16,14 @@ function FilterRow(props) {
           sm={{ span: 4, order: "first" }}
           xs={12}
         >
-          <RedDropdown
-            items={Object.values(Product.Categories)}
-            title={props.category ? props.category : "Categories"}
-            updateSelectedItem={props.handleCategoryChanged}
-            activeElement={props.category}
-          />
+          <Row xs={12} sm={4}>
+            <RedDropdown
+              items={Object.values(Product.Categories)}
+              title={props.category ? props.category : "Categories"}
+              updateSelectedItem={props.handleCategoryChanged}
+              activeElement={props.category}
+            />
+          </Row>
         </Col>
         <Col className='me-auto' xs={{ order: "first" }}>
           <InputGroup

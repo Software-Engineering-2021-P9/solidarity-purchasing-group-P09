@@ -8,10 +8,10 @@ import "./RedDropdown.css";
 function RedDropdown(props) {
   return (
     <Dropdown as={ButtonGroup}>
-      <Dropdown.Toggle id='dropdown-custom-1' className='dropdown'>
+      <Dropdown.Toggle id='dropdown-custom-1' className='btn-primary'>
         {props.title}
       </Dropdown.Toggle>
-      <Dropdown.Menu className='dropdown-menu'>
+      <Dropdown.Menu className='btn-primary-menu'>
         {" "}
         {props.items.map((name, index) => (
           <Dropdown.Item

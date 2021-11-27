@@ -3,18 +3,29 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 var cors = require("cors");
+const passport = require("passport");
+
 var dao = require("./dao/dao");
 
 const {
   checkValidationErrorMiddleware,
 } = require("./handlers/shared_validators");
-var employeeHandlers = require("./handlers/employee");
+var userHandlers = require("./handlers/user");
 
-var orderHandlers = require("./handlers/order");
+var employeeHandlers = require("./handlers/employee");
 
 var clientHandlers = require("./handlers/client");
 
+var orderHandlers = require("./handlers/order");
+
 var productHandlers = require("./handlers/product");
+
+const {
+  sessionSettings,
+  passportStrategy,
+  serializeUser,
+  deserializeUser,
+} = require("./services/auth_service");
 
 const port = process.env.PORT || 3001;
 const buildAPIPath = (apiPath) => "/api" + apiPath;
@@ -28,7 +39,22 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(cors());
 
+passport.use(passportStrategy);
+passport.serializeUser(serializeUser);
+passport.deserializeUser(deserializeUser);
+app.use(sessionSettings);
+app.use(passport.initialize());
+app.use(passport.session());
+
 dao.open();
+
+// -------------
+// login methods
+// -------------
+
+app.post(buildAPIPath("/users/login"), userHandlers.loginHandler(passport));
+app.get(buildAPIPath("/users/current"), userHandlers.getCurrentUserHandler);
+app.delete(buildAPIPath("/users/current"), userHandlers.logoutHandler);
 
 // ----------
 // /employees
@@ -98,8 +124,9 @@ app.get(
   orderHandlers.getOrdersByClientID
 );
 
+// ---------
 // /products
-// ----------
+// ---------
 app.get(
   buildAPIPath("/products"),
   productHandlers.getProductsByIDValidatorChain,

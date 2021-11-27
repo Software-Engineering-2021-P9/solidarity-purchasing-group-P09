@@ -37,20 +37,26 @@ function NavbarComponent(props) {
         </Navbar.Collapse>
         <Navbar.Toggle />
 
-      {props.showShoppingCart && (
-        <div className='navbar-logo d-flex justify-content-end '>
+        {props.showShoppingCart && (
+          <div className='navbar-logo d-flex justify-content-end '>
             {props.shoppingCartItems > 0 ? (
-               <Link className='navbar-logo mx-2'
-               to={{ pathname: routes[shoppingCartRouteName].path, state: { shoppingCart: props.shoppingCart, clientID:props.clientID, isClientLogged:props.isClientLogged}}}>
-              <svg
-                xmlns='http://www.w3.org/2000/svg'
-                width='30'
-                height='30'
-                className='bi bi-cart-fill'
-                viewBox='0 0 16 16'
-              >
-                <path d='M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z' />
-              </svg>
+              <Link
+                className='navbar-logo mx-2'
+                to={{
+                  pathname: routes[shoppingCartRouteName].path,
+                  state: {
+                    shoppingCart: props.shoppingCart,
+                    clientID: props.clientID,
+                  },
+                }}>
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  width='30'
+                  height='30'
+                  className='bi bi-cart-fill'
+                  viewBox='0 0 16 16'>
+                  <path d='M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z' />
+                </svg>
               </Link>
             ) : (
               <svg
@@ -58,15 +64,40 @@ function NavbarComponent(props) {
                 width='30'
                 height='30'
                 className='mx-2 bi bi-cart'
-                viewBox='0 0 16 16'
-              >
+                viewBox='0 0 16 16'>
                 <path d='M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z' />
               </svg>
             )}
-        </div>
-      )}
-    </Navbar>
-    <Container className='navbar-placeholder' />
+          </div>
+        )}
+
+        {props.loggedUser && (
+          <>
+            <svg
+              className='ms-3'
+              version='1.1'
+              xmlns='http://www.w3.org/2000/svg'
+              x='0px'
+              y='0px'
+              height='35'
+              width='35'
+              viewBox='0 0 1000 1000'
+              enable-background='new 0 0 1000 1000'>
+              <metadata>
+                {" "}
+                Svg Vector Icons : http://www.onlinewebfonts.com/icon{" "}
+              </metadata>
+              <g>
+                <path
+                  fill='currentColor'
+                  d='M500,990C229.4,990,10,770.6,10,500S229.4,10,500,10s490,219.4,490,490S770.6,990,500,990z M769,848.9c-45.2-104.1-148.2-177.4-269-177.4s-223.9,73.1-269.1,177.3C305.3,906.4,398.6,941,500,941C601.4,941,694.5,906.5,769,848.9L769,848.9z M647,451c0-81.2-65.8-147-147-147c-81.2,0-147,65.8-147,147c0,81.2,65.8,147,147,147C581.2,598,647,532.2,647,451z M500,59C256.5,59,59,256.5,59,500c0,123.8,51.1,235.5,133.3,315.6c44.8-91.8,129-160.8,231-184.2C353.2,601.6,304,532,304,451c0-108.2,87.8-196,196-196c108.2,0,196,87.8,196,196c0,81-49.2,150.6-119.3,180.4c102,23.3,186.1,92.4,231,184.2C889.8,735.6,941,623.8,941,500C941,256.5,743.5,59,500,59L500,59z'
+                />
+              </g>
+            </svg>
+          </>
+        )}
+      </Navbar>
+      <Container className='navbar-placeholder' />
     </>
   );
 }

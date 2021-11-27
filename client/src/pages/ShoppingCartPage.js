@@ -1,5 +1,6 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useState } from "react";
+import { useLocation } from "react-router";
 import { Container, Row } from "react-bootstrap";
 import { Redirect } from "react-router-dom";
 
@@ -17,6 +18,7 @@ import {
 } from "../services/ApiClient";
 
 function ShoppingCartPage(props) {
+  const location = useLocation();
   // as props, ShoppingCartPage receives
   //      - a Map <ItemID, Qty>
   //      - the clientID
@@ -31,16 +33,12 @@ function ShoppingCartPage(props) {
   // it uses function getClientByID(id) -> client object
   // it uses function createOrder(clientID, cart) -> POST /api/orders
 
-  const propsClientID = props.location.state? props.location.state.clientID : ''; 
-
-  const isClientLogged = props.location.state? props.location.state.isClientLogged : false; 
-
-  const [cart, setCart] = useState(props.location.state.shoppingCart);
+  const [cart, setCart] = useState(location.state.shoppingCart);
 
   /* compute initial total amount */
   var sum = 0;
   Array.from(cart.entries()).map((entry) => {
-    sum += 1.0*entry[1];   // mock price
+    sum += 1.0 * entry[1]; // mock price
     return entry;
   });
 
@@ -53,7 +51,7 @@ function ShoppingCartPage(props) {
     // remove from cart
     if (quantity < 0 && prev_qty === 1) {
       const newMap = new Map();
-      if(cart.size>1){
+      if (cart.size > 1) {
         Array.from(cart.entries()).map((entry) => {
           const [key, val] = entry;
           if (key === product) return null;
@@ -80,7 +78,7 @@ function ShoppingCartPage(props) {
       quantity,
     }));
     //call create order
-    createOrder(propsClientID, products); 
+    createOrder(location.state.clientID, products);
     handleClose();
     setSubmitted(true);
   };
@@ -92,7 +90,7 @@ function ShoppingCartPage(props) {
       </Row>
       <Row>
         <ShoppingCartTitle
-          client={propsClientID}
+          client={location.state.clientID}
           getClientByID={getClientByID}
           isClientLogged={isClientLogged}
         />
@@ -110,7 +108,7 @@ function ShoppingCartPage(props) {
       <Row>
         <ShoppingCartControls
           handleShow={handleShow}
-          clientID={propsClientID}
+          clientID={location.state.clientID}
           cart={cart}
         />
       </Row>
@@ -128,7 +126,8 @@ function ShoppingCartPage(props) {
       {submitted && !isClientLogged ? (
         <Redirect
           to={{
-            pathname: "/employee/clients/" + propsClientID,  state: { orderAmount: amount}
+            pathname: "/employee/clients/" + location.state.clientID,
+            state: { orderAmount: amount },
           }}
         />
       ) : (

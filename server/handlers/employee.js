@@ -1,5 +1,5 @@
 var dao = require("../dao/dao");
-const { Employee } = require("../models/employee");
+const { EmployeeInfo } = require("../models/employee_info");
 const {
   employeeIDPathValidator,
   emailBodyValidator,
@@ -22,7 +22,7 @@ exports.getEmployeeByIDHandler = async function (req, res, next) {
     return res.status(404).end();
   }
 
-  return res.json(Employee.fromMongoJSON(result));
+  return res.json(EmployeeInfo.fromMongoJSON(result));
 };
 
 exports.createEmployeeHandlerValidatorChain = [
@@ -63,5 +63,5 @@ exports.createEmployeeHandler = async function (req, res, next) {
     return res.status(404).end();
   }
 
-  return res.json(Employee.fromMongoJSON(result));
+  return res.json(EmployeeInfo.fromMongoJSON(result));
 };

@@ -1,5 +1,5 @@
-import { React, useEffect, useState } from "react";
-import {useParams } from "react-router";
+import { React, useEffect, useState, useContext } from "react";
+import { useLocation } from "react-router";
 import {
   Row,
   Col,
@@ -10,21 +10,26 @@ import {
   Container,
   Alert
 } from "react-bootstrap";
-import { employeeNavbarLinks } from "../Routes";
+import { getAvailableNavbarLinks } from "../Routes";
+
 import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponent";
-import Product from "../services/models/Product";
 import ProductCard from "../ui-components/ProductCardComponent/ProductCard";
 import { RedButton } from "../ui-components/RedButtonComponent/RedButton";
 import { RedDropdown } from "../ui-components/RedDropdownComponent/RedDropdown";
-import  Button  from "../ui-components/Button/Button";
+import Button from "../ui-components/Button/Button";
+
 import "../ui-components/ShoppingCartComponent/ShoppingCartControlsCSS.css";
 import "../ui-components/Title.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
+import Product from "../services/models/Product";
 import { findProducts } from "../services/ApiClient";
 
+import { AuthContext } from "../contexts/AuthContextProvider";
+
 function ProductListPage(props) {
-  const params = useParams();
+  const location = useLocation();
+  const authContext = useContext(AuthContext);
 
   const [products, setProducts] = useState([]);
 
@@ -38,20 +43,9 @@ function ProductListPage(props) {
   const [searchString, setSearchString] = useState();
 
   //current cart
-  const [cart, setCart] = useState(props.location.state ? props.location.state.shoppingCart : new Map());
-
-  // if the employee is creating a new order or is just showing available products
-  var creatingOrderMode = props.location.state ? true : false;
-
-  // MOCK DATA
-  console.log(params.clientID)
-  const paramClientID = params.clientID;
-  var isClientLogged = false; 
-  if(paramClientID) {
-    creatingOrderMode = true;
-    isClientLogged = true; 
-  }
-  // END DATA
+  const [cart, setCart] = useState(
+    location.state ? location.state.shoppingCart : new Map()
+  );
 
   // modal states
   const [show, setShow] = useState(false);
@@ -89,28 +83,35 @@ function ProductListPage(props) {
   const handleClose = () => setShow(false);
 
   const handleShow = (product) => {
-    if(cart.get(product.id)){
-      setModalProduct({productName: product.name, productId: product.id, productQty: cart.get(product.id)});
-    }
-    else
-      setModalProduct({productName: product.name, productId: product.id, productQty: 1});
+    if (cart.get(product.id)) {
+      setModalProduct({
+        productName: product.name,
+        productId: product.id,
+        productQty: cart.get(product.id),
+      });
+    } else
+      setModalProduct({
+        productName: product.name,
+        productId: product.id,
+        productQty: 1,
+      });
     setShow(true);
   };
 
   const addItem = (productID, quantity) => {
     setCart(new Map(cart.set(productID, parseInt(quantity))));
-    setShow(false); 
+    setShow(false);
   };
 
   return (
     <>
       <NavbarComponent
-        links={employeeNavbarLinks}
+        links={getAvailableNavbarLinks(authContext.currentUser)}
+        loggedUser={authContext.currentUser}
         showShoppingCart
         shoppingCartItems={cart.size}
         shoppingCart={cart}
-        clientID={props.location.state ? props.location.state.clientID : paramClientID }
-        isClientLogged={isClientLogged}
+        clientID={location.state ? location.state.clientID : ""}
       />
 
       <Modal show={show} onHide={handleClose}>
@@ -121,23 +122,28 @@ function ProductListPage(props) {
           <Row>
             <Form.Label>Select a quantity</Form.Label>
           </Row>
-          <Row className="my-1 mb-3 px-3">
+          <Row className='my-1 mb-3 px-3'>
             <FormControl
-              type="number"
+              type='number'
               step={1}
               value={modalProduct.productQty}
-              onChange={(e) => setModalProduct({ ...modalProduct, productQty: e.target.value })}
+              onChange={(e) =>
+                setModalProduct({ ...modalProduct, productQty: e.target.value })
+              }
               max={100}
               min={1}
             />
           </Row>
         </Container>
         <Modal.Footer>
-          <Button className="btn-light" onClick={handleClose}>
+          <Button className='btn-light' onClick={handleClose}>
             Close
           </Button>
-          <Button className="btn-primary" onClick={() => addItem(modalProduct.productId, modalProduct.productQty)}
-          >
+          <Button
+            className='btn-primary'
+            onClick={() =>
+              addItem(modalProduct.productId, modalProduct.productQty)
+            }>
             Submit
           </Button>
         </Modal.Footer>
@@ -165,10 +171,10 @@ function ProductListPage(props) {
         ""
       )}
 
-      <Row className="align-items-center">
-        <h1 className="title">Available products</h1>
+      <Row className='align-items-center'>
+        <h1 className='title'>Available products</h1>
       </Row>
-      <Row className="sticky ">
+      <Row className='sticky '>
         <Col xs={{ span: 4 }}>
           <RedDropdown
             items={Object.values(Product.Categories)}
@@ -182,29 +188,30 @@ function ProductListPage(props) {
             <Row>
               <Col xs={{ span: 8 }}>
                 <FormControl
-                  type="textarea"
-                  placeholder="Filter"
+                  type='textarea'
+                  placeholder='Filter'
                   value={text}
                   onChange={(ev) => setText(ev.target.value)}
                 />
               </Col>
               <Col xs={{ span: 1, offset: 1 }}>
-                <RedButton text="Search" onClick={handleOnSearchSubmit} />
+                <RedButton text='Search' onClick={handleOnSearchSubmit} />
               </Col>
             </Row>
           </Form>
         </Col>
-        <hr className="line" />
+        <hr className='line' />
       </Row>
 
-      <Row md={4} xs={2} className="g-4">
+      <Row md={4} xs={2} className='g-4'>
         {products
           ? products.map((item) => {
               return (
                 <CardGroup as={Col}>
                   <ProductCard
                     product={item}
-                    creatingOrderMode={creatingOrderMode}
+                    // if the employee is creating a new order or is just showing available products
+                    creatingOrderMode={location.state?.creatingOrderMode}
                     handleShow={handleShow}
                   />
                 </CardGroup>

@@ -849,11 +849,15 @@ describe("Clients API tests:", () => {
   });
 });
 
-// Client Login API TESTS
-describe("Client Login API tests:", () => {
+// User Login API TESTS
+describe("User Login API tests:", () => {
   beforeEach(() => {
     dao.open();
-    mongoUnit.load(testData.clientsCollection);
+    mongoUnit.load({
+      ...testData.clientsCollection,
+      ...testData.farmersCollection,
+      ...testData.employeesCollection,
+    });
   });
 
   afterEach(() => {
@@ -862,7 +866,7 @@ describe("Client Login API tests:", () => {
   });
 
   describe("POST /users/login", () => {
-    it("it should log the user in ", (done) => {
+    it("it should success with a client", (done) => {
       chai
         .request(app)
         .post("/api/users/login")
@@ -872,11 +876,47 @@ describe("Client Login API tests:", () => {
           expect(res.status).to.be.equal(200);
           expect(res.body).to.be.an("object");
           expect(res.body.email).to.be.equal("ehsanansari@gmail.com");
+          expect(res.body.password).not.to.exist;
+          expect(res.body.role).to.be.equal("client");
           expect(res.body.id).to.be.equal("618d4ad3736f2caf2d3b3ca5");
           expect(res.body.wallet).to.be.equal(55.5);
           expect(res.body.address).to.be.equal(
             "fsfsaf dsafsa fsafsa,26 Milano,12342"
           );
+
+          done();
+        });
+    });
+    it("it should success with a employee", (done) => {
+      chai
+        .request(app)
+        .post("/api/users/login")
+        .send({ username: "employee1@test.com", password: "123456789" })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          expect(res.body).to.be.an("object");
+          expect(res.body.email).to.be.equal("employee1@gmail.com");
+          expect(res.body.password).to.not.exist();
+          expect(res.body.role).to.be.equal("employee");
+          expect(res.body.id).to.be.equal("6187c957b288576ca26f8257");
+
+          done();
+        });
+    });
+    it("it should success with a farmer", (done) => {
+      chai
+        .request(app)
+        .post("/api/users/login")
+        .send({ username: "farmer1@gmail.com", password: "123456789" })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          expect(res.body).to.be.an("object");
+          expect(res.body.email).to.be.equal("farmer1@gmail.com");
+          expect(res.body.password).to.not.exist();
+          expect(res.body.role).to.be.equal("farmer");
+          expect(res.body.id).to.be.equal("6187c957b288576ca26f8257");
 
           done();
         });
@@ -978,28 +1018,6 @@ describe("Client Login API tests:", () => {
         .end((err, res) => {
           expect(err).to.be.null;
           expect(res.status).to.be.equal(404);
-
-          done();
-        });
-    });
-    it("it should create a new client", (done) => {
-      chai
-        .request(app)
-        .post("/api/clients")
-        .send({
-          fullName: "Ehsan Ansari",
-          phoneNumber: "1236678",
-          email: "ansari@email.com",
-          address: "via giacinto,22 Torino, 10127",
-          wallet: 0.0,
-        })
-        .end((err, res) => {
-          expect(err).to.be.null;
-          expect(res.status).to.be.equal(200);
-          expect(res.body).to.be.an("object");
-          expect(res.body.email).to.be.equal("ansari@email.com");
-          expect(res.body.fullName).to.be.equal("Ehsan Ansari");
-          expect(res.body.address).to.be.equal("via giacinto,22 Torino, 10127");
 
           done();
         });

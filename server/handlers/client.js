@@ -84,14 +84,6 @@ exports.addFundToWalletHandler = async function (req, res, next) {
     }
 
     return res.json({ newWalletValue: result.value.wallet});
-
-  if (result.value == null) {
-    console.error(
-      `AddFundToWalletHandler() -> couldn't find client collection or client document`
-    );
-    return res.status(400).end();
-  }
-  return res.json({ newWalletValue: result.value.wallet });
 };
 
 exports.findClientValidatorChain = [searchStringValidator];

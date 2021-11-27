@@ -102,19 +102,19 @@ exports.createClientsTextSearchIndexes = () =>
 
 // User (Client, Farmer, Employee)
 exports.getUserByEmail = async (email) => {
-  const usersFound = await Promise.all([
+  let usersFound = await Promise.all([
     getClientByEmail(db, email),
     getFarmerByEmail(db, email),
     getEmployeeByEmail(db, email),
   ]).then(([clientInfo, farmerInfo, employeeInfo]) => {
-    let usersFound = [];
-    if (clientInfo) usersFound.push(ClientInfo.fromMongoJSON(clientInfo));
-    if (farmerInfo) usersFound.push(FarmerInfo.fromMongoJSON(farmerInfo));
-    if (employeeInfo) usersFound.push(EmployeeInfo.fromMongoJSON(employeeInfo));
-    return usersFound;
+    let users = [];
+    if (clientInfo) users.push(ClientInfo.fromMongoJSON(clientInfo));
+    if (farmerInfo) users.push(FarmerInfo.fromMongoJSON(farmerInfo));
+    if (employeeInfo) users.push(EmployeeInfo.fromMongoJSON(employeeInfo));
+    return users;
   });
 
-  if (usersFound.length === 0) {
+  if (usersFound?.length === 0) {
     throw new Error("no user found");
   }
   return usersFound[0];

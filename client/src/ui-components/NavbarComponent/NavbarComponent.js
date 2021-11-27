@@ -82,7 +82,7 @@ function NavbarComponent(props) {
               height='35'
               width='35'
               viewBox='0 0 1000 1000'
-              enable-background='new 0 0 1000 1000'>
+              enableBackground='new 0 0 1000 1000'>
               <metadata>
                 {" "}
                 Svg Vector Icons : http://www.onlinewebfonts.com/icon{" "}

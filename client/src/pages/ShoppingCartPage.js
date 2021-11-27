@@ -1,5 +1,5 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { useLocation } from "react-router";
 import { Container, Row } from "react-bootstrap";
 import { Redirect } from "react-router-dom";
@@ -10,15 +10,19 @@ import { ShoppingCartTable } from "../ui-components/ShoppingCartComponent/Shoppi
 import { ShoppingCartTotAmount } from "../ui-components/ShoppingCartComponent/ShoppingCartTotAmount";
 import { ShoppingCartControls } from "../ui-components/ShoppingCartComponent/ShoppingCartControls";
 import { ModalOrderConfirmation } from "../ui-components/ShoppingCartComponent/ModalOrderConfirmation";
+import { AuthContext } from "../contexts/AuthContextProvider";
 
 import {
   getClientByID,
   getProductsByIDs,
   createOrder,
 } from "../services/ApiClient";
+import UserRoles from "../services/models/UserRoles";
 
 function ShoppingCartPage(props) {
   const location = useLocation();
+  const authContext = useContext(AuthContext);
+
   // as props, ShoppingCartPage receives
   //      - a Map <ItemID, Qty>
   //      - the clientID
@@ -30,6 +34,13 @@ function ShoppingCartPage(props) {
   // it uses function createOrder(clientID, cart) -> POST /api/orders
 
   const [cart, setCart] = useState(location.state.shoppingCart);
+
+  const [clientID, setClientID] = useState (location.state ? location.state.clientID :''); 
+
+  useEffect(()=>  {
+    if(authContext.currentUser && authContext.currentUser.role===UserRoles.CLIENT)
+      setClientID(authContext.currentUser.id)
+  },[authContext])
 
   /* compute initial total amount */
   var sum = 0;
@@ -74,7 +85,7 @@ function ShoppingCartPage(props) {
       quantity,
     }));
     //call create order
-    createOrder(location.state.clientID, products);
+    createOrder(clientID, products);
     handleClose();
     setSubmitted(true);
   };
@@ -86,7 +97,7 @@ function ShoppingCartPage(props) {
       </Row>
       <Row>
         <ShoppingCartTitle
-          client={location.state.clientID}
+          client={clientID}
           getClientByID={getClientByID}
         />
       </Row>
@@ -118,16 +129,22 @@ function ShoppingCartPage(props) {
           handleSubmit={handleSubmit}
         />
       </Row>
-      {submitted ? (
+      {submitted && authContext.currentUser.role===UserRoles.EMPLOYEE ?(
         <Redirect
           to={{
             pathname: "/employee/clients/" + location.state.clientID,
             state: { orderAmount: amount },
           }}
         />
-      ) : (
-        ""
-      )}
+      ) : ''}
+      {submitted && authContext.currentUser.role===UserRoles.CLIENT ? (
+        <Redirect
+        to={{
+          pathname: "/" ,
+          state: { showOrderAlert: true, shoppingCart: new Map()},
+        }}
+      />
+      ) : ''}
     </Container>
   );
 }

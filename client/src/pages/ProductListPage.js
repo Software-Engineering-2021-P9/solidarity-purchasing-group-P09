@@ -8,6 +8,7 @@ import {
   FormControl,
   Modal,
   Container,
+  Alert
 } from "react-bootstrap";
 import { getAvailableNavbarLinks } from "../Routes";
 
@@ -25,6 +26,7 @@ import Product from "../services/models/Product";
 import { findProducts } from "../services/ApiClient";
 
 import { AuthContext } from "../contexts/AuthContextProvider";
+import UserRoles from "../services/models/UserRoles";
 
 function ProductListPage(props) {
   const location = useLocation();
@@ -48,6 +50,8 @@ function ProductListPage(props) {
 
   // modal states
   const [show, setShow] = useState(false);
+  const [showAlert, setShowAlert] = useState(location.state ? location.state.showOrderAlert : false); 
+
 
   const [modalProduct, setModalProduct] = useState({});
 
@@ -147,6 +151,29 @@ function ProductListPage(props) {
         </Modal.Footer>
       </Modal>
 
+      {location.state != null && showAlert ? (
+        <Row>
+          <Alert
+            variant="success"
+            style={{
+              color: "#635F46",
+              fontWeight: "bold",
+              backgroundColor: "#7465132f",
+              width: "auto",
+              marginTop: "1%",
+              marginLeft: "1%",
+            }}
+            onClose={() => setShowAlert(false)}
+            dismissible
+          >
+            Your order was successfully created!
+          </Alert>
+        </Row>
+      ) : (
+        ""
+      )}
+
+
       <Row className='align-items-center'>
         <h1 className='title'>Available products</h1>
       </Row>
@@ -187,7 +214,7 @@ function ProductListPage(props) {
                   <ProductCard
                     product={item}
                     // if the employee is creating a new order or is just showing available products
-                    creatingOrderMode={location.state?.creatingOrderMode}
+                    creatingOrderMode={location.state?.creatingOrderMode || authContext?.currentUser?.role===UserRoles.CLIENT}
                     handleShow={handleShow}
                   />
                 </CardGroup>

@@ -74,12 +74,13 @@ exports.createOrderHandler = async function (req, res, next) {
   //IF WALLET NOT ENOUGH SET THE STATE TO NOT COVERED
   if(client.wallet < totalPrice){
     try{
-      result = await dao.updateOrderStatus(result.insertedId, "not covered");
+      result = await dao.updateOrderStatus(result._id, "not covered");
+      result = result.value;
     }catch(err){
       return res.status(500).end();
     }
   }
-
+  console.log(result);
   return res.json(Order.fromMongoJSON(result));
 };
 

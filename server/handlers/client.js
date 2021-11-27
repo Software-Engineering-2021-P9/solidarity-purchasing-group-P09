@@ -69,34 +69,16 @@ exports.addFundToWalletHandler = async function (req, res, next) {
     
     let finalWalletValue = result.value.wallet;
 
-    for(let i=0; i<orders.length; i++){
-      if(finalWalletValue < orders[i].totalPrice)
+    for(let order of orders){
+      if(finalWalletValue < order.totalPrice)
         break;
-      finalWalletValue -= orders[i].totalPrice;
+      finalWalletValue -= order.totalPrice;
       try{
-        await dao.updateOrderStatus(orders[i]._id, "waiting");
+        await dao.updateOrderStatus(order._id, "waiting");
       }catch(err){
         return res.status(500).end();
       }
     }
-
-    /*
-    let subtractBy = result.value.wallet - finalWalletValue;
-    if(subtractBy != 0){
-      try {
-        result = await dao.subtractFundToWallet(req.params.clientID , parseFloat(subtractBy));
-      }
-      catch (err) {
-        console.error(`SubtractFundToWalletHandler() -> couldn't subtract fund to wallet: ${err}`);
-        return res.status(500).end();
-      }
-      if (result.value == null) {
-        console.log(result);
-        console.error(`SubtractFundToWalletHandler() -> couldn't find client collection or client document`);
-        return res.status(400).end();
-      }
-    }
-    */
 
     return res.json({ newWalletValue: result.value.wallet});
 

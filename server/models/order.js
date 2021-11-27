@@ -1,6 +1,7 @@
 "use strict";
 
 const OrderStatus = {
+  NOT_COVERED: "not covered",
   WAITING: "waiting",
   CONFIRMED: "confirmed",
   PREPARED: "prepared",

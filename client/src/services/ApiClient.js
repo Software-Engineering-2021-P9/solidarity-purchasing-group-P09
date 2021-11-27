@@ -278,6 +278,21 @@ export async function getOrders() {
         "-" +
         new Date().getUTCFullYear(),
     },
+    {
+      id: "999f1033364ad6b06554f032",
+      clientId: "918d971d89d6240eb03742d7",
+      products: [{ productId: "118d971d89d6240eb03742d7", quantity: 8 }],
+      status: "NOT COVERED",
+      totalPrice: 43,
+      location: "corso Duca degli Abruzzi, 129, Torino",
+      createdAt:
+        new Date().getUTCMonth() +
+        1 +
+        "-" +
+        new Date().getUTCDate() +
+        "-" +
+        new Date().getUTCFullYear(),
+    },
   ];
 
   return mockOrders;

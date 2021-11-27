@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useHistory, /*useParams,*/ useLocation } from "react-router";
+import { useHistory, useParams, useLocation } from "react-router";
 import { getAvailableNavbarLinks } from "../Routes";
 
 import {
@@ -29,16 +29,19 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "../ui-components/Title.css";
 
 function ClientDetailsPage(props) {
-  //TODO: GET CLIENT ID OF LOGGED CLIENT IF THIS PAGE IS USED ON CLIENT SIDE. For now, we'll set this hardcoded
-  //const params = useParams();
-  //const clientID = params.id;
-  const clientID = "618d4ad3736f2caf2d3b3ca5";//TODO: TO DELETE WHEN LOG IN IS DONE!
+  let clientID;
+  const params = useParams();
+
+  const authContext = useContext(AuthContext);
+  if(authContext.currentUser.role == "client");
+    clientID = authContext.currentUser.id;
+  if(authContext.currentUser.role == "employee")
+    clientID = params.id;
   
   const [show, setShow] = useState(true);
 
   const history = useHistory();
   const location = useLocation();
-  const authContext = useContext(AuthContext);
 
   const [isInitialized, setIsInitialized] = useState(false);
   const [mustReload, setMustReload] = useState(false);

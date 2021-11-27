@@ -69,7 +69,7 @@ const routes = {
     path: "/NotCoveredOrders",
     component: ClientDetailsPage,
     exact: false,
-    linkTitle: "Show Not Covered Orders",
+    linkTitle: "Order List",
   },
   [userLoginRouteName]: {
     path: "/user/login",
@@ -88,7 +88,10 @@ const routes = {
 function getAvailableNavbarLinks(loggedUser) {
   switch (loggedUser?.role) {
     case UserRoles.CLIENT:
-      return [userLogoutRouteName];
+      return [
+        userLogoutRouteName,
+        ClientInsufficientWalletOrdersRouteName
+      ];
     case UserRoles.EMPLOYEE:
       return [
         employeeClientManagementRouteName,

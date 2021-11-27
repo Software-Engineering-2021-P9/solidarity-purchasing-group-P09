@@ -982,8 +982,52 @@ describe("User Login API tests:", () => {
           done();
         });
     });
+  });
 
-    it("logout: res status 204", (done) => {
+  describe("GET /users/current", () => {
+    before((done) => {
+      chai
+        .request(app)
+        .post("/api/users/login")
+        .send({ username: "farmer1@test.com", password: "123456789" })
+        .then(() => done());
+    });
+
+    it("it must success with no currently logged user", (done) => {
+      chai
+        .request(app)
+        .get("/api/users/current")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(204);
+
+          done();
+        });
+    });
+
+    it("it must success with a currently logged user", (done) => {
+      chai
+        .request(app)
+        .get("/api/users/current")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(204);
+
+          done();
+        });
+    });
+  });
+
+  describe("DELETE /users/current", () => {
+    before((done) => {
+      chai
+        .request(app)
+        .post("/api/users/login")
+        .send({ username: "farmer1@test.com", password: "123456789" })
+        .then(() => done());
+    });
+
+    it("it must success with a currently logged user", (done) => {
       chai
         .request(app)
         .delete("/api/users/current")
@@ -994,30 +1038,13 @@ describe("User Login API tests:", () => {
         });
     });
 
-    it("no currently logged user: res status 204", (done) => {
+    it("it must success with a currently logged user", (done) => {
       chai
         .request(app)
-        .get("/api/users/current")
+        .delete("/api/users/current")
         .end((err, res) => {
           expect(err).to.be.null;
           expect(res.status).to.be.equal(204);
-          expect(res.statusCode).to.be.equal(204);
-          done();
-        });
-    });
-
-    it("it must fail when mongo fails", (done) => {
-      dao.close();
-      chai
-        .request(app)
-        .post("/api/users/current")
-        .send({
-          username: "ehsanansari@gmail.com",
-          password: "123456789",
-        })
-        .end((err, res) => {
-          expect(err).to.be.null;
-          expect(res.status).to.be.equal(404);
 
           done();
         });

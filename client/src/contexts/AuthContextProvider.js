@@ -1,58 +1,105 @@
 import { createContext, useState, useEffect } from "react";
-import { Spinner } from "react-bootstrap";
-import { guestNavbarLinks } from "../Routes";
+import { Row, Spinner } from "react-bootstrap";
+import { useHistory } from "react-router";
+import { getCurrentUser, loginUser, logoutUser } from "../services/ApiClient";
+import ErrorToast from "../ui-components/ErrorToast/ErrorToast";
 
 const AuthContext = createContext();
 
-const UserRoles = {
-  CLIENT: "client",
-  EMPLOYEE: "employee",
-  FARMER: "farmer",
-};
-
 function AuthContextProvider(props) {
+  const history = useHistory();
   const [isAuthInitialized, setIsAuthInitialized] = useState(false);
 
+  const [showErrorToast, setShowErrorToast] = useState(false);
+  const [errorToastMessage, setErrorToastMessage] = useState("");
+
   const [authState, setAuthState] = useState({
-    loggedUser: null,
-    loginUser: (email, password) => {
-      // Add user login api call here
+    currentUser: null,
+    loginUser: function (email, password) {
+      return new Promise((resolve, reject) => {
+        loginUser(email, password)
+          .then((user) => {
+            setAuthState((old) => {
+              return { ...old, currentUser: user };
+            });
+            history.push("/");
+            return resolve(user);
+          })
+          .catch((err) => {
+            return reject(err.message);
+          });
+      });
     },
-    logoutUser: () => {
-      // Add user logout api call here
+    logoutUser: function () {
+      return new Promise((resolve, reject) => {
+        if (!this.currentUser) {
+          return resolve();
+        }
+        logoutUser()
+          .then(() => {
+            setAuthState((old) => {
+              return {
+                ...old,
+                currentUser: null,
+              };
+            });
+            history.push("/");
+            return resolve();
+          })
+          .catch((err) => {
+            setErrorToastMessage(err.message);
+            setShowErrorToast(true);
+            return reject();
+          });
+      });
     },
   });
 
   useEffect(() => {
-    const getCurrentUser = () => {
-      // Call getCurrentUser api here and check if there already is a logged user.
-      // If so, populate the authState witht the data from the already logged user
-      setAuthState((oldState) => {
-        return {
-          ...oldState,
-          loggedUser: {
-            id: "ciaone",
-            role: UserRoles.CLIENT,
-          },
-        };
-      });
-      setIsAuthInitialized(true);
+    const fetchCurrentUser = () => {
+      // Check if there already is a logged user.
+      // If so, populate the authState with the data from the already logged user
+      getCurrentUser()
+        .then((currentUser) => {
+          if (currentUser !== null) {
+            setAuthState((old) => {
+              return {
+                ...old,
+                currentUser: currentUser,
+              };
+            });
+          }
+          setIsAuthInitialized(true);
+        })
+        .catch((err) => {
+          setErrorToastMessage(err.message);
+          setShowErrorToast(true);
+        });
     };
 
-    if (!isAuthInitialized) getCurrentUser();
-  }, [isAuthInitialized]);
+    if (!isAuthInitialized) fetchCurrentUser();
+  }, [isAuthInitialized, history]);
 
   return (
     <>
       {!isAuthInitialized ? (
-        <Spinner />
+        <Row className='vh-100 justify-content-center align-content-center'>
+          <Spinner animation='border' />
+        </Row>
       ) : (
         <AuthContext.Provider value={authState}>
           {props.children}
         </AuthContext.Provider>
       )}
+
+      <ErrorToast
+        show={showErrorToast}
+        onClose={() => setShowErrorToast(false)}
+        title='Error'
+        message={errorToastMessage}
+      />
     </>
   );
 }
 
-export { AuthContextProvider, UserRoles, AuthContext };
+export { AuthContextProvider, AuthContext };

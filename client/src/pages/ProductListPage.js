@@ -9,26 +9,27 @@ import {
   Modal,
   Container,
 } from "react-bootstrap";
-import { employeeNavbarLinks } from "../Routes";
+import { getAvailableNavbarLinks } from "../Routes";
+
 import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponent";
-import Product from "../services/models/Product";
 import ProductCard from "../ui-components/ProductCardComponent/ProductCard";
 import { RedButton } from "../ui-components/RedButtonComponent/RedButton";
 import { RedDropdown } from "../ui-components/RedDropdownComponent/RedDropdown";
 import Button from "../ui-components/Button/Button";
+
 import "../ui-components/ShoppingCartComponent/ShoppingCartControlsCSS.css";
 import "../ui-components/Title.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
+import Product from "../services/models/Product";
 import { findProducts } from "../services/ApiClient";
+
 import { AuthContext } from "../contexts/AuthContextProvider";
 
 function ProductListPage(props) {
   const location = useLocation();
   const authContext = useContext(AuthContext);
-  useEffect(() => {
-    console.log(authContext.loggedUser?.role);
-  }, [authContext]);
+
   const [products, setProducts] = useState([]);
 
   //used for storing the content of the search form
@@ -103,7 +104,8 @@ function ProductListPage(props) {
   return (
     <>
       <NavbarComponent
-        links={employeeNavbarLinks}
+        links={getAvailableNavbarLinks(authContext.currentUser)}
+        loggedUser={authContext.currentUser}
         showShoppingCart
         shoppingCartItems={cart.size}
         shoppingCart={cart}
@@ -118,9 +120,9 @@ function ProductListPage(props) {
           <Row>
             <Form.Label>Select a quantity</Form.Label>
           </Row>
-          <Row className="my-1 mb-3 px-3">
+          <Row className='my-1 mb-3 px-3'>
             <FormControl
-              type="number"
+              type='number'
               step={1}
               value={modalProduct.productQty}
               onChange={(e) =>
@@ -132,24 +134,23 @@ function ProductListPage(props) {
           </Row>
         </Container>
         <Modal.Footer>
-          <Button className="btn-light" onClick={handleClose}>
+          <Button className='btn-light' onClick={handleClose}>
             Close
           </Button>
           <Button
-            className="btn-primary"
+            className='btn-primary'
             onClick={() =>
               addItem(modalProduct.productId, modalProduct.productQty)
-            }
-          >
+            }>
             Submit
           </Button>
         </Modal.Footer>
       </Modal>
 
-      <Row className="align-items-center">
-        <h1 className="title">Available products</h1>
+      <Row className='align-items-center'>
+        <h1 className='title'>Available products</h1>
       </Row>
-      <Row className="sticky ">
+      <Row className='sticky '>
         <Col xs={{ span: 4 }}>
           <RedDropdown
             items={Object.values(Product.Categories)}
@@ -163,22 +164,22 @@ function ProductListPage(props) {
             <Row>
               <Col xs={{ span: 8 }}>
                 <FormControl
-                  type="textarea"
-                  placeholder="Filter"
+                  type='textarea'
+                  placeholder='Filter'
                   value={text}
                   onChange={(ev) => setText(ev.target.value)}
                 />
               </Col>
               <Col xs={{ span: 1, offset: 1 }}>
-                <RedButton text="Search" onClick={handleOnSearchSubmit} />
+                <RedButton text='Search' onClick={handleOnSearchSubmit} />
               </Col>
             </Row>
           </Form>
         </Col>
-        <hr className="line" />
+        <hr className='line' />
       </Row>
 
-      <Row md={4} xs={2} className="g-4">
+      <Row md={4} xs={2} className='g-4'>
         {products
           ? products.map((item) => {
               return (

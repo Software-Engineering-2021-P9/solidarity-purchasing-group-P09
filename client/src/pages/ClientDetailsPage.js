@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponent";
-import { CreateNewOrderButton } from "../ui-components/ClientDetailsComponent/CreateNewOrderButton";
+import React, { useContext, useEffect, useState } from "react";
+
 import { useHistory, useParams, useLocation } from "react-router";
-import { employeeNavbarLinks } from "../Routes";
+import { getAvailableNavbarLinks } from "../Routes";
 
 import {
   Col,
@@ -13,14 +12,19 @@ import {
   Spinner,
   Alert,
 } from "react-bootstrap";
+
 import ActionConfirmationModal from "../ui-components/ActionConfirmationModal/ActionConfirmationModal";
 import Button from "../ui-components/Button/Button";
 import ClientDetails from "../ui-components/ClientDetails/ClientDetails";
 import { ClientOrders } from "../ui-components/ClientOrdersComponent/ClientOrders";
 import Divider from "../ui-components/Divider/Divider";
 import ErrorToast from "../ui-components/ErrorToast/ErrorToast";
+import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponent";
+import { CreateNewOrderButton } from "../ui-components/ClientDetailsComponent/CreateNewOrderButton";
 
 import { addFundToWallet, getClientByID } from "../services/ApiClient";
+
+import { AuthContext } from "../contexts/AuthContextProvider";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../ui-components/Title.css";
@@ -32,6 +36,7 @@ function ClientDetailsPage(props) {
 
   const history = useHistory();
   const location = useLocation();
+  const authContext = useContext(AuthContext);
 
   const [isInitialized, setIsInitialized] = useState(false);
   const [mustReload, setMustReload] = useState(false);
@@ -99,11 +104,14 @@ function ClientDetailsPage(props) {
 
   return (
     <>
-      <NavbarComponent links={employeeNavbarLinks} />
+      <NavbarComponent
+        links={getAvailableNavbarLinks(authContext.currentUser)}
+        loggedUser={authContext.currentUser}
+      />
       {location.state != null && show ? (
         <Row>
           <Alert
-            variant="success"
+            variant='success'
             style={{
               color: "#635F46",
               fontWeight: "bold",
@@ -113,8 +121,7 @@ function ClientDetailsPage(props) {
               marginLeft: "1%",
             }}
             onClose={() => setShow(false)}
-            dismissible
-          >
+            dismissible>
             Your order was successfully created!
           </Alert>
         </Row>
@@ -122,23 +129,23 @@ function ClientDetailsPage(props) {
         ""
       )}
       {!isInitialized ? (
-        <Container className="pt-5 d-flex justify-content-center">
-          <Spinner variant="dark" animation="border" />
+        <Container className='pt-5 d-flex justify-content-center'>
+          <Spinner variant='dark' animation='border' />
         </Container>
       ) : (
         <>
           <Row>
-            <h1 className="title">Client Details</h1>
+            <h1 className='title'>Client Details</h1>
           </Row>
-          <Row className="justify-content-around pt-2">
-            <Col md="5" className="ms-5">
+          <Row className='justify-content-around pt-2'>
+            <Col md='5' className='ms-5'>
               <ClientDetails clientInfo={clientInfo} />
             </Col>
-            <Col md="5">
-              <InputGroup className="mb-3 pt-4">
+            <Col md='5'>
+              <InputGroup className='mb-3 pt-4'>
                 <FormControl
-                  type="number"
-                  placeholder="50€"
+                  type='number'
+                  placeholder='50€'
                   value={fundsToAddAmount}
                   onChange={onFundsToAddAmountChange}
                   required
@@ -149,7 +156,7 @@ function ClientDetailsPage(props) {
               </InputGroup>
             </Col>
           </Row>
-          <Row className="my-3">
+          <Row className='my-3'>
             <CreateNewOrderButton clientID={clientID} />
           </Row>
           <Container>

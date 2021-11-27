@@ -7,11 +7,11 @@ function ProtectedRoute(props) {
 
   return (
     <>
-      {authContext.loggedUser &&
-      props.requiredRoles.includes(authContext.loggedUser.role) ? (
+      {props.requiredRoles.length === 0 ||
+      props.requiredRoles.includes(authContext.currentUser?.role) ? (
         <>{props.children}</>
       ) : (
-        <Redirect to="/" />
+        <Redirect to='/' />
       )}
     </>
   );

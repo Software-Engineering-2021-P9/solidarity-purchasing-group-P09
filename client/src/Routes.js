@@ -3,14 +3,19 @@ import { ClientDetailsPage } from "./pages/ClientDetailsPage";
 import { ClientManagementPage } from "./pages/ClientManagementPage/ClientManagementPage";
 import { ClientSignupPage } from "./pages/ClientSignupPage";
 import { ProductListPage } from "./pages/ProductListPage";
+import { UserLoginPage } from "./pages/UserLoginPage";
+import { UserLogoutRedirect } from "./pages/UserLogoutRedirect";
+
 import ProtectedRoute from "./contexts/ProtectedRoute";
-import { UserRoles } from "./contexts/AuthContextProvider";
+import UserRoles from "./services/models/UserRoles";
 
 const productListRouteName = "product-list-page";
 const shoppingCartRouteName = "shopping-cart-page";
 const employeeClientManagementRouteName = "employee-client-management-page";
 const employeeClientDetailsRouteName = "employee-client-details-page";
 const employeeClientSignupRouteName = "employee-client-signup-page";
+const userLoginRouteName = "user-login-page";
+const userLogoutRouteName = "user-logout-page";
 
 const routes = {
   [productListRouteName]: {
@@ -59,14 +64,40 @@ const routes = {
     exact: false,
     linkTitle: "Signup Client",
   },
+  [userLoginRouteName]: {
+    path: "/user/login",
+    component: () => (
+      <ProtectedRoute requiredRoles={[]}>
+        <UserLoginPage />
+      </ProtectedRoute>
+    ),
+    exact: false,
+    linkTitle: "Login",
+  },
+  [userLogoutRouteName]: {
+    path: "/user/logout",
+    component: () => <UserLogoutRedirect />,
+    exact: false,
+    linkTitle: "Logout",
+  },
 };
 
-const employeeNavbarLinks = [
-  employeeClientManagementRouteName,
-  employeeClientSignupRouteName,
-];
-
-const guestNavbarLinks = [];
+function getAvailableNavbarLinks(loggedUser) {
+  switch (loggedUser?.role) {
+    case UserRoles.CLIENT:
+      return [userLogoutRouteName];
+    case UserRoles.EMPLOYEE:
+      return [
+        employeeClientManagementRouteName,
+        employeeClientSignupRouteName,
+        userLogoutRouteName,
+      ];
+    case UserRoles.FARMER:
+      return [userLogoutRouteName];
+    default:
+      return [userLoginRouteName];
+  }
+}
 
 export {
   productListRouteName,
@@ -75,6 +106,5 @@ export {
   employeeClientDetailsRouteName,
   employeeClientSignupRouteName,
   routes,
-  employeeNavbarLinks,
-  guestNavbarLinks,
+  getAvailableNavbarLinks,
 };

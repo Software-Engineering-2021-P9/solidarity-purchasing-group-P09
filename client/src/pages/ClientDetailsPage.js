@@ -78,7 +78,7 @@ function ClientDetailsPage(props) {
     setActionConfirmationModalMessage(
       `Are you sure you want to increase the wallet value of the client by ${fundsToAddFloat}€? The final wallet value will be ${
         fundsToAddFloat + clientInfo.wallet
-      }€. If "Not Covered" orders are present, additional fees may apply to cover those orders. Older orders are to be paid first.`
+      }€`
     );
     setActionConfirmationModalCallback(() => () => {
       setIsActionLoading(true);

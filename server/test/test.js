@@ -528,6 +528,23 @@ describe("Clients API tests:", () => {
           done();
         });
     });
+
+    it("it should update the client wallet", (done) => {
+      chai
+        .request(app)
+        .patch("/api/clients/6187c957b288576ca26f8257/wallet")
+        .send({
+          increaseBy: 24.3,
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          expect(res.body).to.be.an("object");
+          expect(res.body.newWalletValue).to.be.equal(79.8);
+
+          done();
+        });
+    });
   });
 
   // Orders API tests

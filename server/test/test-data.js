@@ -43,6 +43,39 @@ exports.ordersCollection = {
       totalPrice: "12",
       createdAt: "2021-12-16T13:00:07.616Z",
     },
+    {
+      _id: ObjectID("6187c957b288576ca26f8000"),
+      clientID: ObjectID("6187c957b288576ca26f8257"),
+      products: [
+        { productID: "6187c957b288576ca26f8258", quantity: 1 },
+        { productID: "6187c957b288576ca26f8259", quantity: 2 },
+      ],
+      status: "not covered",
+      totalPrice: "2",
+      createdAt: "2021-12-16T13:00:07.616Z",
+    },
+    {
+      _id: ObjectID("6187c957b288576ca26f8001"),
+      clientID: ObjectID("6187c957b288576ca26f8257"),
+      products: [
+        { productID: "6187c957b288576ca26f8258", quantity: 1 },
+        { productID: "6187c957b288576ca26f8259", quantity: 2 },
+      ],
+      status: "not covered",
+      totalPrice: "2",
+      createdAt: "2018-12-16T13:00:07.616Z",
+    },
+    {
+      _id: ObjectID("6187c957b288576ca26f8002"),
+      clientID: ObjectID("6187c957b288576ca26f8257"),
+      products: [
+        { productID: "6187c957b288576ca26f8258", quantity: 1 },
+        { productID: "6187c957b288576ca26f8259", quantity: 2 },
+      ],
+      status: "not covered",
+      totalPrice: "2",
+      createdAt: "2019-12-16T13:00:07.616Z",
+    },
   ],
 };
 

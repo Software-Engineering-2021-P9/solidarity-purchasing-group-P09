@@ -16,6 +16,7 @@ const employeeClientDetailsRouteName = "employee-client-details-page";
 const employeeClientSignupRouteName = "employee-client-signup-page";
 const userLoginRouteName = "user-login-page";
 const userLogoutRouteName = "user-logout-page";
+const clientSignupRouteName="client-signup-page";
 
 const routes = {
   [productListRouteName]: {
@@ -76,6 +77,12 @@ const routes = {
     exact: false,
     linkTitle: "Logout",
   },
+  [clientSignupRouteName]: {
+    path: "/client/signup",
+    component:  () => <ClientSignupPage />, 
+    exact: false,
+    linkTitle: "Register",
+  },
 };
 
 function getAvailableNavbarLinks(loggedUser) {
@@ -91,7 +98,7 @@ function getAvailableNavbarLinks(loggedUser) {
     case UserRoles.FARMER:
       return [userLogoutRouteName];
     default:
-      return [userLoginRouteName];
+      return [userLoginRouteName, clientSignupRouteName];
   }
 }
 
@@ -103,4 +110,5 @@ export {
   employeeClientSignupRouteName,
   routes,
   getAvailableNavbarLinks,
+  clientSignupRouteName,
 };

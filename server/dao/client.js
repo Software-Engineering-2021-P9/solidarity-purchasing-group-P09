@@ -68,3 +68,15 @@ exports.createClient = (db, fullName, phoneNumber, email, address, wallet) => {
     wallet: wallet,
   });
 };
+
+exports.createClientAccount = (db, fullName, phoneNumber, email, password, address, wallet) => {
+  return db.collection(clientCollectionName).insertOne({
+    fullName: fullName,
+    phoneNumber: phoneNumber,
+    email: email,
+    password: password,
+    address: address,
+    wallet: wallet,
+  });
+};
+

@@ -3,8 +3,6 @@ import { Navbar, Nav, Container } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { routes, shoppingCartRouteName } from "../../Routes";
 
-import { PersonCircle } from "react-bootstrap-icons";
-
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./NavbarComponent.css";
 

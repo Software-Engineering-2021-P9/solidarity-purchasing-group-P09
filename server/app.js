@@ -16,6 +16,8 @@ var clientHandlers = require("./handlers/client");
 
 var productHandlers = require("./handlers/product");
 
+var farmerHandlers = require("./handlers/farmer");
+
 
 const port = process.env.PORT || 3001;
 const buildAPIPath = (apiPath) => "/api" + apiPath;
@@ -109,6 +111,23 @@ app.get(
   productHandlers.getProductByIDValidatorChain,
   checkValidationErrorMiddleware,
   productHandlers.getProductByIDHandler
+);
+
+app.post(
+  buildAPIPath("/products/:productID/availability"),
+  productHandlers.setNextWeekProductAvailabilityValidatorChain,
+  checkValidationErrorMiddleware,
+  productHandlers.setNextWeekProductAvailabilityHandler
+)
+
+
+// farmers
+
+app.get(
+  buildAPIPath("/farmers/:farmerID/products"),
+  farmerHandlers.getFarmerProductsValidatorChain,
+  checkValidationErrorMiddleware,
+  farmerHandlers.getFarmerProductsHandler
 );
 
 

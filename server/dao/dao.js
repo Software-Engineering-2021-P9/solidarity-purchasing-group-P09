@@ -7,14 +7,15 @@ const { createOrder, getOrderByID, deleteOrder } = require("./order");
 
 const { getClientByID, addFundToWallet, findClients, createClientsTextSearchIndexes, createClient } = require("./client");
 
-const { getProductsAvailability, getProductAvailability } = require("./productsAvailabilities");
+const { getProductsAvailability, getProductAvailability, setProductAvailability } = require("./productsAvailabilities");
 
 
 const {
   getProductsByIDs,
   findProducts,
   createProductsTextSearchIndexes,
-  getProductByID
+  getProductByID,
+  findProductsByFarmerID
 } = require("./products");
 
 // DAO initialization
@@ -60,6 +61,8 @@ exports.createProductsTextSearchIndexes = () => {
 exports.getProductsAvailability = (listOfIDs, week, year) => getProductsAvailability(db, listOfIDs, week, year);
 exports.getProductAvailability = (productID, week, year) => getProductAvailability(db, productID, week, year);
 exports.getProductByID = (productID) => getProductByID(db, productID);
+exports.setProductAvailability = (farmerID, productID, week, year, price, packaging, quantity) => setProductAvailability(db, farmerID, productID, week, year, price, packaging, quantity)
+exports.findProductsByFarmerID = (farmerID, searchString, category) => findProductsByFarmerID(db, farmerID, searchString, category);
 
 // Order
 exports.createOrder = (clientID, products, status, totalPrice, createdAt) =>

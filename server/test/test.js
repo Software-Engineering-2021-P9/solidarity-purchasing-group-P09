@@ -422,6 +422,124 @@ describe("Products API tests: ", () => {
           done();
         });
     });
+
+    it("it must return the newly created product availability", (done) => {
+      chai
+        .request(app)
+        .post("/api/products/000000000000000000000010/availability")
+        .send({
+          "price": 2.5,
+          "packaging": "6 units",
+          "quantity": 55
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          expect(res.body.price).to.be.equal(2.5);
+          expect(res.body.packaging).to.be.equal("6 units");
+          expect(res.body.quantity).to.be.equal(55);
+          expect(res.body.farmerID).to.be.equal("4c7564443132333435363738");
+          expect(res.body.productID).to.be.equal("000000000000000000000010");
+          done();
+        });
+    });
+
+    it("it must return bad request if the product doesn't exist", (done) => {
+      chai
+        .request(app)
+        .post("/api/products/000000000000aaa000000010/availability")
+        .send({
+          "price": 2.5,
+          "packaging": "6 units",
+          "quantity": 55
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(400);
+          done();
+        });
+    });
+
+    it("it must return bad request if the product availability for next week is already set", (done) => {
+      chai
+        .request(app)
+        .post("/api/products/000000000000000000000012/availability")
+        .send({
+          "price": 2.5,
+          "packaging": "6 units",
+          "quantity": 55
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(400);
+          done();
+        });
+    });
+
+    it("it must fail when mongo fails", (done) => {
+      dao.close()
+      chai
+        .request(app)
+        .post("/api/products/000000000000000000000012/availability")
+        .send({
+          "price": 2.5,
+          "packaging": "6 units",
+          "quantity": 55
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(500);
+          done();
+        });
+    });
+
+    it("it must return bad request if the price is less then 0.01", (done) => {
+      chai
+        .request(app)
+        .post("/api/products/000000000000000000000010/availability")
+        .send({
+          "price": 0,
+          "packaging": "6 units",
+          "quantity": 55
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(400);
+          done();
+        });
+    });
+
+    it("it must return bad request if the quantity is less then 1", (done) => {
+      chai
+        .request(app)
+        .post("/api/products/000000000000000000000010/availability")
+        .send({
+          "price": 2.4,
+          "packaging": "6 units",
+          "quantity": 0
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(400);
+          done();
+        });
+    });
+
+    it("it must return bad request if the productID is not a mongoID", (done) => {
+      chai
+        .request(app)
+        .post("/api/products/aaaa/availability")
+        .send({
+          "price": 2.4,
+          "packaging": "6 units",
+          "quantity": 0
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(400);
+          done();
+        });
+    });
   });
 });
 
@@ -848,5 +966,128 @@ describe("Clients API tests:", () => {
           });
       });
     });
+  });
+});
+
+
+//
+//farmer tests
+//
+
+describe("Farmers API tests:", () => {
+  beforeEach(() => {
+    dao.open();
+    mongoUnit.load(testData.productsCollection);
+    mongoUnit.load(testData.productsAvailabilityCollection2);
+    dao.createProductsTextSearchIndexes();
+  });
+
+  afterEach(() => {
+    mongoUnit.drop();
+    dao.close();
+  });
+
+  it("it must return apples products, one of them with availability set to null", (done) => {
+    chai
+      .request(app)
+      .get("/api/farmers/67696f76616a6a6a31a23334/products?category=fruit&searchString=apple")
+      .end((err, res) => {
+        expect(err).to.be.null;
+        expect(res.status).to.be.equal(200);
+        expect(res.body.map((product) => product.name)).to.include.members(["Golden Delicious Apple", "Stark Delicious Apple", "Royal Gala Apple"]);
+        expect(res.body.filter((product) => product.name === "Royal Gala Apple").map((product) => product.availability)[0]).to.be.null;
+        expect(res.body.filter((product) => product.name !== "Royal Gala Apple").map((product) => product.availability)[0]).to.be.not.null;
+        expect(res.body.filter((product) => product.name !== "Royal Gala Apple").map((product) => product.availability)[1]).to.be.not.null;
+        done();
+      });
+  });
+
+  it("it must return only available apples products", (done) => {
+    chai
+      .request(app)
+      .get("/api/farmers/67696f76616a6a6a31a23334/products?category=fruit&searchString=apple&hasAvailabilitySet=true")
+      .end((err, res) => {
+        expect(err).to.be.null;
+        expect(res.status).to.be.equal(200);
+        expect(res.body.map((product) => product.name)).to.include.members(["Golden Delicious Apple", "Stark Delicious Apple"]);
+        expect(res.body.every((product) => product.availability !== null)).to.be.true;
+        done();
+      });
+  });
+
+  it("it must return only not available apples products", (done) => {
+    chai
+      .request(app)
+      .get("/api/farmers/67696f76616a6a6a31a23334/products?category=fruit&searchString=apple&hasAvailabilitySet=false")
+      .end((err, res) => {
+        expect(err).to.be.null;
+        expect(res.status).to.be.equal(200);
+        expect(res.body.map((product) => product.name)).to.include.members(["Royal Gala Apple"]);
+        expect(res.body.filter((product) => product.name === "Royal Gala Apple").map((product) => product.availability)[0]).to.be.null;
+        done();
+      });
+  });
+
+  it("it must return available fruit products", (done) => {
+    chai
+      .request(app)
+      .get("/api/farmers/67696f76616a6a6a31a23334/products?category=fruit&hasAvailabilitySet=true")
+      .end((err, res) => {
+        expect(err).to.be.null;
+        expect(res.status).to.be.equal(200);
+        expect(res.body.map((product) => product.name)).to.include.members(["Golden Delicious Apple", "Stark Delicious Apple", "Banana", "Pineapple"]);
+        expect(res.body.every((product) => product.availability !== null)).to.be.true;
+        done();
+      });
+  });
+
+  it("it must return bad request due to the farmerID not being a mongoID", (done) => {
+    chai
+      .request(app)
+      .get("/api/farmers/67696f7661s1a23334/products?category=fruit&hasAvailabilitySet=true")
+      .end((err, res) => {
+        expect(err).to.be.null;
+        expect(res.status).to.be.equal(400);
+        done();
+      });
+  });
+
+  it("it must fail when mongo fails", (done) => {
+    dao.close();
+    chai
+      .request(app)
+      .get("/api/farmers/67696f76616a6a6a31a23334/products?category=fruit&hasAvailabilitySet=true")
+      .end((err, res) => {
+        expect(err).to.be.null;
+        expect(res.status).to.be.equal(500);
+        done();
+      });
+  });
+
+  it("If there are no available products with applied filters then it should return an empty array", (done) => {
+    chai
+      .request(app)
+      .get("/api/farmers/4c7564443132333435363738/products?category=eggs&hasAvailabilitySet=true")
+      .end((err, res) => {
+        expect(err).to.be.null;
+        expect(res.status).to.be.equal(200);
+        expect(res.body).to.be.an("array");
+        expect(res.body.length).to.be.equal(0);
+        done();
+      });
+  });
+
+  it("If no filters are applied it should return every farmer products. Some of them (6) with availability not null.", (done) => {
+    chai
+      .request(app)
+      .get("/api/farmers/67696f76616a6a6a31a23334/products")
+      .end((err, res) => {
+        expect(err).to.be.null;
+        expect(res.status).to.be.equal(200);
+        expect(res.body).to.be.an("array");
+        expect(res.body.length).to.be.equal(10);
+        expect(res.body.filter((product) => product.availability !== null).length).to.be.equal(6);
+        done();
+      });
   });
 });

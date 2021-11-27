@@ -1,10 +1,13 @@
 import React, { useContext, useState } from "react";
+
 import { Alert, Container, Row } from "react-bootstrap";
+
 import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponent";
+import Button from "../ui-components/Button/Button";
+
+import { AuthContext } from "../contexts/AuthContextProvider";
 
 import "bootstrap/dist/css/bootstrap.min.css";
-import Button from "../ui-components/Button/Button";
-import { AuthContext } from "../contexts/AuthContextProvider";
 
 function UserLoginPage(props) {
   const authContext = useContext(AuthContext);

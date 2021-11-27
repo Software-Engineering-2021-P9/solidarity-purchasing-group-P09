@@ -556,8 +556,7 @@ describe("Clients API tests:", () => {
             ],
           })
           .end((err, res) => {
-            console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
-            console.log(res.body);
+
             expect(err).to.be.null;
             expect(res.status).to.be.equal(200);
             expect(res.body.clientID).to.be.equal("6187c957b288576ca26f8257");

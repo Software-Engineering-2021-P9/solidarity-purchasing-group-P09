@@ -15,16 +15,6 @@ exports.addFundToWallet = (db, clientID, increaseBy) => {
     .findOneAndUpdate(query, update, { returnDocument: "after" });
 };
 
-// ---------------
-// SubtractFundToWallet
-// ---------------
-
-exports.subtractFundToWallet = (db, clientID, subtractBy) => {
-    var query = { _id: ObjectID(clientID) };
-    var update = { $inc: { wallet: -subtractBy } };
-    return db.collection(clientCollectionName).findOneAndUpdate(query, update, { returnDocument: 'after' });
-}
-
 // -------------
 // getClientByID
 // -------------

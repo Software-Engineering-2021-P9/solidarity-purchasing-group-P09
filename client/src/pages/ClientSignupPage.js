@@ -59,8 +59,23 @@ function ClientForm(props) {
 
   
   const [client, setClient] = useState({ firstName: "", lastName: "",phoneNumber: "", email: " ", address:"", number:"", city:"", postCode:"" });
-        const handleChange = e => {
+  const cancelErrors=()=>{
+    setErrorMessage("");
+    setErrorMessage1("");
+    setErrorMessage2("");
+    setErrorMessage3("");
+    setErrorMessage4("");
+    setErrorMessage5("");
+    setErrorMessage6("");
+    setErrorMessage7("");
+    setErrorMessage8("");
+    setError(false);
+  }      
+  
+  const handleChange = e => {
             const { name, value } = e.target;
+            //all messages can be empty
+        cancelErrors();
             setClient(prevState => ({
                 ...prevState,
                 [name]: value
@@ -69,7 +84,8 @@ function ClientForm(props) {
 
     
         const handleCancel =(event)=>{
-          event.preventDefault();
+          //event.preventDefault();
+          cancelErrors();
         setClient({
         firstName:"",
         lastName:"",
@@ -110,7 +126,7 @@ function ClientForm(props) {
           clientParams1.number === '' || clientParams1.city === '' || clientParams1.postCode === ''  ){
             setErrorMessage("*Fill in all the fields!");
           }
-      if(!(validator.isEmail(clientParams1.email))){
+      if(!(validator.isEmail(clientParams1.email)) && !(validator.isEmpty(clientParams1.email))){
         setErrorMessage1("*The Email is invalid!");
       }
          if(!(validator.isMobilePhone(clientParams1.phoneNumber)) && !(validator.isEmpty(clientParams1.phoneNumber))){
@@ -149,15 +165,8 @@ function ClientForm(props) {
   const handleSubmit = (event) => {
     event.preventDefault();
     let valid = true
-    setErrorMessage("");
-    setErrorMessage1("");
-    setErrorMessage2("");
-    setErrorMessage3("");
-    setErrorMessage4("");
-    setErrorMessage5("");
-    setErrorMessage6("");
-    setErrorMessage7("");
-    setErrorMessage8("");
+    cancelErrors();
+ 
     valid = validate(client);
    try {
      if(valid){  
@@ -206,12 +215,12 @@ function ClientForm(props) {
               
             </Alert>
           ) : " "}
-      <Container flex className="content my-3">
+      <Container className="content my-3">
         <Form noValidate onSubmit={handleSubmit}>
           <h4 className="my-3">User Information</h4>
           <Row className="mb-3">
             <Form.Group as={Col} md="3" controlId="validationCustom01">
-              <Row flex className>
+              <Row className="d-flex">
                 <Col>
                   <Form.Label >First Name:</Form.Label>
                 </Col>
@@ -232,7 +241,7 @@ function ClientForm(props) {
                 </Col>
                 <Col>
                   <Form.Control value ={client.lastName}  onChange={handleChange} name = "lastName" 
-                    class="col-xs-4"
+                    className="col-xs-4"
                     required
                     type="text"
                    

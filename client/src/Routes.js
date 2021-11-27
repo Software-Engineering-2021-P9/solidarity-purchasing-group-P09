@@ -9,6 +9,7 @@ const shoppingCartRouteName = "shopping-cart-page";
 const employeeClientManagementRouteName = "employee-client-management-page";
 const employeeClientDetailsRouteName = "employee-client-details-page";
 const employeeClientSignupRouteName = "employee-client-signup-page";
+const clientSignupRouteName="client-signup-page";
 
 const routes = {
   [productListRouteName]: {
@@ -41,6 +42,12 @@ const routes = {
     exact: false,
     linkTitle: "Signup Client",
   },
+  [clientSignupRouteName]: {
+    path: "/client/signup",
+    component: ClientSignupPage,
+    exact: false,
+    linkTitle: "Register",
+  },
 };
 
 const employeeNavbarLinks = [
@@ -56,4 +63,5 @@ export {
   employeeClientSignupRouteName,
   routes,
   employeeNavbarLinks,
+  clientSignupRouteName,
 };

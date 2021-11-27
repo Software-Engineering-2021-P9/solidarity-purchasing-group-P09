@@ -66,11 +66,7 @@ const routes = {
   },
   [userLoginRouteName]: {
     path: "/user/login",
-    component: () => (
-      <ProtectedRoute requiredRoles={[]}>
-        <UserLoginPage />
-      </ProtectedRoute>
-    ),
+    component: () => <UserLoginPage />,
     exact: false,
     linkTitle: "Login",
   },

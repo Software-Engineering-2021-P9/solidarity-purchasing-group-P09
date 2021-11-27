@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useHistory, useParams, useLocation } from "react-router";
+import { useHistory, /*useParams,*/ useLocation } from "react-router";
 import { getAvailableNavbarLinks } from "../Routes";
 
 import {

@@ -38,10 +38,11 @@ exports.addFundToWalletValidatorChain = [
 exports.addFundToWalletHandler = async function (req, res, next) {
     let result;
     let orders;
+    let clientID = req.params.clientID
 
     //TOP UP WALLET
     try {
-        result = await dao.addFundToWallet(req.params.clientID, parseFloat(req.body.increaseBy));
+        result = await dao.addFundToWallet(clientID, parseFloat(req.body.increaseBy));
     }
     catch (err) {
         console.error(`AddFundToWalletHandler() -> couldn't top up wallet: ${err}`);
@@ -55,7 +56,7 @@ exports.addFundToWalletHandler = async function (req, res, next) {
     //GET "NOT COVERED" STATUS ORDERS, ORDER THEM FROM OLDER TO NEWER, 
     //AND CHANGE THEM TO "WAITING" STATE IF WALLET AFTER TOP UP IS SUFFICIENT 
     try{
-      orders = await dao.getOrdersByClientID(req.params.clientID);
+      orders = await dao.getOrdersByClientID(clientID);
     }catch(err){
       console.error(`getOrdersByClientID() -> couldn't retrieve client orders: ${err}`);
       return res.status(500).end(); 

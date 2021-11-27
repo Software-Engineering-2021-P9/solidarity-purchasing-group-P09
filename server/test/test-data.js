@@ -45,7 +45,7 @@ exports.ordersCollection = {
     },
     {
       _id: ObjectID("6187c957b288576ca26f8000"),
-      clientID: ObjectID("6187c957b288576ca26f8999"),
+      clientID: ObjectID("0000c957b288576ca26f8999"),
       products: [
         { productID: "6187c957b288576ca26f8258", quantity: 1 },
         { productID: "6187c957b288576ca26f8259", quantity: 2 },
@@ -56,7 +56,7 @@ exports.ordersCollection = {
     },
     {
       _id: ObjectID("6187c957b288576ca26f8001"),
-      clientID: ObjectID("6187c957b288576ca26f8999"),
+      clientID: ObjectID("0000c957b288576ca26f8999"),
       products: [
         { productID: "6187c957b288576ca26f8258", quantity: 1 },
         { productID: "6187c957b288576ca26f8259", quantity: 2 },
@@ -67,7 +67,7 @@ exports.ordersCollection = {
     },
     {
       _id: ObjectID("6187c957b288576ca26f8002"),
-      clientID: ObjectID("6187c957b288576ca26f8999"),
+      clientID: ObjectID("0000c957b288576ca26f8999"),
       products: [
         { productID: "6187c957b288576ca26f8258", quantity: 1 },
         { productID: "6187c957b288576ca26f8259", quantity: 2 },
@@ -110,7 +110,7 @@ exports.clientsCollection = {
       wallet: 0,
     },
     {
-      _id: ObjectID("6187c957b288576ca26f8999"),
+      _id: ObjectID("0000c957b288576ca26f8999"),
       email: "client3@test.com",
       role: "client",
       fullName: "Giorgio Mastrota",

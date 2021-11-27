@@ -547,9 +547,10 @@ describe("Clients API tests:", () => {
     });
 
     it("it should update the client wallet with not covered orders", (done) => {
+      mongoUnit.load(testData.ordersCollection);
       chai
         .request(app)
-        .patch("/api/clients/6187c957b288576ca26f8999/wallet")
+        .patch("/api/clients/0000c957b288576ca26f8999/wallet")
         .send({
           increaseBy: 100,
         })

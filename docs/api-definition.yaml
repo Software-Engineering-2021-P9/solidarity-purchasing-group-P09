@@ -551,6 +551,7 @@ definitions:
       - id
       - password
       - email
+      - role
       - fullName
       - phoneNumber
       - address
@@ -567,6 +568,9 @@ definitions:
         type: string
         format: email
         example: mariorossi@gmail.com
+      role:
+        type: string
+        default: client
       fullName:
         type: string
         maxLength: 35
@@ -588,6 +592,7 @@ definitions:
       - id
       - password
       - email
+      - role
       - fullname
     properties:
       id:
@@ -599,6 +604,9 @@ definitions:
       email:
         type: string
         format: email
+      role:
+        type: string
+        default: employee
       fullname:
         type: string
         maxLength: 35
@@ -610,6 +618,7 @@ definitions:
       - id
       - password
       - email
+      - role
       - fullName
       - address
     properties:
@@ -624,6 +633,9 @@ definitions:
         type: string
         format: email
         example: mariorossi@gmail.com
+      role:
+        type: string
+        default: farmer
       fullName:
         type: string
         maxLength: 35
@@ -804,6 +816,7 @@ definitions:
     required:
       - id
       - email
+      - role
       - fullName
       - address
       - phoneNumber
@@ -816,6 +829,9 @@ definitions:
         type: string
         format: email
         example: mariorossi@gmail.com
+      role:
+        type: string
+        default: client
       fullName:
         type: string
         maxLength: 35
@@ -837,6 +853,7 @@ definitions:
     required:
       - id
       - email
+      - role
       - fullname
     properties:
       id:
@@ -845,6 +862,9 @@ definitions:
       email:
         type: string
         format: email
+      role:
+        type: string
+        default: employee
       fullname:
         type: string
         maxLength: 35
@@ -855,6 +875,7 @@ definitions:
     required:
       - id
       - email
+      - role
       - fullName
       - address
     properties:
@@ -865,6 +886,9 @@ definitions:
         type: string
         format: email
         example: mariorossi@gmail.com
+      role:
+        type: string
+        default: farmer
       fullName:
         type: string
         maxLength: 35

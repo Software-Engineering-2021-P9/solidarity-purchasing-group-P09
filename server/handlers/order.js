@@ -57,6 +57,29 @@ exports.createOrderHandler = async function (req, res, next) {
     return res.status(404).end();
   }
 
+  //GET CLIENT WALLET
+  let client;
+
+  try {
+    client = await dao.getClientByID(req.body.clientID.toString());
+  } catch (err) {
+    return res.status(500).end();
+  }
+  if (!client) {
+    console.error(
+      `getClientByID() -> couldn't retrieve client`
+    );
+  }
+
+  //IF WALLET NOT ENOUGH SET THE STATE TO NOT COVERED
+  if(client.wallet < totalPrice){
+    try{
+      result = await dao.updateOrderStatus(result.insertedId, "not covered");
+    }catch(err){
+      return res.status(500).end();
+    }
+  }
+
   return res.json(Order.fromMongoJSON(result));
 };
 

@@ -53,3 +53,13 @@ exports.getOrderByID = async (db, orderID) => {
 exports.deleteOrder = async (db, orderID) => {
   return db.collection(orderCollectionName).deleteOne(ObjectId(orderID));
 };
+
+// -----------
+// UpdateOrderStatus
+// -----------
+
+exports.updateOrderStatus = (db, orderID, status) => {
+  var query = { _id: ObjectId(orderID) };
+  var update = { $set: {status: status} };
+  return db.collection(orderCollectionName).findOneAndUpdate(query, update, { returnDocument: 'after' });
+}

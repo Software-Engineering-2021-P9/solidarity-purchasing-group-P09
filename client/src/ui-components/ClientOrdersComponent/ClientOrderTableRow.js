@@ -7,8 +7,8 @@ import { useHistory } from "react-router";
 
 function setupStatusLabelAndRowButton(location, status, setModalIsOpen){
   let tableRowComponents = {
-    statusLabel: null,
-    rowButton: null
+    statusLabel: <td className='table-row-status-done'>{status}</td>,
+    rowButton: <td className='table-row'></td>
   };
 
   switch(status){
@@ -21,14 +21,9 @@ function setupStatusLabelAndRowButton(location, status, setModalIsOpen){
 
     case("NOT COVERED"):
       tableRowComponents.statusLabel = <td className='table-row-status-not-covered'>{status}</td>; 
-      /*if(location !== "/NotCoveredOrders")
-        tableRowComponents.rowButton = 
-          <td className='table-row'><RedButton text='Cover Order' onClick={() =>{}}/></td>;*/
       break;
 
     default:
-      tableRowComponents.statusLabel = <td className='table-row-status-done'>{status}</td>;
-      tableRowComponents.rowButton = <td className='table-row'></td>;
       break;
   }
   return tableRowComponents;

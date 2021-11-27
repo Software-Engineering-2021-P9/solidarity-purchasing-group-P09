@@ -49,7 +49,8 @@ exports.addFundToWalletHandler = async function (req, res, next) {
         return res.status(400).end();
     }
 
-    //GET CLIENT ORDERS IN "NOT COVERED" STATE, ORDER THEM BY OLDER TO NEWER, AND PAY WHAT THE WALLET CAN 
+    //GET "NOT COVERED" STATUS ORDERS, ORDER THEM FROM OLDER TO NEWER, 
+    //AND CHANGE THEM TO "WAITING" STATE IF WALLET AFTER TOP UP IS SUFFICIENT 
     try{
       orders = await dao.getOrdersByClientID(req.params.clientID);
     }catch(err){
@@ -69,15 +70,17 @@ exports.addFundToWalletHandler = async function (req, res, next) {
     let finalWalletValue = result.value.wallet;
 
     for(let i=0; i<orders.length; i++){
-      if(finalWalletValue >= orders[i].totalPrice){
-        finalWalletValue -= orders[i].totalPrice;
-        //TODO: CHANGE ORDER STATE TO PREPARED
-      }
-      else{
+      if(finalWalletValue < orders[i].totalPrice)
         break;
+      finalWalletValue -= orders[i].totalPrice;
+      try{
+        await dao.updateOrderStatus(orders[i]._id, "waiting");
+      }catch(err){
+        return res.status(500).end();
       }
     }
 
+    /*
     let subtractBy = result.value.wallet - finalWalletValue;
     if(subtractBy != 0){
       try {
@@ -93,8 +96,9 @@ exports.addFundToWalletHandler = async function (req, res, next) {
         return res.status(400).end();
       }
     }
+    */
 
-    return res.json({ newWalletValue: finalWalletValue});
+    return res.json({ newWalletValue: result.value.wallet});
 
 }
 

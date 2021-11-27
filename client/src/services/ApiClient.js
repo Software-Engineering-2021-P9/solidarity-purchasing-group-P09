@@ -278,36 +278,6 @@ export async function getOrders() {
         "-" +
         new Date().getUTCFullYear(),
     },
-    {
-      id: "118f10ce364006b8655df036",
-      clientId: "918d971d89d6240eb03742d7",
-      products: [{ productId: "118d971d89d6240eb03742d7", quantity: 3 }],
-      status: "NOT COVERED",
-      totalPrice: 15,
-      location: "corso Duca degli Abruzzi, 129, Torino",
-      createdAt:
-        new Date().getUTCMonth() +
-        1 +
-        "-" +
-        new Date().getUTCDate() +
-        "-" +
-        new Date().getUTCFullYear(),
-    },
-    {
-      id: "118f10ce364006bd655df000",
-      clientId: "918d971d89d6240eb03742d7",
-      products: [{ productId: "118d971d89d6240eb03742d7", quantity: 3 }],
-      status: "NOT COVERED",
-      totalPrice: 15,
-      location: "corso Duca degli Abruzzi, 129, Torino",
-      createdAt:
-        new Date().getUTCMonth() +
-        1 +
-        "-" +
-        new Date().getUTCDate() +
-        "-" +
-        new Date().getUTCFullYear(),
-    },
   ];
 
   return mockOrders;

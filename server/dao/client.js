@@ -1,7 +1,6 @@
 "use strict";
 
 const { ObjectID } = require("bson");
-const bcrypt = require("bcrypt");
 const clientCollectionName = "clients";
 
 // ---------------

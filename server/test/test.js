@@ -896,8 +896,8 @@ describe("User Login API tests:", () => {
           expect(err).to.be.null;
           expect(res.status).to.be.equal(200);
           expect(res.body).to.be.an("object");
-          expect(res.body.email).to.be.equal("employee1@gmail.com");
-          expect(res.body.password).to.not.exist();
+          expect(res.body.email).to.be.equal("employee1@test.com");
+          expect(res.body.password).not.to.exist;
           expect(res.body.role).to.be.equal("employee");
           expect(res.body.id).to.be.equal("6187c957b288576ca26f8257");
 
@@ -908,15 +908,15 @@ describe("User Login API tests:", () => {
       chai
         .request(app)
         .post("/api/users/login")
-        .send({ username: "farmer1@gmail.com", password: "123456789" })
+        .send({ username: "farmer1@test.com", password: "123456789" })
         .end((err, res) => {
           expect(err).to.be.null;
           expect(res.status).to.be.equal(200);
           expect(res.body).to.be.an("object");
-          expect(res.body.email).to.be.equal("farmer1@gmail.com");
-          expect(res.body.password).to.not.exist();
+          expect(res.body.email).to.be.equal("farmer1@test.com");
+          expect(res.body.password).not.to.exist;
           expect(res.body.role).to.be.equal("farmer");
-          expect(res.body.id).to.be.equal("6187c957b288576ca26f8257");
+          expect(res.body.id).to.be.equal("6187c957b288576ca24f8257");
 
           done();
         });

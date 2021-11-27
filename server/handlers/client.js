@@ -63,12 +63,10 @@ exports.addFundToWalletHandler = async function (req, res, next) {
     }
 
     orders = orders.filter(order => order.status == "not covered").sort((a, b)=>{
-        if(a.createdAt < b.createdAt)
+        if(a.createdAt <= b.createdAt)
           return -1;
         if(a.createdAt > b.createdAt)
           return 1;
-        if(a.createdAt == b.createdAt)
-          return 0;
       });
     
     let finalWalletValue = result.value.wallet;

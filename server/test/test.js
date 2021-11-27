@@ -552,13 +552,13 @@ describe("Clients API tests:", () => {
         .request(app)
         .patch("/api/clients/0000c957b288576ca26f8999/wallet")
         .send({
-          increaseBy: 100,
+          increaseBy: 5,
         })
         .end((err, res) => {
           expect(err).to.be.null;
           expect(res.status).to.be.equal(200);
           expect(res.body).to.be.an("object");
-          expect(res.body.newWalletValue).to.be.equal(100);
+          expect(res.body.newWalletValue).to.be.equal(15);
 
           done();
         });

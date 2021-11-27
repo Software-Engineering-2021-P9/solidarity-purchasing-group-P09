@@ -73,7 +73,7 @@ exports.ordersCollection = {
         { productID: "6187c957b288576ca26f8259", quantity: 2 },
       ],
       status: "not covered",
-      totalPrice: "2",
+      totalPrice: "20",
       createdAt: "2019-12-16T13:00:07.616Z",
     },
   ],
@@ -116,7 +116,7 @@ exports.clientsCollection = {
       fullName: "Giorgio Mastrota",
       phoneNumber: 3205755555,
       address: "via X,24 Torino,10538",
-      wallet: 0,
+      wallet: 10,
     },
   ],
 };

@@ -4,10 +4,10 @@ const session = require("express-session");
 const LocalStrategy = require("passport-local").Strategy;
 const bcrypt = require("bcrypt");
 
-const { ClientInfo } = require("../models/client_info");
-const { EmployeeInfo } = require("../models/employee_info");
-const { FarmerInfo } = require("../models/farmer_info");
 const { UserRoles } = require("../models/user_roles");
+const { ClientInfoResult } = require("../models/client_info_result");
+const { EmployeeInfoResult } = require("../models/employee_info_result");
+const { FarmerInfoResult } = require("../models/farmer_info_result");
 
 function checkMatchingPasswords(inputPassword, userPassword) {
   return bcrypt.compare(inputPassword, userPassword);
@@ -40,7 +40,21 @@ exports.passportStrategy = new LocalStrategy(async function (
     });
   }
 
-  return done(null, user);
+  let userResult;
+  switch (user.role) {
+    case UserRoles.CLIENT:
+      userResult = ClientInfoResult.fromClientInfo(user);
+      break;
+    case UserRoles.EMPLOYEE:
+      userResult = EmployeeInfoResult.fromEmployeeInfo(user);
+      break;
+    case UserRoles.FARMER:
+    default:
+      userResult = FarmerInfoResult.fromFarmerInfo(user);
+      break;
+  }
+
+  return done(null, userResult);
 });
 
 exports.serializeUser = (user, done) => {
@@ -50,23 +64,25 @@ exports.serializeUser = (user, done) => {
 exports.deserializeUser = async (id, done) => {
   const [userRole, userID] = id.split("-");
 
+  console.log(userID);
   let user;
   switch (userRole) {
     case UserRoles.CLIENT:
-      user = ClientInfo.fromMongoJSON(await dao.getClientByID(userID));
+      user = ClientInfoResult.fromMongoJSON(await dao.getClientByID(userID));
       break;
     case UserRoles.EMPLOYEE:
-      user = EmployeeInfo.fromMongoJSON(await dao.getEmployeeByID(userID));
+      user = EmployeeInfoResult.fromMongoJSON(
+        await dao.getEmployeeByID(userID)
+      );
       break;
     case UserRoles.FARMER:
     default:
-      user = FarmerInfo.fromMongoJSON(await dao.getFarmerByID(userID));
+      user = FarmerInfoResult.fromMongoJSON(await dao.getFarmerByID(userID));
       break;
   }
 
   if (!user) {
     return done(err, null);
   }
-  user["password"] = undefined;
   return done(null, user);
 };

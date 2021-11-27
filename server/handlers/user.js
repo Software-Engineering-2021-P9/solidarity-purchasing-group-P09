@@ -8,8 +8,6 @@ exports.loginHandler = (passport) =>
         return res.status(401).json(info);
       }
 
-      user["password"] = undefined;
-
       req.login(user, (err) => {
         if (err) {
           console.error(`UserLogin() -> error during user login: ${err}`);

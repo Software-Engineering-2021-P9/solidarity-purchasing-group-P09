@@ -11,7 +11,6 @@ exports.checkValidationErrorMiddleware = (req, res, next) => {
   next();
 };
 
-
 // shared validators
 
 exports.employeeIDPathValidator = param("employeeID").exists().isMongoId();
@@ -42,7 +41,6 @@ exports.passwordBodyValidator = body("password")
   .trim()
   .escape();
 
-
 // client validators
 exports.clientIDBodyValidator = body("clientID").isMongoId();
 
@@ -54,9 +52,7 @@ exports.addFundToWalletBodyValidator = body("increaseBy")
   .bail()
   .isFloat({ min: 0 });
 
-
 //products
-
 
 // product validators
 exports.productCategoryValidator = query("category")
@@ -66,7 +62,6 @@ exports.productCategoryValidator = query("category")
   .isString()
   .bail()
   .isIn(Object.values(ProductCategory));
-
 
 exports.searchStringValidator = query("searchString")
   .optional()
@@ -119,9 +114,9 @@ exports.orderProductQtysBodyValidator = body("products.*.quantity")
     max: 100,
   });
 
+exports.orderClientIDQueryValidator = query("clientID").isMongoId();
 
 //Clients
-
 
 exports.clientIDPathValidator = param("clientID").isMongoId();
 fullNameBodyValidator = body("fullName")

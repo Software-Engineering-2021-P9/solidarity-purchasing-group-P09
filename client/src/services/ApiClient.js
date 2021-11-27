@@ -1,8 +1,83 @@
-import Employee from "./models/Employee";
-import ClientInfo from "./models/ClientInfo";
+import EmployeeInfoResult from "./models/EmployeeInfoResult";
+import ClientInfoResult from "./models/ClientInfoResult";
+import FarmerInfoResult from "./models/FarmerInfoResult";
 import Product from "./models/Product";
-import Order from "./models/Order"; 
+import Order from "./models/Order";
+import UserRoles from "./models/UserRoles";
 
+// ----
+// Auth
+// ----
+
+export async function loginUser(email, password) {
+  let response = await fetch("/api/users/login", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ username: email, password: password }),
+  });
+
+  switch (response.status) {
+    case 200:
+      let responseBody = await response.json();
+
+      switch (responseBody.role) {
+        case UserRoles.CLIENT:
+          return ClientInfoResult.fromJSON(responseBody);
+        case UserRoles.EMPLOYEE:
+          return EmployeeInfoResult.fromJSON(responseBody);
+        case UserRoles.FARMER:
+        default:
+          return FarmerInfoResult.fromJSON(responseBody);
+      }
+    case 400:
+      throw new Error("Validation error occurred");
+    case 401:
+      throw new Error("Unauthorized");
+    case 500:
+      throw new Error("Internal Server Error");
+    default:
+      throw new Error("An error occurred during user login");
+  }
+}
+
+export async function getCurrentUser() {
+  let response = await fetch("/api/users/current");
+
+  switch (response.status) {
+    case 200:
+      let responseBody = await response.json();
+
+      switch (responseBody.role) {
+        case UserRoles.CLIENT:
+          return ClientInfoResult.fromJSON(responseBody);
+        case UserRoles.EMPLOYEE:
+          return EmployeeInfoResult.fromJSON(responseBody);
+        case UserRoles.FARMER:
+        default:
+          return FarmerInfoResult.fromJSON(responseBody);
+      }
+    case 204:
+      return null;
+    default:
+      throw new Error("An error occurred during user login");
+  }
+}
+
+export async function logoutUser() {
+  let response = await fetch("/api/users/current", {
+    method: "DELETE",
+  });
+
+  switch (response.status) {
+    case 200:
+    case 204:
+      return;
+    default:
+      throw new Error("An error occurred during user login");
+  }
+}
 
 // --------
 // Employee
@@ -16,7 +91,7 @@ export async function getEmployeeByID(employeeID) {
       throw new Error("Validation error occurred");
     case 200:
       let responseBody = await response.json();
-      return Employee.fromJSON(responseBody);
+      return EmployeeInfoResult.fromJSON(responseBody);
     default:
       throw new Error("An error occurred during employee fetch");
   }
@@ -35,7 +110,9 @@ export async function findClients(searchString) {
   switch (response.status) {
     case 200:
       let responseBody = await response.json();
-      return responseBody.map((clientJson) => ClientInfo.fromJSON(clientJson));
+      return responseBody.map((clientJson) =>
+        ClientInfoResult.fromJSON(clientJson)
+      );
     case 400:
       throw new Error("Validation error occurred");
     case 401:
@@ -53,7 +130,7 @@ export async function getClientByID(clientID) {
   switch (response.status) {
     case 200:
       let responseBody = await response.json();
-      return ClientInfo.fromJSON(responseBody);
+      return ClientInfoResult.fromJSON(responseBody);
     case 400:
       throw new Error("Validation error occurred");
     case 401:
@@ -243,7 +320,7 @@ export async function createOrder(clientID, products) {
 // --------
 
 export async function getProductsByIDs(productIDs) {
-  let productIDsString = productIDs.join(","); 
+  let productIDsString = productIDs.join(",");
   const response = await fetch("/api/products?ids=" + productIDsString);
 
   switch (response.status) {
@@ -257,5 +334,3 @@ export async function getProductsByIDs(productIDs) {
       throw new Error("An error occurred during products fetch");
   }
 }
-
-

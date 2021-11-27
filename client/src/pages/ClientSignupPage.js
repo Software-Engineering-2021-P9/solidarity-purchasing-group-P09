@@ -74,7 +74,7 @@ function ClientForm(props) {
   
   const handleChange = e => {
             const { name, value } = e.target;
-            //all messages can be empty
+           
         cancelErrors();
             setClient(prevState => ({
                 ...prevState,
@@ -84,7 +84,7 @@ function ClientForm(props) {
 
     
         const handleCancel =(event)=>{
-          //event.preventDefault();
+          event.preventDefault();
           cancelErrors();
         setClient({
         firstName:"",

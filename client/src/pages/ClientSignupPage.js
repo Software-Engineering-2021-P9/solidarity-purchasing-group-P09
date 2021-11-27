@@ -3,15 +3,11 @@ import { employeeNavbarLinks } from "../Routes";
 import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponent";
 import "../App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { useState, useEffect} from "react";
-import { Button, Col, Form ,Alert, } from "react-bootstrap";
-import { Link, Redirect} from "react-router-dom";
+import {Redirect} from "react-router-dom";
 import { createClient } from "../services/ApiClient";
 
 import { Col, Form ,Alert, Row, Container} from "react-bootstrap";
-import { Redirect} from "react-router-dom";
 
-import { createClient } from "../services/ApiClient";
 import  Button  from "../ui-components/Button/Button";
 import validator from 'validator';
 
@@ -244,8 +240,6 @@ function ClientForm(props) {
             <Form.Group as={Col} md="3" controlId="validationCustom01">
               <Row>
                 <Col>
-           class="col-xs-4"
-
                   <Form.Label>Last Name:</Form.Label>
                 </Col>
                 <Col>

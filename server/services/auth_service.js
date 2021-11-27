@@ -64,7 +64,6 @@ exports.serializeUser = (user, done) => {
 exports.deserializeUser = async (id, done) => {
   const [userRole, userID] = id.split("-");
 
-  console.log(userID);
   let user;
   switch (userRole) {
     case UserRoles.CLIENT:

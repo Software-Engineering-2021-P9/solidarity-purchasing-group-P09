@@ -22,8 +22,10 @@ exports.getProductsByIDValidatorChain = [
 
 exports.getProductsByIDHandler = async function (req, res, next) {
   // If the ids query parameter is set, retrieve the products associated to the ids in the list
+  let productsResult;
+  let products = [];
+
   if (req.query.ids) {
-    let productsResult;
     try {
       productsResult = await dao.getProductsByIDs(req.query.ids);
     } catch (err) {
@@ -31,7 +33,6 @@ exports.getProductsByIDHandler = async function (req, res, next) {
       return res.status(500).end();
     }
 
-    let products;
     try {
       products = productsResult.map((product) =>
         Product.fromMongoJSON({ ...product })
@@ -48,7 +49,7 @@ exports.getProductsByIDHandler = async function (req, res, next) {
   }
 
   // Else, find the available products by the given searchString and category
-  let productsResult;
+
   try {
     productsResult = await dao.findProducts(
       req.query.searchString,
@@ -72,7 +73,6 @@ exports.getProductsByIDHandler = async function (req, res, next) {
     return res.status(500).end();
   }
 
-  let products = [];
   productsAvailabilitiesResult.forEach((productAvailability) => {
     let product = Product.fromMongoJSON(
       productsResult.find((p) => {

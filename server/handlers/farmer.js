@@ -32,6 +32,7 @@ exports.getFarmerProductsHandler = async function (req, res, next) {
     return res.status(500).end();
   }
 
+  let productsAvailabilitiesResult;
   try {
     productsAvailabilitiesResult = await dao.getProductsAvailability(
       productsResult.map((product) => product._id),
@@ -60,11 +61,11 @@ exports.getFarmerProductsHandler = async function (req, res, next) {
     products.push(product);
   });
 
-  let availabilitySet;
-  if (req.query.hasAvailabilitySet) {
-    req.query.hasAvailabilitySet == "true"
-      ? (availabilitySet = true)
-      : (availabilitySet = false);
+  let availabilitySet = req.query.hasAvailabilitySet;
+  if (availabilitySet === "true") {
+    availabilitySet = true;
+  } else if (availabilitySet === "false") {
+    availabilitySet = false;
   }
 
   if (availabilitySet === true) {
@@ -77,84 +78,5 @@ exports.getFarmerProductsHandler = async function (req, res, next) {
     });
   }
 
-  /*
-  let listOfAvailableProductIDs = result.map((availability) =>
-    availability.productID.toString()
-  );
-
-  if (!req.query.hasAvailabilitySet) {
-    for (const productID in productsMongoJSON) {
-      if (listOfAvailableProductIDs.includes(productID)) {
-        try {
-          products.push(
-            Product.fromMongoJSON({
-              ...productsMongoJSON[productID],
-              availability: ProductAvailability.fromMongoJSON(
-                result.find((el) => el.productID == productID)
-              ),
-            })
-          );
-        } catch (err) {
-          console.error(
-            `fromMongoJSON() -> couldn't convert Mongo result to Product: ${err}`
-          );
-          return res.status(500).end();
-        }
-      } else {
-        try {
-          products.push(
-            Product.fromMongoJSON({ ...productsMongoJSON[productID] })
-          );
-        } catch (err) {
-          console.error(
-            `fromMongoJSON() -> couldn't convert Mongo result to Product: ${err}`
-          );
-          return res.status(500).end();
-        }
-      }
-    }
-
-    return res.json(products);
-  }
-
-  const availabilitySet =
-    req.query.hasAvailabilitySet === "true" ? true : false;
-  if (availabilitySet === true) {
-    for (const productID in productsMongoJSON) {
-      if (listOfAvailableProductIDs.includes(productID)) {
-        try {
-          products.push(
-            Product.fromMongoJSON({
-              ...productsMongoJSON[productID],
-              availability: ProductAvailability.fromMongoJSON(
-                result.find((el) => el.productID == productID)
-              ),
-            })
-          );
-        } catch (err) {
-          console.error(
-            `fromMongoJSON() -> couldn't convert Mongo result to Product: ${err}`
-          );
-          return res.status(500).end();
-        }
-      }
-    }
-  } else {
-    for (const productID in productsMongoJSON) {
-      if (!listOfAvailableProductIDs.includes(productID)) {
-        try {
-          products.push(
-            Product.fromMongoJSON({ ...productsMongoJSON[productID] })
-          );
-        } catch (err) {
-          console.error(
-            `fromMongoJSON() -> couldn't convert Mongo result to Product: ${err}`
-          );
-          return res.status(500).end();
-        }
-      }
-    }
-  }
-*/
   return res.json(products);
 };

@@ -1,7 +1,6 @@
 var dao = require("../dao/dao");
 const { ClientInfo } = require("../models/client_info");
 
-
 const {
   clientIDPathValidator,
   addFundToWalletBodyValidator,
@@ -83,7 +82,7 @@ exports.createClientHandlerValidatorChain = [
   addressBodyValidator,
 ];
 
-exports.signupClientHandlerValidatorChain = [
+exports.signupClientValidatorChain = [
   fullNameBodyValidator,
   phoneNumberBodyValidator,
   emailBodyValidator,
@@ -123,10 +122,9 @@ exports.createClientHandler = async function (req, res, next) {
 
 exports.signupClientHandler = async function (req, res, next) {
   // Insert the new client
-  
+
   let result;
   try {
-   
     result = await dao.signupClient(
       req.body.fullName.toString(),
       req.body.phoneNumber.toString(),

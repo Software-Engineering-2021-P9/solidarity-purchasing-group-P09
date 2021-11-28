@@ -168,14 +168,12 @@ export async function addFundToWallet(clientID, increaseBy) {
 }
 
 export async function createClient(client) {
- 
   const response = await fetch("http://localhost:3000/api/clients", {
-    method : 'POST',
-    headers: {'Content-Type': 'application/json'},
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
 
-    body: JSON.stringify({...client})
+    body: JSON.stringify({ ...client }),
   });
-  
 
   switch (response.status) {
     case 400:
@@ -187,18 +185,15 @@ export async function createClient(client) {
     default:
       throw new Error("An error occurred during client fetch");
   }
-
 }
 
-export async function createClientAccount(client) {
- 
+export async function signupClient(client) {
   const response = await fetch("http://localhost:3000/api/clients/signup", {
-    method : 'POST',
-    headers: {'Content-Type': 'application/json'},
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
 
-    body: JSON.stringify({...client})
+    body: JSON.stringify({ ...client }),
   });
-  
 
   switch (response.status) {
     case 400:
@@ -210,7 +205,6 @@ export async function createClientAccount(client) {
     default:
       throw new Error("An error occurred during client fetch");
   }
-
 }
 
 // --------

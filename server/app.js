@@ -5,6 +5,8 @@ var logger = require("morgan");
 var cors = require("cors");
 const passport = require("passport");
 
+
+
 var dao = require("./dao/dao");
 
 const {
@@ -38,6 +40,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(cors());
+
 
 passport.use(passportStrategy);
 passport.serializeUser(serializeUser);
@@ -108,9 +111,9 @@ app.post(
 
 app.post(
   buildAPIPath("/clients/signup"),
-  clientHandlers.createClientAccountHandlerValidatorChain,
+  clientHandlers.signupClientHandlerValidatorChain,
   checkValidationErrorMiddleware,
-  clientHandlers.createClientAccountHandler
+  clientHandlers.signupClientHandler
 );
 
 // ----------

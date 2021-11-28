@@ -2,6 +2,8 @@
 
 const { ObjectID } = require("bson");
 const clientCollectionName = "clients";
+const bcrypt = require("bcrypt");
+const saltRounds = 10;
 
 // ---------------
 // AddFundToWallet
@@ -69,14 +71,23 @@ exports.createClient = (db, fullName, phoneNumber, email, address, wallet) => {
   });
 };
 
-exports.createClientAccount = (db, fullName, phoneNumber, email, password, address, wallet) => {
+exports.signupClient = async (
+  db,
+  fullName,
+  phoneNumber,
+  email,
+  password,
+  address,
+  wallet
+) => {
+  const hashedPwd = await bcrypt.hash(password, saltRounds);
   return db.collection(clientCollectionName).insertOne({
     fullName: fullName,
     phoneNumber: phoneNumber,
     email: email,
-    password: password,
+    password: hashedPwd,
     address: address,
     wallet: wallet,
   });
-};
 
+};

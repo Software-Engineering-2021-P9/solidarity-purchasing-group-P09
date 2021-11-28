@@ -1,5 +1,7 @@
 var dao = require("../dao/dao");
 const { ClientInfo } = require("../models/client_info");
+
+
 const {
   clientIDPathValidator,
   addFundToWalletBodyValidator,
@@ -81,7 +83,7 @@ exports.createClientHandlerValidatorChain = [
   addressBodyValidator,
 ];
 
-exports.createClientAccountHandlerValidatorChain = [
+exports.signupClientHandlerValidatorChain = [
   fullNameBodyValidator,
   phoneNumberBodyValidator,
   emailBodyValidator,
@@ -119,11 +121,13 @@ exports.createClientHandler = async function (req, res, next) {
   return res.json(ClientInfo.fromMongoJSON(result));
 };
 
-exports.createClientAccountHandler = async function (req, res, next) {
+exports.signupClientHandler = async function (req, res, next) {
   // Insert the new client
+  
   let result;
   try {
-    result = await dao.createClientAccount(
+   
+    result = await dao.signupClient(
       req.body.fullName.toString(),
       req.body.phoneNumber.toString(),
       req.body.email.toString(),

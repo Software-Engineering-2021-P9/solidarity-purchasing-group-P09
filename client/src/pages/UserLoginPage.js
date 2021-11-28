@@ -7,6 +7,7 @@ import { AskToRegister } from "../ui-components/LoginFormComponent/AskToRegister
 import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponent";
 import { AuthContext } from "../contexts/AuthContextProvider";
 import "bootstrap/dist/css/bootstrap.min.css";
+var config = require("../ui-components/LoginFormComponent/config.json");
 
 function UserLoginPage(props) {
   const [username, setUsername] = useState("");
@@ -15,7 +16,7 @@ function UserLoginPage(props) {
   let data = { username: username, password: password };
   let rules = {
     username: "required",
-    password: "required|min:5",
+    password: config.secret,
   };
   let validation = new Validator(data, rules, {
     required: "Enter your :attribute",

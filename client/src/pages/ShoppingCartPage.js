@@ -113,12 +113,12 @@ function ShoppingCartPage(props) {
   const handleShow = () => setShow(true);
   const handleSubmit = () => {
     //convert back to array format for backend side!
-    var products = Array.from(cart, ([productID, quantity]) => ({
+    var orderProducts = Array.from(cart, ([productID, quantity]) => ({
       productID,
       quantity,
     }));
     //call create order
-    createOrder(client.id, products);
+    createOrder(client.id, orderProducts);
     handleClose();
     setSubmitted(true);
   };

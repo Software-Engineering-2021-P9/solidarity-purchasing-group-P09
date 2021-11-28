@@ -52,8 +52,8 @@ function ClientForm(props) {
   const [errorMessage6, setErrorMessage6] = useState("");
   const [errorMessage7, setErrorMessage7] = useState("");
   const [errorMessage8, setErrorMessage8] = useState("");
+  const [errorMessage9, setErrorMessage9] = useState("");
   const [errorPassword, setErrorPassword] = useState("");
-  const [showErrorPassword, setShowErrorPassword] = useState(false);
 
   const [client, setClient] = useState({
     firstName: "",
@@ -77,8 +77,8 @@ function ClientForm(props) {
     setErrorMessage6("");
     setErrorMessage7("");
     setErrorMessage8("");
+    setErrorMessage9("");
     setError(false);
-    setShowErrorPassword(false);
     setErrorPassword("");
   };
 
@@ -127,7 +127,8 @@ function ClientForm(props) {
       !validator.isAlpha(clientParams.city, "it-IT", { ignore: "s" }) ||
       !validator.isAlpha(clientParams.address, "it-IT", { ignore: "s" }) ||
       !validator.isNumeric(clientParams.number) ||
-      !validator.isNumeric(clientParams.postCode) ||  !validator.isLength(clientParams.password, {min: 6})
+      !validator.isNumeric(clientParams.postCode) ||
+      !validator.isLength(clientParams.password, { min: 6 }) || !validator.isLength(clientParams.firstName + clientParams.lastName , { max: 35 })
     ) {
       return false;
     }
@@ -161,10 +162,10 @@ function ClientForm(props) {
     }
   };
   const updateErrorMessage2 = function (clientParams2) {
-    if ((
+    if (
       !validator.isAlpha(clientParams2.firstName, "it-IT", { ignore: "s" }) &&
-      !validator.isEmpty(clientParams2.firstName)))
-    {
+      !validator.isEmpty(clientParams2.firstName)
+    ) {
       setErrorMessage3("*The first name is incorrect!  ");
     }
     if (
@@ -202,12 +203,11 @@ function ClientForm(props) {
       setErrorMessage8("*The postCode must be a number!  ");
     }
 
-    if (
-      !validator.isLength(clientParams3.password, {min: 6})
-     
-    ) {
-      setShowErrorPassword(true);
+    if (!validator.isLength(clientParams3.password, { min: 6 }) && !validator.isEmpty(clientParams3.password)) {
       setErrorPassword("*The password should be minimum 6 characters!  ");
+    }
+    if(!validator.isLength(clientParams3.firstName + clientParams3.lastName , { max: 35 })){
+      setErrorMessage9("The length of first name and last name must be less than 36!");
     }
   };
 
@@ -215,14 +215,14 @@ function ClientForm(props) {
     event.preventDefault();
     let valid = true;
     cancelErrors();
+    valid = validate(client);
     if (props.authContext.currentUser === null) {
       if (client.password.localeCompare(client.passwordConfirmation)) {
-        setShowErrorPassword(true);
+        setError(true);
+        valid = false;
         setErrorPassword("Passwords do not match!");
       }
     }
-
-    valid = validate(client);
     try {
       if (valid) {
         let user = {
@@ -239,14 +239,17 @@ function ClientForm(props) {
             client.postCode,
           wallet: 0,
         };
-        if (props.authContext.currentUser === null) {
-          user = { ...user, password: client.password };
-          signupClient(user);
-        } else {
-          createClient(user);
-        }
-        setSuccess(true);
-        setClient("");
+      
+          if (props.authContext.currentUser === null) {
+            user = { ...user, password: client.password };
+
+            signupClient(user);
+          } else {
+            createClient(user);
+          }
+          setSuccess(true);
+          setClient("");
+        
       } else {
         setError(true);
         updateErrorMessage1(client);
@@ -258,8 +261,6 @@ function ClientForm(props) {
       setErrorMessage("Error in the form!");
     }
   };
-    
-                 
 
   return (
     <>
@@ -275,12 +276,13 @@ function ClientForm(props) {
           {errorMessage6}
           {errorMessage7}
           {errorMessage8}
+          {errorMessage9}
           {errorPassword}
         </Alert>
       ) : (
         " "
       )}
-     
+
       <Container className="content my-3">
         <Form noValidate onSubmit={handleSubmit}>
           <h4 className="my-3">User Information</h4>
@@ -298,12 +300,8 @@ function ClientForm(props) {
                     required
                     type="text"
                   />
-         
                 </Col>
-             
-
               </Row>
-          
             </Form.Group>
           </Row>
 
@@ -399,7 +397,6 @@ function ClientForm(props) {
                         type="password"
                       />
                     </Col>
-                  
                   </Row>
                 </Form.Group>
               </Row>
@@ -452,48 +449,45 @@ function ClientForm(props) {
             </Row>
 
             <Row className="mb-3">
-            <Form.Group as={Col} md="3" controlId="validationCustom04">
-              <Row>
-                <Col>
-                  <Form.Label>City:</Form.Label>
-                </Col>
-                <Col>
-                  <Form.Control
-                    value={client.city}
-                    onChange={handleChange}
-                    name="city"
-                    type="text"
-                    required
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    Please provide a valid city.
-                  </Form.Control.Feedback>
-                </Col>
-              </Row>
-            </Form.Group>
+              <Form.Group as={Col} md="3" controlId="validationCustom04">
+                <Row>
+                  <Col>
+                    <Form.Label>City:</Form.Label>
+                  </Col>
+                  <Col>
+                    <Form.Control
+                      value={client.city}
+                      onChange={handleChange}
+                      name="city"
+                      type="text"
+                      required
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      Please provide a valid city.
+                    </Form.Control.Feedback>
+                  </Col>
+                </Row>
+              </Form.Group>
 
-
-
-
-            <Form.Group as={Col} md="3" controlId="validationCustom05">
-              <Row>
-                <Col>
-                  <Form.Label className="mx-3"> Post code: </Form.Label>
-                </Col>
-                <Col>
-                  <Form.Control
-                    value={client.postCode}
-                    onChange={handleChange}
-                    name="postCode"
-                    type="text"
-                    required
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    Please provide a valid post code.
-                  </Form.Control.Feedback>
-                </Col>
-              </Row>
-            </Form.Group>
+              <Form.Group as={Col} md="3" controlId="validationCustom05">
+                <Row>
+                  <Col>
+                    <Form.Label className="mx-3"> Post code: </Form.Label>
+                  </Col>
+                  <Col>
+                    <Form.Control
+                      value={client.postCode}
+                      onChange={handleChange}
+                      name="postCode"
+                      type="text"
+                      required
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      Please provide a valid post code.
+                    </Form.Control.Feedback>
+                  </Col>
+                </Row>
+              </Form.Group>
             </Row>
           </Row>
 

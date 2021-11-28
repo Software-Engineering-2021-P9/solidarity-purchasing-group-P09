@@ -8,7 +8,6 @@ import {
   FormControl,
   Modal,
   Container,
-  Alert
 } from "react-bootstrap";
 import { getAvailableNavbarLinks } from "../Routes";
 

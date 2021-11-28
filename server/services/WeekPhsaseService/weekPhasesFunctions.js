@@ -10,22 +10,17 @@ exports.getTrueActivePhase = ()=>{
         if(phase.isDateWithinInterval(now))
             return phase;
     }
-    return null;
 };
 
 exports.getCurrentPhaseID = (activePhase, phaseIDOverride)=>{
     if(phaseIDOverride !== null)
         return phaseIDOverride;
-    if(activePhase !== null)
-        return activePhase.id;
-    return null;
+    return activePhase.id;
 };
 
 exports.setPhaseIDOverride = (phaseID, phaseIDOverride, cronTask)=>{
     //this means we are setting the time to "not virtual"
     if(phaseID === null){ 
-        if(phaseIDOverride === null)
-            return phaseIDOverride;
         phaseIDOverride = null;
         cronTask.start();
         return phaseIDOverride;
@@ -37,4 +32,5 @@ exports.setPhaseIDOverride = (phaseID, phaseIDOverride, cronTask)=>{
         weekPhases.weekPhases.filter((phase)=> phaseID===phase.id )[0].handler();
         return phaseIDOverride;
     }
+    return phaseIDOverride;
   };

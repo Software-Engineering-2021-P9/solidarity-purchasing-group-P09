@@ -242,85 +242,26 @@ export async function findProducts(category, searchString) {
 // Orders
 // ------
 
-export async function getOrders() {
+export async function getOrders(clientID) {
   // Returns mock data right now
 
-  const mockOrders = [
-    {
-      id: "618f10ce364006b8655df032",
-      clientId: "918d971d89d6240eb03742d7",
-      products: [
-        { productId: "718d971d89d6240eb03742d7", quantity: 10 },
-        { productId: "298d971d89d6240eb03742d7", quantity: 1 },
-        { productId: "318d971d89d6240eb03742d7", quantity: 2 },
-        { productId: "418d971d89d6240eb03742d7", quantity: 3 },
-      ],
-      status: "PREPARED",
-      totalPrice: 31,
-      location: "corso Duca degli Abruzzi, 129, Torino",
-      createdAt:
-        new Date().getUTCMonth() +
-        1 +
-        "-" +
-        new Date().getUTCDate() +
-        "-" +
-        new Date().getUTCFullYear(),
-    },
+  let response = await fetch("/api/orders?clientID=" + clientID);
 
-    {
-      id: "718f10ce364006b8655df032",
-      clientId: "918d971d89d6240eb03742d7",
-      products: [
-        { productId: "718d971d89d6240eb03742d7", quantity: 10 },
-        { productId: "298d971d89d6240eb03742d7", quantity: 1 },
-        { productId: "318d971d89d6240eb03742d7", quantity: 2 },
-        { productId: "418d971d89d6240eb03742d7", quantity: 3 },
-      ],
-      status: "DONE",
-      totalPrice: 14,
-      location: "corso Duca degli Abruzzi, 129, Torino",
-      createdAt:
-        new Date().getUTCMonth() +
-        1 +
-        "-" +
-        new Date().getUTCDate() +
-        "-" +
-        new Date().getUTCFullYear(),
-    },
-
-    {
-      id: "818f10ce364006b8655df032",
-      clientId: "918d971d89d6240eb03742d7",
-      products: [{ productId: "718d971d89d6240eb03742d7", quantity: 3 }],
-      status: "PREPARED",
-      totalPrice: 7,
-      location: "corso Duca degli Abruzzi, 129, Torino",
-      createdAt:
-        new Date().getUTCMonth() +
-        1 +
-        "-" +
-        new Date().getUTCDate() +
-        "-" +
-        new Date().getUTCFullYear(),
-    },
-    {
-      id: "118f10ce364006b8655df032",
-      clientId: "918d971d89d6240eb03742d7",
-      products: [{ productId: "118d971d89d6240eb03742d7", quantity: 3 }],
-      status: "PREPARED",
-      totalPrice: 15,
-      location: "corso Duca degli Abruzzi, 129, Torino",
-      createdAt:
-        new Date().getUTCMonth() +
-        1 +
-        "-" +
-        new Date().getUTCDate() +
-        "-" +
-        new Date().getUTCFullYear(),
-    },
-  ];
-
-  return mockOrders;
+  switch (response.status) {
+    case 200:
+      let responseBody = await response.json();
+      return responseBody.map((order) => Order.fromJSON(order));
+    case 400:
+      throw new Error(
+        "Bad request: the request contained invalid parameter " + clientID
+      );
+    case 401:
+      throw new Error("Unauthorized");
+    case 500:
+      throw new Error("Internal Server Error");
+    default:
+      throw new Error("An error occurred during orders search");
+  }
 }
 
 export async function updateStatus(status) {
@@ -374,3 +315,31 @@ export async function getProductsByIDs(productIDs) {
       throw new Error("An error occurred during products fetch");
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

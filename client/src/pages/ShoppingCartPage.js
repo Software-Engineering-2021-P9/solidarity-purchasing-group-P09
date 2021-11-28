@@ -97,7 +97,7 @@ function ShoppingCartPage(props) {
       </Row>
       <Row>
         <ShoppingCartTitle
-          client={clientID}
+          client={location.state.clientID}
           getClientByID={getClientByID}
         />
       </Row>

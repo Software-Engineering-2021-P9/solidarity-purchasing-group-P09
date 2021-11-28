@@ -16,6 +16,7 @@ const employeeClientDetailsRouteName = "employee-client-details-page";
 const employeeClientSignupRouteName = "employee-client-signup-page";
 const userLoginRouteName = "user-login-page";
 const userLogoutRouteName = "user-logout-page";
+const clientDetailsRouteName = "current-client-details-page"
 
 const routes = {
   [productListRouteName]: {
@@ -54,6 +55,16 @@ const routes = {
     exact: false,
     linkTitle: "Show Client Details",
   },
+  [clientDetailsRouteName]: {
+    path: "/currentClient",
+    component: () => (
+      <ProtectedRoute requiredRoles={[UserRoles.CLIENT]}>
+        <ClientDetailsPage />
+      </ProtectedRoute>
+    ),
+    exact: false,
+    linkTitle: "My Page",
+  },
   [employeeClientSignupRouteName]: {
     path: "/employee/signupClient",
     component: () => (
@@ -81,7 +92,7 @@ const routes = {
 function getAvailableNavbarLinks(loggedUser) {
   switch (loggedUser?.role) {
     case UserRoles.CLIENT:
-      return [userLogoutRouteName];
+      return [userLogoutRouteName, clientDetailsRouteName];
     case UserRoles.EMPLOYEE:
       return [
         employeeClientManagementRouteName,
@@ -101,6 +112,7 @@ export {
   employeeClientManagementRouteName,
   employeeClientDetailsRouteName,
   employeeClientSignupRouteName,
+  clientDetailsRouteName,
   routes,
   getAvailableNavbarLinks,
 };

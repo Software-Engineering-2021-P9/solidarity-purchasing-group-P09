@@ -166,7 +166,7 @@ function ShoppingCartPage(props) {
         <Redirect
           to={{
             pathname: "/employee/clients/" + location.state.clientID,
-            state: { orderAmount: amount },
+            state: { showOrderAlert: true },
           }}
         />
       ) : (
@@ -175,8 +175,8 @@ function ShoppingCartPage(props) {
       {submitted && authContext.currentUser.role === UserRoles.CLIENT ? (
         <Redirect
           to={{
-            pathname: "/",
-            state: { showOrderAlert: true, shoppingCart: new Map() },
+            pathname: "/currentClient",
+            state: { showOrderAlert: true, shoppingCart: new Map(), },
           }}
         />
       ) : (

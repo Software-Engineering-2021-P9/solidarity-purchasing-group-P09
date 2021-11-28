@@ -28,15 +28,18 @@ import { AuthContext } from "../contexts/AuthContextProvider";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../ui-components/Title.css";
+import UserRoles from "../services/models/UserRoles";
 
 function ClientDetailsPage(props) {
   const params = useParams();
-  const clientID = params.id;
+
   const [show, setShow] = useState(true);
 
   const history = useHistory();
   const location = useLocation();
   const authContext = useContext(AuthContext);
+
+  const clientID = params.id ? params.id : authContext.currentUser.id;
 
   const [isInitialized, setIsInitialized] = useState(false);
   const [mustReload, setMustReload] = useState(false);
@@ -139,27 +142,33 @@ function ClientDetailsPage(props) {
             <h1 className='title'>Client Details</h1>
           </Row>
           <Row className='justify-content-around pt-2'>
-            <Col md='5' className='ms-5'>
+            <Col className='ms-5'>
               <ClientDetails clientInfo={clientInfo} />
             </Col>
+
+            {authContext.currentUser.role===UserRoles.EMPLOYEE ? 
             <Col md='5'>
-              <InputGroup className='mb-3 pt-4'>
-                <FormControl
-                  type='number'
-                  placeholder='50€'
-                  value={fundsToAddAmount}
-                  onChange={onFundsToAddAmountChange}
-                  required
-                />
-                <Button onClick={onAddFundsToWalletButtonClick}>
-                  Add funds
-                </Button>
-              </InputGroup>
-            </Col>
+            <InputGroup className='mb-3 pt-4'>
+              <FormControl
+                type='number'
+                placeholder='50€'
+                value={fundsToAddAmount}
+                onChange={onFundsToAddAmountChange}
+                required
+              />
+              <Button onClick={onAddFundsToWalletButtonClick}>
+                Add funds
+              </Button>
+            </InputGroup>
+          </Col>
+          : <Col md='5'/>}
           </Row>
-          <Row className='my-3'>
+
+          {authContext.currentUser.role===UserRoles.EMPLOYEE ?  <Row className='my-3'>
             <CreateNewOrderButton clientID={clientID} />
           </Row>
+          : ''}
+         
           <Container>
             <Divider size={2} />
           </Container>

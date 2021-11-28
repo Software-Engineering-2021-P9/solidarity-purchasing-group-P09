@@ -33,9 +33,9 @@ function ClientDetailsPage(props) {
   const params = useParams();
 
   const authContext = useContext(AuthContext);
-  if(authContext.currentUser.role == "client");
+  if(authContext.currentUser.role === "client");
     clientID = authContext.currentUser.id;
-  if(authContext.currentUser.role == "employee")
+  if(authContext.currentUser.role === "employee")
     clientID = params.id;
   
   const [show, setShow] = useState(true);

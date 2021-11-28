@@ -10,6 +10,7 @@ import { ShoppingCartTable } from "../ui-components/ShoppingCartComponent/Shoppi
 import { ShoppingCartTotAmount } from "../ui-components/ShoppingCartComponent/ShoppingCartTotAmount";
 import { ShoppingCartControls } from "../ui-components/ShoppingCartComponent/ShoppingCartControls";
 import { ModalOrderConfirmation } from "../ui-components/ShoppingCartComponent/ModalOrderConfirmation";
+import ErrorToast from "../ui-components/ErrorToast/ErrorToast";
 import { AuthContext } from "../contexts/AuthContextProvider";
 
 import {
@@ -39,6 +40,8 @@ function ShoppingCartPage(props) {
 
   const [products, setProducts] = useState([]);
 
+  const [requestError, setRequestError] = useState("");
+
   const clientID = authContext.currentUser.role===UserRoles.CLIENT ? authContext.currentUser.id : location.state.clientID; 
 
   useEffect(() => {
@@ -47,7 +50,7 @@ function ShoppingCartPage(props) {
         const clientInfo = await getClientByID(clientID);
         setClient(clientInfo);
       } catch (err) {
-        console.error(`getClientByID() -> couldn't retrieve products: ${err}`);
+        setRequestError("Failed to fetch client data: " + err.message)
       }
     }
     fetchClientInfo();
@@ -64,9 +67,7 @@ function ShoppingCartPage(props) {
         const server_products = await getProductsByIDs(productIDs);
         setProducts(server_products);
       } catch (err) {
-        console.error(
-          `getProductsByIDs() -> couldn't retrieve products: ${err}`
-        );
+        setRequestError("Failed to fetch products data: " + err.message)
       }
     }
     updateProducts();
@@ -159,6 +160,10 @@ function ShoppingCartPage(props) {
           handleSubmit={handleSubmit}
         />
       </Row>
+      <ErrorToast
+        errorMessage={requestError}
+        onClose={() => setRequestError("")}
+      />
       {submitted && authContext.currentUser.role === UserRoles.EMPLOYEE ? (
         <Redirect
           to={{

@@ -15,7 +15,7 @@ function ShoppingCartTitle(props) {
   }, [props]);
 
   return (
-    <div className="title mt-5">
+    <div className="title">
       <h1>
         <svg
           xmlns="http://www.w3.org/2000/svg"

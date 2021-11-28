@@ -56,14 +56,9 @@ function AuthContextProvider(props) {
       });
     },
     getUserIconLink: function(){
-      if (!this.currentUser) {
-        return ;
-      }
-      switch(this.currentUser.role){
+      switch(this.currentUser?.role){
         case UserRoles.CLIENT:
           return clientDetailsRouteName;
-        case UserRoles.EMPLOYEE:
-          return ;
         default:
           return ;
       }

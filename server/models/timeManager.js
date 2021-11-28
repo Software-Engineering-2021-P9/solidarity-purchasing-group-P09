@@ -48,7 +48,7 @@ class TimeManager {
         if(phaseID != this.phaseIDOverride){
             this.phaseIDOverride = phaseID;
             this.disableCron();
-            this.phaseList.filter((phase)=> phaseID==phase.ID )[0].handler();
+            this.phaseList.filter((phase)=> phaseID===phase.ID )[0].handler();
         }
     }
 

@@ -1,6 +1,6 @@
 const { ObjectID } = require("bson");
 const dayjs = require("dayjs");
-const { getNextWeek } = require("../utils/time");
+const { getNextWeek } = require("../services/time_service");
 
 exports.employeesCollection = {
   employees: [
@@ -300,7 +300,6 @@ exports.productsCollectionWithCategoryError = {
   ],
 };
 
-
 const [nextWeek, currentYear] = getNextWeek(dayjs());
 
 exports.productsAvailabilityCollection = {
@@ -313,7 +312,7 @@ exports.productsAvailabilityCollection = {
       year: currentYear,
       price: 3.5,
       packaging: "100g",
-      quantity: 5
+      quantity: 5,
     },
     {
       _id: ObjectID("000000000000000000000002"),
@@ -323,7 +322,7 @@ exports.productsAvailabilityCollection = {
       year: 2020,
       price: 2.3,
       packaging: "4 units",
-      quantity: 25
+      quantity: 25,
     },
     {
       _id: ObjectID("000000000000000000000003"),
@@ -333,7 +332,7 @@ exports.productsAvailabilityCollection = {
       year: currentYear,
       price: 2.3,
       packaging: "4 units",
-      quantity: 25
+      quantity: 25,
     },
     {
       _id: ObjectID("000000000000000000000004"),
@@ -341,9 +340,9 @@ exports.productsAvailabilityCollection = {
       productID: ObjectID("000000000000000000000006"),
       week: nextWeek,
       year: currentYear,
-      price: 4.50,
+      price: 4.5,
       packaging: "1 units",
-      quantity: 27
+      quantity: 27,
     },
     {
       _id: ObjectID("000000000000000000000005"),
@@ -353,7 +352,7 @@ exports.productsAvailabilityCollection = {
       year: currentYear,
       price: 6,
       packaging: "1 units",
-      quantity: 30
+      quantity: 30,
     },
     {
       _id: ObjectID("000000000000000000000005"),
@@ -363,14 +362,13 @@ exports.productsAvailabilityCollection = {
       year: 2021,
       price: 6,
       packaging: "1 units",
-      quantity: 90
-    }
-  ]
+      quantity: 90,
+    },
+  ],
 };
 
 exports.productsAvailabilityCollection2 = {
   availabilities: [
-
     {
       _id: ObjectID("000000000000000000000001"),
       farmerID: ObjectID("67696f76616a6a6a31a23334"),
@@ -379,7 +377,7 @@ exports.productsAvailabilityCollection2 = {
       year: currentYear,
       price: 3.5,
       packaging: "100g",
-      quantity: 5
+      quantity: 5,
     },
     {
       _id: ObjectID("000000000000000000000002"),
@@ -389,7 +387,7 @@ exports.productsAvailabilityCollection2 = {
       year: 2020,
       price: 2.3,
       packaging: "4 units",
-      quantity: 25
+      quantity: 25,
     },
     {
       _id: ObjectID("000000000000000000000003"),
@@ -399,7 +397,7 @@ exports.productsAvailabilityCollection2 = {
       year: currentYear,
       price: 2.3,
       packaging: "4 units",
-      quantity: 25
+      quantity: 25,
     },
     {
       _id: ObjectID("000000000000000000000004"),
@@ -407,9 +405,9 @@ exports.productsAvailabilityCollection2 = {
       productID: ObjectID("000000000000000000000006"),
       week: nextWeek,
       year: currentYear,
-      price: 4.50,
+      price: 4.5,
       packaging: "1 units",
-      quantity: 27
+      quantity: 27,
     },
     {
       _id: ObjectID("000000000000000000000005"),
@@ -419,7 +417,7 @@ exports.productsAvailabilityCollection2 = {
       year: currentYear,
       price: 6,
       packaging: "1 units",
-      quantity: 30
+      quantity: 30,
     },
     {
       _id: ObjectID("000000000000000000000006"),
@@ -429,7 +427,7 @@ exports.productsAvailabilityCollection2 = {
       year: currentYear,
       price: 3.5,
       packaging: "6 units",
-      quantity: 90
+      quantity: 90,
     },
     {
       _id: ObjectID("000000000000000000000007"),
@@ -439,7 +437,7 @@ exports.productsAvailabilityCollection2 = {
       year: currentYear,
       price: 2,
       packaging: "3 units",
-      quantity: 30
+      quantity: 30,
     },
     {
       _id: ObjectID("000000000000000000000008"),
@@ -449,7 +447,7 @@ exports.productsAvailabilityCollection2 = {
       year: 2020,
       price: 6,
       packaging: "6 units",
-      quantity: 99
+      quantity: 99,
     },
     {
       _id: ObjectID("000000000000000000000009"),
@@ -459,8 +457,7 @@ exports.productsAvailabilityCollection2 = {
       year: currentYear,
       price: 4.5,
       packaging: "1 units",
-      quantity: 33
-    }
-  ]
+      quantity: 33,
+    },
+  ],
 };
-

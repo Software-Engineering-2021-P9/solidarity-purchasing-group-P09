@@ -56,19 +56,17 @@ exports.findProductsByFarmerID = (db, farmerID, searchString, category) => {
     query = {
       $and: [
         { farmerID: ObjectID(farmerID) },
-        { category: category.toString() }
-      ]
-    }
-
+        { category: category.toString() },
+      ],
+    };
   } else if (searchString) {
     query = {
       $and: [
         { farmerID: ObjectID(farmerID) },
-        { $text: { $search: searchString.toString() } }
-      ]
-    }
-  }
-  else {
+        { $text: { $search: searchString.toString() } },
+      ],
+    };
+  } else {
     query = { farmerID: ObjectID(farmerID) };
   }
 
@@ -76,8 +74,9 @@ exports.findProductsByFarmerID = (db, farmerID, searchString, category) => {
 };
 
 exports.getProductByID = (db, productID) => {
-
-  return db.collection(productsCollectionName).findOne({ _id: ObjectID(productID) });
+  return db
+    .collection(productsCollectionName)
+    .findOne({ _id: ObjectID(productID) });
 };
 
 //Method used for testing

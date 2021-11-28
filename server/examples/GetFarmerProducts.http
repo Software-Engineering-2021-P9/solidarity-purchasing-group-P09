@@ -1,1 +1,1 @@
-GET http://localhost:3001/api/farmers/618e935fb16865325a18a8bd/products?category=fruit&searchString=apple HTTP/1.1
+GET http://localhost:3001/api/farmers/618e935fb16865325a18a8bd/products?searchString=apple&category=fruit HTTP/1.1

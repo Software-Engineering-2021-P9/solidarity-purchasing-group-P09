@@ -10,10 +10,8 @@ class Product {
       this.category = category;
     else throw new Error("Unknown category (" + category + ")");
 
-    if (availability)
-      this.availability = availability;
-    else
-      this.availability = null;
+    if (availability) this.availability = availability;
+    else this.availability = null;
   }
 
   static fromMongoJSON(json) {

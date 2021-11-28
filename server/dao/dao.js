@@ -20,7 +20,11 @@ const {
   getClientByEmail,
 } = require("./client");
 
-const { getProductsAvailability, getProductAvailability, setProductAvailability } = require("./productsAvailabilities");
+const {
+  getProductsAvailability,
+  getProductAvailability,
+  setProductAvailability,
+} = require("./productAvailability");
 
 const {
   createOrder,
@@ -34,8 +38,8 @@ const {
   findProducts,
   createProductsTextSearchIndexes,
   getProductByID,
-  findProductsByFarmerID
-} = require("./products");
+  findProductsByFarmerID,
+} = require("./product");
 
 const { ClientInfo } = require("../models/client_info");
 const { EmployeeInfo } = require("../models/employee_info");
@@ -94,11 +98,32 @@ exports.createProductsTextSearchIndexes = () => {
   createProductsTextSearchIndexes(db);
 };
 
-exports.getProductsAvailability = (listOfIDs, week, year) => getProductsAvailability(db, listOfIDs, week, year);
-exports.getProductAvailability = (productID, week, year) => getProductAvailability(db, productID, week, year);
+exports.getProductsAvailability = (listOfIDs, week, year) =>
+  getProductsAvailability(db, listOfIDs, week, year);
+exports.getProductAvailability = (productID, week, year) =>
+  getProductAvailability(db, productID, week, year);
 exports.getProductByID = (productID) => getProductByID(db, productID);
-exports.setProductAvailability = (farmerID, productID, week, year, price, packaging, quantity) => setProductAvailability(db, farmerID, productID, week, year, price, packaging, quantity)
-exports.findProductsByFarmerID = (farmerID, searchString, category) => findProductsByFarmerID(db, farmerID, searchString, category);
+exports.setProductAvailability = (
+  farmerID,
+  productID,
+  week,
+  year,
+  price,
+  packaging,
+  quantity
+) =>
+  setProductAvailability(
+    db,
+    farmerID,
+    productID,
+    week,
+    year,
+    price,
+    packaging,
+    quantity
+  );
+exports.findProductsByFarmerID = (farmerID, searchString, category) =>
+  findProductsByFarmerID(db, farmerID, searchString, category);
 
 // Order
 exports.createOrder = (clientID, products, status, totalPrice, createdAt) =>

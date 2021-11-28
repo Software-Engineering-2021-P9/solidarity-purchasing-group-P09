@@ -152,8 +152,7 @@ exports.addressBodyValidator = body("address")
 exports.walletBodyValidator = body("wallet")
   .notEmpty()
   .bail()
-  .isLength({ min: 0 })
-
+  .isLength({ min: 0 });
 
 // availability validators
 

@@ -110,6 +110,7 @@ function ClientDetailsPage(props) {
       <NavbarComponent
         links={getAvailableNavbarLinks(authContext.currentUser)}
         loggedUser={authContext.currentUser}
+        userIconLink={authContext.getUserIconLink()}
       />
       {location.state != null && show ? (
         <Row>
@@ -126,7 +127,9 @@ function ClientDetailsPage(props) {
             onClose={() => setShow(false)}
             dismissible
           >
-            {clientInfo?.fullName}'s order was successfully created!
+            {authContext.currentUser.role === UserRoles.CLIENT
+              ? "Your order was successfully created"
+              : `${clientInfo?.fullName}'s order was successfully created!`}
           </Alert>
         </Row>
       ) : (

@@ -92,7 +92,7 @@ const routes = {
 function getAvailableNavbarLinks(loggedUser) {
   switch (loggedUser?.role) {
     case UserRoles.CLIENT:
-      return [userLogoutRouteName, clientDetailsRouteName];
+      return [userLogoutRouteName];
     case UserRoles.EMPLOYEE:
       return [
         employeeClientManagementRouteName,

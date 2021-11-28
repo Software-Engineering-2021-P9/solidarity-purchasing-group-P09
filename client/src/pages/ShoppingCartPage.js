@@ -42,7 +42,10 @@ function ShoppingCartPage(props) {
 
   const [requestError, setRequestError] = useState("");
 
-  const clientID = authContext.currentUser.role===UserRoles.CLIENT ? authContext.currentUser.id : location.state.clientID; 
+  const clientID =
+    authContext.currentUser.role === UserRoles.CLIENT
+      ? authContext.currentUser.id
+      : location.state.clientID;
 
   useEffect(() => {
     async function fetchClientInfo() {
@@ -50,7 +53,7 @@ function ShoppingCartPage(props) {
         const clientInfo = await getClientByID(clientID);
         setClient(clientInfo);
       } catch (err) {
-        setRequestError("Failed to fetch client data: " + err.message)
+        setRequestError("Failed to fetch client data: " + err.message);
       }
     }
     fetchClientInfo();
@@ -67,7 +70,7 @@ function ShoppingCartPage(props) {
         const server_products = await getProductsByIDs(productIDs);
         setProducts(server_products);
       } catch (err) {
-        setRequestError("Failed to fetch products data: " + err.message)
+        setRequestError("Failed to fetch products data: " + err.message);
       }
     }
     updateProducts();
@@ -130,6 +133,7 @@ function ShoppingCartPage(props) {
         <ShoppingCartTitle
           client={client}
           loggedClient={authContext.currentUser.role === UserRoles.CLIENT}
+          userIconLink={authContext.getUserIconLink()}
         />
       </Row>
       <Row>

@@ -58,7 +58,7 @@ class TimeManager {
             console.log("Checking if new phase...");
         
             let phase = this.getTrueActivePhase();
-            if(phase.ID != this.activePhase.ID){
+            if(phase.ID !== this.activePhase.ID){
 
                 console.log("new phase detected!");
                 this.activePhase = phase;

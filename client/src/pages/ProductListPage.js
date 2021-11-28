@@ -1,4 +1,5 @@
-import { React, useEffect, useState } from "react";
+import { React, useEffect, useState, useContext } from "react";
+import { useLocation } from "react-router";
 import {
   Row,
   Col,
@@ -8,7 +9,8 @@ import {
   Modal,
   Container,
 } from "react-bootstrap";
-import { employeeNavbarLinks } from "../Routes";
+import { getAvailableNavbarLinks } from "../Routes";
+
 import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponent";
 import { FilterRow } from "../ui-components/FilterRow/FilterRow";
 import ProductCard from "../ui-components/ProductCardComponent/ProductCard";
@@ -16,9 +18,15 @@ import Button from "../ui-components/Button/Button";
 import "../ui-components/ShoppingCartComponent/ShoppingCartControlsCSS.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
+import Product from "../services/models/Product";
 import { findProducts } from "../services/ApiClient";
 
+import { AuthContext } from "../contexts/AuthContextProvider";
+
 function ProductListPage(props) {
+  const location = useLocation();
+  const authContext = useContext(AuthContext);
+
   const [products, setProducts] = useState([]);
 
   //used for storing the content of the search form
@@ -32,11 +40,8 @@ function ProductListPage(props) {
 
   //current cart
   const [cart, setCart] = useState(
-    props.location.state ? props.location.state.shoppingCart : new Map()
+    location.state ? location.state.shoppingCart : new Map()
   );
-
-  // if the employee is creating a new order or is just showing available products
-  const creatingOrderMode = props.location.state ? true : false;
 
   // modal states
   const [show, setShow] = useState(false);
@@ -96,11 +101,12 @@ function ProductListPage(props) {
   return (
     <>
       <NavbarComponent
-        links={employeeNavbarLinks}
+        links={getAvailableNavbarLinks(authContext.currentUser)}
+        loggedUser={authContext.currentUser}
         showShoppingCart
         shoppingCartItems={cart.size}
         shoppingCart={cart}
-        clientID={props.location.state ? props.location.state.clientID : ""}
+        clientID={location.state ? location.state.clientID : ""}
       />
 
       <Modal show={show} onHide={handleClose}>
@@ -155,7 +161,8 @@ function ProductListPage(props) {
                 <CardGroup as={Col}>
                   <ProductCard
                     product={item}
-                    creatingOrderMode={creatingOrderMode}
+                    // if the employee is creating a new order or is just showing available products
+                    creatingOrderMode={location.state?.creatingOrderMode}
                     handleShow={handleShow}
                   />
                 </CardGroup>

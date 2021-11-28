@@ -39,40 +39,37 @@ function ShoppingCartPage(props) {
 
   const [products, setProducts] = useState([]);
 
+  const clientID = authContext.currentUser.role===UserRoles.CLIENT ? authContext.currentUser.id : location.state.clientID; 
+
   useEffect(() => {
-    let clientID;
-    async function updateClient() {
-      if (authContext.currentUser && authContext.currentUser.role === UserRoles.CLIENT)
-        clientID = authContext.currentUser.id;
-      else if (location.state.clientID) clientID = location.state.clientID;
+    async function fetchClientInfo() {
       try {
-        const fromServer = await getClientByID(clientID);
-        setClient(fromServer);
+        const clientInfo = await getClientByID(clientID);
+        setClient(clientInfo);
+      } catch (err) {
+        console.error(`getClientByID() -> couldn't retrieve products: ${err}`);
+      }
+    }
+    fetchClientInfo();
+  }, [clientID]);
+
+  useEffect(() => {
+    if (cart.size === 0) {
+      setProducts([]);
+      return;
+    }
+    async function updateProducts() {
+      try {
+        const productIDs = Array.from(cart.keys());
+        const server_products = await getProductsByIDs(productIDs);
+        setProducts(server_products);
       } catch (err) {
         console.error(
-          `getClientByID() -> couldn't retrieve products: ${err}`
+          `getProductsByIDs() -> couldn't retrieve products: ${err}`
         );
       }
     }
-    updateClient();
-  }, [authContext, location.state]);
-
-  useEffect(() => {
-    if (cart.size === 0) setProducts([]);
-    else {
-      async function updateProducts() {
-        try {
-          const keys = Array.from(cart.keys());
-          const fromServer = await getProductsByIDs(keys);
-          setProducts(fromServer);
-        } catch (err) {
-          console.error(
-            `getProductsByIDs() -> couldn't retrieve products: ${err}`
-          );
-        }
-      }
-      updateProducts();
-    }
+    updateProducts();
   }, [cart]);
 
   /* compute initial total amount */
@@ -131,7 +128,7 @@ function ShoppingCartPage(props) {
       <Row>
         <ShoppingCartTitle
           client={client}
-          loggedClient={authContext.currentUser.role===UserRoles.CLIENT}
+          loggedClient={authContext.currentUser.role === UserRoles.CLIENT}
         />
       </Row>
       <Row>
@@ -175,8 +172,8 @@ function ShoppingCartPage(props) {
       {submitted && authContext.currentUser.role === UserRoles.CLIENT ? (
         <Redirect
           to={{
-            pathname: "/currentClient",
-            state: { showOrderAlert: true, shoppingCart: new Map(), },
+            pathname: "/client",
+            state: { showOrderAlert: true, shoppingCart: new Map() },
           }}
         />
       ) : (

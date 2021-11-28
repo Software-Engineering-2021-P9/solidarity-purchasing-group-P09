@@ -39,7 +39,7 @@ function ClientDetailsPage(props) {
   const location = useLocation();
   const authContext = useContext(AuthContext);
 
-  const clientID = params.id ? params.id : authContext.currentUser.id;
+  const clientID = params.id || authContext.currentUser.id;
 
   const [isInitialized, setIsInitialized] = useState(false);
   const [mustReload, setMustReload] = useState(false);

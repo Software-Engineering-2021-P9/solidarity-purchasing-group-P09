@@ -16,7 +16,7 @@ const employeeClientDetailsRouteName = "employee-client-details-page";
 const employeeClientSignupRouteName = "employee-client-signup-page";
 const userLoginRouteName = "user-login-page";
 const userLogoutRouteName = "user-logout-page";
-const clientDetailsRouteName = "current-client-details-page"
+const clientDetailsRouteName = "client-details-page"
 
 const routes = {
   [productListRouteName]: {
@@ -56,7 +56,7 @@ const routes = {
     linkTitle: "Show Client Details",
   },
   [clientDetailsRouteName]: {
-    path: "/currentClient",
+    path: "/client",
     component: () => (
       <ProtectedRoute requiredRoles={[UserRoles.CLIENT]}>
         <ClientDetailsPage />

@@ -127,9 +127,8 @@ function ClientDetailsPage(props) {
             onClose={() => setShow(false)}
             dismissible
           >
-            {authContext.currentUser.role === UserRoles.CLIENT
-              ? "Your order was successfully created"
-              : `${clientInfo?.fullName}'s order was successfully created!`}
+            {authContext.currentUser.role === UserRoles.CLIENT && ( "Your order was successfully created")}
+            {authContext.currentUser.role === UserRoles.EMPLOYEE && (`${clientInfo?.fullName}'s order was successfully created!`)}
           </Alert>
         </Row>
       ) : (

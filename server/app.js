@@ -7,12 +7,6 @@ const passport = require("passport");
 
 var dao = require("./dao/dao");
 
-// ----------
-// /timeManager
-// ----------
-const { TimeManager } = require("./models/timeManager");
-var timeManagerObj = new TimeManager(); 
-
 const {
   checkValidationErrorMiddleware,
 } = require("./handlers/shared_validators");
@@ -25,6 +19,8 @@ var clientHandlers = require("./handlers/client");
 var orderHandlers = require("./handlers/order");
 
 var productHandlers = require("./handlers/product");
+
+var weekPhasesService = require("./services/WeekPhsaseService/weekPhasesService");
 
 const {
   sessionSettings,

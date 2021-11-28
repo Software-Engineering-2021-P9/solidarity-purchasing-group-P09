@@ -849,116 +849,6 @@ describe("Clients API tests:", () => {
   });
 });
 
-//tests on time
-
-const { TimeManager } = require("../models/timeManager");
-const { WeekPhase } = require("../models/weekPhase");
-const { Time } = require("../models/timeModel");
-
-describe("timeModel",()=>{
-  it("check time",()=>{
-    let day = new Time("Monday","00","00","00");
-    expect(day.dayNumber).to.be.equal("1");
-
-    day = new Time("Tuesday","00","00","00");
-    expect(day.dayNumber).to.be.equal("2");
-
-    day = new Time("Wednesday","00","00","00");
-    expect(day.dayNumber).to.be.equal("3");
-
-    day = new Time("Thursday","00","00","00");
-    expect(day.dayNumber).to.be.equal("4");
-
-    day = new Time("Friday","00","00","00");
-    expect(day.dayNumber).to.be.equal("5");
-
-    day = new Time("Saturday","00","00","00");
-    expect(day.dayNumber).to.be.equal("6");
-
-    day = new Time("Sunday","00","00","00");
-    expect(day.dayNumber).to.be.equal("7");
-  });
-});
-
-describe("weekPhase",()=>{
-  let startTime =  new Time("Monday","00","00","00");
-  let endTime = new Time("Saturday","19","30","00");
-  let phase = new WeekPhase("ID3", startTime, endTime, null, ()=>{console.log("try handle 3")});
-
-  expect(phase.description).to.be.equal("no description");
-  expect(phase.getTimeRange()[0].toString()).to.be.equal("1000000");
-  expect(phase.getTimeRange()[1].toString()).to.be.equal("6193000");
-
-  expect(phase.isActiveDuringData( new Time("Wednesday","00","00","00")) ).to.be.equal(true);
-  expect(phase.isActiveDuringData( new Time("Sunday","00","00","00")) ).to.be.equal(false);
-
-  startTime = new Time("Saturday","19","30","00");
-  endTime = new Time("Monday","00","00","00");
-  let crossWeekPhase = new WeekPhase("ID3", startTime, endTime, null, ()=>{console.log("try handle 3")});
-  
-  expect(crossWeekPhase.isActiveDuringData( new Time("Wednesday","00","00","00")) ).to.be.equal(false);
-  expect(crossWeekPhase.isActiveDuringData( new Time("Sunday","00","00","00")) ).to.be.equal(true);
-});
-
-
-describe("timeManager",()=>{
-  describe("check on timeManager object", ()=>{
-    let timeManagerObj = new TimeManager();
-
-    expect(timeManagerObj).to.not.be.null;
-    expect(timeManagerObj).to.be.an("object");
-    expect(timeManagerObj.phaseIDOverride).to.be.null;
-    expect(timeManagerObj.cronTask).to.not.be.null;
-    expect(timeManagerObj.activePhase).to.not.be.null;
-    expect(timeManagerObj.activePhase).to.be.an("object");
-  });
-
-  describe("check getPhaseList", ()=>{
-    it("should add the phases to the timeManager object",()=>{
-      let timeManagerObj = new TimeManager();
-  
-      expect(timeManagerObj.phaseList).to.not.be.null;
-      expect(timeManagerObj.phaseList.length).to.be.equal(2);
-
-      let phase0 = new WeekPhase("ID1", new Time("Monday","00","00","00"), new Time("Saturday","19","30","00"), "description bla bla bla", ()=>{console.log("try handle 1");});
-      let phase1 = new WeekPhase("ID2", new Time("Saturday","19","30","00"), new Time("Monday","00","00","00"), "description bla bla bla", ()=>{console.log("try handle 2");});
-
-      expect(timeManagerObj.phaseList[0].ID).to.be.equal(phase0.ID);
-      expect(timeManagerObj.phaseList[0].startTime.toString()).to.be.equal(phase0.startTime.toString());
-      expect(timeManagerObj.phaseList[0].endTime.toString()).to.be.equal(phase0.endTime.toString());
-      expect(timeManagerObj.phaseList[0].description).to.be.equal(phase0.description);
-
-      expect(timeManagerObj.phaseList[1].ID).to.be.equal(phase1.ID);
-      expect(timeManagerObj.phaseList[1].startTime.toString()).to.be.equal(phase1.startTime.toString());
-      expect(timeManagerObj.phaseList[1].endTime.toString()).to.be.equal(phase1.endTime.toString());
-      expect(timeManagerObj.phaseList[1].description).to.be.equal(phase1.description);
-    });
-  });
-
-  describe("check setPhaseOverride", ()=>{
-    it("should force a phase",()=>{
-      let timeManagerObj = new TimeManager();
-      expect(timeManagerObj.phaseIDOverride).to.be.null;
-
-      timeManagerObj.setPhaseOverride(null);
-      expect(timeManagerObj.phaseIDOverride).to.be.null;
-
-      timeManagerObj.setPhaseOverride("ID1");
-      expect(timeManagerObj.phaseIDOverride).to.be.equal("ID1");
-      expect(timeManagerObj.getCurrentPhaseID()).to.be.equal("ID1");
-
-
-      timeManagerObj.setPhaseOverride("ID2");
-      expect(timeManagerObj.phaseIDOverride).to.be.equal("ID2");
-      expect(timeManagerObj.getCurrentPhaseID()).to.be.equal("ID2");
-
-      timeManagerObj.setPhaseOverride(null);
-      expect(timeManagerObj.phaseIDOverride).to.be.null;
-    
-    });
-  });
-
-});
 // User Login API TESTS
 describe("User Login API tests:", () => {
   beforeEach(() => {
@@ -1160,4 +1050,96 @@ describe("User Login API tests:", () => {
         });
     });
   });
+});
+
+//tests on time
+
+const weekPhasesService = require("../services/WeekPhsaseService/weekPhasesService");
+const { WeekPhaseInterval } = require("../services/WeekPhsaseService/weekPhaseInterval");
+const weekPhases = require("../services/WeekPhsaseService/weekPhaseInterval");
+const { WeekPhaseDate } = require("../services/WeekPhsaseService/weekPhaseDate");
+
+
+describe("weekPhase",()=>{
+  let phase = new WeekPhaseInterval(
+    "1", 
+    new WeekPhaseDate("0","00","00"), 
+    new WeekPhaseDate("1","00","00"),
+    ()=>{console.log("try handle 1");}
+  );
+
+  expect(phase.id).to.be.equal("1");
+  expect(phase.startTime.toString()).to.be.equal("00000");
+  expect(phase.endTime.toString()).to.be.equal("10000");
+  expect(phase.handler).to.be.a("function");
+  expect(phase.isDateWithinInterval( new WeekPhaseDate("0","00","00")) ).to.be.equal(true);
+  expect(phase.isDateWithinInterval( new WeekPhaseDate("0","30","00")) ).to.be.equal(true);
+  expect(phase.isDateWithinInterval( new WeekPhaseDate("1","00","00")) ).to.be.equal(false);
+});
+
+
+describe("timeManager",()=>{
+  describe("check on timeManager object", ()=>{
+    expect(weekPhasesService.getCurrentPhaseID()).to.not.be.null;
+    expect(weekPhases.weekPhases.map(phase=>phase.id)).to.include(weekPhasesService.getCurrentPhaseID());
+    
+    weekPhasesService.setPhaseOverride("1");
+    expect(weekPhasesService.getCurrentPhaseID()).to.be.equal("1");
+    weekPhasesService.setPhaseOverride("2");
+    expect(weekPhasesService.getCurrentPhaseID()).to.be.equal("2");
+   
+    weekPhasesService.setPhaseOverride(null);
+    expect(weekPhases.weekPhases.map(phase=>phase.id)).to.include(weekPhasesService.getCurrentPhaseID());
+   
+    weekPhasesService.setPhaseOverride("2");
+    expect(weekPhasesService.getCurrentPhaseID()).to.be.equal("2");
+    weekPhasesService.setPhaseOverride("1");
+    expect(weekPhasesService.getCurrentPhaseID()).to.be.equal("1");
+
+  });
+/*
+  describe("check getPhaseList", ()=>{
+    it("should add the phases to the timeManager object",()=>{
+      let timeManagerObj = new TimeManager();
+  
+      expect(timeManagerObj.phaseList).to.not.be.null;
+      expect(timeManagerObj.phaseList.length).to.be.equal(2);
+
+      let phase0 = new WeekPhase("ID1", new Time("Monday","00","00","00"), new Time("Saturday","19","30","00"), "description bla bla bla", ()=>{console.log("try handle 1");});
+      let phase1 = new WeekPhase("ID2", new Time("Saturday","19","30","00"), new Time("Monday","00","00","00"), "description bla bla bla", ()=>{console.log("try handle 2");});
+
+      expect(timeManagerObj.phaseList[0].ID).to.be.equal(phase0.ID);
+      expect(timeManagerObj.phaseList[0].startTime.toString()).to.be.equal(phase0.startTime.toString());
+      expect(timeManagerObj.phaseList[0].endTime.toString()).to.be.equal(phase0.endTime.toString());
+      expect(timeManagerObj.phaseList[0].description).to.be.equal(phase0.description);
+
+      expect(timeManagerObj.phaseList[1].ID).to.be.equal(phase1.ID);
+      expect(timeManagerObj.phaseList[1].startTime.toString()).to.be.equal(phase1.startTime.toString());
+      expect(timeManagerObj.phaseList[1].endTime.toString()).to.be.equal(phase1.endTime.toString());
+      expect(timeManagerObj.phaseList[1].description).to.be.equal(phase1.description);
+    });
+  });
+
+  describe("check setPhaseOverride", ()=>{
+    it("should force a phase",()=>{
+      let timeManagerObj = new TimeManager();
+      expect(timeManagerObj.phaseIDOverride).to.be.null;
+
+      timeManagerObj.setPhaseOverride(null);
+      expect(timeManagerObj.phaseIDOverride).to.be.null;
+
+      timeManagerObj.setPhaseOverride("ID1");
+      expect(timeManagerObj.phaseIDOverride).to.be.equal("ID1");
+      expect(timeManagerObj.getCurrentPhaseID()).to.be.equal("ID1");
+
+
+      timeManagerObj.setPhaseOverride("ID2");
+      expect(timeManagerObj.phaseIDOverride).to.be.equal("ID2");
+      expect(timeManagerObj.getCurrentPhaseID()).to.be.equal("ID2");
+
+      timeManagerObj.setPhaseOverride(null);
+      expect(timeManagerObj.phaseIDOverride).to.be.null;
+    
+    });
+  });*/
 });

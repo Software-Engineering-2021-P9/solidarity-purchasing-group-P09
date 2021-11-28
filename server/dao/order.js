@@ -61,7 +61,5 @@ exports.deleteOrder = async (db, orderID) => {
 exports.completeOrder = async (db, orderID) => {
   const query = { _id: ObjectId(orderID), status: OrderStatus.PREPARED };
   const update = { $set: { status: OrderStatus.DONE } };
-  return db
-    .collection(orderCollectionName)
-    .findOneAndUpdate(query, update, { returnDocument: "after" });
+  return db.collection(orderCollectionName).updateOne(query, update);
 };

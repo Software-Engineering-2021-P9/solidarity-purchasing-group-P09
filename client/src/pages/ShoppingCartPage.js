@@ -35,12 +35,45 @@ function ShoppingCartPage(props) {
 
   const [cart, setCart] = useState(location.state.shoppingCart);
 
-  const [clientID, setClientID] = useState (location.state ? location.state.clientID :''); 
+  const [client, setClient] = useState({});
 
-  useEffect(()=>  {
-    if(authContext.currentUser && authContext.currentUser.role===UserRoles.CLIENT)
-      setClientID(authContext.currentUser.id)
-  },[authContext])
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    let clientID;
+    async function updateClient() {
+      if (authContext.currentUser && authContext.currentUser.role === UserRoles.CLIENT)
+        clientID = authContext.currentUser.id;
+      else if (location.state.clientID) clientID = location.state.clientID;
+      try {
+        const fromServer = await getClientByID(clientID);
+        setClient(fromServer);
+      } catch (err) {
+        console.error(
+          `getClientByID() -> couldn't retrieve products: ${err}`
+        );
+      }
+    }
+    updateClient();
+  }, [authContext, location.state]);
+
+  useEffect(() => {
+    if (cart.size === 0) setProducts([]);
+    else {
+      async function updateProducts() {
+        try {
+          const keys = Array.from(cart.keys());
+          const fromServer = await getProductsByIDs(keys);
+          setProducts(fromServer);
+        } catch (err) {
+          console.error(
+            `getProductsByIDs() -> couldn't retrieve products: ${err}`
+          );
+        }
+      }
+      updateProducts();
+    }
+  }, [cart]);
 
   /* compute initial total amount */
   var sum = 0;
@@ -85,7 +118,7 @@ function ShoppingCartPage(props) {
       quantity,
     }));
     //call create order
-    createOrder(clientID, products);
+    createOrder(client.id, products);
     handleClose();
     setSubmitted(true);
   };
@@ -97,14 +130,14 @@ function ShoppingCartPage(props) {
       </Row>
       <Row>
         <ShoppingCartTitle
-          client={location.state.clientID}
-          getClientByID={getClientByID}
+          client={client}
+          loggedClient={authContext.currentUser.role===UserRoles.CLIENT}
         />
       </Row>
       <Row>
         <ShoppingCartTable
           cart={cart}
-          getProductsByIDs={getProductsByIDs}
+          products={products}
           updateQuantity={updateQuantity}
         />
       </Row>
@@ -123,28 +156,32 @@ function ShoppingCartPage(props) {
         <ModalOrderConfirmation
           show={show}
           handleClose={handleClose}
-          getProductsByIDs={getProductsByIDs}
+          products={products}
           cart={cart}
           tot={amount}
           handleSubmit={handleSubmit}
         />
       </Row>
-      {submitted && authContext.currentUser.role===UserRoles.EMPLOYEE ?(
+      {submitted && authContext.currentUser.role === UserRoles.EMPLOYEE ? (
         <Redirect
           to={{
             pathname: "/employee/clients/" + location.state.clientID,
             state: { orderAmount: amount },
           }}
         />
-      ) : ''}
-      {submitted && authContext.currentUser.role===UserRoles.CLIENT ? (
+      ) : (
+        ""
+      )}
+      {submitted && authContext.currentUser.role === UserRoles.CLIENT ? (
         <Redirect
-        to={{
-          pathname: "/" ,
-          state: { showOrderAlert: true, shoppingCart: new Map()},
-        }}
-      />
-      ) : ''}
+          to={{
+            pathname: "/",
+            state: { showOrderAlert: true, shoppingCart: new Map() },
+          }}
+        />
+      ) : (
+        ""
+      )}
     </Container>
   );
 }

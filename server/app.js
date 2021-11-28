@@ -126,9 +126,9 @@ app.get(
 
 app.patch(
   buildAPIPath("/orders/:orderID/complete"),
-  orderHandlers.completeOrderValidator,
+  orderHandlers.completeOrderValidatorChain,
   checkValidationErrorMiddleware,
-  orderHandlers.completeOrder
+  orderHandlers.completeOrderHandler
 );
 
 // /products

@@ -79,9 +79,9 @@ exports.getOrdersByClientID = async function (req, res, next) {
   return res.json(orders);
 };
 
-exports.completeOrderValidator = [orderIDParamValidator];
+exports.completeOrderValidatorChain = [orderIDParamValidator];
 
-exports.completeOrder = async function (req, res, next) {
+exports.completeOrderHandler = async function (req, res, next) {
   // Insert the new order
   var result;
   try {

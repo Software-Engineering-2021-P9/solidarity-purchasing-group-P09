@@ -1,3 +1,4 @@
+
 import EmployeeInfoResult from "./models/EmployeeInfoResult";
 import ClientInfoResult from "./models/ClientInfoResult";
 import FarmerInfoResult from "./models/FarmerInfoResult";
@@ -315,23 +316,6 @@ export async function getProductsByIDs(productIDs) {
       throw new Error("An error occurred during products fetch");
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

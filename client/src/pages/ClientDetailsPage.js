@@ -132,50 +132,53 @@ function ClientDetailsPage(props) {
       ) : (
         ""
       )}
+
       {!isInitialized ? (
         <Container className="pt-5 d-flex justify-content-center">
           <Spinner variant="dark" animation="border" />
         </Container>
       ) : (
+        <Row>
+          <h1 className="title">Client Details</h1>
+        </Row>
+      )}
+
+      {isInitialized && authContext.currentUser.role === UserRoles.EMPLOYEE ? (
         <>
-          <Row>
-            <h1 className="title">Client Details</h1>
+          <Row className="justify-content-around pt-2">
+            <Col className="ms-5">
+              <ClientDetails clientInfo={clientInfo} />
+            </Col>
+            <Col md="5">
+              <InputGroup className="mb-3 pt-4">
+                <FormControl
+                  type="number"
+                  placeholder="50€"
+                  value={fundsToAddAmount}
+                  onChange={onFundsToAddAmountChange}
+                  required
+                />
+                <Button onClick={onAddFundsToWalletButtonClick}>
+                  Add funds
+                </Button>
+              </InputGroup>
+            </Col>
           </Row>
+          <Row className="my-3">
+            <CreateNewOrderButton clientID={clientID} />
+          </Row>
+        </>
+      ) : (
+        <Row className="justify-content-around pt-2">
+          <Col className="ms-5">
+            <ClientDetails clientInfo={clientInfo} />
+          </Col>
+          <Col md="5" />
+        </Row>
+      )}
 
-          {authContext.currentUser.role === UserRoles.EMPLOYEE ? (
-            <>
-              <Row className="justify-content-around pt-2">
-                <Col className="ms-5">
-                  <ClientDetails clientInfo={clientInfo} />
-                </Col>
-                <Col md="5">
-                  <InputGroup className="mb-3 pt-4">
-                    <FormControl
-                      type="number"
-                      placeholder="50€"
-                      value={fundsToAddAmount}
-                      onChange={onFundsToAddAmountChange}
-                      required
-                    />
-                    <Button onClick={onAddFundsToWalletButtonClick}>
-                      Add funds
-                    </Button>
-                  </InputGroup>
-                </Col>
-              </Row>
-              <Row className="my-3">
-                <CreateNewOrderButton clientID={clientID} />
-              </Row>
-            </>
-          ) : (
-            <Row className="justify-content-around pt-2">
-              <Col className="ms-5">
-                <ClientDetails clientInfo={clientInfo} />
-              </Col>
-              <Col md="5" />
-            </Row>
-          )}
-
+      {isInitialized ? (
+        <>
           <Container>
             <Divider size={2} />
           </Container>
@@ -183,7 +186,10 @@ function ClientDetailsPage(props) {
             <ClientOrders clientID={clientID} />
           </Row>
         </>
+      ) : (
+        ""
       )}
+
       <ErrorToast
         errorMessage={requestError}
         onClose={() => setRequestError("")}

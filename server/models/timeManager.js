@@ -45,7 +45,7 @@ class TimeManager {
             return;
         }
         //this means we are setting the time to "virtual"
-        if(phaseID != this.phaseIDOverride){
+        if(phaseID !== this.phaseIDOverride){
             this.phaseIDOverride = phaseID;
             this.disableCron();
             this.phaseList.filter((phase)=> phaseID===phase.ID )[0].handler();

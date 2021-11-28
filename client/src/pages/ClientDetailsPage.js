@@ -121,7 +121,8 @@ function ClientDetailsPage(props) {
               marginLeft: "1%",
             }}
             onClose={() => setShow(false)}
-            dismissible>
+            dismissible
+          >
             Your order was successfully created!
           </Alert>
         </Row>
@@ -163,7 +164,7 @@ function ClientDetailsPage(props) {
             <Divider size={2} />
           </Container>
           <Row>
-            <ClientOrders />
+            <ClientOrders clientID={clientID} />
           </Row>
         </>
       )}

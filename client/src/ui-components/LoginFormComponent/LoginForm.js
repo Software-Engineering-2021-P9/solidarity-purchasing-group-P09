@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Row, Col } from "react-bootstrap";
+import { Form, Row, Col, Alert } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import "./LoginForm.css";
 import Button from "../Button/Button";
@@ -9,14 +9,9 @@ function LoginForm(props) {
     <Form onSubmit={props.handleSubmit} className="form-login">
       <Form.Group className="form-group">
         <h2>Login</h2>
-        {props.reportErrorMessage !== "" ? (
-          <div className="error-message">
-            <i className="fas fa-exclamation-triangle"></i>{" "}
-            {props.reportErrorMessage}
-          </div>
-        ) : (
-          <></>
-        )}
+        {props.errorMessage && (
+          <Alert variant="danger">{props.errorMessage}</Alert>
+        )}{" "}
       </Form.Group>
       <h5 className="credentials">Credentials</h5>
       <Form.Group className="form-group" controlId="usernameForm">
@@ -27,13 +22,6 @@ function LoginForm(props) {
           value={props.username}
           onChange={(ev) => props.setUsername(ev.target.value)}
         />
-        {props.errorMessageType === "username" ? (
-          <div className="error-message">
-            <i className="fas fa-exclamation-triangle"></i> {props.errorMessage}
-          </div>
-        ) : (
-          <></>
-        )}
       </Form.Group>
 
       <Form.Group className="form-group" controlId="passwordForm">
@@ -44,13 +32,7 @@ function LoginForm(props) {
           value={props.password}
           onChange={(ev) => props.setPassword(ev.target.value)}
         />
-        {props.errorMessageType === "password" ? (
-          <div className="error-message">
-            <i className="fas fa-exclamation-triangle"></i> {props.errorMessage}
-          </div>
-        ) : (
-          <></>
-        )}
+
         <Link
           className="forgot-password"
           to="/#"

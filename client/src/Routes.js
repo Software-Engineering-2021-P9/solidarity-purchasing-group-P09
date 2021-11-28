@@ -4,14 +4,11 @@ import { ClientManagementPage } from "./pages/ClientManagementPage/ClientManagem
 import { ClientSignupPage } from "./pages/ClientSignupPage";
 import { ProductListPage } from "./pages/ProductListPage";
 
-import { ClientLoginPage } from "./pages/ClientLoginPage";
-
 import { UserLoginPage } from "./pages/UserLoginPage";
 import { UserLogoutRedirect } from "./pages/UserLogoutRedirect";
 
 import ProtectedRoute from "./contexts/ProtectedRoute";
 import UserRoles from "./services/models/UserRoles";
-
 
 const productListRouteName = "product-list-page";
 const shoppingCartRouteName = "shopping-cart-page";
@@ -19,11 +16,8 @@ const employeeClientManagementRouteName = "employee-client-management-page";
 const employeeClientDetailsRouteName = "employee-client-details-page";
 const employeeClientSignupRouteName = "employee-client-signup-page";
 
-const clientLoginRouteName = "client-login-page";
-
 const userLoginRouteName = "user-login-page";
 const userLogoutRouteName = "user-logout-page";
-
 
 const routes = {
   [productListRouteName]: {
@@ -72,13 +66,6 @@ const routes = {
     exact: false,
     linkTitle: "Signup Client",
   },
-
-  [clientLoginRouteName]: {
-    path: "/client/login",
-    component: ClientLoginPage,
-    exact: false,
-    linkTitle: "Login Client",
-
   [userLoginRouteName]: {
     path: "/user/login",
     component: () => <UserLoginPage />,
@@ -90,7 +77,6 @@ const routes = {
     component: () => <UserLogoutRedirect />,
     exact: false,
     linkTitle: "Logout",
-
   },
 };
 
@@ -117,7 +103,6 @@ export {
   employeeClientManagementRouteName,
   employeeClientDetailsRouteName,
   employeeClientSignupRouteName,
-  clientLoginRouteName,
   routes,
   getAvailableNavbarLinks,
 };

@@ -82,7 +82,7 @@ function ProductDetailsPage(props) {
           setRequestError("Failed to fetch data: " + err.message)
         );
 
-    //loadData();
+    loadData();
   }, [productID, history, mustReload]);
 
   function onSetNextWeekProductAvailabilitySubmit(data) {
@@ -189,14 +189,14 @@ function ProductDetailsPage(props) {
           <Row>
             <Col xs='12' md='6' className='pb-3'>
               <Row>
-                <h2 className='title'>Current Week Availability</h2>
+                <h2 className='subtitle'>Current Week Availability</h2>
               </Row>
               {buildCurrentWeekAvailabilitySection()}
             </Col>
             <Divider className='d-block d-md-none' />
             <Col xs='12' md='6' className='pb-3'>
               <Row>
-                <h2 className='title'>Next Week Availability</h2>
+                <h2 className='subtitle'>Next Week Availability</h2>
               </Row>
               {buildNextWeekAvailabilitySection()}
             </Col>

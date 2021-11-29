@@ -9,7 +9,6 @@ basePath: /api
 tags:
   - name: client
   - name: employee
-  - name: farmer
   - name: order
   - name: product
   - name: week-phase
@@ -22,8 +21,8 @@ paths:
     get:
       tags:
         - product
-      summary: List all the available products
-      description: "Products can be filtered by name and farmer or/and selecting a category. It can also accept a list of productIDs to be retrieved. Filters will not be applied and it will also return unavailable products."
+      summary: List all the products
+      description: "Products can be filtered by name and farmer or/and selecting a category. It can also accept a list of productIDs to be retrieved. Filters will not be applied."
       operationId: getProducts
       produces:
         - application/json
@@ -39,14 +38,14 @@ paths:
         - in: query
           name: IDs
           type: string
-          description: String of productsID commas separated. If this is set, other filters are not applied and it will also return unavailable products.
+          description: String of productsID commas separated
       responses:
         "200":
           description: Success
           schema:
             type: array
             items:
-              $ref: "#/definitions/ProductResult"
+              $ref: "#/definitions/Product"
         "400":
           description: Bad Request - The request contains invalid parameters
         "500":
@@ -377,105 +376,6 @@ paths:
         "500":
           description: Internal Server Error
 
-  /farmers/{farmerID}/products:
-    get:
-      tags:
-        - farmer
-      summary: Get the filtered products associated to a specific farmer
-      description: Get all the products associated to a specific farmer, filtered by category a searchString and/or if it has a productAvailability associated for the current week
-      operationId: getFarmerProducts
-      produces:
-        - application/json
-      parameters:
-        - in: query
-          name: category
-          type: string
-          description: Filter the products by category
-        - in: query
-          name: searchString
-          type: string
-          description: Filter the products by any substring related to the product (name of the product, name of the farmer, description)
-        - in: query
-          name: isAvailable
-          type: boolean
-          description: Return only the products with (true) or without (false) availability set. If this field is not defined, all the products will be returned.
-      responses:
-        "200":
-          description: Success
-          schema:
-            type: array
-            items:
-              $ref: "#/definitions/ProductResult"
-        "400":
-          description: Bad Request - The request contains invalid parameters
-        "401":
-          description: Unauthorized - The user is not logged or is not allowed to make this action
-        "500":
-          description: Internal Server Error
-
-  /products/{productID}:
-    get:
-      tags:
-        - product
-      summary: Get a product details
-      description: "Get the product details given its ID."
-      operationId: getProductByID
-      produces:
-        - application/json
-      parameters:
-        - in: path
-          required: true
-          name: productID
-          type: string
-          description: Parameter that identify and select the Product
-      responses:
-        "200":
-          description: Success
-          schema:
-            $ref: "#/definitions/ProductResult"
-        "400":
-          description: Bad Request - The request contains invalid parameters
-        "404":
-          description: Not Found
-        "401":
-          description: Unauthorized
-        "500":
-          description: Internal Server Error
-
-  /products/{productID}/availability:
-    post:
-      tags:
-        - product
-      summary: Set a product availability for the next week.
-      description: Set a product availability for the next week.
-      operationId: setNextWeekProductAvailability
-      produces:
-        - application/json
-      parameters:
-        - in: path
-          required: true
-          name: productID
-          type: string
-          description: Parameter that identify and select the Product
-        - in: body
-          name: body
-          required: true
-          schema:
-            $ref: "#/definitions/SetNextWeekProductAvailabilityParams"
-      responses:
-        "200":
-          description: Success
-          schema:
-            $ref: "#/definitions/ProductAvailability"
-        "400":
-          description: Bad Request - The request contains invalid parameters
-        "404":
-          description: Not Found
-        "401":
-          description: Unauthorized
-        "500":
-          description: Internal Server Error
-
   /testing/weekPhases/current:
     patch:
       tags:
@@ -563,36 +463,6 @@ definitions:
       fullname:
         type: string
         maxLength: 35
-  FarmerInfo:
-    description: "At least one between email and (fullName, address) are required"
-    type: object
-    additionalProperties: false
-    required:
-      - id
-      - password
-      - email
-      - fullName
-      - address
-    properties:
-      id:
-        type: string
-        format: bsonID
-      password:
-        type: string
-        minLength: 6
-        example: basePassword
-      email:
-        type: string
-        format: email
-        example: mariorossi@gmail.com
-      fullName:
-        type: string
-        maxLength: 35
-        example: Mario Rossi
-      address:
-        type: string
-        maxLength: 60
-        example: Via dei castagni 7a|Torino|TO|10140
   Order:
     type: object
     additionalProperties: false
@@ -626,7 +496,6 @@ definitions:
         type: string
         enum:
           - WAITING
-          - NOT-COVERED
           - CONFIRMED
           - PREPARED
           - DONE
@@ -662,41 +531,6 @@ definitions:
           - meat
           - eggs
           - milk
-  ProductAvailability:
-    type: object
-    additionalProperties: false
-    required:
-      - id
-      - farmerID
-      - productID
-      - week
-      - year
-      - price
-      - packaging
-      - quantity
-    properties:
-      id:
-        type: string
-        format: bsonID
-      farmerID:
-        type: string
-        format: bsonID
-      productID:
-        type: string
-        format: bsonID
-      week:
-        type: integer
-        example: 34
-      year:
-        type: integer
-        example: 2021
-      price:
-        type: number
-      packaging:
-        type: string
-        example: "'2lt', '1kg', '100g', '6 pcs', '4 units'"
-      quantity:
-        type: integer
   CreateOrderParams:
     type: object
     additionalProperties: false
@@ -743,21 +577,6 @@ definitions:
         type: string
         maxLength: 60
         example: Via dei castagni 7a|Torino|TO|10140
-  SetNextWeekProductAvailabilityParams:
-    type: object
-    additionalProperties: false
-    required:
-      - price
-      - packaging
-      - quantity
-    properties:
-      price:
-        type: number
-      packaging:
-        type: string
-        example: "'2lt', '1kg', '100g', '6 pcs', '4 units'"
-      quantity:
-        type: integer
   ClientInfoResult:
     description: "Return model for methods which return ClientInfo (sensitive data is stripped). At least one between email and (fullName, address) are required"
     type: object
@@ -804,74 +623,3 @@ definitions:
       fullname:
         type: string
         maxLength: 35
-  ProductResult:
-    description: Return model for methods which return Product. It also contains the information about current week availability.
-    type: object
-    additionalProperties: false
-    required:
-      - id
-      - farmerID
-      - name
-      - description
-      - category
-    properties:
-      id:
-        type: string
-        format: bsonID
-      farmerID:
-        type: string
-        format: bsonID
-      name:
-        type: string
-        maxLength: 25
-        example: Potato
-      description:
-        type: string
-        maxLength: 100
-      category:
-        type: string
-        enum:
-          - fruit
-          - vegetables
-          - spreadable creams
-          - meat
-          - eggs
-          - milk
-      productAvailability:
-        $ref: "#/definitions/ProductAvailabilityResult"
-  ProductAvailabilityResult:
-    description: Return model for methods which return ProductAvailability.
-    type: object
-    additionalProperties: false
-    required:
-      - id
-      - farmerID
-      - productID
-      - week
-      - year
-      - price
-      - packaging
-      - quantity
-    properties:
-      id:
-        type: string
-        format: bsonID
-      farmerID:
-        type: string
-        format: bsonID
-      productID:
-        type: string
-        format: bsonID
-      week:
-        type: integer
-        example: 34
-      year:
-        type: integer
-        example: 2021
-      price:
-        type: number
-      packaging:
-        type: string
-        example: "'2lt', '1kg', '100g', '6 pcs', '4 units'"
-      quantity:
-        type: integer

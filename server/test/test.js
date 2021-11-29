@@ -577,7 +577,7 @@ describe("Clients API tests:", () => {
       dao.close();
     });
 
-    /*
+    
     describe("POST /orders", () => {
       it("it should create a new order", (done) => {
         chai
@@ -739,7 +739,7 @@ describe("Clients API tests:", () => {
           });
       });
     });
-    */
+    
 
     describe("GET /orders", () => {
       it("it should retrieve the client's orders with given ClientID", (done) => {

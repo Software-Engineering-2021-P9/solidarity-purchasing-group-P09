@@ -43,6 +43,17 @@ exports.ordersCollection = {
       totalPrice: "12",
       createdAt: "2021-12-16T13:00:07.616Z",
     },
+    {
+      _id: ObjectID("6187c957b288576ca26f8990"),
+      clientID: ObjectID("6187c957b288576ca26f8251"),
+      products: [
+        { productID: "6187c957b288576ca26f8258", quantity: 10 },
+        { productID: "6187c957b288576ca26f8259", quantity: 2 },
+      ],
+      status: "waiting",
+      totalPrice: "12",
+      createdAt: "2021-12-16T13:00:07.616Z",
+    },
   ],
 };
 

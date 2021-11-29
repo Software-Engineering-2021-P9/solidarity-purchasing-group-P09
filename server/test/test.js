@@ -765,27 +765,81 @@ describe("Clients API tests:", () => {
           .end((err, res) => {
             expect(err).to.be.null;
             expect(res.status).to.be.equal(204);
-            done();
           });
-      });
-      it("it should return 400 if the order with given orderID is not in PREPARING status", (done) => {
+
         chai
           .request(app)
-          .patch("/api/orders/6187c957b288576ca26f8999/complete")
+          .get("/api/orders?clientID=6187c957b288576ca26f8257")
           .end((err, res) => {
             expect(err).to.be.null;
-            expect(res.status).to.be.equal(400);
+            expect(res.status).to.be.equal(200);
+            expect(res.body).to.be.eql([
+              {
+                id: "6187c957b288576ca26f8251",
+                clientID: "6187c957b288576ca26f8257",
+                products: [
+                  { productID: "6187c957b288576ca26f8258", quantity: 3 },
+                  { productID: "6187c957b288576ca26f8259", quantity: 1 },
+                  { productID: "6187c957b288576ca26f8250", quantity: 2 },
+                ],
+                status: "done",
+                totalPrice: "6",
+                createdAt: "2021-11-16T13:00:07.616Z",
+              },
+              {
+                id: "6187c957b288576ca26f8999",
+                clientID: "6187c957b288576ca26f8257",
+                products: [
+                  { productID: "6187c957b288576ca26f8258", quantity: 10 },
+                  { productID: "6187c957b288576ca26f8259", quantity: 2 },
+                ],
+                status: "done",
+                totalPrice: "12",
+                createdAt: "2021-12-16T13:00:07.616Z",
+              },
+            ]);
             done();
           });
       });
 
-      it("it should return an status=400 if the ID passed is valid but not present in the collection", (done) => {
+      it("it should not update the order if it is not in PREPARING status", (done) => {
+        chai
+          .request(app)
+          .patch("/api/orders/6187c957b288576ca26f8990/complete")
+          .end((err, res) => {
+            expect(err).to.be.null;
+            expect(res.status).to.be.equal(204);
+          });
+        chai
+          .request(app)
+          .get("/api/orders?clientID=6187c957b288576ca26f8251")
+          .end((err, res) => {
+            expect(err).to.be.null;
+            expect(res.status).to.be.equal(200);
+            expect(res.body).to.be.eql([
+              {
+                id: "6187c957b288576ca26f8990",
+                clientID: "6187c957b288576ca26f8251",
+                products: [
+                  { productID: "6187c957b288576ca26f8258", quantity: 10 },
+                  { productID: "6187c957b288576ca26f8259", quantity: 2 },
+                ],
+                status: "waiting",
+                totalPrice: "12",
+                createdAt: "2021-12-16T13:00:07.616Z",
+              },
+            ]);
+            done();
+          });
+      });
+
+      it("Even if the ID passed is valid but not present in the collection, the response status should be 204", (done) => {
         chai
           .request(app)
           .patch("/api/orders/6187c957b288576ca26f8259/complete")
           .end((err, res) => {
             expect(err).to.be.null;
-            expect(res.status).to.be.equal(400);
+            expect(res.status).to.be.equal(204);
             done();
           });
       });

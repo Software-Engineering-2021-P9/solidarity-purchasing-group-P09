@@ -4,6 +4,11 @@ import { ClientManagementPage } from "./pages/ClientManagementPage/ClientManagem
 import { ClientSignupPage } from "./pages/ClientSignupPage";
 import { ProductListPage } from "./pages/ProductListPage";
 import { ProductManagementPage } from "./pages/ProductManagementPage/ProductManagementPage";
+import { UserLoginPage } from "./pages/UserLoginPage";
+import { UserLogoutRedirect } from "./pages/UserLogoutRedirect";
+
+import ProtectedRoute from "./contexts/ProtectedRoute";
+import UserRoles from "./services/models/UserRoles";
 
 const productListRouteName = "product-list-page";
 const shoppingCartRouteName = "shopping-cart-page";
@@ -12,35 +17,64 @@ const employeeClientDetailsRouteName = "employee-client-details-page";
 const employeeClientSignupRouteName = "employee-client-signup-page";
 const farmerProductManagementRouteName = "farmer-product-management-page";
 const farmerProductDetailsRouteName = "farmer-product-details-page";
+const userLoginRouteName = "user-login-page";
+const userLogoutRouteName = "user-logout-page";
+const clientDetailsRouteName = "client-details-page";
 
 const routes = {
   [productListRouteName]: {
     path: "/",
-    component: ProductListPage,
+    component: () => <ProductListPage />,
     exact: true,
     linkTitle: "Show Product List",
   },
   [shoppingCartRouteName]: {
     path: "/currentCart",
-    component: ShoppingCartPage,
+    component: () => (
+      <ProtectedRoute requiredRoles={[UserRoles.CLIENT, UserRoles.EMPLOYEE]}>
+        <ShoppingCartPage />
+      </ProtectedRoute>
+    ),
     exact: false,
     linkTitle: "Show Current Cart",
   },
   [employeeClientManagementRouteName]: {
     path: "/employee/clients/",
-    component: ClientManagementPage,
+    component: () => (
+      <ProtectedRoute requiredRoles={[UserRoles.EMPLOYEE]}>
+        <ClientManagementPage />
+      </ProtectedRoute>
+    ),
     exact: true,
     linkTitle: "Manage Clients",
   },
   [employeeClientDetailsRouteName]: {
     path: "/employee/clients/:id",
-    component: ClientDetailsPage,
+    component: () => (
+      <ProtectedRoute requiredRoles={[UserRoles.EMPLOYEE]}>
+        <ClientDetailsPage />
+      </ProtectedRoute>
+    ),
     exact: false,
     linkTitle: "Show Client Details",
   },
+  [clientDetailsRouteName]: {
+    path: "/client",
+    component: () => (
+      <ProtectedRoute requiredRoles={[UserRoles.CLIENT]}>
+        <ClientDetailsPage />
+      </ProtectedRoute>
+    ),
+    exact: false,
+    linkTitle: "My Page",
+  },
   [employeeClientSignupRouteName]: {
     path: "/employee/signupClient",
-    component: ClientSignupPage,
+    component: () => (
+      <ProtectedRoute requiredRoles={[UserRoles.EMPLOYEE]}>
+        <ClientSignupPage />
+      </ProtectedRoute>
+    ),
     exact: false,
     linkTitle: "Signup Client",
   },
@@ -56,14 +90,36 @@ const routes = {
     exact: false,
     linkTitle: "Show Product Details",
   },
+  [userLoginRouteName]: {
+    path: "/user/login",
+    component: () => <UserLoginPage />,
+    exact: false,
+    linkTitle: "Login",
+  },
+  [userLogoutRouteName]: {
+    path: "/user/logout",
+    component: () => <UserLogoutRedirect />,
+    exact: false,
+    linkTitle: "Logout",
+  },
 };
 
-const employeeNavbarLinks = [
-  employeeClientManagementRouteName,
-  employeeClientSignupRouteName,
-];
-
-const farmerNavbarLinks = [farmerProductManagementRouteName];
+function getAvailableNavbarLinks(loggedUser) {
+  switch (loggedUser?.role) {
+    case UserRoles.CLIENT:
+      return [userLogoutRouteName];
+    case UserRoles.EMPLOYEE:
+      return [
+        employeeClientManagementRouteName,
+        employeeClientSignupRouteName,
+        userLogoutRouteName,
+      ];
+    case UserRoles.FARMER:
+      return [userLogoutRouteName];
+    default:
+      return [userLoginRouteName];
+  }
+}
 
 export {
   productListRouteName,
@@ -73,7 +129,7 @@ export {
   employeeClientSignupRouteName,
   farmerProductManagementRouteName,
   farmerProductDetailsRouteName,
+  clientDetailsRouteName,
   routes,
-  employeeNavbarLinks,
-  farmerNavbarLinks,
+  getAvailableNavbarLinks,
 };

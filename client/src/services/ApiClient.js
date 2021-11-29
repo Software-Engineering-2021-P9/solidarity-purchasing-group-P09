@@ -305,9 +305,9 @@ export async function setNextWeekProductAvailability(
   quantity
 ) {
   var obj = {
-    price: price,
+    price: parseFloat(price),
     packaging: packaging,
-    quantity: quantity,
+    quantity: parseInt(quantity),
   };
 
   const response = await fetch(`/api/products/${productID}/availability`, {
@@ -330,8 +330,52 @@ export async function setNextWeekProductAvailability(
       throw new Error("Internal Server Error");
     default:
       throw new Error(
-        "An error occurred setting products' next week availability"
+        "An error occurred setting product's next week availability"
       );
+  }
+}
+
+export async function getNextWeekProductAvailability(productID) {
+  const response = await fetch(
+    `/api/products/${productID}/availability/nextWeek`
+  );
+
+  switch (response.status) {
+    case 200:
+      let responseBody = await response.json();
+      return ProductAvailability.fromJSON(responseBody);
+    case 400:
+      throw new Error("Validation error occurred");
+    case 401:
+      throw new Error("Unauthorized");
+    case 404:
+      throw new Error("Not Found");
+    case 500:
+      throw new Error("Internal Server Error");
+    default:
+      throw new Error(
+        "An error occurred retrieving product's next week availability"
+      );
+  }
+}
+
+export async function getProductByID(productID) {
+  let response = await fetch("/api/products/" + productID);
+
+  switch (response.status) {
+    case 200:
+      let responseBody = await response.json();
+      return Product.fromJSON(responseBody);
+    case 400:
+      throw new Error("Validation error occurred");
+    case 401:
+      throw new Error("Unauthorized");
+    case 404:
+      throw new Error("Not Found");
+    case 500:
+      throw new Error("Internal Server Error");
+    default:
+      throw new Error("An error occurred retrieving the product");
   }
 }
 

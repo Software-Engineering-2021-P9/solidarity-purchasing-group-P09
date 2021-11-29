@@ -24,6 +24,28 @@ exports.createOrderHandler = async function (req, res, next) {
   req.body.products.forEach((product) => {
     totalPrice += product.quantity * productPrice;
   });
+  
+  //GET CLIENT WALLET
+  let client;
+
+  try {
+    client = await dao.getClientByID(req.body.clientID.toString());
+  } catch (err) {
+    return res.status(500).end();
+  }
+  if (!client) {
+    console.error(
+      `getClientByID() -> couldn't retrieve client`
+    );
+  }
+
+  //IF WALLET NOT ENOUGH SET THE STATE TO NOT COVERED
+  let status;
+
+  if(client.wallet < totalPrice)
+    status = OrderStatus.NOT_COVERED;
+  else
+    status = OrderStatus.WAITING;
 
   // Insert the new order
   var result;
@@ -31,7 +53,7 @@ exports.createOrderHandler = async function (req, res, next) {
     result = await dao.createOrder(
       req.body.clientID.toString(),
       req.body.products,
-      OrderStatus.WAITING,
+      status,
       totalPrice,
       dayjs().toISOString()
     );
@@ -51,34 +73,11 @@ exports.createOrderHandler = async function (req, res, next) {
     );
     return res.status(500).end();
   }
-
   if (!result) {
     console.error(`CreateOrder() -> couldn't retrieve newly created order`);
     return res.status(404).end();
   }
-  //GET CLIENT WALLET
-  let client;
-
-  try {
-    client = await dao.getClientByID(req.body.clientID.toString());
-  } catch (err) {
-    return res.status(500).end();
-  }
-  if (!client) {
-    console.error(
-      `getClientByID() -> couldn't retrieve client`
-    );
-  }
-
-  //IF WALLET NOT ENOUGH SET THE STATE TO NOT COVERED
-  if(client.wallet < totalPrice){
-    try{
-      result = await dao.updateOrderStatus(result._id, "not covered");
-      result = result.value;
-    }catch(err){
-      return res.status(500).end();
-    }
-  }
+  
   return res.json(Order.fromMongoJSON(result));
 };
 

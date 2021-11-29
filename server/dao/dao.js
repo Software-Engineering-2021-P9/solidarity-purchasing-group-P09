@@ -99,12 +99,6 @@ exports.deleteOrder = (orderID) => deleteOrder(db, orderID);
 exports.getOrdersByClientID = (clientID) => getOrdersByClientID(db, clientID);
 exports.updateOrderStatus = (orderID, status) => updateOrderStatus(db, orderID, status);
 
-exports.deleteEmployee = (employeeID) => deleteEmployee(db, employeeID);
-exports.getClientByID = (clientID) => getClientByID(db, clientID);
-exports.addFundToWallet = (clientID, increaseBy) =>
-  addFundToWallet(db, clientID, increaseBy);
-exports.findClients = (searchString) => findClients(db, searchString);
-
 exports.createClientsTextSearchIndexes = () =>
   createClientsTextSearchIndexes(db);
 

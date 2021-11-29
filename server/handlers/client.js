@@ -38,7 +38,7 @@ exports.addFundToWalletValidatorChain = [
 exports.addFundToWalletHandler = async function (req, res, next) {
     let result;
     let orders;
-    let clientID = req.params.clientID
+    const clientID = req.params.clientID;
 
     //TOP UP WALLET
     try {
@@ -65,8 +65,7 @@ exports.addFundToWalletHandler = async function (req, res, next) {
     orders = orders.filter(order => order.status == "not covered").sort((a, b)=>{
         if(a.createdAt <= b.createdAt)
           return -1;
-        if(a.createdAt > b.createdAt)
-          return 1;
+        return 1;
       });
     
     let finalWalletValue = result.value.wallet;

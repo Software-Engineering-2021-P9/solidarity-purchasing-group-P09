@@ -18,8 +18,12 @@ function ObjectList(props) {
             {props.emptyListText && props.emptyListText !== "" ? (
               <Row className='justify-content-center pt-3'>
                 <Col sm='6'>
-                  {props.emptyListText.split("\n").map((line) => (
-                    <h4 className='title text-center'>{line}</h4>
+                  {props.emptyListText.split("\n").map((line, index) => (
+                    <h4
+                      key={`object-list-item-${index}`}
+                      className='title text-center'>
+                      {line}
+                    </h4>
                   ))}
                 </Col>
               </Row>

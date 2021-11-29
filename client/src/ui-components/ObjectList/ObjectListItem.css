@@ -1,0 +1,21 @@
+.object-list-item {
+  cursor: pointer;
+  border-bottom: #635f4646 solid 1px;
+}
+
+.object-list-item:hover,
+.object-list-item:focus {
+  background-color: #f4bfa7;
+}
+
+.object-list-item:active {
+  background-color: #c48566;
+}
+
+.object-list-item:focus:not(.focus-visible) {
+  box-shadow: 0 0 0 0.15rem #c48566 !important;
+}
+
+.object-list-item-arrow {
+  max-width: 30px;
+}

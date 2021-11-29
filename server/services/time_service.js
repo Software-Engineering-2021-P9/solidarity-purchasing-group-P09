@@ -16,19 +16,7 @@ exports.getNextWeek = (date) => {
 
   let currentWeek = now.isoWeek() + 1;
   let currentYear = now.year();
-  /*
-  if (now.isoWeekday() == 7 && now.hour() >= 23) {
-    currentWeek++;
-  }
 
-  if (currentWeek > now.isoWeeksInYear()) {
-    currentWeek = currentWeek % now.isoWeeksInYear();
-
-    if (now.year() != now.add(7, "day").year()) {
-      currentYear++;
-    }
-  }
-  */
   [currentWeek, currentYear] = normalizeWeek(now, currentWeek, currentYear);
   return [currentWeek, currentYear];
 };

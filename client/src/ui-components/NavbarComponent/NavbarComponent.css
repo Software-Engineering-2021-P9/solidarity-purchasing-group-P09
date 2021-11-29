@@ -1,5 +1,7 @@
 .navbar {
   background-color: #635f46;
+  overflow-y: scroll;
+  height: 78px;
 }
 
 .navbar-placeholder {

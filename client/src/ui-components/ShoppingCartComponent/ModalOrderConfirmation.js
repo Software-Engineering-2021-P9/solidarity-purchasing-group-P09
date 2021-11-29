@@ -1,11 +1,25 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./ModalOrderConfirmationCSS.css";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Modal, Container, Row, Col } from "react-bootstrap";
 import  Button  from "../Button/Button";
 
 
 function ModalOrderConfirmation(props) {
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    if (props.cart.size === 0) return;
+    else {
+      const getProducts = () => {
+        const keys = Array.from(props.cart.keys());
+        props.getProductsByIDs(keys).then(function (res) {
+          setProducts(res);
+        });
+      };
+      getProducts();
+    }
+  }, [props]);
 
   return (
     <Modal show={props.show} onHide={props.handleClose}>
@@ -13,7 +27,7 @@ function ModalOrderConfirmation(props) {
         <Modal.Title className="modal-title">Are you sure?</Modal.Title>
       </Modal.Header>
       <Container>
-      {props.products.map((item) => {
+      {products.map((item) => {
           return (
             <OrderRecapRow
             product={item}

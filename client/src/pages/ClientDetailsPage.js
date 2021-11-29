@@ -24,16 +24,13 @@ import { addFundToWallet, getClientByID } from "../services/ApiClient";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../ui-components/Title.css";
-import UserRoles from "../services/models/UserRoles";
 
 function ClientDetailsPage(props) {
   const params = useParams();
-
+  const clientID = params.id;
   const [show, setShow] = useState(true);
 
   const history = useHistory();
-
-  const clientID = params.id || authContext.currentUser.id;
 
   const [isInitialized, setIsInitialized] = useState(false);
   const [mustReload, setMustReload] = useState(false);
@@ -101,12 +98,8 @@ function ClientDetailsPage(props) {
 
   return (
     <>
-      <NavbarComponent
-        links={getAvailableNavbarLinks(authContext.currentUser)}
-        loggedUser={authContext.currentUser}
-        userIconLink={authContext.getUserIconLink()}
-      />
-      {location.state != null && show ? (
+      <NavbarComponent links={employeeNavbarLinks} />
+      {props.location.state != null && show ? (
         <Row>
           <Alert
             variant='success'
@@ -121,16 +114,12 @@ function ClientDetailsPage(props) {
             onClose={() => setShow(false)}
             dismissible
           >
-            {authContext.currentUser.role === UserRoles.CLIENT &&
-              "Your order was successfully created"}
-            {authContext.currentUser.role === UserRoles.EMPLOYEE &&
-              `${clientInfo?.fullName}'s order was successfully created!`}
+            Your order was successfully created!
           </Alert>
         </Row>
       ) : (
         ""
       )}
-
       {!isInitialized ? (
         <Container className='pt-5 d-flex justify-content-center'>
           <Spinner variant='dark' animation='border' />
@@ -141,32 +130,27 @@ function ClientDetailsPage(props) {
             <h1 className='title'>Client Details</h1>
           </Row>
           <Row className='justify-content-around pt-2'>
-            <Col className='ms-5'>
+            <Col md='5' className='ms-5'>
               <ClientDetails clientInfo={clientInfo} />
             </Col>
-            {authContext.currentUser.role === UserRoles.EMPLOYEE && (
-              <Col md='5'>
-                <InputGroup className='mb-3 pt-4'>
-                  <FormControl
-                    type='number'
-                    placeholder='50€'
-                    value={fundsToAddAmount}
-                    onChange={onFundsToAddAmountChange}
-                    required
-                  />
-                  <Button onClick={onAddFundsToWalletButtonClick}>
-                    Add funds
-                  </Button>
-                </InputGroup>
-              </Col>
-            )}
+            <Col md='5'>
+              <InputGroup className='mb-3 pt-4'>
+                <FormControl
+                  type='number'
+                  placeholder='50€'
+                  value={fundsToAddAmount}
+                  onChange={onFundsToAddAmountChange}
+                  required
+                />
+                <Button onClick={onAddFundsToWalletButtonClick}>
+                  Add funds
+                </Button>
+              </InputGroup>
+            </Col>
           </Row>
-          {authContext.currentUser.role === UserRoles.EMPLOYEE && (
-            <Row className='my-3'>
-              <CreateNewOrderButton clientID={clientID} />
-            </Row>
-          )}
-
+          <Row className='my-3'>
+            <CreateNewOrderButton clientID={clientID} />
+          </Row>
           <Container>
             <Divider size={2} />
           </Container>
@@ -175,7 +159,6 @@ function ClientDetailsPage(props) {
           </Row>
         </>
       )}
-
       <ErrorToast
         errorMessage={requestError}
         onClose={() => setRequestError("")}

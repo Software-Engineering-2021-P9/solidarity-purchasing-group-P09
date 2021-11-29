@@ -20,6 +20,8 @@ var orderHandlers = require("./handlers/order");
 
 var productHandlers = require("./handlers/product");
 
+var farmerHandlers = require("./handlers/farmer");
+
 const {
   sessionSettings,
   passportStrategy,
@@ -106,6 +108,13 @@ app.post(
   clientHandlers.createClientHandler
 );
 
+app.post(
+  buildAPIPath("/clients/signup"),
+  clientHandlers.signupClientValidatorChain,
+  checkValidationErrorMiddleware,
+  clientHandlers.signupClientHandler
+);
+
 // ----------
 // /orders
 // ----------
@@ -134,11 +143,44 @@ app.patch(
 // ---------
 // /products
 // ---------
+
 app.get(
   buildAPIPath("/products"),
   productHandlers.getProductsByIDValidatorChain,
   checkValidationErrorMiddleware,
   productHandlers.getProductsByIDHandler
+);
+
+app.get(
+  buildAPIPath("/products/:productID"),
+  productHandlers.getProductByIDValidatorChain,
+  checkValidationErrorMiddleware,
+  productHandlers.getProductByIDHandler
+);
+
+app.post(
+  buildAPIPath("/products/:productID/availability"),
+  productHandlers.setNextWeekProductAvailabilityValidatorChain,
+  checkValidationErrorMiddleware,
+  productHandlers.setNextWeekProductAvailabilityHandler
+);
+
+app.get(
+  buildAPIPath("/products/:productID/availability/nextWeek"),
+  productHandlers.getNextWeekProductAvailabilityValidatorChain,
+  checkValidationErrorMiddleware,
+  productHandlers.getNextWeekProductAvailability
+);
+
+// --------
+// /farmers
+// --------
+
+app.get(
+  buildAPIPath("/farmers/:farmerID/products"),
+  farmerHandlers.getFarmerProductsValidatorChain,
+  checkValidationErrorMiddleware,
+  farmerHandlers.getFarmerProductsHandler
 );
 
 // Serve client app

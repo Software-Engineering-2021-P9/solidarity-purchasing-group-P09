@@ -15,10 +15,17 @@ const {
   findClients,
   createClientsTextSearchIndexes,
   createClient,
+  signupClient,
   getUserById,
   getUser,
   getClientByEmail,
 } = require("./client");
+
+const {
+  getProductsAvailability,
+  getProductAvailability,
+  setProductAvailability,
+} = require("./productAvailability");
 
 const {
   createOrder,
@@ -32,7 +39,9 @@ const {
   getProductsByIDs,
   findProducts,
   createProductsTextSearchIndexes,
-} = require("./products");
+  getProductByID,
+  findProductsByFarmerID,
+} = require("./product");
 
 const { ClientInfo } = require("../models/client_info");
 const { EmployeeInfo } = require("../models/employee_info");
@@ -76,8 +85,19 @@ exports.getFarmerByEmail = (email) => getFarmerByEmail(db, email);
 
 // Client
 exports.getClientByID = (clientID) => getClientByID(db, clientID);
+
 exports.createClient = (fullName, phoneNumber, email, address, wallet) =>
   createClient(db, fullName, phoneNumber, email, address, wallet);
+
+exports.signupClient = (
+  fullName,
+  phoneNumber,
+  email,
+  password,
+  address,
+  wallet
+) => signupClient(db, fullName, phoneNumber, email, password, address, wallet);
+
 exports.findClients = (searchString) => findClients(db, searchString);
 exports.addFundToWallet = (clientID, increaseBy) =>
   addFundToWallet(db, clientID, increaseBy);
@@ -90,6 +110,33 @@ exports.findProducts = (searchString, category) =>
 exports.createProductsTextSearchIndexes = () => {
   createProductsTextSearchIndexes(db);
 };
+
+exports.getProductsAvailability = (listOfIDs, week, year) =>
+  getProductsAvailability(db, listOfIDs, week, year);
+exports.getProductAvailability = (productID, week, year) =>
+  getProductAvailability(db, productID, week, year);
+exports.getProductByID = (productID) => getProductByID(db, productID);
+exports.setProductAvailability = (
+  farmerID,
+  productID,
+  week,
+  year,
+  price,
+  packaging,
+  quantity
+) =>
+  setProductAvailability(
+    db,
+    farmerID,
+    productID,
+    week,
+    year,
+    price,
+    packaging,
+    quantity
+  );
+exports.findProductsByFarmerID = (farmerID, searchString, category) =>
+  findProductsByFarmerID(db, farmerID, searchString, category);
 
 // Order
 exports.createOrder = (clientID, products, status, totalPrice, createdAt) =>

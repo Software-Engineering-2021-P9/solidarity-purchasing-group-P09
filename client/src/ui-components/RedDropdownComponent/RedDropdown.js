@@ -20,14 +20,16 @@ function RedDropdown(props) {
                 className='dropdown-content'
                 key={index}
                 onClick={() => props.updateSelectedItem(name)}
-                active={props.activeElement === name}>
+                active={props.activeElement === name}
+              >
                 {name}
               </Dropdown.Item>
             ))}
             <Dropdown.Item
               className='dropdown-content'
               onClick={() => props.updateSelectedItem()}
-              active={props.title === "Categories"}>
+              active={props.title === "Categories"}
+            >
               All
             </Dropdown.Item>
           </Dropdown.Menu>

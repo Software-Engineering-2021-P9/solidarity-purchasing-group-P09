@@ -12,14 +12,6 @@ exports.getEmployeeByID = (db, employeeID) => {
   return db.collection(employeeCollectionName).findOne(ObjectID(employeeID));
 };
 
-// ------------------
-// GetEmployeeByEmail
-// ------------------
-
-exports.getEmployeeByEmail = (db, email) => {
-  return db.collection(employeeCollectionName).findOne({ email: email });
-};
-
 // --------------
 // CreateEmployee
 // --------------

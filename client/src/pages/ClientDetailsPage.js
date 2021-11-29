@@ -1,7 +1,8 @@
-import React, { useContext, useEffect, useState } from "react";
-
-import { useHistory, useParams, useLocation } from "react-router";
-import { getAvailableNavbarLinks } from "../Routes";
+import React, { useEffect, useState } from "react";
+import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponent";
+import { CreateNewOrderButton } from "../ui-components/ClientDetailsComponent/CreateNewOrderButton";
+import { useHistory, useParams } from "react-router";
+import { employeeNavbarLinks } from "../Routes";
 
 import {
   Col,
@@ -12,19 +13,14 @@ import {
   Spinner,
   Alert,
 } from "react-bootstrap";
-
 import ActionConfirmationModal from "../ui-components/ActionConfirmationModal/ActionConfirmationModal";
 import Button from "../ui-components/Button/Button";
 import ClientDetails from "../ui-components/ClientDetails/ClientDetails";
 import { ClientOrders } from "../ui-components/ClientOrdersComponent/ClientOrders";
 import Divider from "../ui-components/Divider/Divider";
 import ErrorToast from "../ui-components/ErrorToast/ErrorToast";
-import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponent";
-import { CreateNewOrderButton } from "../ui-components/ClientDetailsComponent/CreateNewOrderButton";
 
 import { addFundToWallet, getClientByID } from "../services/ApiClient";
-
-import { AuthContext } from "../contexts/AuthContextProvider";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../ui-components/Title.css";
@@ -35,8 +31,6 @@ function ClientDetailsPage(props) {
   const [show, setShow] = useState(true);
 
   const history = useHistory();
-  const location = useLocation();
-  const authContext = useContext(AuthContext);
 
   const [isInitialized, setIsInitialized] = useState(false);
   const [mustReload, setMustReload] = useState(false);
@@ -104,11 +98,8 @@ function ClientDetailsPage(props) {
 
   return (
     <>
-      <NavbarComponent
-        links={getAvailableNavbarLinks(authContext.currentUser)}
-        loggedUser={authContext.currentUser}
-      />
-      {location.state != null && show ? (
+      <NavbarComponent links={employeeNavbarLinks} />
+      {props.location.state != null && show ? (
         <Row>
           <Alert
             variant='success'
@@ -164,7 +155,7 @@ function ClientDetailsPage(props) {
             <Divider size={2} />
           </Container>
           <Row>
-            <ClientOrders clientID={clientID} />
+            <ClientOrders />
           </Row>
         </>
       )}

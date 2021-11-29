@@ -1,6 +1,5 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useState } from "react";
-import { useLocation } from "react-router";
 import { Container, Row } from "react-bootstrap";
 import { Redirect } from "react-router-dom";
 
@@ -18,7 +17,6 @@ import {
 } from "../services/ApiClient";
 
 function ShoppingCartPage(props) {
-  const location = useLocation();
   // as props, ShoppingCartPage receives
   //      - a Map <ItemID, Qty>
   //      - the clientID
@@ -29,12 +27,14 @@ function ShoppingCartPage(props) {
   // it uses function getClientByID(id) -> client object
   // it uses function createOrder(clientID, cart) -> POST /api/orders
 
-  const [cart, setCart] = useState(location.state.shoppingCart);
+  const propsClientID = props.location.state? props.location.state.clientID : ''; 
+
+  const [cart, setCart] = useState(props.location.state.shoppingCart);
 
   /* compute initial total amount */
   var sum = 0;
   Array.from(cart.entries()).map((entry) => {
-    sum += 1.0 * entry[1]; // mock price
+    sum += 1.0*entry[1];   // mock price
     return entry;
   });
 
@@ -47,7 +47,7 @@ function ShoppingCartPage(props) {
     // remove from cart
     if (quantity < 0 && prev_qty === 1) {
       const newMap = new Map();
-      if (cart.size > 1) {
+      if(cart.size>1){
         Array.from(cart.entries()).map((entry) => {
           const [key, val] = entry;
           if (key === product) return null;
@@ -74,7 +74,7 @@ function ShoppingCartPage(props) {
       quantity,
     }));
     //call create order
-    createOrder(location.state.clientID, products);
+    createOrder(propsClientID, products); 
     handleClose();
     setSubmitted(true);
   };
@@ -86,7 +86,7 @@ function ShoppingCartPage(props) {
       </Row>
       <Row>
         <ShoppingCartTitle
-          client={location.state.clientID}
+          client={propsClientID}
           getClientByID={getClientByID}
         />
       </Row>
@@ -103,7 +103,7 @@ function ShoppingCartPage(props) {
       <Row>
         <ShoppingCartControls
           handleShow={handleShow}
-          clientID={location.state.clientID}
+          clientID={propsClientID}
           cart={cart}
         />
       </Row>
@@ -121,8 +121,7 @@ function ShoppingCartPage(props) {
       {submitted ? (
         <Redirect
           to={{
-            pathname: "/employee/clients/" + location.state.clientID,
-            state: { orderAmount: amount },
+            pathname: "/employee/clients/" + propsClientID,  state: { orderAmount: amount}
           }}
         />
       ) : (

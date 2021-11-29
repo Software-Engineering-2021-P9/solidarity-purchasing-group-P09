@@ -1,21 +1,19 @@
 class Order {
-  constructor(id, clientID, products, status, totalPrice, createdAt) {
+  constructor(id, clientId, products, status, totalPrice) {
     this.id = id;
-    this.clientID = clientID;
+    this.clientId = clientId;
     this.products = products;
     this.status = status;
     this.totalPrice = totalPrice;
-    this.createdAt = createdAt;
   }
 
   static fromJSON(json) {
     return new Order(
-      json.id,
-      json.clientID,
+      json._id,
+      json.clientId,
       json.products,
       json.status,
-      json.totalPrice,
-      json.createdAt
+      json.totalPrice
     );
   }
 }

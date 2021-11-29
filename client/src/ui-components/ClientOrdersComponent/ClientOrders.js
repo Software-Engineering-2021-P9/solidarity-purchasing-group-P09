@@ -7,10 +7,11 @@ function ClientOrders(props) {
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {
-    getOrders(props.clientID).then((newO) => {
+    // getOrder retrieves mock data!
+    getOrders().then((newO) => {
       setOrders(newO);
     });
-  }, [props.clientID]);
+  }, []);
 
   return (
     <div>

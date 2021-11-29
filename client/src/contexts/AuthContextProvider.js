@@ -59,6 +59,10 @@ function AuthContextProvider(props) {
       switch(this.currentUser?.role){
         case UserRoles.CLIENT:
           return clientDetailsRouteName;
+        case UserRoles.EMPLOYEE:
+          return ; 
+        case UserRoles.FARMER:
+          return ;
         default:
           return ;
       }

@@ -108,6 +108,13 @@ app.post(
   clientHandlers.createClientHandler
 );
 
+app.post(
+  buildAPIPath("/clients/signup"),
+  clientHandlers.signupClientValidatorChain,
+  checkValidationErrorMiddleware,
+  clientHandlers.signupClientHandler
+);
+
 // ----------
 // /orders
 // ----------

@@ -1,7 +1,9 @@
 import { createContext, useState, useEffect } from "react";
 import { Row, Spinner } from "react-bootstrap";
 import { useHistory } from "react-router";
+import { clientDetailsRouteName } from "../Routes";
 import { getCurrentUser, loginUser, logoutUser } from "../services/ApiClient";
+import UserRoles from "../services/models/UserRoles";
 import ErrorToast from "../ui-components/ErrorToast/ErrorToast";
 
 const AuthContext = createContext();
@@ -53,6 +55,16 @@ function AuthContextProvider(props) {
           });
       });
     },
+    getUserIconLink: function(){
+      switch(this.currentUser?.role){
+        case UserRoles.CLIENT:
+          return clientDetailsRouteName;
+        case UserRoles.EMPLOYEE:
+        case UserRoles.FARMER:
+        default:
+          return "";
+      }
+    }
   });
 
   useEffect(() => {

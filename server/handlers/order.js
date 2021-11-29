@@ -1,4 +1,5 @@
 const dayjs = require("dayjs");
+const { logoutUser } = require("../../client/src/services/ApiClient");
 var dao = require("../dao/dao");
 const { Order, OrderStatus } = require("../models/order");
 const {
@@ -17,6 +18,28 @@ exports.createOrderValidatorChain = [
 ];
 
 exports.createOrderHandler = async function (req, res, next) {
+  //GET CLIENT WALLET
+  let client;
+  
+  try {
+    client = await dao.getClientByID(req.body.clientID.toString());
+  } catch (err) {
+    return res.status(500).end();
+  }
+  if (!client) {
+    console.error(
+      `getClientByID() -> couldn't retrieve client`
+    );
+  }
+
+  //IF WALLET NOT ENOUGH SET THE STATE TO NOT COVERED
+  let status = "waiting";
+
+  if(client.wallet < totalPrice)
+    status = OrderStatus.NOT_COVERED;
+  else
+    status = OrderStatus.WAITING;
+
   // productPrice is hardcoded to 1 as a tempoarary solution for now, will be fixed in the next sprints
   const productPrice = 1;
 
@@ -31,7 +54,7 @@ exports.createOrderHandler = async function (req, res, next) {
     result = await dao.createOrder(
       req.body.clientID.toString(),
       req.body.products,
-      OrderStatus.WAITING,
+      status,
       totalPrice,
       dayjs().toISOString()
     );
@@ -51,34 +74,11 @@ exports.createOrderHandler = async function (req, res, next) {
     );
     return res.status(500).end();
   }
-
   if (!result) {
     console.error(`CreateOrder() -> couldn't retrieve newly created order`);
     return res.status(404).end();
   }
-  //GET CLIENT WALLET
-  let client;
 
-  try {
-    client = await dao.getClientByID(req.body.clientID.toString());
-  } catch (err) {
-    return res.status(500).end();
-  }
-  if (!client) {
-    console.error(
-      `getClientByID() -> couldn't retrieve client`
-    );
-  }
-
-  //IF WALLET NOT ENOUGH SET THE STATE TO NOT COVERED
-  if(client.wallet < totalPrice){
-    try{
-      result = await dao.updateOrderStatus(result._id, "not covered");
-      result = result.value;
-    }catch(err){
-      return res.status(500).end();
-    }
-  }
   return res.json(Order.fromMongoJSON(result));
 };
 

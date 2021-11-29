@@ -174,7 +174,7 @@ function ClientDetailsPage(props) {
             <Divider size={2} />
           </Container>
           <Row>
-            <ClientOrders/>
+            <ClientOrders clientID={clientID}/>
           </Row>
         </>
       )}

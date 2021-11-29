@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { PopUpForCompleteOrder } from "./PopUpForCompleteOrder";
 import "./ClientOrderTableRow.css";
-import { RedButton } from "../RedButtonComponent/RedButton";
+import Button from "../Button/Button";
 import { updateStatus } from "../../services/ApiClient";
 import { useHistory } from "react-router";
 
@@ -16,7 +16,9 @@ function setupStatusLabelAndRowButton(location, status, setModalIsOpen){
       tableRowComponents.statusLabel = <td className='table-row-status-prepared'>{status}</td>;
       if(location !== "/NotCoveredOrders")
         tableRowComponents.rowButton = 
-          <td className='table-row'><RedButton text='Change Status' onClick={() => setModalIsOpen(true)}/></td>
+          <td className='table-row'>
+            <Button text='Change Status' onClick={() => setModalIsOpen(true)}/>
+            </td>
       break;
 
     case("NOT COVERED"):
@@ -43,7 +45,6 @@ function ClientOrderTableRow(props) {
   };
 
   let tableRowComponents = setupStatusLabelAndRowButton(history.location.pathname, status, setModalIsOpen);
-
   return (
     <>
       <PopUpForCompleteOrder

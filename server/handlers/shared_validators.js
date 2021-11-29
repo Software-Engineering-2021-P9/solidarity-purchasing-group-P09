@@ -2,6 +2,7 @@ const { ObjectId } = require("bson");
 const { ProductCategory } = require("../models/product");
 
 const { body, param, validationResult, query } = require("express-validator");
+const configOverrideAuth = require ("../services/overrideAuth");
 
 exports.checkValidationErrorMiddleware = (req, res, next) => {
   const errors = validationResult(req);
@@ -13,6 +14,10 @@ exports.checkValidationErrorMiddleware = (req, res, next) => {
 
 exports.checkUserRoleMiddleware = (userRoles) => {
   return (req, res, next) => {
+    if(configOverrideAuth.overrideAuth){
+      next(); 
+      return; 
+    }
     if (!userRoles?.includes(req?.user.role)) {
       return res?.status(401).end();
     }

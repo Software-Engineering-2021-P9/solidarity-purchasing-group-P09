@@ -271,12 +271,13 @@ export async function getFarmerProducts(
   farmerID,
   category = null,
   searchString = null,
-  isAvailable = null
+  hasAvailabilitySet = null
 ) {
   var queryParams = {};
   if (category) queryParams["category"] = category;
   if (searchString) queryParams["searchString"] = searchString;
-  if (isAvailable) queryParams["isAvailable"] = isAvailable;
+  if (hasAvailabilitySet !== null)
+    queryParams["hasAvailabilitySet"] = hasAvailabilitySet;
 
   let response = await fetch(
     `/api/farmers/${farmerID}/products` +

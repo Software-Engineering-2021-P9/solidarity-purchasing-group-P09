@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import { useHistory } from "react-router";
 import {
@@ -38,38 +38,52 @@ function ProductManagementPage(props) {
   const [searchString, setSearchString] = useState("");
 
   const [productList, setProductList] = useState([]);
-  const [isProductListLoading, setIsProductListLoading] = useState(false);
+  const [isProductListLoading, setIsProductListLoading] = useState(true);
+  const [mustReload, setMustReload] = useState(true);
 
   const [requestError, setRequestError] = useState("");
 
-  function loadProductList() {
-    setIsProductListLoading(true);
-    getFarmerProducts(
-      authContext.currentUser.id,
-      categoryFilter,
-      searchString,
-      availabilityFilter
-    )
-      .then(setProductList)
-      .catch((err) => {
-        setRequestError(err.message);
-        setProductList([]);
-      })
-      .finally(() => setIsProductListLoading(false));
-  }
+  useEffect(() => {
+    const loadProductList = () => {
+      setIsProductListLoading(true);
+      getFarmerProducts(
+        authContext.currentUser.id,
+        categoryFilter,
+        searchString,
+        getAvailabilityFilterOptions()[availabilityFilter]
+      )
+        .then((result) => {
+          setProductList(result);
+          setMustReload(false);
+        })
+        .catch((err) => {
+          setRequestError(err.message);
+          setProductList([]);
+        })
+        .finally(() => setIsProductListLoading(false));
+    };
+
+    if (mustReload) loadProductList();
+  }, [
+    mustReload,
+    authContext.currentUser.id,
+    availabilityFilter,
+    categoryFilter,
+    searchString,
+  ]);
 
   function onCategoryFilterChange(newVal) {
     setCategoryFilter(newVal);
-    loadProductList();
+    setMustReload(true);
   }
 
   function onAvailabilityFilterChange(newVal) {
     setAvailabilityFilter(newVal);
-    loadProductList();
+    setMustReload(true);
   }
 
   function onSearchFormSubmit() {
-    loadProductList();
+    setMustReload(true);
   }
 
   function productListEmptyText() {
@@ -100,6 +114,10 @@ function ProductManagementPage(props) {
     history.push(routes[farmerProductCreateRouteName].path);
   }
 
+  function getAvailabilityFilterOptions() {
+    return { Available: true, "Not available": false };
+  }
+
   return (
     <>
       <NavbarComponent
@@ -127,7 +145,7 @@ function ProductManagementPage(props) {
           <Col className='me-auto' xs='12' sm='6' md='3' lg='2'>
             <Row>
               <RedDropdown
-                items={["Available", "Not available"]}
+                items={Object.keys(getAvailabilityFilterOptions())}
                 title={availabilityFilter ? availabilityFilter : "Availability"}
                 updateSelectedItem={onAvailabilityFilterChange}
                 activeElement={availabilityFilter}

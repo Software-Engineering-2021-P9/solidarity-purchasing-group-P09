@@ -5,5 +5,8 @@
     "scripts": {
         "start": "npm start --prefix server/",
         "build": "npm ci --prefix client/ && npm ci --prefix server/ && npm run build --prefix client/"
-    }
+    },
+    "engines": {
+        "node": "16.x"
+  }
 }

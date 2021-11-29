@@ -133,11 +133,10 @@ function ProductListPage(props) {
           </Row>
         </Container>
         <Modal.Footer>
-          <Button className='btn-light' onClick={handleClose}>
+          <Button variant='light' onClick={handleClose}>
             Close
           </Button>
           <Button
-            className='btn-primary'
             onClick={() =>
               addItem(modalProduct.productId, modalProduct.productQty)
             }

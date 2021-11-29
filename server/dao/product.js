@@ -1,7 +1,6 @@
 "use strict";
 
 const { ObjectID } = require("bson");
-const { productsCollection } = require("../test/test-data");
 
 const productsCollectionName = "products";
 

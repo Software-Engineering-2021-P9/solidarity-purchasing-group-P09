@@ -317,7 +317,7 @@ exports.productsAvailabilityCollection = {
     {
       _id: ObjectID("000000000000000000000002"),
       farmerID: ObjectID("4c7564443132333435363738"),
-      productID: ObjectID("000000000000000000000010"),
+      productID: ObjectID("000000000000000000000011"),
       week: 15,
       year: 2020,
       price: 2.3,
@@ -355,7 +355,7 @@ exports.productsAvailabilityCollection = {
       quantity: 30,
     },
     {
-      _id: ObjectID("000000000000000000000005"),
+      _id: ObjectID("000000000000000000000006"),
       farmerID: ObjectID("4c7564443132333435363738"),
       productID: ObjectID("000000000000000000000012"),
       week: 1,

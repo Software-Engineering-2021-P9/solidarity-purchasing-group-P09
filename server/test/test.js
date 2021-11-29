@@ -204,28 +204,9 @@ describe("Products API tests: ", () => {
           expect(res.status).to.be.equal(200);
           expect(res.body).to.be.an("array");
           expect(res.body.length).to.be.equal(2);
-          expect(res.body.map((product) => product.availability)).to.be.eql([
-            {
-              id: "000000000000000000000004",
-              farmerID: "67696f76616a6a6a31a23334",
-              productID: "000000000000000000000006",
-              week: 48,
-              year: 2021,
-              price: 4.5,
-              packaging: "1 units",
-              quantity: 27,
-            },
-            {
-              id: "000000000000000000000005",
-              farmerID: "4c7564443132333435363738",
-              productID: "000000000000000000000012",
-              week: 48,
-              year: 2021,
-              price: 6,
-              packaging: "1 units",
-              quantity: 30,
-            },
-          ]);
+          expect(
+            res.body.map((product) => product.availability.productID)
+          ).to.be.eql(["000000000000000000000006", "000000000000000000000012"]);
           done();
         });
     });
@@ -1202,7 +1183,7 @@ describe("Farmers API tests:", () => {
     chai
       .request(app)
       .get(
-        "/api/farmers/4c7564443132333435363738/products?category=eggs&hasAvailabilitySet=true"
+        "/api/farmers/4c7564443132333435363738/products?category=milk&hasAvailabilitySet=true"
       )
       .end((err, res) => {
         expect(err).to.be.null;

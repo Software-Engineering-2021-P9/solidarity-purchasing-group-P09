@@ -6,8 +6,8 @@ function ObjectListHeader(props) {
   return (
     <Container className='object-list-header pb-3'>
       <Row>
-        {props.headerLabels.map((l) => (
-          <Col>
+        {props.headerLabels.map((l, index) => (
+          <Col key={index}>
             <b>{l}</b>
           </Col>
         ))}

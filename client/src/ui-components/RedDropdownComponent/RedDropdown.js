@@ -1,5 +1,5 @@
 import React from "react";
-import { Dropdown, ButtonGroup, Row, Container } from "react-bootstrap";
+import { Dropdown, ButtonGroup, Row } from "react-bootstrap";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./RedDropdown.css";

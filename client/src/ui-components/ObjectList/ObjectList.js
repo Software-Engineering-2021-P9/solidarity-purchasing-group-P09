@@ -26,11 +26,11 @@ function ObjectList(props) {
             ) : (
               <>
                 {props.items?.map((item, index) => (
-                  <ObjectListItem
+                  <span
                     key={"object-info-item-" + index}
-                    item={item}
-                    onClick={() => props.onItemClick(index)}
-                  />
+                    onClick={() => props.onItemClick(index)}>
+                    <ObjectListItem item={item} />
+                  </span>
                 ))}
               </>
             )}

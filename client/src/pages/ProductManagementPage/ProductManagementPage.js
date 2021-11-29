@@ -1,17 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 
 import { useHistory } from "react-router";
 import {
-  employeeClientSignupRouteName,
+  farmerProductCreateRouteName,
   farmerProductDetailsRouteName,
-  farmerNavbarLinks,
+  getAvailableNavbarLinks,
   routes,
 } from "../../Routes";
 
-import { Container, FormControl, InputGroup, Row, Col } from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
 
 import { NavbarComponent } from "../../ui-components/NavbarComponent/NavbarComponent";
-import ClientInfoList from "../../ui-components/ClientInfoList/ClientInfoList";
 import Button from "../../ui-components/Button/Button";
 import Divider from "../../ui-components/Divider/Divider";
 import InlineTextForm from "../../ui-components/InlineTextForm/InlineTextForm";
@@ -20,30 +19,35 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./ProductManagementPage.css";
 import "../../ui-components/Title.css";
 
-import { findClients, getFarmerProducts } from "../../services/ApiClient";
+import { getFarmerProducts } from "../../services/ApiClient";
 import ErrorToast from "../../ui-components/ErrorToast/ErrorToast";
 import ObjectList from "../../ui-components/ObjectList/ObjectList";
 import { RedDropdown } from "../../ui-components/RedDropdownComponent/RedDropdown";
 import Product from "../../services/models/Product";
 import SemaphoreRenderer from "../../ui-components/ObjectList/SemaphoreRenderer";
 import TextRenderer from "../../ui-components/ObjectList/TextRenderer";
+import { AuthContext } from "../../contexts/AuthContextProvider";
 
 function ProductManagementPage(props) {
-  const farmerID = "test";
   const history = useHistory();
+
+  const authContext = useContext(AuthContext);
+
   const [categoryFilter, setCategoryFilter] = useState("");
   const [availabilityFilter, setAvailabilityFilter] = useState("");
   const [searchString, setSearchString] = useState("");
+
   const [productList, setProductList] = useState([
     { name: "cavallo", availability: "wow" },
   ]);
   const [isProductListLoading, setIsProductListLoading] = useState(false);
+
   const [requestError, setRequestError] = useState("");
 
   function loadProductList() {
     setIsProductListLoading(true);
     getFarmerProducts(
-      farmerID,
+      authContext.currentUser.id,
       categoryFilter,
       searchString,
       availabilityFilter
@@ -71,25 +75,17 @@ function ProductManagementPage(props) {
   }
 
   function productListEmptyText() {
-    console.log(productList);
     if (productList?.length === 0)
       return "No product found.\nYou can create a new product using the button below.";
     return "";
   }
 
   function buildProductListItems() {
-    console.log(
-      productList.map((p) => {
-        console.log(p.name, !!p.availability);
-        return [
-          TextRenderer({ value: p.name }),
-          SemaphoreRenderer({ value: !!p.availability }),
-        ];
-      })
-    );
     return productList.map((p) => [
       TextRenderer({ value: p.name }),
-      SemaphoreRenderer({ value: !!p.availability }),
+      <span className='ps-4 d-flex'>
+        <SemaphoreRenderer value={!!p.availability} />
+      </span>,
     ]);
   }
 
@@ -103,12 +99,16 @@ function ProductManagementPage(props) {
   }
 
   function onCreateProductButtonClick(index) {
-    history.push(routes[employeeClientSignupRouteName].path);
+    history.push(routes[farmerProductCreateRouteName].path);
   }
 
   return (
     <>
-      <NavbarComponent links={farmerNavbarLinks} />
+      <NavbarComponent
+        links={getAvailableNavbarLinks(authContext.currentUser)}
+        loggedUser={authContext.currentUser}
+        userIconLink={authContext.getUserIconLink()}
+      />
       <Row>
         <Col md='5'>
           <h1 className='title'>Manage Products</h1>

@@ -10,7 +10,7 @@ function buildQueryParametersString(queryParams) {
     return "";
   }
 
-  queryParamsString = "?";
+  let queryParamsString = "?";
 
   for (const [key, value] of Object.entries(queryParams)) {
     queryParamsString += `${key}=${value}&`;

@@ -37,9 +37,7 @@ function ProductManagementPage(props) {
   const [availabilityFilter, setAvailabilityFilter] = useState("");
   const [searchString, setSearchString] = useState("");
 
-  const [productList, setProductList] = useState([
-    { name: "cavallo", availability: "wow" },
-  ]);
+  const [productList, setProductList] = useState([]);
   const [isProductListLoading, setIsProductListLoading] = useState(false);
 
   const [requestError, setRequestError] = useState("");

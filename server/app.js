@@ -8,7 +8,7 @@ const passport = require("passport");
 var dao = require("./dao/dao");
 
 const {
-  checkValidationErrorMiddleware,
+  checkValidationErrorMiddleware, checkUserRoleMiddleware
 } = require("./handlers/shared_validators");
 var userHandlers = require("./handlers/user");
 
@@ -26,6 +26,7 @@ const {
   serializeUser,
   deserializeUser,
 } = require("./services/auth_service");
+const { UserRoles } = require("./models/user_roles");
 
 const port = process.env.PORT || 3001;
 const buildAPIPath = (apiPath) => "/api" + apiPath;
@@ -62,6 +63,7 @@ app.delete(buildAPIPath("/users/current"), userHandlers.logoutHandler);
 
 app.get(
   buildAPIPath("/employees/:employeeID"),
+  checkUserRoleMiddleware([UserRoles.EMPLOYEE]),
   employeeHandlers.getEmployeeByIDValidatorChain,
   checkValidationErrorMiddleware,
   employeeHandlers.getEmployeeByIDHandler
@@ -69,6 +71,7 @@ app.get(
 
 app.post(
   buildAPIPath("/employees"),
+  checkUserRoleMiddleware([UserRoles.EMPLOYEE]),
   employeeHandlers.createEmployeeHandlerValidatorChain,
   checkValidationErrorMiddleware,
   employeeHandlers.createEmployeeHandler
@@ -80,6 +83,7 @@ app.post(
 
 app.get(
   buildAPIPath("/clients/:clientID"),
+  checkUserRoleMiddleware([UserRoles.EMPLOYEE, UserRoles.CLIENT]),
   clientHandlers.getClientByIDValidatorChain,
   checkValidationErrorMiddleware,
   clientHandlers.getClientByIDHandler
@@ -87,6 +91,7 @@ app.get(
 
 app.patch(
   buildAPIPath("/clients/:clientID/wallet"),
+  checkUserRoleMiddleware([UserRoles.EMPLOYEE]),
   clientHandlers.addFundToWalletValidatorChain,
   checkValidationErrorMiddleware,
   clientHandlers.addFundToWalletHandler
@@ -94,6 +99,7 @@ app.patch(
 
 app.get(
   buildAPIPath("/clients"),
+  checkUserRoleMiddleware([UserRoles.EMPLOYEE]),
   clientHandlers.findClientValidatorChain,
   checkValidationErrorMiddleware,
   clientHandlers.findClientsHandler
@@ -112,6 +118,7 @@ app.post(
 
 app.post(
   buildAPIPath("/orders"),
+  checkUserRoleMiddleware([UserRoles.EMPLOYEE, UserRoles.CLIENT]),
   orderHandlers.createOrderValidatorChain,
   checkValidationErrorMiddleware,
   orderHandlers.createOrderHandler
@@ -119,6 +126,7 @@ app.post(
 
 app.get(
   buildAPIPath("/orders"),
+  checkUserRoleMiddleware([UserRoles.EMPLOYEE, UserRoles.CLIENT]),
   orderHandlers.getOrdersByClientIDValidator,
   checkValidationErrorMiddleware,
   orderHandlers.getOrdersByClientID

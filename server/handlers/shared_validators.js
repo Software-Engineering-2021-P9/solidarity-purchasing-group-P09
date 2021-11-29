@@ -11,6 +11,12 @@ exports.checkValidationErrorMiddleware = (req, res, next) => {
   next();
 };
 
+exports.checkUserRoleMiddleware = (userRoles)=>{
+  if(userRoles.includes(req.user.role))
+    next(); 
+  return res.status(401).end();
+}
+
 // shared validators
 
 exports.employeeIDPathValidator = param("employeeID").isMongoId();

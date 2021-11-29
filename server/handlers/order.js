@@ -1,6 +1,7 @@
 const dayjs = require("dayjs");
 var dao = require("../dao/dao");
 const { Order, OrderStatus } = require("../models/order");
+const { UserRoles } = require("../models/user_roles");
 const {
   clientIDBodyValidator,
   orderProductIDsBodyValidator,
@@ -27,13 +28,8 @@ exports.createOrderHandler = async function (req, res, next) {
 
   // checking if the req.body.clientID is the same of the logged client
 
-  /* MOCK DATA ... waiting for login */
-  var isClientLogged = true;
-  var loggedClientID = req.body.clientID; // ClientID of the logged client
-  /* END MOCK DATA */
-
-  if (isClientLogged) {
-    if (loggedClientID != req.body.clientID) return res.status(401).end();
+  if(req.user.role === UserRoles.CLIENT && req.body.clientID != req.user.id){
+    return res.status(401).end();
   }
 
   // Insert the new order

@@ -1,4 +1,3 @@
-
 import EmployeeInfoResult from "./models/EmployeeInfoResult";
 import ClientInfoResult from "./models/ClientInfoResult";
 import FarmerInfoResult from "./models/FarmerInfoResult";
@@ -265,10 +264,32 @@ export async function getOrders(clientID) {
   }
 }
 
-export async function updateStatus(status) {
+export async function updateStatus(status, orderID) {
   // again another mock function for frontend
-  if (status === "PREPARED") {
-    return "DONE";
+  if (status === Order.OrderStatus.PREPARED) {
+    const response = await fetch(`/api/orders/${orderID}/complete`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    switch (response.status) {
+      case 204:
+        return Order.OrderStatus.DONE;
+      case 400:
+        throw new Error(
+          "Bad request: the request contained invalid parameter " + orderID
+        );
+      case 401:
+        throw new Error("Unauthorized");
+      case 500:
+        throw new Error("Internal Server Error");
+      default:
+        throw new Error(
+          "An error occurred during order update to complete status"
+        );
+    }
   }
 }
 
@@ -316,14 +337,3 @@ export async function getProductsByIDs(productIDs) {
       throw new Error("An error occurred during products fetch");
   }
 }
-
-
-
-
-
-
-
-
-
-
-

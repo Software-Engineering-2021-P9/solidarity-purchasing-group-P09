@@ -48,14 +48,15 @@ function ShoppingCartPage(props) {
       : location.state.clientID;
 
   useEffect(() => {
-    async function fetchClientInfo() {
-      try {
-        const clientInfo = await getClientByID(clientID);
-        setClient(clientInfo);
-      } catch (err) {
-        setRequestError("Failed to fetch client data: " + err.message);
-      }
-    }
+    const fetchClientInfo = () => {
+      getClientByID(clientID)
+        .then((result) => {
+          setClient(result);
+        })
+        .catch((err) => {
+          setRequestError("Failed to fetch client data: " + err.message);
+        });
+    };
     fetchClientInfo();
   }, [clientID]);
 
@@ -64,14 +65,15 @@ function ShoppingCartPage(props) {
       setProducts([]);
       return;
     }
-    async function updateProducts() {
-      try {
+    const updateProducts = () => {
         const productIDs = Array.from(cart.keys());
-        const server_products = await getProductsByIDs(productIDs);
-        setProducts(server_products);
-      } catch (err) {
-        setRequestError("Failed to fetch products data: " + err.message);
-      }
+        getProductsByIDs(productIDs)
+        .then((result)=>{
+          setProducts(result);
+        })
+        .catch((err)=>{
+          setRequestError("Failed to fetch products data: " + err.message);
+        })
     }
     updateProducts();
   }, [cart]);
@@ -168,25 +170,21 @@ function ShoppingCartPage(props) {
         errorMessage={requestError}
         onClose={() => setRequestError("")}
       />
-      {submitted && authContext.currentUser.role === UserRoles.EMPLOYEE ? (
+      {submitted && authContext.currentUser.role === UserRoles.EMPLOYEE && (
         <Redirect
           to={{
             pathname: "/employee/clients/" + location.state.clientID,
             state: { showOrderAlert: true },
           }}
         />
-      ) : (
-        ""
       )}
-      {submitted && authContext.currentUser.role === UserRoles.CLIENT ? (
+      {submitted && authContext.currentUser.role === UserRoles.CLIENT && (
         <Redirect
           to={{
             pathname: "/client",
             state: { showOrderAlert: true, shoppingCart: new Map() },
           }}
         />
-      ) : (
-        ""
       )}
     </Container>
   );

@@ -140,10 +140,6 @@ function ClientDetailsPage(props) {
           <Spinner variant="dark" animation="border" />
         </Container>
       ) : (
-        ""
-      )}
-
-      {isInitialized && (
         <>
           <Row>
             <h1 className="title">Client Details</h1>

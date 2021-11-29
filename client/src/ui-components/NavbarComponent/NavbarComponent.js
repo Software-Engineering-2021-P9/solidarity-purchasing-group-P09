@@ -78,7 +78,7 @@ function NavbarComponent(props) {
 
         {props.loggedUser && (
           <>
-            {props.userIconLink != null ? (
+            {props.userIconLink ? (
               <Nav.Link
                 className="navbar-text"
                 href={routes[props.userIconLink]?.path}

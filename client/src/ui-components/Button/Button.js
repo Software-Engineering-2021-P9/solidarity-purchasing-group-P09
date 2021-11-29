@@ -8,7 +8,8 @@ function Button(props) {
       className={props.className}
       variant={props.variant}
       onClick={props.onClick}
-      disabled={props.disabled}>
+      disabled={props.disabled}
+      type={props.type}>
       <Container>
         <Row className='align-items-center'>
           <Col className='p-0 d-flex justify-content-center align-items-center'>

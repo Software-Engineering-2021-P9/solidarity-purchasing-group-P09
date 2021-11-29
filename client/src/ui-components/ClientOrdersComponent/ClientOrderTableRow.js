@@ -4,25 +4,34 @@ import "./ClientOrderTableRow.css";
 import Button from "../Button/Button";
 import { updateStatus } from "../../services/ApiClient";
 import { useHistory } from "react-router";
+import  Order  from "../../services/models/Order"
 
 function setupStatusLabelAndRowButton(location, status, setModalIsOpen){
   let tableRowComponents = {
-    statusLabel: <td className='table-row-status-done'>{status}</td>,
+    statusLabel: <td className='table-row-status-not-covered'>{"invalid status"}</td>,
     rowButton: <td className='table-row'></td>
   };
 
   switch(status){
-    case("PREPARED"):
+    case(Order.OrderStatus.PREPARED):
       tableRowComponents.statusLabel = <td className='table-row-status-prepared'>{status}</td>;
       if(location !== "/NotCoveredOrders")
         tableRowComponents.rowButton = 
           <td className='table-row'>
-            <Button text='Change Status' onClick={() => setModalIsOpen(true)}/>
+            <Button onClick={() => setModalIsOpen(true)}>Change Status</Button>
           </td>
       break;
 
-    case("NOT COVERED"):
+    case(Order.OrderStatus.NOT_COVERED):
       tableRowComponents.statusLabel = <td className='table-row-status-not-covered'>{status}</td>; 
+      break;
+    
+      case(Order.OrderStatus.DONE):
+      tableRowComponents.statusLabel = <td className='table-row-status-done'>{status}</td>; 
+      break;
+
+      case(Order.OrderStatus.WAITING):
+      tableRowComponents.statusLabel = <td className='table-row-status-waiting'>{status}</td>; 
       break;
 
     default:

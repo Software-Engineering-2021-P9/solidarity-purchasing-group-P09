@@ -1,5 +1,6 @@
 var dao = require("../dao/dao");
 const { ClientInfo } = require("../models/client_info");
+const { OrderStatus } = require("../models/order");
 const {
   clientIDPathValidator,
   addFundToWalletBodyValidator,
@@ -62,7 +63,7 @@ exports.addFundToWalletHandler = async function (req, res, next) {
       return res.status(500).end(); 
     }
 
-    orders = orders.filter(order => order.status == "not covered").sort((a, b)=>{
+    orders = orders.filter(order => order.status == OrderStatus.NOT_COVERED).sort((a, b)=>{
         if(a.createdAt <= b.createdAt)
           return -1;
         return 1;
@@ -75,7 +76,7 @@ exports.addFundToWalletHandler = async function (req, res, next) {
         break;
       finalWalletValue -= order.totalPrice;
       try{
-        await dao.updateOrderStatus(order._id, "waiting");
+        await dao.updateOrderStatusToWaiting(order._id);
       }catch(err){
         return res.status(500).end();
       }

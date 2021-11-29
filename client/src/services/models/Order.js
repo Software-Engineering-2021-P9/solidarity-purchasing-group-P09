@@ -1,3 +1,5 @@
+"use strict";
+
 class Order {
   constructor(id, clientID, products, status, totalPrice, createdAt) {
     this.id = id;
@@ -18,6 +20,14 @@ class Order {
       json.createdAt
     );
   }
+  
+  static OrderStatus = {
+    NOT_COVERED: "not covered",
+    WAITING: "waiting",
+    CONFIRMED: "confirmed",
+    PREPARED: "prepared",
+    DONE: "done",
+  };
 }
 
 export default Order;

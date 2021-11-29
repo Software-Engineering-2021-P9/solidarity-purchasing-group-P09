@@ -25,7 +25,7 @@ const {
   getOrderByID,
   deleteOrder,
   getOrdersByClientID,
-  updateOrderStatus,
+  updateOrderStatusToWaiting,
 } = require("./order");
 
 const {
@@ -97,7 +97,7 @@ exports.createOrder = (clientID, products, status, totalPrice, createdAt) =>
 exports.getOrderByID = (orderID) => getOrderByID(db, orderID);
 exports.deleteOrder = (orderID) => deleteOrder(db, orderID);
 exports.getOrdersByClientID = (clientID) => getOrdersByClientID(db, clientID);
-exports.updateOrderStatus = (orderID, status) => updateOrderStatus(db, orderID, status);
+exports.updateOrderStatusToWaiting = (orderID) => updateOrderStatusToWaiting(db, orderID);
 
 exports.createClientsTextSearchIndexes = () =>
   createClientsTextSearchIndexes(db);

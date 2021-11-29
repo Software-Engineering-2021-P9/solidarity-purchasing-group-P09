@@ -182,6 +182,46 @@ export async function addFundToWallet(clientID, increaseBy) {
   }
 }
 
+export async function createClient(client) {
+  const response = await fetch("http://localhost:3000/api/clients", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+
+    body: JSON.stringify({ ...client }),
+  });
+
+  switch (response.status) {
+    case 400:
+      throw new Error("Validation error occurred");
+    case 200:
+      let responseBody;
+      responseBody = await response.json();
+      return ClientInfoResult.fromJSON(responseBody);
+    default:
+      throw new Error("An error occurred during client fetch");
+  }
+}
+
+export async function signupClient(client) {
+  const response = await fetch("http://localhost:3000/api/clients/signup", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+
+    body: JSON.stringify({ ...client }),
+  });
+
+  switch (response.status) {
+    case 400:
+      throw new Error("Validation error occurred");
+    case 200:
+      let responseBody;
+      responseBody = await response.json();
+      return ClientInfoResult.fromJSON(responseBody);
+    default:
+      throw new Error("An error occurred during client fetch");
+  }
+}
+
 // -------
 // Product
 // -------
@@ -200,7 +240,6 @@ export async function findProducts(category, searchString) {
   }
 
   const response = await fetch(urlRequest);
-
   switch (response.status) {
     case 400:
       throw new Error("Validation error occurred");
@@ -216,7 +255,6 @@ export async function findProducts(category, searchString) {
 export async function getProductsByIDs(productIDs) {
   let productIDsString = productIDs.join(",");
   const response = await fetch("/api/products?ids=" + productIDsString);
-
   switch (response.status) {
     case 400:
       throw new Error("Validation error occurred");

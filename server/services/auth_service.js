@@ -87,6 +87,6 @@ exports.deserializeUser = async (id, done) => {
   return done(null, user);
 };
 
-exports.hashPassword = (password) => {
+exports.hashPassword = async (password) => {
   return await bcrypt.hash(password, saltRounds);
 };

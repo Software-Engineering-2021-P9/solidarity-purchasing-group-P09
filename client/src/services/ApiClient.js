@@ -1,3 +1,4 @@
+
 import EmployeeInfoResult from "./models/EmployeeInfoResult";
 import ClientInfoResult from "./models/ClientInfoResult";
 import FarmerInfoResult from "./models/FarmerInfoResult";
@@ -167,6 +168,46 @@ export async function addFundToWallet(clientID, increaseBy) {
   }
 }
 
+export async function createClient(client) {
+  const response = await fetch("http://localhost:3000/api/clients", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+
+    body: JSON.stringify({ ...client }),
+  });
+
+  switch (response.status) {
+    case 400:
+      throw new Error("Validation error occurred");
+    case 200:
+      let responseBody;
+      responseBody = await response.json();
+      return ClientInfoResult.fromJSON(responseBody);
+    default:
+      throw new Error("An error occurred during client fetch");
+  }
+}
+
+export async function signupClient(client) {
+  const response = await fetch("http://localhost:3000/api/clients/signup", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+
+    body: JSON.stringify({ ...client }),
+  });
+
+  switch (response.status) {
+    case 400:
+      throw new Error("Validation error occurred");
+    case 200:
+      let responseBody;
+      responseBody = await response.json();
+      return ClientInfoResult.fromJSON(responseBody);
+    default:
+      throw new Error("An error occurred during client fetch");
+  }
+}
+
 // --------
 // Products
 // --------
@@ -275,3 +316,14 @@ export async function getProductsByIDs(productIDs) {
       throw new Error("An error occurred during products fetch");
   }
 }
+
+
+
+
+
+
+
+
+
+
+

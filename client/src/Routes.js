@@ -16,6 +16,7 @@ const employeeClientDetailsRouteName = "employee-client-details-page";
 const employeeClientSignupRouteName = "employee-client-signup-page";
 const userLoginRouteName = "user-login-page";
 const userLogoutRouteName = "user-logout-page";
+const clientDetailsRouteName = "client-details-page"
 
 const routes = {
   [productListRouteName]: {
@@ -53,6 +54,16 @@ const routes = {
     ),
     exact: false,
     linkTitle: "Show Client Details",
+  },
+  [clientDetailsRouteName]: {
+    path: "/client",
+    component: () => (
+      <ProtectedRoute requiredRoles={[UserRoles.CLIENT]}>
+        <ClientDetailsPage />
+      </ProtectedRoute>
+    ),
+    exact: false,
+    linkTitle: "My Page",
   },
   [employeeClientSignupRouteName]: {
     path: "/employee/signupClient",
@@ -101,6 +112,7 @@ export {
   employeeClientManagementRouteName,
   employeeClientDetailsRouteName,
   employeeClientSignupRouteName,
+  clientDetailsRouteName,
   routes,
   getAvailableNavbarLinks,
 };

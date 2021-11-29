@@ -15,12 +15,15 @@ import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponen
 import { FilterRow } from "../ui-components/FilterRow/FilterRow";
 import ProductCard from "../ui-components/ProductCardComponent/ProductCard";
 import Button from "../ui-components/Button/Button";
+
 import "../ui-components/ShoppingCartComponent/ShoppingCartControlsCSS.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
+import Product from "../services/models/Product";
 import { findProducts } from "../services/ApiClient";
 
 import { AuthContext } from "../contexts/AuthContextProvider";
+import UserRoles from "../services/models/UserRoles";
 
 function ProductListPage(props) {
   const location = useLocation();
@@ -106,6 +109,7 @@ function ProductListPage(props) {
         shoppingCartItems={cart.size}
         shoppingCart={cart}
         clientID={location.state ? location.state.clientID : ""}
+        userIconLink={authContext.getUserIconLink()}
       />
 
       <Modal show={show} onHide={handleClose}>
@@ -161,7 +165,10 @@ function ProductListPage(props) {
                   <ProductCard
                     product={item}
                     // if the employee is creating a new order or is just showing available products
-                    creatingOrderMode={location.state?.creatingOrderMode}
+                    creatingOrderMode={
+                      location.state?.creatingOrderMode ||
+                      authContext?.currentUser?.role === UserRoles.CLIENT
+                    }
                     handleShow={handleShow}
                   />
                 </CardGroup>

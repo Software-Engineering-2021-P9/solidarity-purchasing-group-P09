@@ -14,6 +14,9 @@ const mongoUnit = require("mongo-unit");
 let testData = require("./test-data");
 const { OrderStatus } = require("../models/order");
 
+let configOverrideAuth = require ("../services/overrideAuth");
+configOverrideAuth.overrideAuth = true; 
+
 const mongoTestDBName = "spg-test";
 mongoUnit.start({ dbName: mongoTestDBName }).then(() => {
   process.env.MONGO_CONN_STR = mongoUnit.getUrl();

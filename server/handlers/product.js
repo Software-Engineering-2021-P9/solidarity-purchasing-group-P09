@@ -2,7 +2,7 @@ var dao = require("../dao/dao");
 const dayjs = require("dayjs");
 const { Product } = require("../models/product");
 const { ProductAvailability } = require("../models/product_availability");
-const { getNextWeek } = require("../services/time_service");
+const { getNextWeek, getCurrentWeek } = require("../services/time_service");
 const {
   searchStringValidator,
   productCategoryValidator,
@@ -64,7 +64,7 @@ exports.getProductsByIDHandler = async function (req, res, next) {
   try {
     productsAvailabilitiesResult = await dao.getProductsAvailability(
       productsResult.map((product) => product._id),
-      ...getNextWeek(dayjs())
+      ...getCurrentWeek(dayjs())
     );
   } catch (err) {
     console.error(
@@ -110,7 +110,7 @@ exports.getProductByIDHandler = async function (req, res, next) {
   try {
     result = await dao.getProductAvailability(
       req.params.productID,
-      ...getNextWeek(dayjs())
+      ...getCurrentWeek(dayjs())
     );
   } catch (err) {
     console.error(
@@ -212,6 +212,33 @@ exports.setNextWeekProductAvailabilityHandler = async function (
   if (!result) {
     console.error(
       `SetNextWeekProductAvailability() -> couldn't retrieve the newly created product availability: Not found`
+    );
+    return res.status(404).end();
+  }
+
+  return res.json(ProductAvailability.fromMongoJSON(result));
+};
+
+exports.getNextWeekProductAvailabilityValidatorChain = [productIDPathValidator];
+
+exports.getNextWeekProductAvailability = async function (req, res, next) {
+  let result;
+
+  try {
+    result = await dao.getProductAvailability(
+      req.params.productID,
+      ...getNextWeek(dayjs())
+    );
+  } catch (err) {
+    console.error(
+      `GetNextWeekProductAvailability() --> Couldn't retrieve the next week availability: ${err}`
+    );
+    return res.status(500).end();
+  }
+
+  if (!result) {
+    console.error(
+      `GetNextWeekProductAvailability() --> Couldn't retrieve the next week availability: Not found`
     );
     return res.status(404).end();
   }

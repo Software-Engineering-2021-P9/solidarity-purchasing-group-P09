@@ -136,6 +136,7 @@ app.get(
 // ---------
 // /products
 // ---------
+
 app.get(
   buildAPIPath("/products"),
   productHandlers.getProductsByIDValidatorChain,
@@ -155,10 +156,18 @@ app.post(
   productHandlers.setNextWeekProductAvailabilityValidatorChain,
   checkValidationErrorMiddleware,
   productHandlers.setNextWeekProductAvailabilityHandler
-)
+);
 
+app.get(
+  buildAPIPath("/products/:productID/availability/nextWeek"),
+  productHandlers.getNextWeekProductAvailabilityValidatorChain,
+  checkValidationErrorMiddleware,
+  productHandlers.getNextWeekProductAvailability
+);
 
-// farmers
+// --------
+// /farmers
+// --------
 
 app.get(
   buildAPIPath("/farmers/:farmerID/products"),
@@ -166,7 +175,6 @@ app.get(
   checkValidationErrorMiddleware,
   farmerHandlers.getFarmerProductsHandler
 );
-
 
 // Serve client app
 app.use("/", express.static(path.resolve(__dirname, "../client/build")));

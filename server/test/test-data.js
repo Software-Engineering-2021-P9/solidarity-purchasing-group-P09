@@ -1,6 +1,6 @@
 const { ObjectID } = require("bson");
 const dayjs = require("dayjs");
-const { getNextWeek } = require("../services/time_service");
+const { getNextWeek, getCurrentWeek } = require("../services/time_service");
 
 exports.employeesCollection = {
   employees: [
@@ -300,7 +300,11 @@ exports.productsCollectionWithCategoryError = {
   ],
 };
 
-const [nextWeek, currentYear] = getNextWeek(dayjs());
+let nextWeek;
+let currentWeek;
+let currentYear;
+[nextWeek, currentYear] = getNextWeek(dayjs());
+[currentWeek, currentYear] = getCurrentWeek(dayjs());
 
 exports.productsAvailabilityCollection = {
   availabilities: [
@@ -309,6 +313,16 @@ exports.productsAvailabilityCollection = {
       farmerID: ObjectID("67696f76616a6a6a31a23334"),
       productID: ObjectID("000000000000000000000001"),
       week: nextWeek,
+      year: currentYear,
+      price: 3.5,
+      packaging: "100g",
+      quantity: 5,
+    },
+    {
+      _id: ObjectID("100000000000000000000001"),
+      farmerID: ObjectID("67696f76616a6a6a31a23334"),
+      productID: ObjectID("000000000000000000000001"),
+      week: currentWeek,
       year: currentYear,
       price: 3.5,
       packaging: "100g",
@@ -342,6 +356,16 @@ exports.productsAvailabilityCollection = {
       year: currentYear,
       price: 4.5,
       packaging: "1 units",
+      quantity: 52,
+    },
+    {
+      _id: ObjectID("000000000000000000000014"),
+      farmerID: ObjectID("67696f76616a6a6a31a23334"),
+      productID: ObjectID("000000000000000000000006"),
+      week: currentWeek,
+      year: currentYear,
+      price: 4.5,
+      packaging: "1 units",
       quantity: 27,
     },
     {
@@ -349,6 +373,16 @@ exports.productsAvailabilityCollection = {
       farmerID: ObjectID("4c7564443132333435363738"),
       productID: ObjectID("000000000000000000000012"),
       week: nextWeek,
+      year: currentYear,
+      price: 6,
+      packaging: "1 units",
+      quantity: 30,
+    },
+    {
+      _id: ObjectID("000000000000000000000015"),
+      farmerID: ObjectID("4c7564443132333435363738"),
+      productID: ObjectID("000000000000000000000012"),
+      week: currentWeek,
       year: currentYear,
       price: 6,
       packaging: "1 units",

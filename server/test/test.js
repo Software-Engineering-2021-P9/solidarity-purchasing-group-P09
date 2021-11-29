@@ -272,7 +272,7 @@ describe("Products API tests: ", () => {
           expect(err).to.be.null;
           expect(res.status).to.be.equal(200);
           expect(res.body).to.be.an("array");
-          expect(res.body.length).to.be.equal(4);
+          expect(res.body.length).to.be.equal(3);
           done();
         });
     });
@@ -521,6 +521,41 @@ describe("Products API tests: ", () => {
         .end((err, res) => {
           expect(err).to.be.null;
           expect(res.status).to.be.equal(400);
+          done();
+        });
+    });
+
+    it("it must return the next week availability of the product ", (done) => {
+      chai
+        .request(app)
+        .get("/api/products/000000000000000000000006/availability/nextWeek")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          expect(res.body.productID).to.be.equal("000000000000000000000006");
+          expect(res.body.quantity).to.be.equal(52);
+          done();
+        });
+    });
+
+    it("it must return bad request if the productID is not a mongoID", (done) => {
+      chai
+        .request(app)
+        .get("/api/products/000000000111100000006/availability/nextWeek")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(400);
+          done();
+        });
+    });
+
+    it("it must return not found if the product hasn't nextweek availability set", (done) => {
+      chai
+        .request(app)
+        .get("/api/products/000000000000000000000011/availability/nextWeek")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(404);
           done();
         });
     });
@@ -942,7 +977,6 @@ describe("Clients API tests:", () => {
   });
 });
 
-
 //SignupClient
 
 describe("Clients API tests:", () => {
@@ -1063,7 +1097,6 @@ describe("Clients API tests:", () => {
   });
 });
 
-
 //
 //create client test
 //
@@ -1080,9 +1113,8 @@ describe("Clients API tests:", () => {
     dao.close();
   });
 
-
   describe("POST /clients", () => {
-    it("it should create a new client", (done) => { 
+    it("it should create a new client", (done) => {
       chai
         .request(app)
         .post("/api/clients")

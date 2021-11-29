@@ -3,6 +3,7 @@ const dao = require("../dao/dao");
 const session = require("express-session");
 const LocalStrategy = require("passport-local").Strategy;
 const bcrypt = require("bcrypt");
+const saltRounds = 10;
 
 const { UserRoles } = require("../models/user_roles");
 const { ClientInfoResult } = require("../models/client_info_result");
@@ -84,4 +85,8 @@ exports.deserializeUser = async (id, done) => {
     return done(err, null);
   }
   return done(null, user);
+};
+
+exports.hashPassword = (password) => {
+  return bcrypt.hash(password, saltRounds);
 };

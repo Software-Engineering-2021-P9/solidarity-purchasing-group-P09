@@ -1,25 +1,10 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./ShoppingCartTableCSS.css";
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Container, Col, Row} from "react-bootstrap";
 import ImageService from "../../services/ImageService/ImageService";
 
 function ShoppingCartTable(props) {
-  const [products, setProducts] = useState([]);
-
-  useEffect(() => {
-    if(props.cart.size===0)
-      setProducts([]);  
-    else {
-      const getProducts = () => {
-        const keys = Array.from(props.cart.keys());
-        props.getProductsByIDs(keys).then(function (res) {
-          setProducts(res);
-        });
-      };
-      getProducts();
-    }
-  }, [props]);
 
   return (
     <Container>
@@ -33,7 +18,7 @@ function ShoppingCartTable(props) {
           <Col md={1}>Quantity</Col>
           <Col md={1}>Total</Col>
         </Row>
-        {products.map((item) => {
+        {props.products.map((item) => {
           return (
             <CartRow
               product={item}

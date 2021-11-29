@@ -1,5 +1,5 @@
 import React from "react";
-import { Dropdown, ButtonGroup } from "react-bootstrap";
+import { Dropdown, ButtonGroup, Row } from "react-bootstrap";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./RedDropdown.css";
@@ -7,31 +7,33 @@ import "./RedDropdown.css";
 
 function RedDropdown(props) {
   return (
-    <Dropdown as={ButtonGroup}>
-      <Dropdown.Toggle id="dropdown-custom-1" className="dropdown">
-        {props.title}
-      </Dropdown.Toggle>
-      <Dropdown.Menu className="dropdown-menu">
-        {" "}
-        {props.items.map((name, index) => (
-          <Dropdown.Item
-            className="dropdown-content"
-            key={index}
-            onClick={() => props.updateSelectedItem(name)}
-            active={props.activeElement === name}
-          >
-            {name}
-          </Dropdown.Item>
-        ))}
-        <Dropdown.Item
-          className="dropdown-content"
-          onClick={() => props.updateSelectedItem()}
-          active={props.title === "Categories"}
-        >
-          All
-        </Dropdown.Item>
-      </Dropdown.Menu>
-    </Dropdown>
+    <Row>
+      <Dropdown className='d-flex' as={ButtonGroup}>
+        <Dropdown.Toggle id='dropdown-custom-1' className='dropdown'>
+          {props.title}
+        </Dropdown.Toggle>
+
+        <Row>
+          <Dropdown.Menu className='dropdown-menu'>
+            {props.items.map((name, index) => (
+              <Dropdown.Item
+                className='dropdown-content'
+                key={index}
+                onClick={() => props.updateSelectedItem(name)}
+                active={props.activeElement === name}>
+                {name}
+              </Dropdown.Item>
+            ))}
+            <Dropdown.Item
+              className='dropdown-content'
+              onClick={() => props.updateSelectedItem()}
+              active={props.title === "Categories"}>
+              All
+            </Dropdown.Item>
+          </Dropdown.Menu>
+        </Row>
+      </Dropdown>
+    </Row>
   );
 }
 

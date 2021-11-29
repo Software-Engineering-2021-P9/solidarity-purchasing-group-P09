@@ -32,28 +32,11 @@ function ProductDetailsPage(props) {
   const history = useHistory();
   const authContext = useContext(AuthContext);
 
-  const [isInitialized, setIsInitialized] = useState(true);
+  const [isInitialized, setIsInitialized] = useState(false);
   const [mustReload, setMustReload] = useState(false);
   const [requestError, setRequestError] = useState("");
 
-  const [product, setProduct] = useState({
-    id: "1234",
-    farmerID: "1234",
-    name: "Potato",
-    description:
-      "The best potatoes everThe best potatoes everThe best potatoes everThe best potatoes ever",
-    category: "fruit",
-    productAvailability: {
-      id: "1234",
-      farmerID: "1234",
-      productID: "1234",
-      week: 34,
-      year: 2021,
-      price: 10,
-      packaging: "1kg",
-      quantity: 50,
-    },
-  });
+  const [product, setProduct] = useState(null);
   const [nextWeekAvailability, setNextWeekAvailability] = useState(null);
 
   const [actionConfirmationModalMessage, setActionConfirmationModalMessage] =

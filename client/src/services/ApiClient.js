@@ -350,7 +350,7 @@ export async function getNextWeekProductAvailability(productID) {
     case 401:
       throw new Error("Unauthorized");
     case 404:
-      throw new Error("Not Found");
+      return null;
     case 500:
       throw new Error("Internal Server Error");
     default:

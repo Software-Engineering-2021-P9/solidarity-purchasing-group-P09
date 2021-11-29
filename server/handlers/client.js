@@ -1,5 +1,6 @@
 var dao = require("../dao/dao");
 const { ClientInfo } = require("../models/client_info");
+const { hashPassword } = require("../services/auth_service");
 
 const {
   clientIDPathValidator,
@@ -122,6 +123,7 @@ exports.createClientHandler = async function (req, res, next) {
 
 exports.signupClientHandler = async function (req, res, next) {
   // Insert the new client
+  
 
   let result;
   try {
@@ -129,7 +131,7 @@ exports.signupClientHandler = async function (req, res, next) {
       req.body.fullName.toString(),
       req.body.phoneNumber.toString(),
       req.body.email.toString(),
-      req.body.password.toString(),
+      hashPassword(req.body.password.toString()),
       req.body.address.toString(),
       0.0
     );

@@ -3,10 +3,10 @@ Content-Type: application/json
 
 {
     
-    "fullName": "Vincenzo Di Stasio",
+    "fullName": "Ehsan Ansari",
      "phoneNumber": "1236678223",
-     "email": "Vincenzo2@email.com",
+     "email": "Ehsannnn@email.com",
      "password":"Ciaociao1234",
-     "address": "via giacinto,22 Torino, 10127",
+     "address": "via Di Nanni,22 Torino, 10127",
      "wallet": 0
 }

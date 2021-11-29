@@ -66,15 +66,15 @@ function ShoppingCartPage(props) {
       return;
     }
     const updateProducts = () => {
-        const productIDs = Array.from(cart.keys());
-        getProductsByIDs(productIDs)
-        .then((result)=>{
+      const productIDs = Array.from(cart.keys());
+      getProductsByIDs(productIDs)
+        .then((result) => {
           setProducts(result);
         })
-        .catch((err)=>{
+        .catch((err) => {
           setRequestError("Failed to fetch products data: " + err.message);
-        })
-    }
+        });
+    };
     updateProducts();
   }, [cart]);
 
@@ -129,13 +129,14 @@ function ShoppingCartPage(props) {
   return (
     <Container className="px-5 py-3">
       <Row>
-        <NavbarComponent />
+        <NavbarComponent
+          userIconLink={authContext.getUserIconLink()}
+          loggedUser={authContext.currentUser}
+        />
       </Row>
       <Row>
         <ShoppingCartTitle
-          client={client}
-          loggedClient={authContext.currentUser.role === UserRoles.CLIENT}
-          userIconLink={authContext.getUserIconLink()}
+          title={authContext.currentUser.role === UserRoles.CLIENT ?  "Your cart" : `${client.fullName}'s cart`}
         />
       </Row>
       <Row>

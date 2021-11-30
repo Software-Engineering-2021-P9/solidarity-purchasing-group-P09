@@ -18,7 +18,7 @@ function ClientSignupPage(props) {
     <Container>
       <Row>
         <NavbarComponent
-          links={getAvailableNavbarLinks("")}
+          links={getAvailableNavbarLinks(authContext.currentUser)}
           loggedUser={authContext.currentUser}
         />
       </Row>
@@ -128,7 +128,10 @@ function ClientForm(props) {
       !validator.isAlpha(clientParams.address, "it-IT", { ignore: "s" }) ||
       !validator.isNumeric(clientParams.number) ||
       !validator.isNumeric(clientParams.postCode) ||
-      !validator.isLength(clientParams.password, { min: 6 }) || !validator.isLength(clientParams.firstName + clientParams.lastName , { max: 35 })
+      !validator.isLength(clientParams.password, { min: 6 }) ||
+      !validator.isLength(clientParams.firstName + clientParams.lastName, {
+        max: 35,
+      })
     ) {
       return false;
     }
@@ -203,11 +206,20 @@ function ClientForm(props) {
       setErrorMessage8("*The postCode must be a number!  ");
     }
 
-    if (!validator.isLength(clientParams3.password, { min: 6 }) && !validator.isEmpty(clientParams3.password)) {
+    if (
+      !validator.isLength(clientParams3.password, { min: 6 }) &&
+      !validator.isEmpty(clientParams3.password)
+    ) {
       setErrorPassword("*The password should be minimum 6 characters!  ");
     }
-    if(!validator.isLength(clientParams3.firstName + clientParams3.lastName , { max: 35 })){
-      setErrorMessage9("The length of first name and last name must be less than 36!");
+    if (
+      !validator.isLength(clientParams3.firstName + clientParams3.lastName, {
+        max: 35,
+      })
+    ) {
+      setErrorMessage9(
+        "The length of first name and last name must be less than 36!"
+      );
     }
   };
 
@@ -239,17 +251,16 @@ function ClientForm(props) {
             client.postCode,
           wallet: 0,
         };
-      
-          if (props.authContext.currentUser === null) {
-            user = { ...user, password: client.password };
 
-            signupClient(user);
-          } else {
-            createClient(user);
-          }
-          setSuccess(true);
-          setClient("");
-        
+        if (props.authContext.currentUser === null) {
+          user = { ...user, password: client.password };
+
+          signupClient(user);
+        } else {
+          createClient(user);
+        }
+        setSuccess(true);
+        setClient("");
       } else {
         setError(true);
         updateErrorMessage1(client);
@@ -266,19 +277,26 @@ function ClientForm(props) {
     <>
       {success ? <Redirect to="/" /> : ""}
       {error ? (
-        <Alert variant="danger" onClose={() => setError("")} dismissible>
-          {errorMessage}
-          {errorMessage1}
-          {errorMessage2}
-          {errorMessage3}
-          {errorMessage4}
-          {errorMessage5}
-          {errorMessage6}
-          {errorMessage7}
-          {errorMessage8}
-          {errorMessage9}
-          {errorPassword}
-        </Alert>
+        <Row>
+          <Alert
+            variant="danger"
+            className="mx-3 my-3"
+            onClose={() => setError("")}
+            dismissible
+          >
+            {errorMessage}
+            {errorMessage1}
+            {errorMessage2}
+            {errorMessage3}
+            {errorMessage4}
+            {errorMessage5}
+            {errorMessage6}
+            {errorMessage7}
+            {errorMessage8}
+            {errorMessage9}
+            {errorPassword}
+          </Alert>
+        </Row>
       ) : (
         " "
       )}

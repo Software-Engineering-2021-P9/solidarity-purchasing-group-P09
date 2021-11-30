@@ -133,15 +133,14 @@ function ProductListPage(props) {
           </Row>
         </Container>
         <Modal.Footer>
-          <Button variant='light' onClick={handleClose}>
-            Close
-          </Button>
           <Button
             onClick={() =>
               addItem(modalProduct.productId, modalProduct.productQty)
-            }
-          >
+            }>
             Submit
+          </Button>
+          <Button variant='light' onClick={handleClose}>
+            Close
           </Button>
         </Modal.Footer>
       </Modal>

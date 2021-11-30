@@ -59,7 +59,7 @@ function ClientForm(props) {
     firstName: "",
     lastName: "",
     phoneNumber: "",
-    email: " ",
+    email: "",
     password: "",
     passwordConfirmation: "",
     address: "",
@@ -128,12 +128,14 @@ function ClientForm(props) {
       !validator.isAlpha(clientParams.address, "it-IT", { ignore: "s" }) ||
       !validator.isNumeric(clientParams.number) ||
       !validator.isNumeric(clientParams.postCode) ||
-      !validator.isLength(clientParams.password, { min: 6 }) ||
       !validator.isLength(clientParams.firstName + clientParams.lastName, {
         max: 35,
       })
     ) {
       return false;
+    }
+    if(props.authContext.currentUser===null && !validator.isLength(clientParams.password, { min: 6 })) {
+      return false; 
     }
     return true;
   };

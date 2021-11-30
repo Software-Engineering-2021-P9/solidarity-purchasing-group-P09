@@ -26,6 +26,12 @@ const clientSignupRouteName = "client-signup-page";
 const clientDetailsRouteName = "client-details-page";
 
 const routes = {
+  [clientSignupRouteName]: {
+    path: "/client/signup",
+    component: () => <ClientSignupPage />,
+    exact: true,
+    linkTitle: "Register",
+  },
   [productListRouteName]: {
     path: "/",
     component: () => <ProductListPage />,
@@ -123,12 +129,6 @@ const routes = {
     component: () => <UserLogoutRedirect />,
     exact: false,
     linkTitle: "Logout",
-  },
-  [clientSignupRouteName]: {
-    path: "/client/signup",
-    component: () => <ClientSignupPage />,
-    exact: false,
-    linkTitle: "Register",
   },
 };
 

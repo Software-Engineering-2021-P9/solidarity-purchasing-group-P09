@@ -30,6 +30,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "../ui-components/Title.css";
 import UserRoles from "../services/models/UserRoles";
 
+const positiveFloatRegex = /^[+]?([0-9]+(?:[.][0-9]{0,2})?|\.[0-9]{1,2})$/;
+
 function ClientDetailsPage(props) {
   const params = useParams();
 
@@ -75,16 +77,20 @@ function ClientDetailsPage(props) {
 
   function onFundsToAddAmountChange(event) {
     const newVal = event.target.value;
-    if (newVal.match(/\d+\.\d*|\.?\d+|/)) setFundsToAddAmount(newVal);
+
+    if (newVal === "" || newVal.match(positiveFloatRegex)) {
+      setFundsToAddAmount(newVal);
+      return;
+    }
   }
 
   function onAddFundsToWalletButtonClick() {
     if (!fundsToAddAmount) return;
-    const fundsToAddFloat = parseFloat(fundsToAddAmount);
+    const fundsToAddFloat = Number(parseFloat(fundsToAddAmount).toFixed(2));
     setActionConfirmationModalMessage(
-      `Are you sure you want to increase the wallet value of the client by ${fundsToAddFloat}€? The final wallet value will be ${
+      `Are you sure you want to increase the wallet value of the client by ${fundsToAddFloat}€? The final wallet value will be ${Number(
         fundsToAddFloat + clientInfo.wallet
-      }€`
+      ).toFixed(2)}€`
     );
     setActionConfirmationModalCallback(() => () => {
       setIsActionLoading(true);
@@ -115,7 +121,7 @@ function ClientDetailsPage(props) {
       {location.state != null && show ? (
         <Row>
           <Alert
-            variant="success"
+            variant='success'
             style={{
               color: "#635F46",
               fontWeight: "bold",
@@ -125,10 +131,11 @@ function ClientDetailsPage(props) {
               marginLeft: "1%",
             }}
             onClose={() => setShow(false)}
-            dismissible
-          >
-            {authContext.currentUser.role === UserRoles.CLIENT && ( "Your order was successfully created")}
-            {authContext.currentUser.role === UserRoles.EMPLOYEE && (`${clientInfo?.fullName}'s order was successfully created!`)}
+            dismissible>
+            {authContext.currentUser.role === UserRoles.CLIENT &&
+              "Your order was successfully created"}
+            {authContext.currentUser.role === UserRoles.EMPLOYEE &&
+              `${clientInfo?.fullName}'s order was successfully created!`}
           </Alert>
         </Row>
       ) : (
@@ -136,24 +143,23 @@ function ClientDetailsPage(props) {
       )}
 
       {!isInitialized ? (
-        <Container className="pt-5 d-flex justify-content-center">
-          <Spinner variant="dark" animation="border" />
+        <Container className='pt-5 d-flex justify-content-center'>
+          <Spinner variant='dark' animation='border' />
         </Container>
       ) : (
         <>
           <Row>
-            <h1 className="title">Client Details</h1>
+            <h1 className='title'>Client Details</h1>
           </Row>
-          <Row className="justify-content-around pt-2">
-            <Col className="ms-5">
+          <Row className='justify-content-around pt-2'>
+            <Col className='ms-5'>
               <ClientDetails clientInfo={clientInfo} />
             </Col>
             {authContext.currentUser.role === UserRoles.EMPLOYEE && (
-              <Col md="5">
-                <InputGroup className="mb-3 pt-4">
+              <Col md='5'>
+                <InputGroup className='mb-3 pt-4'>
                   <FormControl
-                    type="number"
-                    placeholder="50€"
+                    placeholder='50€'
                     value={fundsToAddAmount}
                     onChange={onFundsToAddAmountChange}
                     required
@@ -166,7 +172,7 @@ function ClientDetailsPage(props) {
             )}
           </Row>
           {authContext.currentUser.role === UserRoles.EMPLOYEE && (
-            <Row className="my-3">
+            <Row className='my-3'>
               <CreateNewOrderButton clientID={clientID} />
             </Row>
           )}

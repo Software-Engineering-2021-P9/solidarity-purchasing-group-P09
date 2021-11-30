@@ -18,7 +18,7 @@ function ClientSignupPage(props) {
     <Container>
       <Row>
         <NavbarComponent
-          links={getAvailableNavbarLinks("")}
+          links={getAvailableNavbarLinks(authContext.currentUser)}
           loggedUser={authContext.currentUser}
         />
       </Row>

@@ -49,6 +49,8 @@ function ProductListPage(props) {
 
   const [modalProduct, setModalProduct] = useState({});
 
+  const [errorMessage, setErrorMessage] = useState("");
+
   useEffect(() => {
     //call from props the function for fetching the new products
     async function updateProducts() {
@@ -79,6 +81,7 @@ function ProductListPage(props) {
   const handleClose = () => setShow(false);
 
   const handleShow = (product) => {
+    setErrorMessage(""); 
     if (cart.get(product.id)) {
       setModalProduct({
         productName: product.name,
@@ -95,8 +98,12 @@ function ProductListPage(props) {
   };
 
   const addItem = (productID, quantity) => {
-    setCart(new Map(cart.set(productID, parseInt(quantity))));
-    setShow(false);
+    if (quantity > 0) {
+      setCart(new Map(cart.set(productID, parseInt(quantity))));
+      setShow(false);
+    } else {
+      setErrorMessage("Insert a valid quantity.");
+    }
   };
 
   return (
@@ -119,21 +126,26 @@ function ProductListPage(props) {
           <Row>
             <Form.Label>Select a quantity</Form.Label>
           </Row>
-          <Row className='my-1 mb-3 px-3'>
+          <Row className="my-1 mb-3 px-3">
             <FormControl
-              type='number'
+              type="number"
               step={1}
               value={modalProduct.productQty}
-              onChange={(e) =>
-                setModalProduct({ ...modalProduct, productQty: e.target.value })
-              }
+              onChange={(e) =>{
+                setModalProduct({ ...modalProduct, productQty: e.target.value }); setErrorMessage("");
+              }}
               max={100}
               min={1}
             />
           </Row>
+          {errorMessage && (
+            <Row>
+              <p className="text-danger">{errorMessage}</p>
+            </Row>
+          )}
         </Container>
         <Modal.Footer>
-          <Button variant='light' onClick={handleClose}>
+          <Button variant="light" onClick={handleClose}>
             Close
           </Button>
           <Button
@@ -155,7 +167,7 @@ function ProductListPage(props) {
         handleOnSearchSubmit={handleOnSearchSubmit}
       />
 
-      <Row lg={4} md={3} sm={2} xs={1} className='g-4'>
+      <Row lg={4} md={3} sm={2} xs={1} className="g-4">
         {products
           ? products.map((item) => {
               return (

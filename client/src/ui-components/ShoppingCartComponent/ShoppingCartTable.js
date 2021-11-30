@@ -9,15 +9,6 @@ function ShoppingCartTable(props) {
   return (
     <Container>
       <Col>
-        <Row className="table-heading p-2 mb-3">
-          <Col md={1}>Category</Col>
-          <Col md={2} className="my-pl-3">Item</Col>
-          <Col md={4} className="my-pl-3">Description</Col>
-          <Col md={2}>Packaging</Col>
-          <Col md={1}>Price</Col>
-          <Col md={1}>Quantity</Col>
-          <Col md={1}>Total</Col>
-        </Row>
         {props.products.map((item) => {
           return (
             <CartRow

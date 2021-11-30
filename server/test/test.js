@@ -577,7 +577,7 @@ describe("Clients API tests:", () => {
     mongoUnit.drop();
     dao.close();
   });
-
+  
   describe("GET /clients[?searchString=:searchString]", () => {
     it("it must retrieve all the clients", (done) => {
       chai
@@ -694,6 +694,7 @@ describe("Clients API tests:", () => {
         });
     });
   });
+
   describe("PATCH /clients/:clientID/wallet", () => {
     it("it must fail when mongo fails", (done) => {
       dao.close();
@@ -760,7 +761,7 @@ describe("Clients API tests:", () => {
           done();
         });
     });
-  });
+  }); 
 
   // Orders API tests
   describe("Orders API tests:", () => {
@@ -798,7 +799,7 @@ describe("Clients API tests:", () => {
             done();
           });
       });
-
+      
       it("it should give Bad request error because quantity is negative", (done) => {
         chai
           .request(app)
@@ -888,7 +889,7 @@ describe("Clients API tests:", () => {
             done();
           });
       });
-
+      
       it("it must fail when mongo fails", (done) => {
         dao.close();
         chai
@@ -910,7 +911,7 @@ describe("Clients API tests:", () => {
           });
       });
     });
-
+    
     describe("GET /orders", () => {
       it("it should retrieve the client's orders with given ClientID", (done) => {
         chai

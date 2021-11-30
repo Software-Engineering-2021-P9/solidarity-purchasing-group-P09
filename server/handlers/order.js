@@ -9,6 +9,8 @@ const {
   orderProductsBodyValidator,
   orderClientIDQueryValidator,
 } = require("./shared_validators");
+const configOverrideAuth = require ("../services/overrideAuth");
+const overrideAuth = require("../services/overrideAuth");
 
 exports.createOrderValidatorChain = [
   clientIDBodyValidator,
@@ -20,15 +22,16 @@ exports.createOrderValidatorChain = [
 exports.createOrderHandler = async function (req, res, next) {
   // productPrice is hardcoded to 1 as a tempoarary solution for now, will be fixed in the next sprints
   const productPrice = 1;
-
   var totalPrice = 0.0;
   req.body.products.forEach((product) => {
     totalPrice += product.quantity * productPrice;
   });
 
   // checking if the req.body.clientID is the same of the logged client
-
-  if(req.user.role === UserRoles.CLIENT && req.body.clientID != req.user.id){
+  if(configOverrideAuth.overrideAuth){
+    ;
+  }
+  else if(req.user.role === UserRoles.CLIENT && req.body.clientID != req.user.id){
     return res.status(401).end();
   }
 

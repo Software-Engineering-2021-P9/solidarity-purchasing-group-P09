@@ -29,7 +29,7 @@ exports.createOrderHandler = async function (req, res, next) {
 
   // checking if the req.body.clientID is the same of the logged client
   if(configOverrideAuth.overrideAuth){
-    ;
+    console.log("OverrideAuth set to true");
   }
   else if(req.user.role === UserRoles.CLIENT && req.body.clientID != req.user.id){
     return res.status(401).end();

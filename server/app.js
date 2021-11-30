@@ -161,6 +161,7 @@ app.get(
 
 app.post(
   buildAPIPath("/products/:productID/availability"),
+  checkUserRoleMiddleware([UserRoles.FARMER]),
   productHandlers.setNextWeekProductAvailabilityValidatorChain,
   checkValidationErrorMiddleware,
   productHandlers.setNextWeekProductAvailabilityHandler

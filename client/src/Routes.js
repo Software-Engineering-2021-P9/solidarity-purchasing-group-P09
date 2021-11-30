@@ -75,7 +75,7 @@ const routes = {
         <ClientDetailsPage />
       </ProtectedRoute>
     ),
-    exact: false,
+    exact: true,
     linkTitle: "My Page",
   },
   [employeeClientSignupRouteName]: {

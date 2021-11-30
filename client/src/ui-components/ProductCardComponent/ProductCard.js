@@ -19,9 +19,9 @@ function ProductCard(props) {
               <Card.Text className="text">
                 {product.description}
                 <br />
-                Packaging: 1Kg MOCK
+                Packaging: {product.availability.packaging}
                 <br />
-                Price: {product.price} € MOCK
+                Price: {product.availability.price} €
               </Card.Text>
             </Col>
           </Row>

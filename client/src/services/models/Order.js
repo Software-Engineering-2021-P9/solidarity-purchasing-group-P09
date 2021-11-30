@@ -1,5 +1,3 @@
-"use strict";
-
 class Order {
   constructor(id, clientID, products, status, totalPrice, createdAt) {
     this.id = id;

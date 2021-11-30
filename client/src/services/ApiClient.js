@@ -1,10 +1,24 @@
-
 import EmployeeInfoResult from "./models/EmployeeInfoResult";
 import ClientInfoResult from "./models/ClientInfoResult";
 import FarmerInfoResult from "./models/FarmerInfoResult";
 import Product from "./models/Product";
+import ProductAvailability from "./models/ProductAvailability";
 import Order from "./models/Order";
 import UserRoles from "./models/UserRoles";
+
+// Builds the query parameters for an URL from the passed object
+function buildQueryParametersString(queryParams) {
+  if (Object.keys(queryParams).length === 0) {
+    return "";
+  }
+
+  let queryParamsString = "?";
+
+  for (const [key, value] of Object.entries(queryParams)) {
+    queryParamsString += `${key}=${value}&`;
+  }
+  return queryParamsString.slice(0, -1);
+}
 
 // ----
 // Auth
@@ -208,9 +222,9 @@ export async function signupClient(client) {
   }
 }
 
-// --------
-// Products
-// --------
+// -------
+// Product
+// -------
 
 export async function findProducts(category, searchString) {
   let urlRequest = "/api/products?";
@@ -226,7 +240,6 @@ export async function findProducts(category, searchString) {
   }
 
   const response = await fetch(urlRequest);
-
   switch (response.status) {
     case 400:
       throw new Error("Validation error occurred");
@@ -239,9 +252,137 @@ export async function findProducts(category, searchString) {
   }
 }
 
-// ------
-// Orders
-// ------
+export async function getProductsByIDs(productIDs) {
+  let productIDsString = productIDs.join(",");
+  const response = await fetch("/api/products?ids=" + productIDsString);
+  switch (response.status) {
+    case 400:
+      throw new Error("Validation error occurred");
+    case 200:
+      let responseBody;
+      responseBody = await response.json();
+      return responseBody.map((product) => Product.fromJSON(product));
+    default:
+      throw new Error("An error occurred during products fetch");
+  }
+}
+
+export async function getFarmerProducts(
+  farmerID,
+  category = null,
+  searchString = null,
+  hasAvailabilitySet = null
+) {
+  var queryParams = {};
+  if (category) queryParams["category"] = category;
+  if (searchString) queryParams["searchString"] = searchString;
+  if (hasAvailabilitySet !== null)
+    queryParams["hasAvailabilitySet"] = hasAvailabilitySet;
+
+  let response = await fetch(
+    `/api/farmers/${farmerID}/products` +
+      buildQueryParametersString(queryParams)
+  );
+
+  switch (response.status) {
+    case 200:
+      let responseBody = await response.json();
+      return responseBody.map((productJson) => Product.fromJSON(productJson));
+    case 400:
+      throw new Error("Validation error occurred");
+    case 401:
+      throw new Error("Unauthorized");
+    case 500:
+      throw new Error("Internal Server Error");
+    default:
+      throw new Error("An error occurred during farmer products retrieval");
+  }
+}
+
+export async function setNextWeekProductAvailability(
+  productID,
+  price,
+  packaging,
+  quantity
+) {
+  var obj = {
+    price: parseFloat(price),
+    packaging: packaging,
+    quantity: parseInt(quantity),
+  };
+
+  const response = await fetch(`/api/products/${productID}/availability`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ ...obj }),
+  });
+
+  switch (response.status) {
+    case 200:
+      let responseBody = await response.json();
+      return ProductAvailability.fromJSON(responseBody);
+    case 400:
+      throw new Error("Validation error occurred");
+    case 401:
+      throw new Error("Unauthorized");
+    case 404:
+      throw new Error("Not Found");
+    case 500:
+      throw new Error("Internal Server Error");
+    default:
+      throw new Error(
+        "An error occurred setting product's next week availability"
+      );
+  }
+}
+
+export async function getNextWeekProductAvailability(productID) {
+  const response = await fetch(
+    `/api/products/${productID}/availability/nextWeek`
+  );
+
+  switch (response.status) {
+    case 200:
+      let responseBody = await response.json();
+      return ProductAvailability.fromJSON(responseBody);
+    case 400:
+      throw new Error("Validation error occurred");
+    case 401:
+      throw new Error("Unauthorized");
+    case 404:
+      return null;
+    case 500:
+      throw new Error("Internal Server Error");
+    default:
+      throw new Error(
+        "An error occurred retrieving product's next week availability"
+      );
+  }
+}
+
+export async function getProductByID(productID) {
+  let response = await fetch("/api/products/" + productID);
+
+  switch (response.status) {
+    case 200:
+      let responseBody = await response.json();
+      return Product.fromJSON(responseBody);
+    case 400:
+      throw new Error("Validation error occurred");
+    case 401:
+      throw new Error("Unauthorized");
+    case 404:
+      throw new Error("Not Found");
+    case 500:
+      throw new Error("Internal Server Error");
+    default:
+      throw new Error("An error occurred retrieving the product");
+  }
+}
+
+// -----
+// Order
+// -----
 
 export async function getOrders(clientID) {
   // Returns mock data right now
@@ -272,10 +413,6 @@ export async function updateStatus(status) {
   }
 }
 
-// --------
-// Order
-// --------
-
 export async function createOrder(clientID, products) {
   var obj = { clientID: clientID, products: products };
 
@@ -296,34 +433,3 @@ export async function createOrder(clientID, products) {
       throw new Error("An error occurred during order fetch");
   }
 }
-
-// --------
-// Product
-// --------
-
-export async function getProductsByIDs(productIDs) {
-  let productIDsString = productIDs.join(",");
-  const response = await fetch("/api/products?ids=" + productIDsString);
-
-  switch (response.status) {
-    case 400:
-      throw new Error("Validation error occurred");
-    case 200:
-      let responseBody;
-      responseBody = await response.json();
-      return responseBody.map((product) => Product.fromJSON(product));
-    default:
-      throw new Error("An error occurred during products fetch");
-  }
-}
-
-
-
-
-
-
-
-
-
-
-

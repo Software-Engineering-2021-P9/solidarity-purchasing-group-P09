@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { PopUpForCompleteOrder } from "./PopUpForCompleteOrder";
 import "./ClientOrderTableRow.css";
-import { RedButton } from "../RedButtonComponent/RedButton";
+import Button from "../Button/Button";
 import { updateStatus } from "../../services/ApiClient";
 function ClientOrderTableRow(props) {
   const [status, setStatus] = useState(props.order.status);
@@ -33,10 +33,10 @@ function ClientOrderTableRow(props) {
 
         {status === "PREPARED" ? (
           <td>
-            <RedButton
-              text='Change Status'
-              onClick={() => setModalIsOpen(true)}
-            />
+            <Button onClick={() => setModalIsOpen(true)}>
+              {" "}
+              Change Status{" "}
+            </Button>
           </td>
         ) : (
           <td className='table-row'></td>

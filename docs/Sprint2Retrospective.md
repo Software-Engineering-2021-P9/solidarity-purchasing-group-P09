@@ -35,8 +35,7 @@ sections:
 | [Insufficient Blance Reminder](https://polito-se2-21-09.myjetbrains.com/youtrack/issue/S202109SPG-8) | 2       | 2      | 9h         | 11h          |
 | [Report availability](https://polito-se2-21-09.myjetbrains.com/youtrack/issue/S202109SPG-9) | 3       | 5      | 14h        | 14h 55m      |
 
-
-> place technical tasks corresponding to story `#0` and leave out story points (not applicable in this case)
+\* user stories from the previous sprint
 
 - Hours per task (average, standard deviation)
 - Total task estimation error ratio: sum of total hours estimation / sum of total hours spent from previous table = 0.957

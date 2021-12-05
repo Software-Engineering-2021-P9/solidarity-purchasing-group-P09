@@ -19,7 +19,6 @@ schemes:
   - https
   - http
 paths:
-
   # ------------
   # AUTH METHODS
   # ------------
@@ -90,6 +89,31 @@ paths:
           description: No Content
 
   /products:
+    post:
+      tags:
+        - product
+      summary: Create a product
+      description: Add a new product in the database
+      operationId: createProduct
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: "#/definitions/CreateProductParams"
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/Product"
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "500":
+          description: Internal Server Error
     get:
       tags:
         - product
@@ -314,6 +338,10 @@ paths:
           name: searchString
           type: string
           description: Parameter used in searching matching Clients (in any way, i.e. address, fullname, etc...)
+        - in: query
+          name: hasPendingCancelation
+          type: boolean
+          description: "Parameter used to filter clients based by order status: PENDING-CANCELATION"
       responses:
         "200":
           description: Success
@@ -510,6 +538,68 @@ paths:
         "500":
           description: Internal Server Error
 
+  /products/{productID}/availability/confirm:
+    post:
+      tags:
+        - product
+      summary: Set the confirmed availability for the next week.
+      description: Send the confirmed quantity of this product, which can be equal or lower to the initial quantity estimation.
+      operationId: confirmNextWeekProductAvailability
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          required: true
+          name: productID
+          type: string
+          description: Parameter that identify and select the Product
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              confirmedQuantity:
+                type: integer
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request - The request contains invalid parameters
+        "401":
+          description: Unauthorized
+        "500":
+          description: Internal Server Error
+
+  /products/{productID}/availability/nextWeek:
+    get:
+      tags:
+        - product
+      summary: Get the next week availability.
+      description: It return the next week availability given a productID.
+      operationId: getNextWeekProductAvailability
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          required: true
+          name: productID
+          type: string
+          description: Parameter that identify and select the Product
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/ProductAvailabilityResult"
+        "400":
+          description: Bad Request - The request contains invalid parameters
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+
   /testing/weekPhases/current:
     patch:
       tags:
@@ -653,6 +743,8 @@ definitions:
       - products
       - totalPrice
       - status
+      - createdAt
+      - shipmentInfo
     properties:
       id:
         type: string
@@ -663,13 +755,7 @@ definitions:
       products:
         type: array
         items:
-          type: object
-          properties:
-            productID:
-              type: string
-              format: bsonID
-            quantity:
-              type: integer
+          $ref: "#/definitions/OrderProduct"
         example: "{$productID:$quantity,...}"
       totalPrice:
         type: number
@@ -678,9 +764,44 @@ definitions:
         enum:
           - WAITING
           - NOT-COVERED
+          - PENDING-CANCELATION
           - CONFIRMED
           - PREPARED
           - DONE
+      createdAt:
+        type: string
+        format: date-time
+      shipmentInfo:
+        $ref: "#/definitions/ShipmentInfo"
+
+  OrderProduct:
+    type: object
+    additionalProperties: false
+    required:
+      - productID
+      - quantity
+      - price
+      - packaging
+      - status
+    properties:
+      productID:
+        type: string
+        format: bsonID
+      quantity:
+        type: integer
+      price:
+        type: number
+      packaging:
+        type: string
+      status:
+        type: string
+        enum:
+          - WAITING-FOR-CONFIRMATION
+          - CONFIRMED
+          - MODIFIED
+          - CANCELED
+    description: "each product in an order can have different status. WAITING-FOR-CONFIRMATION means that the farmer hasn't yet confirmed the product, CONFIRM means that he confirmed the product and the quantity requested is entirely fulfilled. MODIFIED means that the quantity requested is not entirely covered by the confirmed availability. CANCELED means that there are no more products available for this order"
+
   Product:
     type: object
     additionalProperties: false
@@ -725,6 +846,8 @@ definitions:
       - price
       - packaging
       - quantity
+      - leftQuantity
+      - confirmedQuantity
     properties:
       id:
         type: string
@@ -748,12 +871,19 @@ definitions:
         example: "'2lt', '1kg', '100g', '6 pcs', '4 units'"
       quantity:
         type: integer
+      leftQuantity:
+        type: integer
+        description: "when the farmer estimates quantity, leftQuantity will be set at the same value of it"
+      confirmedQuantity:
+        type: integer
+        description: The real quantity after farmer confirmation
   CreateOrderParams:
     type: object
     additionalProperties: false
     required:
       - clientID
       - products
+      - shipmentInfo
     properties:
       clientID:
         type: string
@@ -769,6 +899,36 @@ definitions:
             quantity:
               type: integer
         example: "{$productID:$quantity,...}"
+      shipmentInfo:
+        $ref: "#/definitions/ShipmentInfo"
+  CreateProductParams:
+    type: object
+    additionalProperties: false
+    required:
+      - name
+      - description
+      - category
+      - farmerID
+    properties:
+      farmerID:
+        type: string
+        format: bsonID
+      name:
+        type: string
+        maxLength: 25
+        example: Potato
+      description:
+        type: string
+        maxLength: 100
+      category:
+        type: string
+        enum:
+          - fruit
+          - vegetables
+          - spreadable creams
+          - meat
+          - eggs
+          - milk
   SignupClientParams:
     type: object
     additionalProperties: false
@@ -821,6 +981,7 @@ definitions:
       - address
       - phoneNumber
       - wallet
+      - hasNotCoveredOrders
     properties:
       id:
         type: string
@@ -846,6 +1007,9 @@ definitions:
         example: "33475654545"
       wallet:
         type: number
+      hasPendingCancelation:
+        type: boolean
+        description: "if the client has at least one not covered order (after farmer availability confirmation) hasPendingCancelation will be set to true"
   EmployeeInfoResult:
     description: Return model for methods which return EmployeeInfo (sensitive data is stripped).
     type: object
@@ -968,3 +1132,17 @@ definitions:
         example: "'2lt', '1kg', '100g', '6 pcs', '4 units'"
       quantity:
         type: integer
+  ShipmentInfo:
+    type: object
+    additionalProperties: false
+    required:
+      - date
+      - time
+      - address
+    properties:
+      date:
+        type: string
+      time:
+        type: string
+      address:
+        type: string

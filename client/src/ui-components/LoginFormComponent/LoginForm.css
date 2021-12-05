@@ -17,16 +17,3 @@
 span {
   margin-left: 20px;
 }
-
-.credentials {
-  margin: 30px;
-  margin-top: 10px;
-  margin-bottom: -20px;
-}
-
-.forgot-password {
-  color: #c48566 !important;
-  font-size: 13px;
-  text-decoration: underline;
-  font-weight: 580;
-}

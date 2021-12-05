@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import Validator from "validatorjs";
-import { Container, Row, Col, Alert } from "react-bootstrap";
+import { Container, Row, Alert } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { LoginForm } from "../ui-components/LoginFormComponent/LoginForm";
 import { AskToRegister } from "../ui-components/LoginFormComponent/AskToRegister";
@@ -70,21 +70,18 @@ function UserLoginPage(props) {
           </Alert>
         </Row>
       ) : (
-        <Row>
-          <Col>
-            <LoginForm
-              handleSubmit={handleSubmit}
-              username={username}
-              password={password}
-              errorMessage={errorMessage}
-              setUsername={setUsername}
-              setPassword={setPassword}
-              handleReset={handleReset}
-            />
-            <AskToRegister />
-          </Col>
-          <Col xs lg="3"></Col>
-        </Row>
+        <Container style={{ textAlign: "center", width: "500px" }}>
+          <LoginForm
+            handleSubmit={handleSubmit}
+            username={username}
+            password={password}
+            errorMessage={errorMessage}
+            setUsername={setUsername}
+            setPassword={setPassword}
+            handleReset={handleReset}
+          />
+          <AskToRegister />
+        </Container>
       )}
     </Container>
   );

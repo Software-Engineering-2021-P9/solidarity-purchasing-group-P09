@@ -13,6 +13,7 @@ function Divider(props) {
 
   return (
     <hr
+      className={props.className}
       style={{
         backgroundColor: getVariantClass(props.variant),
         height: props.size + "px" || "1px",

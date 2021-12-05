@@ -1,0 +1,22 @@
+.title {
+  color: #635f46 !important;
+  margin-top: 25px !important;
+}
+
+.line {
+  color: #635f46 !important;
+  /*margin-top: 2% !important;*/
+}
+
+.sticky {
+  position: sticky;
+  padding-top: 0.5em !important;
+  padding-bottom: 0% !important;
+  z-index: 100;
+  background-color: #fcf5ee;
+  top: 78.3px;
+}
+
+.padding {
+  padding-bottom: 0.5em !important;
+}

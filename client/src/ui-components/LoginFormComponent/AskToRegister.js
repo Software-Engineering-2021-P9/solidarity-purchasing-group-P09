@@ -5,7 +5,7 @@ function AskToRegister() {
   return (
     <p className="register-message">
       If you do not have account already, you can click here to{" "}
-      <Link to="/#" className="register-link">
+      <Link to="/client/signup" className="register-link">
         register
       </Link>
       !

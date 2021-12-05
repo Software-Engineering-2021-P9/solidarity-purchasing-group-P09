@@ -13,11 +13,9 @@ function PopUpForCompleteOrder(props) {
       </Modal.Body>
 
       <Modal.Footer>
-        <Button variant="secondary" onClick={() => props.setModalIsOpen(false)}>
+        <Button onClick={props.handleSubmit}>Submit</Button>
+        <Button variant='light' onClick={() => props.setModalIsOpen(false)}>
           Cancel
-        </Button>
-        <Button variant="primary" onClick={props.handleSubmit}>
-          Submit
         </Button>
       </Modal.Footer>
     </Modal>

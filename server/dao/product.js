@@ -37,6 +37,47 @@ exports.findProducts = (db, searchString, category) => {
   return db.collection(productsCollectionName).find(query).toArray();
 };
 
+exports.findProductsByFarmerID = (db, farmerID, searchString, category) => {
+  //4 cases: 1. Category is defined, 2. stringSearch is defined,
+  //3.both stringSearch and Category are defined, 4. none of them are defined
+
+  let query = {};
+
+  if (searchString && category) {
+    query = {
+      $and: [
+        { farmerID: ObjectID(farmerID) },
+        { $text: { $search: searchString.toString() } },
+        { category: category.toString() },
+      ],
+    };
+  } else if (category) {
+    query = {
+      $and: [
+        { farmerID: ObjectID(farmerID) },
+        { category: category.toString() },
+      ],
+    };
+  } else if (searchString) {
+    query = {
+      $and: [
+        { farmerID: ObjectID(farmerID) },
+        { $text: { $search: searchString.toString() } },
+      ],
+    };
+  } else {
+    query = { farmerID: ObjectID(farmerID) };
+  }
+
+  return db.collection(productsCollectionName).find(query).toArray();
+};
+
+exports.getProductByID = (db, productID) => {
+  return db
+    .collection(productsCollectionName)
+    .findOne({ _id: ObjectID(productID) });
+};
+
 //Method used for testing
 exports.createProductsTextSearchIndexes = (db) => {
   //create text index

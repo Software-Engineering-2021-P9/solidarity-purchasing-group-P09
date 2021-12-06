@@ -272,7 +272,7 @@ describe("Products API tests: ", () => {
           expect(err).to.be.null;
           expect(res.status).to.be.equal(200);
           expect(res.body).to.be.an("array");
-          expect(res.body.length).to.be.equal(3);
+          expect(res.body.length).to.be.equal(4);
           done();
         });
     });

@@ -528,7 +528,7 @@ paths:
         "200":
           description: Success
           schema:
-            $ref: "#/definitions/ProductAvailability"
+            $ref: "#/definitions/ProductAvailabilityResult"
         "400":
           description: Bad Request - The request contains invalid parameters
         "404":
@@ -539,12 +539,12 @@ paths:
           description: Internal Server Error
 
   /products/{productID}/availability/confirm:
-    post:
+    patch:
       tags:
         - product
       summary: Set the confirmed availability for the next week.
       description: Send the confirmed quantity of this product, which can be equal or lower to the initial quantity estimation.
-      operationId: confirmNextWeekProductAvailability
+      operationId: confirmCurrentWeekProductAvailability
       produces:
         - application/json
       parameters:
@@ -834,49 +834,6 @@ definitions:
           - meat
           - eggs
           - milk
-  ProductAvailability:
-    type: object
-    additionalProperties: false
-    required:
-      - id
-      - farmerID
-      - productID
-      - week
-      - year
-      - price
-      - packaging
-      - quantity
-      - leftQuantity
-      - confirmedQuantity
-    properties:
-      id:
-        type: string
-        format: bsonID
-      farmerID:
-        type: string
-        format: bsonID
-      productID:
-        type: string
-        format: bsonID
-      week:
-        type: integer
-        example: 34
-      year:
-        type: integer
-        example: 2021
-      price:
-        type: number
-      packaging:
-        type: string
-        example: "'2lt', '1kg', '100g', '6 pcs', '4 units'"
-      quantity:
-        type: integer
-      leftQuantity:
-        type: integer
-        description: "when the farmer estimates quantity, leftQuantity will be set at the same value of it"
-      confirmedQuantity:
-        type: integer
-        description: The real quantity after farmer confirmation
   CreateOrderParams:
     type: object
     additionalProperties: false
@@ -1094,10 +1051,10 @@ definitions:
           - meat
           - eggs
           - milk
-      productAvailability:
+      ProductAvailabilityResult:
         $ref: "#/definitions/ProductAvailabilityResult"
   ProductAvailabilityResult:
-    description: Return model for methods which return ProductAvailability.
+    description: Return model for methods which return the Product Availability.
     type: object
     additionalProperties: false
     required:
@@ -1109,6 +1066,8 @@ definitions:
       - price
       - packaging
       - quantity
+      - leftQuantity
+      - confirmedQuantity
     properties:
       id:
         type: string
@@ -1132,6 +1091,12 @@ definitions:
         example: "'2lt', '1kg', '100g', '6 pcs', '4 units'"
       quantity:
         type: integer
+      leftQuantity:
+        type: integer
+        description: "when the farmer estimates quantity, leftQuantity will be set at the same value of it"
+      confirmedQuantity:
+        type: integer
+        description: The real quantity after farmer confirmation
   ShipmentInfo:
     type: object
     additionalProperties: false

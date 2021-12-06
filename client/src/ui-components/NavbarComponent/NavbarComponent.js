@@ -39,7 +39,7 @@ function NavbarComponent(props) {
         </Navbar.Collapse>
         <Navbar.Toggle />
 
-        {props.showShoppingCart && (
+        {props.showShoppingCart && props.loggedUser &&(
           <div className='navbar-logo d-flex justify-content-end '>
             {props.shoppingCartItems > 0 ? (
               <Link

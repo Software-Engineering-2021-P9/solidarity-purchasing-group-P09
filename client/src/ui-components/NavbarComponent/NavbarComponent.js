@@ -47,7 +47,7 @@ function NavbarComponent(props) {
                 {iconCartFill}
               </Link>
             ) : (
-              { iconCartEmpty }
+              <>{iconCartEmpty}</>
             )}
           </div>
         )}
@@ -60,7 +60,7 @@ function NavbarComponent(props) {
                 href={routes[props.userIconLink]?.path}
               ></Nav.Link>
             ) : (
-              { iconUser }
+              <>{iconUser}</>
             )}
           </>
         )}

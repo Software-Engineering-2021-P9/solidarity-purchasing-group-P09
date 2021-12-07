@@ -1,8 +1,17 @@
-.text {
-  color: #68717a !important;
-  font-family: sans-serif;
-  font-style: normal;
-  font-size: 16px;
+.card {
+  /* Stroke/light */
+  border: 1px solid #dee2e6;
+  box-sizing: border-box;
+  box-shadow: 7px 20px 20px rgba(0, 0, 0, 0.25);
+  border-radius: 20px;
+}
+
+.card-img {
+  border-radius: 20px;
+}
+
+.body {
+  min-height: 250px !important;
 }
 
 .card-title {
@@ -25,6 +34,17 @@
   align-self: center;
 }
 
+.card-text {
+  color: #68717a !important;
+  font-family: sans-serif;
+  font-style: normal;
+  font-size: 16px;
+}
+
+.description {
+  min-height: 60px;
+}
+
 .bg-progressbar {
   padding-left: 0 !important;
   margin: 0;
@@ -34,30 +54,21 @@
 .progressbar-row {
   margin-left: 0px;
   margin-right: 0px;
-}
-
-.body {
-  min-height: 250px !important;
-}
-
-.description {
-  min-height: 60px;
-}
-.footer {
-  background-color: transparent;
+  text-align: center;
 }
 
 .add-to-cart-button {
   background-color: transparent !important;
-  color: #635f46;
+  color: black;
   width: auto !important;
-  border: 1px solid black;
+  border: 0px solid black;
   border-color: #635f46;
+  font-weight: bold;
 }
 
 .add-to-cart-button:hover {
   background-color: #7465132f;
-  color: #635f46;
+  color: black;
   width: auto !important;
   border: 1px solid black;
   border-color: #635f46;
@@ -70,13 +81,15 @@
   border-color: #635f46;
 }
 
-.card {
-  /* Stroke/light */
-  border: 1px solid #dee2e6;
-  box-sizing: border-box;
-  box-shadow: 7px 20px 20px rgba(0, 0, 0, 0.25);
+.form-input-gt10 {
   border-radius: 20px;
+  max-width: 60px;
 }
-.card-img {
-  border-radius: 20px;
+
+.delete-icon {
+  padding: 0 !important;
+}
+
+.footer {
+  background-color: transparent;
 }

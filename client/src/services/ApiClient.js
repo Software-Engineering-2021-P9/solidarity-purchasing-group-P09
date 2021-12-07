@@ -226,6 +226,24 @@ export async function signupClient(client) {
 // Product
 // -------
 
+export async function createProduct(product) {
+  const response = await fetch("api/products", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+
+    body: JSON.stringify({ ...product }),
+  });
+
+  switch (response.status) {
+    case 200:
+      let responseBody;
+      responseBody = await response.json();
+      return Product.fromJSON(responseBody);
+    default:
+      throw new Error("An error occurred during client fetch");
+  }
+}
+
 export async function findProducts(category, searchString) {
   let urlRequest = "/api/products?";
 

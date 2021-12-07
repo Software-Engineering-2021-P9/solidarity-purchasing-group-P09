@@ -20,8 +20,11 @@ The app can be ran in these ways:
 
 ## Docker
 
-The docker image can be build running in the root of the project:
-`docker build -t spg:latest .`
+The docker image can be built running in the root of the project:
+`docker build -t marcobramini/solidarity-purchasing-group-p09:release-x -t marcobramini/solidarity-purchasing-group-p09:latest .`
+
+And then pushed to DockerHub using:
+`docker push marcobramini/solidarity-purchasing-group-p09:latest`
 
 It can than be ran using:
-`docker run --env MONGO_CONN_STR={} --env MONGO_DB_NAME={} -p 80:80 spg:latest`
+`docker run --env MONGO_CONN_STR={placeholder-cannot-put-this-here} --env MONGO_DB_NAME=spg -p 80:80 marcobramini/solidarity-purchasing-group-p09:latest`

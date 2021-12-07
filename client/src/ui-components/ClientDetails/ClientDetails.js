@@ -25,7 +25,7 @@ function ClientDetails(props) {
         <Col className='fw-light' xs='3'>
           Wallet:
         </Col>
-        <Col>{props.clientInfo?.wallet.toFixed(3)}€</Col>
+        <Col>{props.clientInfo?.wallet.toFixed(2)}€</Col>
       </Row>
     </>
   );

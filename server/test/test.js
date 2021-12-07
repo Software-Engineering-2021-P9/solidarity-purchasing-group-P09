@@ -775,19 +775,19 @@ describe("Clients API tests:", () => {
         });
     });
 
-    it("it should update the client wallet with not covered orders", (done) => {
+    it("it should update the client wallet and change some orders from not covered to waiting", (done) => {
       mongoUnit.load(testData.ordersCollection);
       chai
         .request(app)
         .patch("/api/clients/0000c957b288576ca26f8999/wallet")
         .send({
-          increaseBy: 5,
+          increaseBy: 40,
         })
         .end((err, res) => {
           expect(err).to.be.null;
           expect(res.status).to.be.equal(200);
           expect(res.body).to.be.an("object");
-          expect(res.body.newWalletValue).to.be.equal(15);
+          expect(res.body.newWalletValue).to.be.equal(50);
 
           done();
         });

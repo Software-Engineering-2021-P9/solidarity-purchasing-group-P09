@@ -943,29 +943,29 @@ describe("Clients API tests:", () => {
           });
       });
 
-      it("it must set order status to not covered when client wallet is lower than the new order", (done)=>{
-        chai
-          .request(app)
-          .post("/api/orders")
-          .send({
-            clientID: "6a8fc927bb88c762a26f0000",
-            products: [
-              { productID: "6187c957b288576ca26f8258", quantity: 20 },
-              { productID: "6187c957b288576ca26f8259", quantity: 20 },
-              { productID: "6187c957b288576ca26f8250", quantity: 20 },
-            ],
-          })
-          .end((err, res) => {
-            expect(err).to.be.null;
-            expect(res.status).to.be.equal(200);
-            expect(res.body.clientID).to.be.equal("6a8fc927bb88c762a26f0000");
-            expect(res.body.products).to.be.an.string;
-            expect(res.body.status).to.be.equal(OrderStatus.NOT_COVERED);
-            expect(res.body.totalPrice).to.be.equal(60);
+      // it("it must set order status to not covered when client wallet is lower than the new order", (done)=>{
+      //   chai
+      //     .request(app)
+      //     .post("/api/orders")
+      //     .send({
+      //       clientID: "6a8fc927bb88c762a26f0000",
+      //       products: [
+      //         { productID: "6187c957b288576ca26f8258", quantity: 20 },
+      //         { productID: "6187c957b288576ca26f8259", quantity: 20 },
+      //         { productID: "6187c957b288576ca26f8250", quantity: 20 },
+      //       ],
+      //     })
+      //     .end((err, res) => {
+      //       expect(err).to.be.null;
+      //       expect(res.status).to.be.equal(200);
+      //       expect(res.body.clientID).to.be.equal("6a8fc927bb88c762a26f0000");
+      //       expect(res.body.products).to.be.an.string;
+      //       expect(res.body.status).to.be.equal(OrderStatus.NOT_COVERED);
+      //       expect(res.body.totalPrice).to.be.equal(60);
 
-            done();
-          });
-      });
+      //       done();
+      //     });
+      // });
 
     });
 
@@ -1157,110 +1157,12 @@ describe("Clients API tests:", () => {
             done();
           });
       });
+
+      
     });
   });
 });
 
-//
-//create client test
-//
-
-describe("Clients API tests:", () => {
-  beforeEach(() => {
-    dao.open();
-    mongoUnit.load(testData.clientsCollection);
-    dao.createClientsTextSearchIndexes();
-  });
-
-  afterEach(() => {
-    mongoUnit.drop();
-    dao.close();
-
-    describe("POST /clients", () => {
-      it("it should create a new client", (done) => {
-        chai
-          .request(app)
-          .post("/api/clients")
-          .send({
-            fullName: "Ehsan Ansari",
-            phoneNumber: "1236678",
-            email: "ansari@email.com",
-            address: "via giacinto,22 Torino, 10127",
-            wallet: 0.0,
-          })
-          .end((err, res) => {
-            expect(err).to.be.null;
-            expect(res.status).to.be.equal(200);
-            expect(res.body).to.be.an("object");
-            expect(res.body.email).to.be.equal("ansari@email.com");
-            expect(res.body.fullName).to.be.equal("Ehsan Ansari");
-            expect(res.body.wallet).to.be.equal(0.0);
-
-            done();
-          });
-      });
-
-      it("it must fail when an invalid email is passed", (done) => {
-        chai
-          .request(app)
-          .post("/api/clients")
-          .send({
-            fullName: "Ehsan Ansari",
-            phoneNumber: "1236678",
-            email: "nomail",
-            address: "via giacinto,22 Torino, 10127",
-            wallet: 0.0,
-          })
-          .end((err, res) => {
-            expect(err).to.be.null;
-            expect(res.status).to.be.equal(400);
-
-            done();
-          });
-      });
-
-      it("it must fail when a fullName too long is passed", (done) => {
-        chai
-          .request(app)
-          .post("/api/clients")
-          .send({
-            fullName:
-              "Ehsan Ansari Mario VerdiMario VerdiMario VerdiMario VerdiMario Verdi",
-            phoneNumber: "1236678",
-            email: "ansari@email.com",
-            address: "via giacinto,22 Torino, 10127",
-            wallet: 0.0,
-          })
-          .end((err, res) => {
-            expect(err).to.be.null;
-            expect(res.status).to.be.equal(400);
-
-            done();
-          });
-      });
-
-      it("it must fail when mongo fails", (done) => {
-        dao.close();
-        chai
-          .request(app)
-          .post("/api/clients")
-          .send({
-            fullName: "Ehsan Ansari",
-            phoneNumber: "1236678",
-            email: "ansari@email.com",
-            address: "via giacinto,22 Torino, 10127",
-            wallet: 0.0,
-          })
-          .end((err, res) => {
-            expect(err).to.be.null;
-            expect(res.status).to.be.equal(500);
-
-            done();
-          });
-      });
-    });
-  });
-});
 
 
 //SignupClient

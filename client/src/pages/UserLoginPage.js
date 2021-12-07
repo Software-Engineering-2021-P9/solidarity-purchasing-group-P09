@@ -1,34 +1,52 @@
 import React, { useContext, useState } from "react";
-
-import { Alert, Container, Row } from "react-bootstrap";
-
+import Validator from "validatorjs";
+import { Container, Row, Alert } from "react-bootstrap";
+import { Link } from "react-router-dom";
+import { LoginForm } from "../ui-components/LoginFormComponent/LoginForm";
+import { AskToRegister } from "../ui-components/LoginFormComponent/AskToRegister";
 import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponent";
-import Button from "../ui-components/Button/Button";
-
 import { AuthContext } from "../contexts/AuthContextProvider";
-
 import "bootstrap/dist/css/bootstrap.min.css";
+var config = require("../ui-components/LoginFormComponent/config.json");
 
 function UserLoginPage(props) {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  let data = { username: username, password: password };
+  let rules = {
+    username: "required",
+    password: config.secret,
+  };
+  let validation = new Validator(data, rules, {
+    required: "Enter your :attribute",
+    alpha_num: "Username must be alphanumeric",
+    min: "Password must be at least of 6 characters",
+  });
   const authContext = useContext(AuthContext);
 
-  const [errorMessage, setErrorMessage] = useState("");
+  const handleReset = (event) => {
+    event.preventDefault();
+    setErrorMessage("");
+    setUsername("");
+    setPassword("");
+  };
 
-  function onClientLogin() {
-    authContext
-      .loginUser("client@test.com", "123456789")
-      .catch(setErrorMessage);
-  }
-  function onEmployeeLogin() {
-    authContext
-      .loginUser("employee@test.com", "123456789")
-      .catch(setErrorMessage);
-  }
-  function onFarmerLogin() {
-    authContext
-      .loginUser("farmer@test.com", "123456789")
-      .catch(setErrorMessage);
-  }
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    setErrorMessage("");
+    if (validation.passes()) {
+      authContext.loginUser(username, password).catch((err) => {
+        setErrorMessage("Your credentials are wrong!");
+      });
+    } else {
+      if (validation.errors.first("username")) {
+        setErrorMessage(validation.errors.first("username"));
+      } else {
+        setErrorMessage(validation.errors.first("password"));
+      }
+    }
+  };
 
   function onLogout() {
     authContext.logoutUser();
@@ -39,29 +57,32 @@ function UserLoginPage(props) {
       <Row>
         <NavbarComponent links={[]} />
       </Row>
-      <Row>
-        <h1>UserLoginPage</h1>
-      </Row>
-      {authContext.currentUser && (
-        <Row className='pb-5'>
-          Hi, {authContext.currentUser.fullName}! You are already logged as a{" "}
-          {authContext.currentUser.role}!
-          <Button onClick={onLogout}>Logout</Button>
+
+      {authContext.currentUser ? (
+        <Row className="pb-5">
+          <Alert variant="danger" style={{ margin: "30px" }}>
+            {" "}
+            Hi, {authContext.currentUser.fullName}! You are already logged as a{" "}
+            {authContext.currentUser.role}. Please logout from{" "}
+            <Link to="#" onClick={onLogout} style={{ color: "#c48566" }}>
+              here!
+            </Link>
+          </Alert>
         </Row>
+      ) : (
+        <Container style={{ textAlign: "center", width: "500px" }}>
+          <LoginForm
+            handleSubmit={handleSubmit}
+            username={username}
+            password={password}
+            errorMessage={errorMessage}
+            setUsername={setUsername}
+            setPassword={setPassword}
+            handleReset={handleReset}
+          />
+          <AskToRegister />
+        </Container>
       )}
-      <Row className='pb-2'>
-        <Button onClick={onClientLogin}>Login Client</Button>
-      </Row>
-      <Row className='pb-2'>
-        <Button onClick={onEmployeeLogin}>Login Employee</Button>
-      </Row>
-      <Row className='pb-2'>
-        <Button onClick={onFarmerLogin}>Login Farmer</Button>
-      </Row>
-
-      <Row></Row>
-
-      {errorMessage && <Alert variant='danger'>{errorMessage}</Alert>}
     </Container>
   );
 }

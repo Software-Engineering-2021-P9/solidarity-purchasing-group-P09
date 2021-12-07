@@ -41,6 +41,7 @@ const {
   createProductsTextSearchIndexes,
   getProductByID,
   findProductsByFarmerID,
+  createProduct,
 } = require("./product");
 
 const { ClientInfo } = require("../models/client_info");
@@ -137,6 +138,8 @@ exports.setProductAvailability = (
   );
 exports.findProductsByFarmerID = (farmerID, searchString, category) =>
   findProductsByFarmerID(db, farmerID, searchString, category);
+exports.createProduct = (farmerID, name, category) =>
+  createProduct(db, farmerID, name, category);
 
 // Order
 exports.createOrder = (clientID, products, status, totalPrice, createdAt) =>

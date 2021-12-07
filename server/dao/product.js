@@ -1,6 +1,6 @@
 "use strict";
 
-const { ObjectID } = require("bson");
+const { ObjectID, ObjectId } = require("bson");
 
 const productsCollectionName = "products";
 
@@ -85,4 +85,14 @@ exports.createProductsTextSearchIndexes = (db) => {
     name: "text",
     description: "text",
   });
+};
+
+exports.createProduct = (db, farmerID, name, description, category) => {
+  const prodcutToWrite = {
+    farmerID: ObjectId(farmerID),
+    name: name,
+    description: description,
+    category: category,
+  };
+  return db.collection(productsCollectionName).insertOne(prodcutToWrite);
 };

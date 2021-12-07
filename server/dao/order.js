@@ -1,7 +1,7 @@
 "use strict";
 
 const { ObjectId } = require("bson");
-const { OrderProduct } = require("../models/order");
+const { OrderProduct, OrderStatus } = require("../models/order");
 
 const orderCollectionName = "orders";
 
@@ -52,4 +52,14 @@ exports.getOrderByID = async (db, orderID) => {
 
 exports.deleteOrder = async (db, orderID) => {
   return db.collection(orderCollectionName).deleteOne(ObjectId(orderID));
+};
+
+// -------------
+// CompleteOrder
+// -------------
+
+exports.completeOrder = async (db, orderID) => {
+  const query = { _id: ObjectId(orderID), status: OrderStatus.PREPARED };
+  const update = { $set: { status: OrderStatus.DONE } };
+  return db.collection(orderCollectionName).updateOne(query, update);
 };

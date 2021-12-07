@@ -133,6 +133,13 @@ app.get(
   orderHandlers.getOrdersByClientID
 );
 
+app.patch(
+  buildAPIPath("/orders/:orderID/complete"),
+  orderHandlers.completeOrderValidatorChain,
+  checkValidationErrorMiddleware,
+  orderHandlers.completeOrderHandler
+);
+
 // ---------
 // /products
 // ---------

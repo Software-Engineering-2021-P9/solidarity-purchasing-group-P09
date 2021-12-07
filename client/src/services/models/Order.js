@@ -18,6 +18,14 @@ class Order {
       json.createdAt
     );
   }
+
+  static OrderStatus = {
+    NOT_COVERED: "not covered",
+    WAITING: "waiting",
+    CONFIRMED: "confirmed",
+    PREPARED: "prepared",
+    DONE: "done",
+  };
 }
 
 export default Order;

@@ -636,20 +636,37 @@ describe("Products API tests: ", () => {
         });
     });
 
-    it("it should return 500 when mongo fails ", (done) => {
+    it("it should return 400 if the Name is not valid", (done) => {
       chai
         .request(app)
         .post("/api/products")
         .send({
           farmerID: "6187c957b288576ca24f8257",
           name: "Test",
-          description:
-            "This is a test product  more than 100 charas aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-          category: "fruit",
+          description: "This is a test product",
+          category: "WRONG",
         })
         .end((err, res) => {
           expect(err).to.be.null;
           expect(res.status).to.be.equal(400);
+          done();
+        });
+    });
+
+    it("it should return 500 when mongo fails ", (done) => {
+      dao.close();
+      chai
+        .request(app)
+        .post("/api/products")
+        .send({
+          farmerID: "6187c957b288576ca24f8257",
+          name: "Test",
+          description: "This is a test product  more than 100 charas ",
+          category: "fruit",
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(500);
           done();
         });
     });

@@ -94,7 +94,7 @@ function ProductAvailabilityForm(props) {
         </Form.Group>
 
         <Container className='d-flex justify-content-center'>
-          <Button variant='primary' type='submit'>
+          <Button type='submit'>
             {props.isLoading ? (
               <span className='px-3'>
                 <Spinner variant='light' animation='border' size='sm' />

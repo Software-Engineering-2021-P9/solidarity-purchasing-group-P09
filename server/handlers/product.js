@@ -64,7 +64,7 @@ exports.getProductsByIDHandler = async function (req, res, next) {
   try {
     productsAvailabilitiesResult = await dao.getProductsAvailability(
       productsResult.map((product) => product._id),
-      ...getCurrentWeek(dayjs())
+      ...getNextWeek(dayjs())
     );
   } catch (err) {
     console.error(

@@ -5,6 +5,7 @@ import Button from "../Button/Button";
 import { updateStatus } from "../../services/ApiClient";
 import { useHistory } from "react-router";
 import  Order  from "../../services/models/Order"
+import Order from "../../services/models/Order";
 
 function setupStatusLabelAndRowButton(location, status, setModalIsOpen){
   let tableRowComponents = {
@@ -47,7 +48,7 @@ function ClientOrderTableRow(props) {
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const handleSubmit = () => {
-    updateStatus(status).then((newS) => {
+    updateStatus(status, props.order.id).then((newS) => {
       setStatus(newS);
     });
     setModalIsOpen(false);

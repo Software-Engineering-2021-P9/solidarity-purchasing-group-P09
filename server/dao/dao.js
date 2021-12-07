@@ -33,6 +33,7 @@ const {
   deleteOrder,
   getOrdersByClientID,
   updateOrderStatusToWaiting,
+  completeOrder,
 } = require("./order");
 
 const {
@@ -145,6 +146,7 @@ exports.getOrderByID = (orderID) => getOrderByID(db, orderID);
 exports.deleteOrder = (orderID) => deleteOrder(db, orderID);
 exports.getOrdersByClientID = (clientID) => getOrdersByClientID(db, clientID);
 exports.updateOrderStatusToWaiting = (orderID) => updateOrderStatusToWaiting(db, orderID);
+exports.completeOrder = (orderID) => completeOrder(db, orderID);
 
 exports.createClientsTextSearchIndexes = () =>
   createClientsTextSearchIndexes(db);

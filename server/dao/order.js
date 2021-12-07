@@ -63,3 +63,12 @@ exports.updateOrderStatusToWaiting = (db, orderID) => {
   var update = { $set: {status: OrderStatus.WAITING} };
   return db.collection(orderCollectionName).updateOne(query, update, { returnDocument: 'after' });
 }
+// -------------
+// CompleteOrder
+// -------------
+
+exports.completeOrder = async (db, orderID) => {
+  const query = { _id: ObjectId(orderID), status: OrderStatus.PREPARED };
+  const update = { $set: { status: OrderStatus.DONE } };
+  return db.collection(orderCollectionName).updateOne(query, update);
+};

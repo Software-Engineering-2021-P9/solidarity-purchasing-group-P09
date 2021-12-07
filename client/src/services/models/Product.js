@@ -1,25 +1,23 @@
 import ProductAvailability from "./ProductAvailability";
 
 class Product {
-  constructor(id, farmerID, name, description, category, productAvailability) {
+  constructor(id, farmerID, name, description, category, availability) {
     this.id = id;
     this.farmerID = farmerID;
     this.name = name;
     this.description = description;
     if (Object.values(Product.Categories).includes(category))
       this.category = category;
-    this.productAvailability = productAvailability;
+    this.availability = availability;
     //Mock price
     this.price = 1.0;
     this.packaging = "packaging: 1kg";
   }
 
   static fromJSON(json) {
-    let productAvailability = null;
-    if (json.productAvailability) {
-      productAvailability = ProductAvailability.fromJSON(
-        json.productAvailability
-      );
+    let availability = null;
+    if (json.availability) {
+      availability = ProductAvailability.fromJSON(json.availability);
     }
 
     return new Product(
@@ -28,7 +26,7 @@ class Product {
       json.name,
       json.description,
       json.category,
-      productAvailability
+      availability
     );
   }
 

@@ -101,11 +101,9 @@ function ProductDetailsPage(props) {
   function buildCurrentWeekAvailabilitySection() {
     return (
       <>
-        {product?.productAvailability ? (
+        {product?.availability ? (
           <Row className='pt-3'>
-            <ProductAvailabilityDetails
-              availability={product?.productAvailability}
-            />
+            <ProductAvailabilityDetails availability={product?.availability} />
           </Row>
         ) : (
           <h4 className='title text-center'>No availability set</h4>

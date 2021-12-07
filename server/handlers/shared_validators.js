@@ -13,8 +13,10 @@ exports.checkValidationErrorMiddleware = (req, res, next) => {
 
 // shared validators
 
-exports.employeeIDPathValidator = param("employeeID").isMongoId();
+exports.employeeIDPathValidator = param("employeeID").exists().isMongoId();
 exports.clientIDPathValidator = param("clientID").exists().isMongoId();
+exports.productIDPathValidator = param("productID").exists().isMongoId();
+exports.farmerIDPathValidator = param("farmerID").exists().isMongoId();
 
 exports.emailBodyValidator = body("email")
   .notEmpty()
@@ -70,6 +72,12 @@ exports.searchStringValidator = query("searchString")
   .isLength({ max: 100 })
   .trim()
   .escape();
+
+exports.hasAvailabilitySetValidator = query("hasAvailabilitySet")
+  .optional()
+  .notEmpty()
+  .bail()
+  .isBoolean();
 
 exports.idsValidator = query("ids")
   .optional()
@@ -145,3 +153,23 @@ exports.walletBodyValidator = body("wallet")
   .notEmpty()
   .bail()
   .isLength({ min: 0 });
+
+// availability validators
+
+exports.availabilityPriceBodyValidator = body("price")
+  .notEmpty()
+  .bail()
+  .isFloat({ min: 0.01 });
+
+exports.availabilityQuantityBodyValidator = body("quantity")
+  .notEmpty()
+  .bail()
+  .isInt({ min: 1 });
+
+exports.availabilityPackagingBodyValidator = body("packaging")
+  .notEmpty()
+  .bail()
+  .isString()
+  .bail()
+  .trim()
+  .escape();

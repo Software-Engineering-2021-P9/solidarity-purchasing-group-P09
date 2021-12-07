@@ -3,11 +3,14 @@ import { ClientDetailsPage } from "./pages/ClientDetailsPage";
 import { ClientManagementPage } from "./pages/ClientManagementPage/ClientManagementPage";
 import { ClientSignupPage } from "./pages/ClientSignupPage";
 import { ProductListPage } from "./pages/ProductListPage";
+import { ProductManagementPage } from "./pages/ProductManagementPage/ProductManagementPage";
 import { UserLoginPage } from "./pages/UserLoginPage";
 import { UserLogoutRedirect } from "./pages/UserLogoutRedirect";
 
 import ProtectedRoute from "./contexts/ProtectedRoute";
 import UserRoles from "./services/models/UserRoles";
+import { ProductDetailsPage } from "./pages/ProductDetailsPage";
+import ProductCreatePage from "./pages/ProductCreatePage";
 
 const productListRouteName = "product-list-page";
 const shoppingCartRouteName = "shopping-cart-page";
@@ -15,13 +18,13 @@ const ClientInsufficientWalletOrdersRouteName = "client-insufficient-wallet-orde
 const employeeClientManagementRouteName = "employee-client-management-page";
 const employeeClientDetailsRouteName = "employee-client-details-page";
 const employeeClientSignupRouteName = "employee-client-signup-page";
+const farmerProductManagementRouteName = "farmer-product-management-page";
+const farmerProductDetailsRouteName = "farmer-product-details-page";
+const farmerProductCreateRouteName = "farmer-product-create-page";
 const userLoginRouteName = "user-login-page";
 const userLogoutRouteName = "user-logout-page";
-
-const clientSignupRouteName="client-signup-page";
-
-const clientDetailsRouteName = "client-details-page"
-
+const clientSignupRouteName = "client-signup-page";
+const clientDetailsRouteName = "client-details-page";
 
 const routes = {
   [productListRouteName]: {
@@ -86,6 +89,36 @@ const routes = {
     exact: false,
     linkTitle: "Order List",
   },
+  [farmerProductManagementRouteName]: {
+    path: "/farmer/products",
+    component: () => (
+      <ProtectedRoute requiredRoles={[UserRoles.FARMER]}>
+        <ProductManagementPage />
+      </ProtectedRoute>
+    ),
+    exact: true,
+    linkTitle: "Manage Products",
+  },
+  [farmerProductDetailsRouteName]: {
+    path: "/farmer/products/:id",
+    component: () => (
+      <ProtectedRoute requiredRoles={[UserRoles.FARMER]}>
+        <ProductDetailsPage />
+      </ProtectedRoute>
+    ),
+    exact: false,
+    linkTitle: "Show Product Details",
+  },
+  [farmerProductCreateRouteName]: {
+    path: "/farmer/createProduct",
+    component: () => (
+      <ProtectedRoute requiredRoles={[UserRoles.FARMER]}>
+        <ProductCreatePage />
+      </ProtectedRoute>
+    ),
+    exact: false,
+    linkTitle: "Add Product",
+  },
   [userLoginRouteName]: {
     path: "/user/login",
     component: () => <UserLoginPage />,
@@ -100,7 +133,7 @@ const routes = {
   },
   [clientSignupRouteName]: {
     path: "/client/signup",
-    component:  () => <ClientSignupPage />, 
+    component: () => <ClientSignupPage />,
     exact: false,
     linkTitle: "Register",
   },
@@ -120,7 +153,7 @@ function getAvailableNavbarLinks(loggedUser) {
         userLogoutRouteName,
       ];
     case UserRoles.FARMER:
-      return [userLogoutRouteName];
+      return [farmerProductManagementRouteName, userLogoutRouteName];
     default:
       return [userLoginRouteName, clientSignupRouteName];
   }
@@ -132,6 +165,9 @@ export {
   employeeClientManagementRouteName,
   employeeClientDetailsRouteName,
   employeeClientSignupRouteName,
+  farmerProductManagementRouteName,
+  farmerProductDetailsRouteName,
+  farmerProductCreateRouteName,
   clientDetailsRouteName,
   routes,
   getAvailableNavbarLinks,

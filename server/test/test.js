@@ -1157,13 +1157,9 @@ describe("Clients API tests:", () => {
             done();
           });
       });
-
-      
     });
   });
 });
-
-
 
 //SignupClient
 

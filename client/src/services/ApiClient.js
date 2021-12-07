@@ -455,23 +455,3 @@ export async function createOrder(clientID, products) {
       throw new Error("An error occurred during order fetch");
   }
 }
-
-// --------
-// Product
-// --------
-
-export async function getProductsByIDs(productIDs) {
-  let productIDsString = productIDs.join(",");
-  const response = await fetch("/api/products?ids=" + productIDsString);
-
-  switch (response.status) {
-    case 400:
-      throw new Error("Validation error occurred");
-    case 200:
-      let responseBody;
-      responseBody = await response.json();
-      return responseBody.map((product) => Product.fromJSON(product));
-    default:
-      throw new Error("An error occurred during products fetch");
-  }
-}

@@ -4,7 +4,6 @@ import "./ClientOrderTableRow.css";
 import Button from "../Button/Button";
 import { updateStatus } from "../../services/ApiClient";
 import { useHistory } from "react-router";
-import  Order  from "../../services/models/Order"
 import Order from "../../services/models/Order";
 
 function setupStatusLabelAndRowButton(location, status, setModalIsOpen){

@@ -89,10 +89,10 @@ exports.createProductsTextSearchIndexes = (db) => {
 
 exports.createProduct = (db, farmerID, name, description, category) => {
   const prodcutToWrite = {
-    farmerID: ObjectId(farmerID),
-    name: name,
-    description: description,
-    category: category,
+    farmerID: ObjectId(farmerID.toString()),
+    name: name.toString(),
+    description: description.toString(),
+    category: category.toString(),
   };
   return db.collection(productsCollectionName).insertOne(prodcutToWrite);
 };

@@ -13,7 +13,7 @@ var activePhase = getTrueActivePhase();
 
 activePhase.handler();
 
-let cronTask = cron.schedule('* * * * * *', ()=> {
+let cronTask = cron.schedule('* * * * *', ()=> {
   let phase = getTrueActivePhase();
 
   if(phase === null){

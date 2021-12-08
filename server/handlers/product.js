@@ -261,10 +261,10 @@ exports.createProductHandler = async function (req, res, next) {
 
   try {
     result = await dao.createProduct(
-      req.body.farmerID,
-      req.body.name,
-      req.body.description,
-      req.body.category
+      req.body.farmerID.toString(),
+      req.body.name.toString(),
+      req.body.description.toString(),
+      req.body.category.toString()
     );
   } catch (err) {
     console.error(`CreateProduct() -> couldn't create the product: ${err}`);

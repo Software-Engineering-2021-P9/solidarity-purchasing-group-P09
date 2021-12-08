@@ -147,7 +147,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: "#/definitions/ProductResult"
+              $ref: "#/definitions/ProductAndAvailabilityResult"
         "400":
           description: Bad Request - The request contains invalid parameters
         "500":
@@ -513,7 +513,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: "#/definitions/ProductResult"
+              $ref: "#/definitions/ProductAndAvailabilityResult"
         "400":
           description: Bad Request - The request contains invalid parameters
         "401":
@@ -525,8 +525,8 @@ paths:
     get:
       tags:
         - product
-      summary: Get a product details
-      description: "Get the product details given its ID."
+      summary: Get a product details and its availability if exist
+      description: "Get the product details and its availability if exist given its ID."
       operationId: getProductByID
       produces:
         - application/json
@@ -547,35 +547,6 @@ paths:
           description: Not Found
         "401":
           description: Unauthorized
-        "500":
-          description: Internal Server Error
-
-  /products/{productID}/availability/nextWeek:
-    get:
-      tags:
-        - product
-      summary: Get the next week availability.
-      description: It return the next week availability given a productID.
-      operationId: getNextWeekProductAvailability
-      produces:
-        - application/json
-      parameters:
-        - in: path
-          required: true
-          name: availabilityID
-          type: string
-          description: Parameter that identify and select the Product
-      responses:
-        "200":
-          description: Success
-          schema:
-            $ref: "#/definitions/ProductAvailabilityResult"
-        "400":
-          description: Bad Request - The request contains invalid parameters
-        "401":
-          description: Unauthorized
-        "404":
-          description: Not Found
         "500":
           description: Internal Server Error
 
@@ -734,6 +705,63 @@ paths:
         "500":
           description: Internal Server Error
 
+  /availabilities/{productID}/nextWeek:
+     get:
+      tags:
+        - availability
+      summary: Get the next week availability.
+      description: It return the next week availability given a productID.
+      operationId: getNextWeekProductAvailability
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          required: true
+          name: productID
+          type: string
+          description: Parameter that identify and select the Product
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/ProductAvailabilityResult"
+        "400":
+          description: Bad Request - The request contains invalid parameters
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+
+  /availabilities/{productID}/currentWeek:
+     get:
+      tags:
+        - availability
+      summary: Get the current week availability.
+      description: It return the current week availability given a productID.
+      operationId: getNextWeekProductAvailability
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          required: true
+          name: productID
+          type: string
+          description: Parameter that identify and select the Product
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/ProductAvailabilityResult"
+        "400":
+          description: Bad Request - The request contains invalid parameters
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
 definitions:
   ClientInfo:
     description: "At least one between email and (fullName, address, phoneNumber) are required"
@@ -1120,7 +1148,7 @@ definitions:
         type: string
         maxLength: 60
         example: Via dei castagni 7a|Torino|TO|10140
-  ProductResult:
+  ProductAndAvailabilityResult:
     description: Return model for methods which return Product. It also contains the information about current week availability.
     type: object
     additionalProperties: false
@@ -1130,6 +1158,7 @@ definitions:
       - name
       - description
       - category
+      - ProductAvailabilityResult
     properties:
       id:
         type: string
@@ -1219,3 +1248,36 @@ definitions:
         type: string
       fee:
         type: number
+  ProductResult:
+    description: Return model for methods which return Product. It also contains the information about current week availability.
+    type: object
+    additionalProperties: false
+    required:
+      - id
+      - farmerID
+      - name
+      - description
+      - category
+    properties:
+      id:
+        type: string
+        format: bsonID
+      farmerID:
+        type: string
+        format: bsonID
+      name:
+        type: string
+        maxLength: 25
+        example: Potato
+      description:
+        type: string
+        maxLength: 100
+      category:
+        type: string
+        enum:
+          - fruit
+          - vegetables
+          - spreadable creams
+          - meat
+          - eggs
+          - milk

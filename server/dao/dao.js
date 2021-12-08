@@ -1,18 +1,51 @@
 "use strict";
 
 const { MongoClient } = require("mongodb");
-const { getEmployeeByID, createEmployee } = require("./employee");
+const {
+  getEmployeeByID,
+  createEmployee,
+  getEmployeeByEmail,
+} = require("./employee");
 
-const { createOrder, getOrderByID, deleteOrder } = require("./order");
+const { getFarmerByID, getFarmerByEmail } = require("./farmer");
 
-const { getClientByID, addFundToWallet, findClients, createClientsTextSearchIndexes, createClient } = require("./client");
+const {
+  getClientByID,
+  addFundToWallet,
+  findClients,
+  createClientsTextSearchIndexes,
+  createClient,
+  signupClient,
+  getUserById,
+  getUser,
+  getClientByEmail,
+} = require("./client");
 
+const {
+  getProductsAvailability,
+  getProductAvailability,
+  setProductAvailability,
+} = require("./productAvailability");
+
+const {
+  createOrder,
+  getOrderByID,
+  deleteOrder,
+  getOrdersByClientID,
+  completeOrder,
+} = require("./order");
 
 const {
   getProductsByIDs,
   findProducts,
   createProductsTextSearchIndexes,
-} = require("./products");
+  getProductByID,
+  findProductsByFarmerID,
+} = require("./product");
+
+const { ClientInfo } = require("../models/client_info");
+const { EmployeeInfo } = require("../models/employee_info");
+const { FarmerInfo } = require("../models/farmer_info");
 
 // DAO initialization
 // Only one instance can be open at a time. Subsequent calls has no effect.
@@ -41,9 +74,33 @@ exports.close = () => {
 // Exported database access methods
 // Employee
 exports.getEmployeeByID = (employeeID) => getEmployeeByID(db, employeeID);
+exports.getEmployeeByEmail = (email) => getEmployeeByEmail(db, email);
 exports.createEmployee = (email, hashedPassword, fullName) =>
   createEmployee(db, email, hashedPassword, fullName);
 exports.deleteEmployee = (employeeID) => deleteEmployee(db, employeeID);
+
+// Farmer
+exports.getFarmerByID = (farmerID) => getFarmerByID(db, farmerID);
+exports.getFarmerByEmail = (email) => getFarmerByEmail(db, email);
+
+// Client
+exports.getClientByID = (clientID) => getClientByID(db, clientID);
+
+exports.createClient = (fullName, phoneNumber, email, address, wallet) =>
+  createClient(db, fullName, phoneNumber, email, address, wallet);
+
+exports.signupClient = (
+  fullName,
+  phoneNumber,
+  email,
+  password,
+  address,
+  wallet
+) => signupClient(db, fullName, phoneNumber, email, password, address, wallet);
+
+exports.findClients = (searchString) => findClients(db, searchString);
+exports.addFundToWallet = (clientID, increaseBy) =>
+  addFundToWallet(db, clientID, increaseBy);
 
 // Product
 exports.getProductsByIDs = (ids) => getProductsByIDs(db, ids);
@@ -54,25 +111,60 @@ exports.createProductsTextSearchIndexes = () => {
   createProductsTextSearchIndexes(db);
 };
 
+exports.getProductsAvailability = (listOfIDs, week, year) =>
+  getProductsAvailability(db, listOfIDs, week, year);
+exports.getProductAvailability = (productID, week, year) =>
+  getProductAvailability(db, productID, week, year);
+exports.getProductByID = (productID) => getProductByID(db, productID);
+exports.setProductAvailability = (
+  farmerID,
+  productID,
+  week,
+  year,
+  price,
+  packaging,
+  quantity
+) =>
+  setProductAvailability(
+    db,
+    farmerID,
+    productID,
+    week,
+    year,
+    price,
+    packaging,
+    quantity
+  );
+exports.findProductsByFarmerID = (farmerID, searchString, category) =>
+  findProductsByFarmerID(db, farmerID, searchString, category);
 
 // Order
 exports.createOrder = (clientID, products, status, totalPrice, createdAt) =>
   createOrder(db, clientID, products, status, totalPrice, createdAt);
 exports.getOrderByID = (orderID) => getOrderByID(db, orderID);
 exports.deleteOrder = (orderID) => deleteOrder(db, orderID);
-
-exports.deleteEmployee = (employeeID) => deleteEmployee(db, employeeID);
-exports.getClientByID = (clientID) => getClientByID(db, clientID);
-exports.addFundToWallet = (clientID, increaseBy) => addFundToWallet(db, clientID, increaseBy);
-exports.findClients = (searchString) => findClients(db, searchString);
+exports.getOrdersByClientID = (clientID) => getOrdersByClientID(db, clientID);
+exports.completeOrder = (orderID) => completeOrder(db, orderID);
 
 exports.createClientsTextSearchIndexes = () =>
   createClientsTextSearchIndexes(db);
 
-    // --------------
-// CreateClient
-// --------------
-exports.getClientByID = (clientID) => getClientByID(db, clientID);
-exports.createClient = (fullName, phoneNumber, email, address, wallet) => 
-createClient(db, fullName, phoneNumber, email, address, wallet);
+// User (Client, Farmer, Employee)
+exports.getUserByEmail = async (email) => {
+  let usersFound = await Promise.all([
+    getClientByEmail(db, email),
+    getFarmerByEmail(db, email),
+    getEmployeeByEmail(db, email),
+  ]).then(([clientInfo, farmerInfo, employeeInfo]) => {
+    let users = [];
+    if (clientInfo) users.push(ClientInfo.fromMongoJSON(clientInfo));
+    if (farmerInfo) users.push(FarmerInfo.fromMongoJSON(farmerInfo));
+    if (employeeInfo) users.push(EmployeeInfo.fromMongoJSON(employeeInfo));
+    return users;
+  });
 
+  if (usersFound?.length === 0) {
+    throw new Error("no user found");
+  }
+  return usersFound[0];
+};

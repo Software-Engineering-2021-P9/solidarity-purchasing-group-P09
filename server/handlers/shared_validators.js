@@ -11,11 +11,12 @@ exports.checkValidationErrorMiddleware = (req, res, next) => {
   next();
 };
 
-
 // shared validators
 
-exports.employeeIDPathValidator = param("employeeID").isMongoId();
+exports.employeeIDPathValidator = param("employeeID").exists().isMongoId();
 exports.clientIDPathValidator = param("clientID").exists().isMongoId();
+exports.productIDPathValidator = param("productID").exists().isMongoId();
+exports.farmerIDPathValidator = param("farmerID").exists().isMongoId();
 
 exports.emailBodyValidator = body("email")
   .notEmpty()
@@ -40,7 +41,6 @@ exports.passwordBodyValidator = body("password")
   .trim()
   .escape();
 
-
 // client validators
 exports.clientIDBodyValidator = body("clientID").isMongoId();
 
@@ -52,9 +52,7 @@ exports.addFundToWalletBodyValidator = body("increaseBy")
   .bail()
   .isFloat({ min: 0 });
 
-
 //products
-
 
 // product validators
 exports.productCategoryValidator = query("category")
@@ -65,7 +63,6 @@ exports.productCategoryValidator = query("category")
   .bail()
   .isIn(Object.values(ProductCategory));
 
-
 exports.searchStringValidator = query("searchString")
   .optional()
   .notEmpty()
@@ -75,6 +72,12 @@ exports.searchStringValidator = query("searchString")
   .isLength({ max: 100 })
   .trim()
   .escape();
+
+exports.hasAvailabilitySetValidator = query("hasAvailabilitySet")
+  .optional()
+  .notEmpty()
+  .bail()
+  .isBoolean();
 
 exports.idsValidator = query("ids")
   .optional()
@@ -111,44 +114,64 @@ exports.orderProductQtysBodyValidator = body("products.*.quantity")
     max: 100,
   });
 
+exports.orderClientIDQueryValidator = query("clientID").isMongoId();
 
-    //Clients
+exports.orderIDParamValidator = param("orderID").isMongoId();
 
+//Clients
 
-    exports.clientIDPathValidator = param("clientID").isMongoId();
-    fullNameBodyValidator = body("fullName")
-    .notEmpty()
-    .bail()
-    .isString()
-    .bail()
-    .isLength({ max: 40 })
-    .trim()
-    .escape();
-    
-    exports.phoneNumberBodyValidator = body("phoneNumber")
-    .notEmpty()
-    .bail()
-    .isString()
-    .isLength({ max: 20 })
-    .trim()
-    .escape();
-     exports.emailBodyValidator = body("email")
-     .notEmpty()
-     .bail()
-     .trim()
-     .escape()
-     .isEmail();
-    exports.addressBodyValidator = body("address")
-    .notEmpty()
-    .isString()
-    .bail()
-    .isLength({ max: 100 })
-    .trim()
-    .escape();
-
-    exports.walletBodyValidator = body("wallet")
+exports.clientIDPathValidator = param("clientID").isMongoId();
+fullNameBodyValidator = body("fullName")
   .notEmpty()
   .bail()
-  .isLength({ min: 0 })
- 
+  .isString()
+  .bail()
+  .isLength({ max: 40 })
+  .trim()
+  .escape();
 
+exports.phoneNumberBodyValidator = body("phoneNumber")
+  .notEmpty()
+  .bail()
+  .isString()
+  .isLength({ max: 20 })
+  .trim()
+  .escape();
+exports.emailBodyValidator = body("email")
+  .notEmpty()
+  .bail()
+  .trim()
+  .escape()
+  .isEmail();
+exports.addressBodyValidator = body("address")
+  .notEmpty()
+  .isString()
+  .bail()
+  .isLength({ max: 100 })
+  .trim()
+  .escape();
+
+exports.walletBodyValidator = body("wallet")
+  .notEmpty()
+  .bail()
+  .isLength({ min: 0 });
+
+// availability validators
+
+exports.availabilityPriceBodyValidator = body("price")
+  .notEmpty()
+  .bail()
+  .isFloat({ min: 0.01 });
+
+exports.availabilityQuantityBodyValidator = body("quantity")
+  .notEmpty()
+  .bail()
+  .isInt({ min: 1 });
+
+exports.availabilityPackagingBodyValidator = body("packaging")
+  .notEmpty()
+  .bail()
+  .isString()
+  .bail()
+  .trim()
+  .escape();

@@ -1,4 +1,5 @@
-import { React, useEffect, useState } from "react";
+import { React, useEffect, useState, useContext } from "react";
+import { useLocation } from "react-router";
 import {
   Row,
   Col,
@@ -8,21 +9,25 @@ import {
   Modal,
   Container,
 } from "react-bootstrap";
-import { employeeNavbarLinks } from "../Routes";
+import { getAvailableNavbarLinks } from "../Routes";
+
 import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponent";
-import Product from "../services/models/Product";
+import { FilterRow } from "../ui-components/FilterRow/FilterRow";
 import ProductCard from "../ui-components/ProductCardComponent/ProductCard";
-import { RedButton } from "../ui-components/RedButtonComponent/RedButton";
-import { RedDropdown } from "../ui-components/RedDropdownComponent/RedDropdown";
-import  Button  from "../ui-components/Button/Button";
+import Button from "../ui-components/Button/Button";
+
 import "../ui-components/ShoppingCartComponent/ShoppingCartControlsCSS.css";
-import "../ui-components/Title.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import { findProducts } from "../services/ApiClient";
 
+import { AuthContext } from "../contexts/AuthContextProvider";
+import UserRoles from "../services/models/UserRoles";
+
 function ProductListPage(props) {
-  
+  const location = useLocation();
+  const authContext = useContext(AuthContext);
+
   const [products, setProducts] = useState([]);
 
   //used for storing the content of the search form
@@ -35,16 +40,17 @@ function ProductListPage(props) {
   const [searchString, setSearchString] = useState();
 
   //current cart
-  const [cart, setCart] = useState(props.location.state ? props.location.state.shoppingCart : new Map());
-
-  // if the employee is creating a new order or is just showing available products
-  const creatingOrderMode = props.location.state ? true : false; 
+  const [cart, setCart] = useState(
+    location.state ? location.state.shoppingCart : new Map()
+  );
 
   // modal states
   const [show, setShow] = useState(false);
 
   const [modalProduct, setModalProduct] = useState({});
-  
+
+  const [errorMessage, setErrorMessage] = useState("");
+
   useEffect(() => {
     //call from props the function for fetching the new products
     async function updateProducts() {
@@ -75,27 +81,41 @@ function ProductListPage(props) {
   const handleClose = () => setShow(false);
 
   const handleShow = (product) => {
-    if(cart.get(product.id)){
-      setModalProduct({productName: product.name, productId: product.id, productQty: cart.get(product.id)});
-    }
-    else
-      setModalProduct({productName: product.name, productId: product.id, productQty: 1});
+    setErrorMessage(""); 
+    if (cart.get(product.id)) {
+      setModalProduct({
+        productName: product.name,
+        productId: product.id,
+        productQty: cart.get(product.id),
+      });
+    } else
+      setModalProduct({
+        productName: product.name,
+        productId: product.id,
+        productQty: 1,
+      });
     setShow(true);
   };
 
   const addItem = (productID, quantity) => {
-    setCart(new Map(cart.set(productID, parseInt(quantity))));
-    setShow(false); 
+    if (quantity > 0) {
+      setCart(new Map(cart.set(productID, parseInt(quantity))));
+      setShow(false);
+    } else {
+      setErrorMessage("Insert a valid quantity.");
+    }
   };
 
   return (
     <>
       <NavbarComponent
-        links={employeeNavbarLinks}
+        links={getAvailableNavbarLinks(authContext.currentUser)}
+        loggedUser={authContext.currentUser}
         showShoppingCart
         shoppingCartItems={cart.size}
         shoppingCart={cart}
-        clientID={props.location.state ? props.location.state.clientID: ''}
+        clientID={location.state ? location.state.clientID : ""}
+        userIconLink={authContext.getUserIconLink()}
       />
 
       <Modal show={show} onHide={handleClose}>
@@ -111,62 +131,53 @@ function ProductListPage(props) {
               type="number"
               step={1}
               value={modalProduct.productQty}
-              onChange={(e) => setModalProduct({...modalProduct, productQty:e.target.value})}
+              onChange={(e) =>{
+                setModalProduct({ ...modalProduct, productQty: e.target.value }); setErrorMessage("");
+              }}
               max={100}
               min={1}
             />
           </Row>
+          {errorMessage && (
+            <Row>
+              <p className="text-danger">{errorMessage}</p>
+            </Row>
+          )}
         </Container>
         <Modal.Footer>
-          <Button className="btn-light" onClick={handleClose}>
-            Close
-          </Button>
-          <Button className="btn-primary" onClick={() => addItem(modalProduct.productId, modalProduct.productQty)}>
+          <Button
+            onClick={() =>
+              addItem(modalProduct.productId, modalProduct.productQty)
+            }>
             Submit
+          </Button>
+          <Button variant='light' onClick={handleClose}>
+            Close
           </Button>
         </Modal.Footer>
       </Modal>
 
-      <Row className="align-items-center">
-        <h1 className="title">Available products</h1>
-      </Row>
-      <Row className="sticky ">
-        <Col xs={{ span: 4 }}>
-          <RedDropdown
-            items={Object.values(Product.Categories)}
-            title={category ? category : "Categories"}
-            updateSelectedItem={handleCategoryChanged}
-            activeElement={category}
-          />
-        </Col>
-        <Col xs={{ span: 4, offset: 4 }}>
-          <Form onSubmit={(ev) => handleFormSubmit(ev)}>
-            <Row>
-              <Col xs={{ span: 8 }}>
-                <FormControl
-                  type="textarea"
-                  placeholder="Filter"
-                  value={text}
-                  onChange={(ev) => setText(ev.target.value)}
-                />
-              </Col>
-              <Col xs={{ span: 1, offset: 1 }}>
-                <RedButton text="Search" onClick={handleOnSearchSubmit} />
-              </Col>
-            </Row>
-          </Form>
-        </Col>
-        <hr className="line" />
-      </Row>
+      <FilterRow
+        text={text}
+        handleCategoryChanged={handleCategoryChanged}
+        handleFormSubmit={handleFormSubmit}
+        category={category}
+        setText={setText}
+        handleOnSearchSubmit={handleOnSearchSubmit}
+      />
 
-      <Row md={4} xs={2} className="g-4">
+      <Row lg={4} md={3} sm={2} xs={1} className="g-4">
         {products
           ? products.map((item) => {
               return (
                 <CardGroup as={Col}>
                   <ProductCard
                     product={item}
-                    creatingOrderMode={creatingOrderMode}
+                    // if the employee is creating a new order or is just showing available products
+                    creatingOrderMode={
+                      location.state?.creatingOrderMode ||
+                      authContext?.currentUser?.role === UserRoles.CLIENT
+                    }
                     handleShow={handleShow}
                   />
                 </CardGroup>

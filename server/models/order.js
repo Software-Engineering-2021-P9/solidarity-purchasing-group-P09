@@ -7,11 +7,6 @@ const OrderStatus = {
   DONE: "done",
 };
 
-const DeliveryType = {
-  SHIPMENT: "shipment",
-  PICKUP: "pickup",
-}
-
 class OrderProduct {
   constructor(productID, quantity) {
     this.productID = productID;
@@ -24,14 +19,13 @@ class OrderProduct {
 }
 
 class Order {
-  constructor(id, clientID, products, status, totalPrice, createdAt, deliveryType) {
+  constructor(id, clientID, products, status, totalPrice, createdAt) {
     this.id = id;
     this.clientID = clientID;
     this.products = products;
     this.status = status;
     this.totalPrice = totalPrice;
     this.createdAt = createdAt;
-    this.deliveryType = deliveryType;
   }
 
   static fromMongoJSON(json) {
@@ -46,8 +40,7 @@ class Order {
       orderProducts,
       json.status,
       json.totalPrice,
-      json.createdAt,
-      json.deliveryType,
+      json.createdAt
     );
   }
 }

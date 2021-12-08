@@ -4,7 +4,6 @@ import React from "react";
 import { Container, Col, Row, Card, Form, FloatingLabel} from "react-bootstrap";
 import  Divider from "../Divider/Divider";
 
-
 function ShoppingCartOrderSummary(props) {
 
     let checkboxShipment =     
@@ -36,25 +35,23 @@ function ShoppingCartOrderSummary(props) {
     <Card className="cart-order-summary">
         <h1 className="cart-order-summary-title"> ORDER SUMMARY</h1>
         
-        <Container>
+        <Container fluid>
             <Divider/>
-
             <Form>
                 <Form.Group className="mb-3">
-                <Container>
-                <Row>
-                    <Col><h5>{props.tot+" items"}</h5></Col>
-                    <Col><h5 className="cart-order-summary-price">{props.tot+"€"}</h5> </Col>
-                </Row>
-                <Row>
-                <Col>
-                    {checkboxShipment}
-                </Col>
-                <Col>
-                    {checkboxPickup}
-                </Col>
-                </Row>
-                </Container>
+                    <Row>
+                        <Col><h5 className="cart-order-summary-price">{props.tot+"€"}</h5></Col>
+                        <Col>{props.deliveryType==="Shipment"?<Row><h5 style={{"margin-top":"6%"}}>+20€ fees</h5></Row>:null}</Col>
+                    </Row>
+                    <Row><h5>{props.tot+" items"}</h5></Row>
+                    <Row>
+                        <Col>
+                            {checkboxShipment}
+                        </Col>
+                        <Col>
+                            {checkboxPickup}
+                        </Col>
+                    </Row>
                 </Form.Group>
 
                 {props.deliveryType!=="Shipment"?null:
@@ -64,8 +61,7 @@ function ShoppingCartOrderSummary(props) {
                         label="Address"
                         className="mb-3"
                     >
-                    <Form.Control onChange={(event)=>{props.setDeliveryAddress(event.target.value)}} type="text" className="cart-order-summary-form" placeholder="Address"/>
-
+                        <Form.Control onChange={(event)=>{props.setDeliveryAddress(event.target.value)}} type="text" className="cart-order-summary-form" placeholder="Address"/>
                     </FloatingLabel>
                 </Form.Group>
                 }
@@ -85,6 +81,7 @@ function ShoppingCartOrderSummary(props) {
                 </Form.Group>
             </Form>
         </Container>
+
     </Card>
   );
 }

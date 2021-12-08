@@ -128,6 +128,9 @@ function ShoppingCartPage(props) {
 
     //TODO: Modify create order API parameters, in order to take:
     //deliveryDate, deliveryTime, deliveryAddress, pickupIsChecked
+    
+    //TODO: to pass the shipement fee to create order, we just need
+    //to check deliveryType=="Shipment" -> then add fee
 
     //call create order
     createOrder(client.id, orderProducts);
@@ -143,7 +146,7 @@ function ShoppingCartPage(props) {
   />
 
   return (
-    <Container className="px-5 py-3">
+    <Container className="px-5 py-3" fluid>
       <Row>
         <NavbarComponent
           userIconLink={authContext.getUserIconLink()}
@@ -156,14 +159,14 @@ function ShoppingCartPage(props) {
         />
       </Row>
       <Row>
-        <Col className="col-8">
+        <Col className="col-10">
           <ShoppingCartTable
             cart={cart}
             products={products}
             updateQuantity={updateQuantity}
           />
         </Col>
-        <Col>
+        <Col style={{"margin-left":"-5%"}}>
           {authContext.currentUser.role === UserRoles.CLIENT &&
              <ShoppingCartOrderSummary 
                 tot={amount}

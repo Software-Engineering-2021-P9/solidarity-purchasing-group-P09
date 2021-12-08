@@ -3,23 +3,29 @@ import "./ShoppingCartControlsCSS.css";
 import React from "react";
 import Button from "../Button/Button";
 import { Link } from "react-router-dom";
+import { Col, Row} from "react-bootstrap";
+
 
 function ShoppingCartControls(props) {
   return (
-    <div className='d-flex flex-row-reverse mt-5'>
-      <Link
-        to={{
-          pathname: "/",
-          state: { shoppingCart: props.cart, clientID: props.clientID },
-        }}>
-        <Button variant='light' className='mx-3'>
-          CONTINUE SHOPPING
+    <Row>
+      <Col>
+        <Link
+          to={{
+            pathname: "/",
+            state: { shoppingCart: props.cart, clientID: props.clientID },
+          }}>
+          <Button className="cart-button-shopping" variant='light'>
+            CONTINUE SHOPPING
+          </Button>
+        </Link>
+      </Col>
+      <Col>
+        <Button className="cart-button-placeorder" disabled={props.cart.size === 0} onClick={props.handleShow}>
+          PLACE ORDER
         </Button>
-      </Link>
-      <Button disabled={props.cart.size === 0} onClick={props.handleShow}>
-        PLACE ORDER
-      </Button>
-    </div>
+      </Col>
+    </Row>
   );
 }
 

@@ -1,5 +1,17 @@
+.cart-button-shopping {
+  margin-top: 2%;
+  height: 4rem;
+  width: 9rem;
+}
+
+.cart-button-placeorder {
+  margin-top: 2%;
+  height: 4rem;
+  width: 9rem;
+}
+
 .cart-inverse-button {
-  border: 2px solid black ;
+  border: 2px solid black;
   background-color: whitesmoke !important;
   color: #db9471;
   width: auto;
@@ -38,6 +50,5 @@
   border: 2px solid black;
   background-color: #d88054 !important;
   width: auto;
-  border-color: #db9471; 
+  border-color: #db9471;
 }
-

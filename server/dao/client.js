@@ -27,11 +27,21 @@ exports.getClientByID = (db, clientID) => {
 // FindClients
 // -----------
 
-exports.findClients = (db, searchString) => {
-  let query;
+exports.findClients = (db, searchString, hasPendingCancelation) => {
+  let query = {};
+
+  if (searchString || hasPendingCancelation !== undefined) {
+    query["$and"] = [];
+  }
 
   if (searchString) {
-    query = { $text: { $search: `\"${searchString.toString()}\"` } };
+    query["$and"].push({
+      $text: { $search: `\"${searchString.toString()}\"` },
+    });
+  }
+
+  if (hasPendingCancelation !== undefined) {
+    query["$and"].push({ hasPendingCancelation: hasPendingCancelation });
   }
 
   return db.collection(clientCollectionName).find(query).limit(50).toArray();
@@ -59,13 +69,22 @@ exports.createClientsTextSearchIndexes = (db) => {
 // CreateClient
 // --------------
 
-exports.createClient = (db, fullName, phoneNumber, email, address, wallet) => {
+exports.createClient = (
+  db,
+  fullName,
+  phoneNumber,
+  email,
+  address,
+  wallet,
+  hasPendingCancelation
+) => {
   return db.collection(clientCollectionName).insertOne({
     fullName: fullName,
     phoneNumber: phoneNumber,
     email: email,
     address: address,
     wallet: wallet,
+    hasPendingCancelation: hasPendingCancelation,
   });
 };
 
@@ -76,7 +95,8 @@ exports.signupClient = async (
   email,
   password,
   address,
-  wallet
+  wallet,
+  hasPendingCancelation
 ) => {
   return db.collection(clientCollectionName).insertOne({
     fullName: fullName,
@@ -85,6 +105,6 @@ exports.signupClient = async (
     password: password,
     address: address,
     wallet: wallet,
+    hasPendingCancelation: hasPendingCancelation,
   });
-
 };

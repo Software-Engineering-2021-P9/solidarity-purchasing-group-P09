@@ -606,6 +606,33 @@ describe("Clients API tests:", () => {
               phoneNumber: 3205708803,
               address: "via Domenico Bini,26 Torino,10538",
               wallet: 55.5,
+              hasPendingCancelation: true,
+            },
+          ]);
+          expect(res.status).to.be.equal(200);
+
+          done();
+        });
+    });
+
+    it("it must retrieve client Domenico Bini with hasPendingCancelation=true", (done) => {
+      chai
+        .request(app)
+        .get("/api/clients?searchString=Torino&hasPendingCancelation=true")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.body).to.be.an("array");
+          expect(res.body.length).to.be.equal(1);
+          expect(res.body).to.be.eql([
+            {
+              id: "6187c957b288576ca26f8257",
+              email: "client1@test.com",
+              role: "client",
+              fullName: " Domenico Bini",
+              phoneNumber: 3205708803,
+              address: "via Domenico Bini,26 Torino,10538",
+              wallet: 55.5,
+              hasPendingCancelation: true,
             },
           ]);
           expect(res.status).to.be.equal(200);
@@ -623,6 +650,18 @@ describe("Clients API tests:", () => {
           expect(res.body).to.be.an("array");
           expect(res.body.length).to.be.equal(0);
           expect(res.status).to.be.equal(200);
+
+          done();
+        });
+    });
+
+    it("it must return a bad request due to hasPendingCancelation not being a boolean", (done) => {
+      chai
+        .request(app)
+        .get("/api/clients?hasPendingCancelation=dsaffa")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(400);
 
           done();
         });
@@ -661,6 +700,7 @@ describe("Clients API tests:", () => {
             phoneNumber: 3205755555,
             address: "via Andrea Dipre,24 Torino,10538",
             wallet: 0,
+            hasPendingCancelation: false,
           });
 
           done();
@@ -1124,7 +1164,6 @@ describe("Clients API tests:", () => {
           email: "client@test.com",
           password: "password",
           address: "via giacinto,22 Torino, 10127",
-          wallet: 0.0,
         })
         .end((err, res) => {
           expect(err).to.be.null;
@@ -1147,7 +1186,6 @@ describe("Clients API tests:", () => {
           email: "notanemail",
           password: "password",
           address: "via giacinto,22 Torino, 10127",
-          wallet: 0.0,
         })
         .end((err, res) => {
           expect(err).to.be.null;
@@ -1167,7 +1205,6 @@ describe("Clients API tests:", () => {
           email: "client@test.com",
           password: "pas",
           address: "via giacinto,22 Torino, 10127",
-          wallet: 0.0,
         })
         .end((err, res) => {
           expect(err).to.be.null;
@@ -1187,7 +1224,6 @@ describe("Clients API tests:", () => {
           email: "client@test.com",
           password: "password",
           address: "via giacinto,22 Torino, 10127",
-          wallet: 0.0,
         })
         .end((err, res) => {
           expect(err).to.be.null;
@@ -1208,7 +1244,6 @@ describe("Clients API tests:", () => {
           email: "client@test.com",
           password: "password",
           address: "via giacinto,22 Torino, 10127",
-          wallet: 0.0,
         })
         .end((err, res) => {
           expect(err).to.be.null;
@@ -1246,7 +1281,6 @@ describe("Clients API tests:", () => {
           phoneNumber: "1236678",
           email: "ansari@email.com",
           address: "via giacinto,22 Torino, 10127",
-          wallet: 0.0,
         })
         .end((err, res) => {
           expect(err).to.be.null;
@@ -1268,7 +1302,6 @@ describe("Clients API tests:", () => {
           phoneNumber: "1236678",
           email: "nomail",
           address: "via giacinto,22 Torino, 10127",
-          wallet: 0.0,
         })
         .end((err, res) => {
           expect(err).to.be.null;
@@ -1287,7 +1320,6 @@ describe("Clients API tests:", () => {
           phoneNumber: "1236678",
           email: "ansari@email.com",
           address: "via giacinto,22 Torino, 10127",
-          wallet: 0.0,
         })
         .end((err, res) => {
           expect(err).to.be.null;
@@ -1307,7 +1339,6 @@ describe("Clients API tests:", () => {
           phoneNumber: "1236678",
           email: "ansari@email.com",
           address: "via giacinto,22 Torino, 10127",
-          wallet: 0.0,
         })
         .end((err, res) => {
           expect(err).to.be.null;

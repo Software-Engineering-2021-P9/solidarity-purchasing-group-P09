@@ -1,1 +1,1 @@
-GET http://localhost:3001/api/clients?searchString=gmail HTTP/1.1
+GET http://localhost:3001/api/clients?searchString=adriana&hasPendingCancelation=true HTTP/1.1

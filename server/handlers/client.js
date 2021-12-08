@@ -11,6 +11,7 @@ const {
   emailBodyValidator,
   addressBodyValidator,
   passwordBodyValidator,
+  hasPendingCancelationValidator,
 } = require("./shared_validators");
 
 exports.getClientByIDValidatorChain = [clientIDPathValidator];
@@ -60,12 +61,26 @@ exports.addFundToWalletHandler = async function (req, res, next) {
   return res.json({ newWalletValue: result.value.wallet });
 };
 
-exports.findClientValidatorChain = [searchStringValidator];
+exports.findClientValidatorChain = [
+  searchStringValidator,
+  hasPendingCancelationValidator,
+];
 exports.findClientsHandler = async function (req, res, next) {
   let result;
 
+  let hasPendingCancelation = req.query.hasPendingCancelation;
+
+  if (hasPendingCancelation === "true") {
+    hasPendingCancelation = true;
+  } else if (hasPendingCancelation === "false") {
+    hasPendingCancelation = false;
+  }
+
   try {
-    result = await dao.findClients(req.query.searchString);
+    result = await dao.findClients(
+      req.query.searchString,
+      hasPendingCancelation
+    );
   } catch (err) {
     console.error(`FindClientsHandler() -> couldn't find clients: ${err}`);
     return res.status(500).end();
@@ -100,7 +115,8 @@ exports.createClientHandler = async function (req, res, next) {
       req.body.phoneNumber.toString(),
       req.body.email.toString(),
       req.body.address.toString(),
-      0.0
+      0.0,
+      false
     );
   } catch (err) {
     console.error(`CreateClient() -> couldn't create client: ${err}`);
@@ -123,7 +139,6 @@ exports.createClientHandler = async function (req, res, next) {
 
 exports.signupClientHandler = async function (req, res, next) {
   // Insert the new client
-  
 
   let result;
   try {
@@ -133,7 +148,8 @@ exports.signupClientHandler = async function (req, res, next) {
       req.body.email.toString(),
       hashPassword(req.body.password.toString()),
       req.body.address.toString(),
-      0.0
+      0.0,
+      false
     );
   } catch (err) {
     console.error(`CreateClient() -> couldn't create client: ${err}`);

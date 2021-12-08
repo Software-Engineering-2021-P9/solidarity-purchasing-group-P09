@@ -86,8 +86,23 @@ exports.getFarmerByEmail = (email) => getFarmerByEmail(db, email);
 // Client
 exports.getClientByID = (clientID) => getClientByID(db, clientID);
 
-exports.createClient = (fullName, phoneNumber, email, address, wallet) =>
-  createClient(db, fullName, phoneNumber, email, address, wallet);
+exports.createClient = (
+  fullName,
+  phoneNumber,
+  email,
+  address,
+  wallet,
+  hasPendingCancelation
+) =>
+  createClient(
+    db,
+    fullName,
+    phoneNumber,
+    email,
+    address,
+    wallet,
+    hasPendingCancelation
+  );
 
 exports.signupClient = (
   fullName,
@@ -95,10 +110,22 @@ exports.signupClient = (
   email,
   password,
   address,
-  wallet
-) => signupClient(db, fullName, phoneNumber, email, password, address, wallet);
+  wallet,
+  hasPendingCancelation
+) =>
+  signupClient(
+    db,
+    fullName,
+    phoneNumber,
+    email,
+    password,
+    address,
+    wallet,
+    hasPendingCancelation
+  );
 
-exports.findClients = (searchString) => findClients(db, searchString);
+exports.findClients = (searchString, hasPendingCancelation) =>
+  findClients(db, searchString, hasPendingCancelation);
 exports.addFundToWallet = (clientID, increaseBy) =>
   addFundToWallet(db, clientID, increaseBy);
 

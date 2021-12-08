@@ -1,0 +1,31 @@
+.cart-order-summary {
+  border: 1px solid black;
+  padding: 3%;
+  border-color: #db9471;
+  border-radius: 15px;
+  box-shadow: 0px 10px 5px rgb(192, 192, 192);
+}
+
+.cart-order-summary-title {
+  font-weight: bold;
+  font-size: xx-large;
+  text-align: center;
+}
+
+.cart-order-summary-price {
+  font-weight: bold;
+  font-size: xx-large;
+}
+
+.cart-order-summary-form {
+  margin: 1%;
+}
+
+.cart-order-summary-form {
+  margin-bottom: 1%;
+}
+
+.form-check-input:checked {
+  background-color: #db9471;
+  border-color: #db9471;
+}

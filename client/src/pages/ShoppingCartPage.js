@@ -1,7 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useState, useContext, useEffect } from "react";
 import { useLocation } from "react-router";
-import { Container, Row } from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
 import { Redirect } from "react-router-dom";
 
 import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponent";
@@ -9,6 +9,7 @@ import { ShoppingCartTitle } from "../ui-components/ShoppingCartComponent/Shoppi
 import { ShoppingCartTable } from "../ui-components/ShoppingCartComponent/ShoppingCartTable";
 import { ShoppingCartTotAmount } from "../ui-components/ShoppingCartComponent/ShoppingCartTotAmount";
 import { ShoppingCartControls } from "../ui-components/ShoppingCartComponent/ShoppingCartControls";
+import { ShoppingCartOrderSummary } from "../ui-components/ShoppingCartComponent/ShoppingCartOrderSummary";
 import { ModalOrderConfirmation } from "../ui-components/ShoppingCartComponent/ModalOrderConfirmation";
 import ErrorToast from "../ui-components/ErrorToast/ErrorToast";
 import { AuthContext } from "../contexts/AuthContextProvider";
@@ -35,6 +36,11 @@ function ShoppingCartPage(props) {
   // it uses function createOrder(clientID, cart) -> POST /api/orders
 
   const [cart, setCart] = useState(location.state.shoppingCart);
+  
+  const [deliveryAddress, setDeliveryAddress] = useState("");
+  const [deliveryDate, setDeliveryDate] = useState("");
+  const [deliveryTime, setDeliveryTime] = useState("");
+  const [pickupIsChecked, setPickupIsChecked] = useState(false);
 
   const [client, setClient] = useState({});
 
@@ -120,11 +126,30 @@ function ShoppingCartPage(props) {
       productID,
       quantity,
     }));
+
+    var address;
+
+    if(!deliveryDate || !deliveryTime || (!pickupIsChecked && !deliveryAddress) ){
+      console.log("errore");
+      return;
+    }
+    if(pickupIsChecked)
+      address = "Skylab, Via Washington 35, Pizzo Calabro (Store Address)"
+    //TODO: Modify create order API parameters, in order to take:
+    //deliveryDate, deliveryTime, deliveryAddress, pickupIsChecked
+
     //call create order
     createOrder(client.id, orderProducts);
     handleClose();
     setSubmitted(true);
   };
+
+  let controlsComponent =         
+  <ShoppingCartControls
+      handleShow={handleShow}
+      clientID={location.state.clientID}
+      cart={cart}
+  />
 
   return (
     <Container className="px-5 py-3">
@@ -140,21 +165,25 @@ function ShoppingCartPage(props) {
         />
       </Row>
       <Row>
-        <ShoppingCartTable
-          cart={cart}
-          products={products}
-          updateQuantity={updateQuantity}
-        />
-      </Row>
-      <Row>
-        <ShoppingCartTotAmount tot={amount} />
-      </Row>
-      <Row>
-        <ShoppingCartControls
-          handleShow={handleShow}
-          clientID={location.state.clientID}
-          cart={cart}
-        />
+        <Col className="col-8">
+          <ShoppingCartTable
+            cart={cart}
+            products={products}
+            updateQuantity={updateQuantity}
+          />
+        </Col>
+        <Col>
+          {authContext.currentUser.role === UserRoles.CLIENT &&
+             <ShoppingCartOrderSummary 
+                tot={amount}
+                controlsComponent={controlsComponent}
+                setDeliveryAddress={setDeliveryAddress}
+                setDeliveryDate={setDeliveryDate}
+                setDeliveryTime={setDeliveryTime}
+                setPickupIsChecked={setPickupIsChecked}
+                pickupIsChecked={pickupIsChecked}
+              />}
+        </Col>
       </Row>
 
       <Row>

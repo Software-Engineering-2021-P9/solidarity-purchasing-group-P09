@@ -230,6 +230,40 @@ paths:
         "500":
           description: Internal Server Error
 
+  /orders/{orderID}/shipmentInfo:
+    patch:
+      tags:
+        - order
+      summary: update the shipmentInfo of an order
+      description: Updates the shipmentInfo associated to the given orderID, based on the information stored in the body
+      operationId: updateShipmentInfo
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          required: true
+          name: orderID
+          type: string
+          description: The ID of the order to set as completed
+        - in: body
+          name: body
+          description: New ShipmentInfo of the order
+          required: true
+          schema:
+            $ref: "#/definitions/ShipmentInfo"
+      responses:
+        "204":
+          description: Success
+        "400":
+          description: Bad Request - The request contains invalid parameters
+        "401":
+          description: Unauthorized - The user is not logged or is not allowed to make this action
+        "403":
+          description: Forbidden - The action cannot be executed in the current week phase
+        "500":
+          description: Internal Server Error
+
+
   /clients/{clientID}:
     get:
       tags:
@@ -537,14 +571,12 @@ paths:
           description: Unauthorized
         "500":
           description: Internal Server Error
-
-  /products/{productID}/availability/confirm:
     patch:
       tags:
         - product
-      summary: Set the confirmed availability for the next week.
-      description: Send the confirmed quantity of this product, which can be equal or lower to the initial quantity estimation.
-      operationId: confirmCurrentWeekProductAvailability
+      summary: Update the availability of the product.
+      description: Update the quantity value of the products'availability . It will not modify or update any clients orders. This function can be called only if the product is not yet confirmed by the farmer
+      operationId: updateNextWeekProductAvailability
       produces:
         - application/json
       parameters:
@@ -559,8 +591,34 @@ paths:
           schema:
             type: object
             properties:
-              confirmedQuantity:
-                type: integer
+              quantity:
+                 type: integer
+                
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request - The request contains invalid parameters
+        "401":
+          description: Unauthorized
+        "500":
+          description: Internal Server Error
+
+  /products/{productID}/availability/confirm:
+    patch:
+      tags:
+        - product
+      summary: Set the confirmed availability for the next week.
+      description: Updates the status of the product's availability to "CONFIRMED". Then it checks every order of the current week with this product. For each order, it will update the OrderProduct's status based on the quantity of the product ("CONFIRMED","MODIFIED","CANCELED")
+      operationId: confirmCurrentWeekProductAvailability
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          required: true
+          name: productID
+          type: string
+          description: Parameter that identify and select the Product        
       responses:
         "204":
           description: No Content
@@ -1067,7 +1125,7 @@ definitions:
       - packaging
       - quantity
       - leftQuantity
-      - confirmedQuantity
+      - confirmedStatus
     properties:
       id:
         type: string
@@ -1094,9 +1152,12 @@ definitions:
       leftQuantity:
         type: integer
         description: "when the farmer estimates quantity, leftQuantity will be set at the same value of it"
-      confirmedQuantity:
-        type: integer
-        description: The real quantity after farmer confirmation
+      confirmedStatus:
+        type: string
+        enum:
+         - WAITING
+         - CONFIRMED
+        description: used to spedify if the product quantuty was confirmed by the farmed or not
   ShipmentInfo:
     type: object
     additionalProperties: false
@@ -1104,6 +1165,7 @@ definitions:
       - date
       - time
       - address
+      - fee
     properties:
       date:
         type: string
@@ -1111,3 +1173,5 @@ definitions:
         type: string
       address:
         type: string
+      fee:
+        type: number

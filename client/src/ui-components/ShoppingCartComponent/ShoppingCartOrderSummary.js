@@ -1,16 +1,20 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./ShoppingCartOrderSummaryCSS.css";
 import React from "react";
-import { Container, Col, Row, Card, Form, Button, FloatingLabel} from "react-bootstrap";
+import { Container, Col, Row, Card, Form, FloatingLabel} from "react-bootstrap";
 import  Divider from "../Divider/Divider";
-import { useState} from "react";
 
 
 function ShoppingCartOrderSummary(props) {
 
     let checkboxShipment =     
     <div className="form-check">
-        <input onChange={()=>{props.setPickupIsChecked(false)}} className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1"/>
+        <input onChange={()=>{
+            if(props.deliveryType==="Pickup")//i.e. if from "pickup" to "shipment", then clear the address field
+                props.setDeliveryAddress("")
+            props.setDeliveryType("Shipment");}} 
+            className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1"
+        />
         <label className="form-check-label" for="flexCheckDefault">
             Shipment
         </label>
@@ -18,7 +22,11 @@ function ShoppingCartOrderSummary(props) {
 
     let checkboxPickup =
     <div className="form-check">
-        <input onChange={()=>{props.setPickupIsChecked(true)}} className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2"/>
+        <input onChange={()=>
+                {props.setDeliveryType("Pickup");
+                 props.setDeliveryAddress("Skylab, Via Washington 35, Pizzo Calabro (Store Address)")}} 
+                className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2"
+        />
         <label className="form-check-label" for="flexCheckChecked">
             Pickup
         </label>
@@ -30,14 +38,14 @@ function ShoppingCartOrderSummary(props) {
         
         <Container>
             <Divider/>
-            <Row>
-                <Col><h5>{props.tot+" items"}</h5></Col>
-                <Col><h5 className="cart-order-summary-price">{props.tot+"€"}</h5> </Col>
-            </Row>
 
             <Form>
                 <Form.Group className="mb-3">
                 <Container>
+                <Row>
+                    <Col><h5>{props.tot+" items"}</h5></Col>
+                    <Col><h5 className="cart-order-summary-price">{props.tot+"€"}</h5> </Col>
+                </Row>
                 <Row>
                 <Col>
                     {checkboxShipment}
@@ -49,7 +57,7 @@ function ShoppingCartOrderSummary(props) {
                 </Container>
                 </Form.Group>
 
-                {props.pickupIsChecked?null:
+                {props.deliveryType!=="Shipment"?null:
                 <Form.Group className="mb-3">
                     <FloatingLabel
                         controlId="floatingInput"
@@ -68,7 +76,12 @@ function ShoppingCartOrderSummary(props) {
                     <Form.Control onChange={(event)=>{props.setDeliveryTime(event.target.value)}} type="time" placeholder="Enter address" className="cart-order-summary-form"/>
                 </Form.Group>
                 <Form.Group className="mb-3">
-                    {props.controlsComponent}
+                    {
+                    //hide "create order button" if one of these is true:
+                    //never hit checkbox, no date, no time, no address
+                    (props.deliveryType==="" || !props.deliveryDate || !props.deliveryTime || !props.deliveryAddress )?
+                    null:props.controlsComponent
+                    }
                 </Form.Group>
             </Form>
         </Container>

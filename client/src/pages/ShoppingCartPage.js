@@ -7,7 +7,6 @@ import { Redirect } from "react-router-dom";
 import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponent";
 import { ShoppingCartTitle } from "../ui-components/ShoppingCartComponent/ShoppingCartTitle";
 import { ShoppingCartTable } from "../ui-components/ShoppingCartComponent/ShoppingCartTable";
-import { ShoppingCartTotAmount } from "../ui-components/ShoppingCartComponent/ShoppingCartTotAmount";
 import { ShoppingCartControls } from "../ui-components/ShoppingCartComponent/ShoppingCartControls";
 import { ShoppingCartOrderSummary } from "../ui-components/ShoppingCartComponent/ShoppingCartOrderSummary";
 import { ModalOrderConfirmation } from "../ui-components/ShoppingCartComponent/ModalOrderConfirmation";
@@ -40,7 +39,7 @@ function ShoppingCartPage(props) {
   const [deliveryAddress, setDeliveryAddress] = useState("");
   const [deliveryDate, setDeliveryDate] = useState("");
   const [deliveryTime, setDeliveryTime] = useState("");
-  const [pickupIsChecked, setPickupIsChecked] = useState(false);
+  const [deliveryType, setDeliveryType] = useState("");
 
   const [client, setClient] = useState({});
 
@@ -127,14 +126,6 @@ function ShoppingCartPage(props) {
       quantity,
     }));
 
-    var address;
-
-    if(!deliveryDate || !deliveryTime || (!pickupIsChecked && !deliveryAddress) ){
-      console.log("errore");
-      return;
-    }
-    if(pickupIsChecked)
-      address = "Skylab, Via Washington 35, Pizzo Calabro (Store Address)"
     //TODO: Modify create order API parameters, in order to take:
     //deliveryDate, deliveryTime, deliveryAddress, pickupIsChecked
 
@@ -177,11 +168,16 @@ function ShoppingCartPage(props) {
              <ShoppingCartOrderSummary 
                 tot={amount}
                 controlsComponent={controlsComponent}
+
                 setDeliveryAddress={setDeliveryAddress}
                 setDeliveryDate={setDeliveryDate}
                 setDeliveryTime={setDeliveryTime}
-                setPickupIsChecked={setPickupIsChecked}
-                pickupIsChecked={pickupIsChecked}
+                setDeliveryType={setDeliveryType}
+
+                deliveryAddress={deliveryAddress}
+                deliveryDate={deliveryDate}
+                deliveryTime={deliveryTime}
+                deliveryType={deliveryType}
               />}
         </Col>
       </Row>

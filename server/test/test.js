@@ -765,6 +765,32 @@ describe("Clients API tests:", () => {
         });
     });
 
+    it("it must retrieve client Andrea Diprè with hasPendingCancelation=false", (done) => {
+      chai
+        .request(app)
+        .get("/api/clients?hasPendingCancelation=false")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.body).to.be.an("array");
+          expect(res.body.length).to.be.equal(1);
+          expect(res.body).to.be.eql([
+            {
+              id: "6a8fc927bb88c762a26f0000",
+              email: "client2@test.com",
+              role: "client",
+              fullName: "Andrea Diprè",
+              phoneNumber: 3205755555,
+              address: "via Andrea Dipre,24 Torino,10538",
+              wallet: 0,
+              hasPendingCancelation: false,
+            },
+          ]);
+          expect(res.status).to.be.equal(200);
+
+          done();
+        });
+    });
+
     it("it must retrieve no client due to a searchString not matching", (done) => {
       chai
         .request(app)

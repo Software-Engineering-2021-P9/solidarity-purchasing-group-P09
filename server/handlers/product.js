@@ -271,26 +271,5 @@ exports.createProductHandler = async function (req, res, next) {
     return res.status(500).end();
   }
 
-  const productID = result.insertedId;
-
-  //retrieve product from DB
-  try {
-    result = await dao.getProductByID(productID);
-  } catch (err) {
-    console.error(
-      `CreateProduct() -> couldn't retrieve newly created product: ${err}`
-    );
-    return res.status(500).end();
-  }
-
-  try {
-    result = Product.fromMongoJSON({ ...result });
-  } catch (err) {
-    console.error(
-      `fromMongoJSON() -> couldn't convert Mongo result to Product: ${err}`
-    );
-    return res.status(500).end();
-  }
-
-  return res.json(result);
+  return res.json(result.insertedId);
 };

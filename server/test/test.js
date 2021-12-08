@@ -575,12 +575,24 @@ describe("Products API tests: ", () => {
         .end((err, res) => {
           expect(err).to.be.null;
           expect(res.status).to.be.equal(200);
-          expect(res.body).to.be.an("object");
-          expect(res.body.farmerID).to.be.equal("6187c957b288576ca24f8257");
-          expect(res.body.name).to.be.equal("TestProduct");
-          expect(res.body.description).to.be.equal("This is a test product");
-          expect(res.body.category).to.be.equal("fruit");
-          done();
+          expect(res.body).to.be.an("string");
+
+          // get the order with newly retrived ID to check if everything is ok
+          chai
+            .request(app)
+            .get("/api/products/" + res.body)
+            .end((err, res) => {
+              expect(err).to.be.null;
+              expect(res.status).to.be.equal(200);
+              expect(res.body).to.be.an("object");
+              expect(res.body.farmerID).to.be.equal("6187c957b288576ca24f8257");
+              expect(res.body.name).to.be.equal("TestProduct");
+              expect(res.body.description).to.be.equal(
+                "This is a test product"
+              );
+              expect(res.body.category).to.be.equal("fruit");
+              done();
+            });
         });
     });
 
@@ -636,7 +648,7 @@ describe("Products API tests: ", () => {
         });
     });
 
-    it("it should return 400 if the Name is not valid", (done) => {
+    it("it should return 400 if the Category is not valid", (done) => {
       chai
         .request(app)
         .post("/api/products")

@@ -4,6 +4,7 @@
   box-sizing: border-box;
   box-shadow: 7px 20px 20px rgba(0, 0, 0, 0.25);
   border-radius: 20px;
+  width: 100%;
 }
 
 .card-img {
@@ -17,16 +18,15 @@
 .card-title {
   color: black !important;
   margin-bottom: 0px !important;
-  font-style: normal;
-  font-weight: 600;
-  font-size: 24px;
+  font-weight: 650;
+  font-size: 28px;
   line-height: 34px;
 }
 
 .product-price {
   font-style: normal;
-  font-weight: 700;
-  font-size: 20px;
+  font-weight: 800;
+  font-size: 22px;
   line-height: 34px;
   /* identical to box height, or 109% */
   text-align: right;
@@ -34,11 +34,16 @@
   align-self: center;
 }
 
+.packaging-text {
+  margin-left: 10px;
+}
+
 .card-text {
   color: #68717a !important;
   font-family: sans-serif;
   font-style: normal;
   font-size: 16px;
+  font-weight: lighter;
 }
 
 .description {
@@ -55,6 +60,7 @@
   margin-left: 0px;
   margin-right: 0px;
   text-align: center;
+  color: #68717a;
 }
 
 .add-to-cart-button {
@@ -88,6 +94,7 @@
 
 .delete-icon {
   padding: 0 !important;
+  margin: 0 !important;
 }
 
 .footer {

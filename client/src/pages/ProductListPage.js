@@ -102,25 +102,24 @@ function ProductListPage(props) {
       />
 
       <Row lg={4} md={3} sm={2} xs={1} className="g-4">
-        {products
-          ? products.map((item) => {
-              return (
-                <CardGroup as={Col}>
-                  <ProductCard
-                    product={item}
-                    shoppingCart={cart}
-                    addItem={addItem}
-                    deleteItem={deleteItem}
-                    // if the employee is creating a new order or is just showing available products
-                    creatingOrderMode={
-                      location.state?.creatingOrderMode ||
-                      authContext?.currentUser?.role === UserRoles.CLIENT
-                    }
-                  />
-                </CardGroup>
-              );
-            })
-          : {}}
+        {products &&
+          products.map((item) => {
+            return (
+              <CardGroup as={Col}>
+                <ProductCard
+                  product={item}
+                  shoppingCart={cart}
+                  addItem={addItem}
+                  deleteItem={deleteItem}
+                  // if the employee is creating a new order or is just showing available products
+                  creatingOrderMode={
+                    location.state?.creatingOrderMode ||
+                    authContext?.currentUser?.role === UserRoles.CLIENT
+                  }
+                />
+              </CardGroup>
+            );
+          })}
       </Row>
     </>
   );

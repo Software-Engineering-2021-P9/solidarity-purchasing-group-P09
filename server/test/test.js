@@ -575,12 +575,13 @@ describe("Products API tests: ", () => {
         .end((err, res) => {
           expect(err).to.be.null;
           expect(res.status).to.be.equal(200);
-          expect(res.body).to.be.an("string");
+          expect(res.body.id).to.be.an("string");
+          expect(res.body.id).to.be.not.null;
 
           // get the order with newly retrived ID to check if everything is ok
           chai
             .request(app)
-            .get("/api/products/" + res.body)
+            .get("/api/products/" + res.body.id)
             .end((err, res) => {
               expect(err).to.be.null;
               expect(res.status).to.be.equal(200);

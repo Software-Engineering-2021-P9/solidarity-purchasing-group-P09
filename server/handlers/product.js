@@ -271,5 +271,7 @@ exports.createProductHandler = async function (req, res, next) {
     return res.status(500).end();
   }
 
-  return res.json(result.insertedId);
+  return res.json({
+    id: result.insertedId,
+  });
 };

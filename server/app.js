@@ -20,7 +20,9 @@ var orderHandlers = require("./handlers/order");
 
 var productHandlers = require("./handlers/product");
 
-var weekPhasesService = require("./services/WeekPhsaseService/weekPhasesService");
+var weekPhasesService = require("./services/weekphase_service/weekphases_service");
+weekPhasesService.setUp();
+console.log("current phaseID: " + weekPhasesService.getCurrentPhaseID());
 
 var farmerHandlers = require("./handlers/farmer");
 

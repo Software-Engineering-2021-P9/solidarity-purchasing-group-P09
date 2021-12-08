@@ -1,4 +1,4 @@
-class WeekPhaseDate{
+class WeekPhaseBoundary{
     constructor(weekDay, hour, min){
         this.weekDay = weekDay;
         this.hour = hour;
@@ -10,4 +10,4 @@ class WeekPhaseDate{
     }
 }
 
-module.exports = { WeekPhaseDate };
+module.exports = { WeekPhaseBoundary };

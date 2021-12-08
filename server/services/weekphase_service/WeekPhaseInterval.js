@@ -1,5 +1,4 @@
 "use strict";
-const { WeekPhaseDate } = require("./weekPhaseDate");
 
 class WeekPhaseInterval {
   constructor(id, startTime, endTime, handler) {
@@ -20,11 +19,4 @@ class WeekPhaseInterval {
   }
 }
 
-const weekPhases = [
-  new WeekPhaseInterval("1", new WeekPhaseDate("0","00","00"), new WeekPhaseDate("2","19","30"), ()=>{console.log("try handle 1");}),
-  new WeekPhaseInterval("2", new WeekPhaseDate("2","19","30"), new WeekPhaseDate("7","00","00"), ()=>{console.log("try handle 2");})
-  //phase 1: sun 00:00 -> tue 19:30
-  //phase 2: tue 19:30 -> sun 00:00
-];
-
-module.exports = { weekPhases, WeekPhaseInterval };
+module.exports = { WeekPhaseInterval };

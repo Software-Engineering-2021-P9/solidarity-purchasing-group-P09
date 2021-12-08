@@ -58,7 +58,9 @@ function NavbarComponent(props) {
               <Nav.Link
                 className="navbar-text"
                 href={routes[props.userIconLink]?.path}
-              ></Nav.Link>
+              >
+                {iconUser}
+              </Nav.Link>
             ) : (
               <>{iconUser}</>
             )}

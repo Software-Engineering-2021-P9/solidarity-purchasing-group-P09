@@ -14,8 +14,8 @@ const iconPackaging = (
 const iconCartPlus = (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width="16"
-    height="16"
+    width="24"
+    height="24"
     fill="black"
     className="bi bi-cart-plus"
     viewBox="0 0 16 16"
@@ -128,8 +128,8 @@ const iconCart2 = (
 const iconDelete = (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width="16"
-    height="16"
+    width="24"
+    height="24"
     fill="currentColor"
     class="bi bi-trash"
     viewBox="0 0 16 16"
@@ -145,8 +145,8 @@ const iconDelete = (
 const iconCartEmptySmall = (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width="16"
-    height="16"
+    width="24"
+    height="24"
     className="mx-1 bi bi-cart"
     viewBox="0 0 16 16"
   >

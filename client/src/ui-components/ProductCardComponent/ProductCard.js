@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Container,
   Card,
@@ -22,9 +22,6 @@ import ImageService from "../../services/ImageService/ImageService";
 
 function ProductCard(props) {
   const product = props.product;
-  const [quantity, setQuantity] = useState(
-    props.shoppingCart.get(product.id) | 0
-  );
 
   return (
     <Container>
@@ -76,7 +73,7 @@ function ProductCard(props) {
                   >
                     {iconCartEmptySmall}
                   </Col>
-                  {quantity < 10 ? (
+                  {props.shoppingCart.get(product.id) < 10 ? (
                     <Col
                       sm="auto"
                       xs="4"
@@ -85,10 +82,8 @@ function ProductCard(props) {
                       <Form.Select
                         className="form-input-gt10"
                         size="sm"
-                        value={quantity}
+                        value={props.shoppingCart.get(product.id)}
                         onChange={(e) => {
-                          console.log("e.target.value", e.target.value);
-                          setQuantity(parseInt(e.target.value));
                           props.addItem(product.id, e.target.value);
                         }}
                       >
@@ -115,13 +110,12 @@ function ProductCard(props) {
                         type="number"
                         size="sm"
                         step={1}
-                        value={quantity}
+                        value={props.shoppingCart.get(product.id)}
                         onChange={(e) => {
-                          setQuantity(parseInt(e.target.value));
                           props.addItem(product.id, e.target.value);
                         }}
                         max={100}
-                        min={9}
+                        min={1}
                       />
                     </Col>
                   )}
@@ -139,11 +133,10 @@ function ProductCard(props) {
                   className="add-to-cart-button"
                   onClick={() => {
                     props.addItem(product.id, 1);
-                    setQuantity(1);
                   }}
                 >
                   Add to cart
-                  <span className="ml-2 add-to-cart-icon">{iconCartPlus}</span>
+                  <span className="ml-2">{iconCartPlus}</span>
                 </Button>
               )}
             </Row>

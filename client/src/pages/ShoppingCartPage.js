@@ -93,27 +93,27 @@ function ShoppingCartPage(props) {
     if (quantity > 0) {
       setCart(new Map(cart.set(productID, parseInt(quantity))));
     }
-    var sum = 0.0;
+    var new_sum = 0.0;
     Array.from(cart.entries()).map((entry) => {
       sum += 1.0 * entry[1]; // mock price
       return entry;
     });
-    setAmount(sum);
+    setAmount(new_sum);
   };
 
   const deleteItem = (productID) => {
     let new_cart = new Map();
-    var sum = 0.0;
+    var new_sum = 0.0;
     if (cart.size > 1) {
       Array.from(cart.entries()).map((entry) => {
         const [key, val] = entry;
         if (key === productID) return null;
         new_cart.set(key, val);
-        sum += 1.0 * entry[1];
+        new_sum += 1.0 * entry[1];
         return entry;
       });
     }
-    setAmount(sum);
+    setAmount(new_sum);
     setCart(new_cart);
   };
 

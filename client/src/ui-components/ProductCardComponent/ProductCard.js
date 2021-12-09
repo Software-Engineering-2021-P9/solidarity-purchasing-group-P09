@@ -80,7 +80,7 @@ function ProductCard(props) {
                   >
                     {iconCartEmptySmall}
                   </Col>
-                  {props.shoppingCart.get(product.id) < 10 ? (
+                  {props.shoppingCart.get(product.id) < 10 && (
                     <Col
                       sm="auto"
                       xs="4"
@@ -100,7 +100,8 @@ function ProductCard(props) {
                         <option value="10">10+</option>
                       </Form.Select>
                     </Col>
-                  ) : (
+                  )}
+                  {props.shoppingCart.get(product.id) >= 10 && (
                     <Col
                       sm="auto"
                       xs="4"

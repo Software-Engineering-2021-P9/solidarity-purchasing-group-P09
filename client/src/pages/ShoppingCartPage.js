@@ -2,7 +2,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useState, useContext, useEffect } from "react";
 import { useLocation } from "react-router";
 import { Container, Row, Col } from "react-bootstrap";
-import { Redirect } from "react-router-dom";
+import { Redirect, useHistory } from "react-router-dom";
 
 import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponent";
 import { ShoppingCartTitle } from "../ui-components/ShoppingCartComponent/ShoppingCartTitle";
@@ -19,7 +19,6 @@ import {
   createOrder,
 } from "../services/ApiClient";
 import UserRoles from "../services/models/UserRoles";
-import {useHistory} from "react-router-dom";
 
 function ShoppingCartPage(props) {
   const location = useLocation();

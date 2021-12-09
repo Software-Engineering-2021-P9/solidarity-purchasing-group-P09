@@ -16,7 +16,6 @@ import { FilterRow } from "../ui-components/FilterRow/FilterRow";
 import ProductCard from "../ui-components/ProductCardComponent/ProductCard";
 import Button from "../ui-components/Button/Button";
 
-import "../ui-components/ShoppingCartComponent/ShoppingCartControlsCSS.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import { findProducts } from "../services/ApiClient";

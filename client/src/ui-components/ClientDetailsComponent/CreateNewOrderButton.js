@@ -1,5 +1,4 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import "../ShoppingCartComponent/ShoppingCartControls";
 import React from "react";
 import { Button } from "react-bootstrap";
 import { Link } from "react-router-dom";

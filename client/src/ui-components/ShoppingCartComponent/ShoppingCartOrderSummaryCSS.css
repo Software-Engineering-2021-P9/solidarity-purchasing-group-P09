@@ -26,3 +26,13 @@
   background-color: #db9471;
   border-color: #db9471;
 }
+
+.cart-button-placeorder {
+  margin-top: 2%;
+  height: 4rem;
+}
+
+.cart-button-shopping {
+  margin-top: 2%;
+  height: 4rem;
+}

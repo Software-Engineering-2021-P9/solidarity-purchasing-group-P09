@@ -134,7 +134,7 @@ function ShoppingCartPage(props) {
       fee: 0
     };
 
-    if(deliveryType == "Shipment")
+    if(deliveryType === "Shipment")
       shipmentInfo.fee = 20;
       
     //call create order

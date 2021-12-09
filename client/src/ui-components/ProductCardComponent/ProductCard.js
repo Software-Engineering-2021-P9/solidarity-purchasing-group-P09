@@ -37,10 +37,12 @@ function ProductCard(props) {
         />
         <Card.Body className="body">
           <Row className="d-flex justify-content-between mb-1">
-            <Col xs="auto" sm="12">
+            <Col xs="auto">
               <Card.Title className="card-title">{product.name}</Card.Title>
             </Col>
-            <Col className="product-price">{product.availability.price} €</Col>
+            <Col className="product-price" sm={{ span: 0, offset: 1 }}>
+              {product.availability.price} €
+            </Col>
           </Row>
 
           <Row className="mb-3 pt-1">

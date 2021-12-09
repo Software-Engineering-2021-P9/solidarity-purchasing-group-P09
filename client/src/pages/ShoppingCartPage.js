@@ -127,14 +127,18 @@ function ShoppingCartPage(props) {
       quantity,
     }));
 
-    //TODO: Modify create order API parameters, in order to take:
-    //deliveryDate, deliveryTime, deliveryAddress, pickupIsChecked
-    
-    //TODO: to pass the shipement fee to create order, we just need
-    //to check deliveryType=="Shipment" -> then add fee
+    let shipmentInfo = {
+      date: deliveryDate,
+      time: deliveryTime,
+      address: deliveryAddress,
+      fee: 0
+    };
 
+    if(deliveryType == "Shipment")
+      shipmentInfo.fee = 20;
+      
     //call create order
-    createOrder(client.id, orderProducts);
+    createOrder(client.id, orderProducts, shipmentInfo);
     handleClose();
     setSubmitted(true);
   };

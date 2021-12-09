@@ -1,12 +1,12 @@
 class Order {
-  constructor(id, clientID, products, status, totalPrice, createdAt, deliveryType) {
+  constructor(id, clientID, products, status, totalPrice, createdAt, shipmentInfo) {
     this.id = id;
     this.clientID = clientID;
     this.products = products;
     this.status = status;
     this.totalPrice = totalPrice;
     this.createdAt = createdAt;
-    this.deliveryType = deliveryType;
+    this.shipmentInfo = shipmentInfo;
   }
 
   static fromJSON(json) {
@@ -17,7 +17,7 @@ class Order {
       json.status,
       json.totalPrice,
       json.createdAt,
-      json.deliveryType,
+      json.shipmentInfo,
     );
   }
 
@@ -29,10 +29,10 @@ class Order {
     DONE: "done",
   };
 
-  static DeliveryType = {
-    SHIPMENT: "shipment",
-    PICKUP: "pickup",
-  }
+  // static DeliveryType = {
+  //   SHIPMENT: "shipment",
+  //   PICKUP: "pickup",
+  // }
 }
 
 export default Order;

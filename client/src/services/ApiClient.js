@@ -435,8 +435,8 @@ export async function updateStatus(status, orderID) {
   }
 }
 
-export async function createOrder(clientID, products) {
-  var obj = { clientID: clientID, products: products };
+export async function createOrder(clientID, products, shipmentInfo) {
+  var obj = { clientID: clientID, products: products, shipmentInfo: shipmentInfo};
 
   const response = await fetch("/api/orders", {
     method: "POST",

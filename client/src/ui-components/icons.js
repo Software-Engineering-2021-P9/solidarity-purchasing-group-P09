@@ -3,8 +3,8 @@ const iconPackaging = (
     xmlns="http://www.w3.org/2000/svg"
     width="24"
     height="24"
-    fill="currentColor"
-    class="bi bi-box-seam"
+    fillRule="currentColor"
+    className="bi bi-box-seam"
     viewBox="0 0 16 16"
   >
     <path d="M8.186 1.113a.5.5 0 0 0-.372 0L1.846 3.5l2.404.961L10.404 2l-2.218-.887zm3.564 1.426L5.596 5 8 5.961 14.154 3.5l-2.404-.961zm3.25 1.7-6.5 2.6v7.922l6.5-2.6V4.24zM7.5 14.762V6.838L1 4.239v7.923l6.5 2.6zM7.443.184a1.5 1.5 0 0 1 1.114 0l7.129 2.852A.5.5 0 0 1 16 3.5v8.662a1 1 0 0 1-.629.928l-7.185 2.874a.5.5 0 0 1-.372 0L.63 13.09a1 1 0 0 1-.63-.928V3.5a.5.5 0 0 1 .314-.464L7.443.184z" />
@@ -16,7 +16,7 @@ const iconCartPlus = (
     xmlns="http://www.w3.org/2000/svg"
     width="24"
     height="24"
-    fill="black"
+    fillRule="black"
     className="bi bi-cart-plus"
     viewBox="0 0 16 16"
   >
@@ -88,8 +88,8 @@ const iconMinus = (
     xmlns="http://www.w3.org/2000/svg"
     width="16"
     height="16"
-    fill="currentColor"
-    class="bi bi-dash-square"
+    fillRule="currentColor"
+    className="bi bi-dash-square"
     viewBox="0 0 16 16"
   >
     <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
@@ -102,8 +102,8 @@ const iconPlus = (
     xmlns="http://www.w3.org/2000/svg"
     width="16"
     height="16"
-    fill="currentColor"
-    class="bi bi-plus-square"
+    fillRule="currentColor"
+    className="bi bi-plus-square"
     viewBox="0 0 16 16"
   >
     <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
@@ -117,8 +117,8 @@ const iconCart2 = (
     width="50"
     height="50"
     className="cart-icon"
-    fill="#635F46"
-    class="bi bi-cart4"
+    fillRule="#635F46"
+    className="bi bi-cart4"
     viewBox="0 0 16 16"
   >
     <path d="M0 2.5A.5.5 0 0 1 .5 2H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .485.621l-1.5 6A.5.5 0 0 1 13 11H4a.5.5 0 0 1-.485-.379L1.61 3H.5a.5.5 0 0 1-.5-.5zM3.14 5l.5 2H5V5H3.14zM6 5v2h2V5H6zm3 0v2h2V5H9zm3 0v2h1.36l.5-2H12zm1.11 3H12v2h.61l.5-2zM11 8H9v2h2V8zM8 8H6v2h2V8zM5 8H3.89l.5 2H5V8zm0 5a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0zm9-1a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0z" />
@@ -130,8 +130,8 @@ const iconDelete = (
     xmlns="http://www.w3.org/2000/svg"
     width="24"
     height="24"
-    fill="currentColor"
-    class="bi bi-trash"
+    fillRule="currentColor"
+    className="bi bi-trash"
     viewBox="0 0 16 16"
   >
     <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />

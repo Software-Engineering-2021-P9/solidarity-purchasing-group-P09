@@ -1,9 +1,9 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./ShoppingCartTableCSS.css";
 import React from "react";
-import { Container, Col, Row } from "react-bootstrap";
+import { Container, Col, Row, Form, FormControl } from "react-bootstrap";
 import ImageService from "../../services/ImageService/ImageService";
-import { iconMinus, iconPlus } from "../icons";
+import { iconDelete } from "../icons";
 
 function ShoppingCartTable(props) {
   return (
@@ -13,8 +13,9 @@ function ShoppingCartTable(props) {
           return (
             <CartRow
               product={item}
-              quantity={props.cart.get(item.id)}
               updateQuantity={props.updateQuantity}
+              deleteItem={props.deleteItem}
+              shoppingCart={props.shoppingCart}
               key={item.id}
             ></CartRow>
           );
@@ -27,43 +28,63 @@ function ShoppingCartTable(props) {
 function CartRow(props) {
   return (
     <Row className="shopping-cart-row">
-      <Col md={1}>
+      <Col md="auto" sm="12" className="d-flex justify-content-center">
         <img
           alt=""
-          width="100"
+          width="225"
+          className="item-cart-image"
           src={ImageService.returnImageByCategory(props.product.category)}
         />
       </Col>
-      <Col className="item-cart my-pl-3" md={2}>
-        {props.product.name}
+      <Col md="7" className="px-4">
+        <Row className="item-cart-name">{props.product.name}</Row>
+        <Row>{props.product.description}</Row>
+        <Row className="my-1">{props.product.packaging}</Row>
+        <Row className="justify-content-md-start mt-3">
+          {props.shoppingCart.get(props.product.id) < 10 ? (
+            <Form.Select
+              className="form-input-gt10"
+              size="sm"
+              value={props.shoppingCart.get(props.product.id)}
+              onChange={(e) => {
+                props.updateQuantity(props.product.id, e.target.value);
+              }}
+            >
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+              <option value="10">10+</option>
+            </Form.Select>
+          ) : (
+            <FormControl
+              className="form-input-gt10"
+              type="number"
+              size="sm"
+              step={1}
+              value={props.shoppingCart.get(props.product.id)}
+              onChange={(e) => {
+                props.updateQuantity(props.product.id, e.target.value);
+              }}
+              max={100}
+              min={1}
+            />
+          )}
+          <span
+            className="w-auto ml-3 px-0"
+            onClick={() => props.deleteItem(props.product.id)}
+          >
+            {iconDelete}REMOVE
+          </span>
+        </Row>
       </Col>
-      <Col md={4} className="my-pl-3">
-        {props.product.description}
-      </Col>
-      <Col md={2}>{props.product.packaging}</Col>
-      <Col md={1}>
+      <Col className="item-cart-name text-right">
         {props.product.price}
-        {" €"}
-      </Col>
-      <Col md={1}>
-        <span
-          onClick={() => {
-            props.updateQuantity(props.product.id, -1, props.product.price);
-          }}
-        >
-          {iconMinus}
-        </span>
-        <span className="mx-2">{props.quantity}</span>
-        <span
-          onClick={() => {
-            props.updateQuantity(props.product.id, 1, props.product.price);
-          }}
-        >
-          {iconPlus}
-        </span>
-      </Col>
-      <Col md={1}>
-        {(props.product.price * props.quantity).toFixed(2)}
         {" €"}
       </Col>
     </Row>

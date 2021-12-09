@@ -61,8 +61,9 @@ function ProductCard(props) {
             </p>
           </Row>
         </Card.Body>
-        <Card.Footer className="footer">
-          {props.creatingOrderMode && (
+
+        {props.creatingOrderMode && (
+          <Card.Footer className="footer">
             <Row className="justify-content-center d-flex align-items-center">
               {props.shoppingCart.get(product.id) ? (
                 <>
@@ -140,8 +141,8 @@ function ProductCard(props) {
                 </Button>
               )}
             </Row>
-          )}
-        </Card.Footer>
+          </Card.Footer>
+        )}
       </Card>
     </Container>
   );

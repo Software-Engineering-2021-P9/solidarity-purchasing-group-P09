@@ -1,14 +1,14 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useState, useContext, useEffect } from "react";
 import { useLocation } from "react-router";
-import { Container, Row } from "react-bootstrap";
-import { Redirect } from "react-router-dom";
+import { Container, Row, Col } from "react-bootstrap";
+import { Redirect, Link } from "react-router-dom";
+import Button from "../ui-components/Button/Button";
 
 import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponent";
 import { ShoppingCartTitle } from "../ui-components/ShoppingCartComponent/ShoppingCartTitle";
 import { ShoppingCartTable } from "../ui-components/ShoppingCartComponent/ShoppingCartTable";
-import { ShoppingCartTotAmount } from "../ui-components/ShoppingCartComponent/ShoppingCartTotAmount";
-import { ShoppingCartControls } from "../ui-components/ShoppingCartComponent/ShoppingCartControls";
+import { ShoppingCartSummary } from "../ui-components/ShoppingCartComponent/ShoppingCartSummary";
 import { ModalOrderConfirmation } from "../ui-components/ShoppingCartComponent/ModalOrderConfirmation";
 import ErrorToast from "../ui-components/ErrorToast/ErrorToast";
 import { AuthContext } from "../contexts/AuthContextProvider";
@@ -89,27 +89,27 @@ function ShoppingCartPage(props) {
   const [show, setShow] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-  const updateQuantity = (product, quantity, price) => {
-    const prev_qty = cart.get(product);
-    // remove from cart
-    if (quantity < 0 && prev_qty === 1) {
-      const newMap = new Map();
-      if (cart.size > 1) {
-        Array.from(cart.entries()).map((entry) => {
-          const [key, val] = entry;
-          if (key === product) return null;
-          newMap.set(key, val);
-          return entry;
-        });
-      }
-      setCart(newMap);
+  const updateQuantity = (productID, quantity) => {
+    if (quantity > 0) {
+      setCart(new Map(cart.set(productID, parseInt(quantity))));
     }
-    // decrease qty which is still > 0 || increase it
-    else if ((quantity < 0 && prev_qty > 1) || quantity > 0) {
-      setCart(new Map(cart.set(product, prev_qty + quantity)));
-    }
-    // update total amount
-    setAmount(amount + quantity * price);
+    var sum = 0;
+    Array.from(cart.entries()).map((entry) => {
+      sum += 1.0 * entry[1]; // mock price
+      return entry;
+    });
+    setAmount(sum);
+  };
+
+  const deleteItem = (productID) => {
+    let new_cart = new Map();
+    Array.from(cart.entries()).map((entry) => {
+      const [key, val] = entry;
+      if (key === productID) return null;
+      new_cart.set(key, val);
+      return entry;
+    });
+    setCart(new_cart);
   };
 
   const handleClose = () => setShow(false);
@@ -136,37 +136,57 @@ function ShoppingCartPage(props) {
       </Row>
       <Row>
         <ShoppingCartTitle
-          title={authContext.currentUser.role === UserRoles.CLIENT ?  "Your cart" : `${client.fullName}'s cart`}
+          title={
+            authContext.currentUser.role === UserRoles.CLIENT
+              ? "Your cart"
+              : `${client.fullName}'s cart`
+          }
         />
       </Row>
       <Row>
-        <ShoppingCartTable
-          cart={cart}
-          products={products}
-          updateQuantity={updateQuantity}
-        />
+        <Col md="8">
+          <Row>
+            <ShoppingCartTable
+              shoppingCart={cart}
+              products={products}
+              updateQuantity={updateQuantity}
+              deleteItem={deleteItem}
+            />
+          </Row>
+        </Col>
+        <Col md="4" sm="12" className="mx-0 px-0">
+          <ShoppingCartSummary
+            products={products}
+            cart={cart}
+            tot={amount}
+            handleShow={handleShow}
+          />
+        </Col>
       </Row>
-      <Row>
-        <ShoppingCartTotAmount tot={amount} />
-      </Row>
-      <Row>
-        <ShoppingCartControls
-          handleShow={handleShow}
-          clientID={location.state.clientID}
-          cart={cart}
-        />
+      <Row className="my-4">
+        <Link
+          className="px-0 mx-0"
+          to={{
+            pathname: "/",
+            state: {
+              creatingOrderMode: true,
+              shoppingCart: cart,
+              clientID: location.state.clientID,
+            },
+          }}
+        >
+          <Button variant="light">CONTINUE SHOPPING</Button>
+        </Link>
       </Row>
 
-      <Row>
-        <ModalOrderConfirmation
-          show={show}
-          handleClose={handleClose}
-          products={products}
-          cart={cart}
-          tot={amount}
-          handleSubmit={handleSubmit}
-        />
-      </Row>
+      <ModalOrderConfirmation
+        show={show}
+        handleClose={handleClose}
+        products={products}
+        cart={cart}
+        tot={amount}
+        handleSubmit={handleSubmit}
+      />
       <ErrorToast
         errorMessage={requestError}
         onClose={() => setRequestError("")}

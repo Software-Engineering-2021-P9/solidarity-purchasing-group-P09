@@ -7,7 +7,6 @@ import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponen
 import { FilterRow } from "../ui-components/FilterRow/FilterRow";
 import ProductCard from "../ui-components/ProductCardComponent/ProductCard";
 
-import "../ui-components/ShoppingCartComponent/ShoppingCartControlsCSS.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import { findProducts } from "../services/ApiClient";
@@ -77,7 +76,6 @@ function ProductListPage(props) {
       return entry;
     });
     setCart(new_cart);
-    console.log(new_cart);
   };
 
   return (
@@ -111,6 +109,7 @@ function ProductListPage(props) {
                   shoppingCart={cart}
                   addItem={addItem}
                   deleteItem={deleteItem}
+                  key={item.id}
                   // if the employee is creating a new order or is just showing available products
                   creatingOrderMode={
                     location.state?.creatingOrderMode ||

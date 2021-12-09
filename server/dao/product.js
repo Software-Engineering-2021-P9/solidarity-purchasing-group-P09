@@ -86,3 +86,12 @@ exports.createProductsTextSearchIndexes = (db) => {
     description: "text",
   });
 };
+
+exports.createProduct = (db, farmerID, name, description, category) => {
+  return db.collection(productsCollectionName).insertOne({
+    farmerID: ObjectID(farmerID),
+    name: name,
+    description: description,
+    category: category,
+  });
+};

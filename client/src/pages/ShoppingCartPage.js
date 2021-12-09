@@ -79,7 +79,7 @@ function ShoppingCartPage(props) {
   }, [cart]);
 
   /* compute initial total amount */
-  var sum = 0;
+  var sum = 0.0;
   Array.from(cart.entries()).map((entry) => {
     sum += 1.0 * entry[1]; // mock price
     return entry;
@@ -93,7 +93,7 @@ function ShoppingCartPage(props) {
     if (quantity > 0) {
       setCart(new Map(cart.set(productID, parseInt(quantity))));
     }
-    var sum = 0;
+    var sum = 0.0;
     Array.from(cart.entries()).map((entry) => {
       sum += 1.0 * entry[1]; // mock price
       return entry;
@@ -103,12 +103,17 @@ function ShoppingCartPage(props) {
 
   const deleteItem = (productID) => {
     let new_cart = new Map();
-    Array.from(cart.entries()).map((entry) => {
-      const [key, val] = entry;
-      if (key === productID) return null;
-      new_cart.set(key, val);
-      return entry;
-    });
+    var sum = 0.0;
+    if (cart.size > 1) {
+      Array.from(cart.entries()).map((entry) => {
+        const [key, val] = entry;
+        if (key === productID) return null;
+        new_cart.set(key, val);
+        sum += 1.0 * entry[1];
+        return entry;
+      });
+    }
+    setAmount(sum);
     setCart(new_cart);
   };
 

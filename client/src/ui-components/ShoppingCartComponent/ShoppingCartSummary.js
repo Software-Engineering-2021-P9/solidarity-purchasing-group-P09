@@ -32,7 +32,7 @@ function OrderSummary(props) {
   return (
     <Container>
       <Row className="order-summary-title mb-3">ORDER SUMMARY</Row>
-      {props.products.map((item) => {
+      {props.products?.map((item) => {
         return (
           <Row className="d-flex justify-content-between">
             <Col md="1" sm="1" xs="1">
@@ -42,7 +42,7 @@ function OrderSummary(props) {
               {"x "} {item.name}
             </Col>
             <Col className="align-end">
-              {item.price * props.cart.get(item.id).toFixed(2)}
+              {item.price * props.cart.get(item.id)?.toFixed(2)}
               {" €"}
             </Col>
           </Row>

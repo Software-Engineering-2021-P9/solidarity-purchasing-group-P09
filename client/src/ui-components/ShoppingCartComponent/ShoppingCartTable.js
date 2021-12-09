@@ -26,6 +26,10 @@ function ShoppingCartTable(props) {
 }
 
 function CartRow(props) {
+  let dropdown_items = [];
+  for (let i = 1; i < 10; i++) {
+    dropdown_items.push(i);
+  }
   return (
     <Row className="shopping-cart-row">
       <Col md="auto" sm="12" className="d-flex justify-content-center">
@@ -50,15 +54,9 @@ function CartRow(props) {
                 props.updateQuantity(props.product.id, e.target.value);
               }}
             >
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-              <option value="5">5</option>
-              <option value="6">6</option>
-              <option value="7">7</option>
-              <option value="8">8</option>
-              <option value="9">9</option>
+              {dropdown_items.map((i) => {
+                return <option value={i}>{i}</option>;
+              })}
               <option value="10">10+</option>
             </Form.Select>
           ) : (

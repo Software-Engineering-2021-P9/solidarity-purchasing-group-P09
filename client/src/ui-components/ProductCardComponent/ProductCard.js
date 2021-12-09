@@ -29,7 +29,7 @@ function ProductCard(props) {
   }
 
   return (
-    <Container>
+    <Container className="px-2">
       <Card className="card">
         <CardImg
           src={ImageService.returnImageByCategory(product.category)}
@@ -37,10 +37,10 @@ function ProductCard(props) {
         />
         <Card.Body className="body">
           <Row className="d-flex justify-content-between mb-1">
-            <Col>
+            <Col xs="auto" sm="12">
               <Card.Title className="card-title">{product.name}</Card.Title>
             </Col>
-            <Col className="product-price">{product.availability.price} €</Col>{" "}
+            <Col className="product-price">{product.availability.price} €</Col>
           </Row>
 
           <Row className="mb-3 pt-1">

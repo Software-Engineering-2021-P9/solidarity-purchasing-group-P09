@@ -95,7 +95,7 @@ function ShoppingCartPage(props) {
     }
     var new_sum = 0.0;
     Array.from(cart.entries()).map((entry) => {
-      sum += 1.0 * entry[1]; // mock price
+      new_sum += 1.0 * entry[1]; // mock price
       return entry;
     });
     setAmount(new_sum);
@@ -169,19 +169,21 @@ function ShoppingCartPage(props) {
         </Col>
       </Row>
       <Row className="my-4">
-        <Link
-          className="px-0 mx-0"
-          to={{
-            pathname: "/",
-            state: {
-              creatingOrderMode: true,
-              shoppingCart: cart,
-              clientID: location.state.clientID,
-            },
-          }}
-        >
-          <Button variant="light">CONTINUE SHOPPING</Button>
-        </Link>
+        <div className="mx-0 px-0">
+          <Link
+            className="px-0 mx-0"
+            to={{
+              pathname: "/",
+              state: {
+                creatingOrderMode: true,
+                shoppingCart: cart,
+                clientID: location.state.clientID,
+              },
+            }}
+          >
+            <Button variant="light">CONTINUE SHOPPING</Button>
+          </Link>
+        </div>
       </Row>
 
       <ModalOrderConfirmation

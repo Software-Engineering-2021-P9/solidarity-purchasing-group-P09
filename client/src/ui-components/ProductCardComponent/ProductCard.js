@@ -35,26 +35,29 @@ function ProductCard(props) {
           className="card-img"
         />
         <Card.Body className="body">
-          <Row className="d-flex justify-content-between mb-1">
-            <Col xs="auto">
-              <Card.Title className="card-title">{product.name}</Card.Title>
-            </Col>
-            <Col className="product-price" sm={{ span: 0, offset: 1 }}>
-              {product.availability.price} €
-            </Col>
-          </Row>
+          <div className="min-height mx-0 px-0">
+            <Row className="d-flex justify-content-between mb-1">
+              <Col xs="8" sm="7">
+                <Card.Title className="card-title">{product.name}</Card.Title>
+              </Col>
+              <Col className="product-price" sm="5" xs="4">
+                {product.availability.price} €
+              </Col>
+            </Row>
 
-          <Row className="mb-3 pt-1">
-            <Card.Text className="card-text">
-              {iconPackaging}
-              <span className="packaging-text">
-                Packaging: {product.availability.packaging}
-              </span>
-            </Card.Text>
-          </Row>
-          <Row className="description">
-            <Card.Text className="card-text">{product.description}</Card.Text>
-          </Row>
+            <Row className="mb-3 pt-1">
+              <Card.Text className="card-text">
+                {iconPackaging}
+                <span className="packaging-text">
+                  Packaging: {product.availability.packaging}
+                </span>
+              </Card.Text>
+            </Row>
+            <Row className="description">
+              <Card.Text className="card-text">{product.description}</Card.Text>
+            </Row>
+          </div>
+
           <Row className="mt-4 progressbar-row">
             <ProgressBar
               now={32}
@@ -74,7 +77,7 @@ function ProductCard(props) {
               {props.shoppingCart.get(product.id) ? (
                 <>
                   <Col
-                    className="px-0 d-flex justify-content-center"
+                    className="px-0 mx-0 d-flex justify-content-center"
                     sm="2"
                     xs="1"
                   >

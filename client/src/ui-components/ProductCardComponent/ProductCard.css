@@ -20,8 +20,12 @@
   color: black !important;
   margin-bottom: 0px !important;
   font-weight: 650;
-  font-size: 28px;
+  font-size: 23px;
   line-height: 34px;
+}
+
+.min-height {
+  min-height: 165px;
 }
 
 .product-price {
@@ -32,6 +36,7 @@
   /* identical to box height, or 109% */
   text-align: right;
   color: #db9471;
+  vertical-align: top;
 }
 
 .packaging-text {

@@ -101,6 +101,7 @@ function ProductCard(props) {
                       </Form.Select>
                     </Col>
                   )}
+
                   {props.shoppingCart.get(product.id) >= 10 && (
                     <Col
                       sm="auto"

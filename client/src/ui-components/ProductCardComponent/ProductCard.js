@@ -22,7 +22,6 @@ import ImageService from "../../services/ImageService/ImageService";
 
 function ProductCard(props) {
   const product = props.product;
-
   let dropdown_items = [];
   for (let i = 1; i < 10; i++) {
     dropdown_items.push(i);

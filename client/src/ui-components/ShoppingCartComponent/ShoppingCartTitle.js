@@ -1,16 +1,14 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./ShoppingCartTitleCSS.css";
 import React from "react";
-import { iconCart2 } from "../icons";
+import { iconCartTitle } from "../icons";
 
 function ShoppingCartTitle(props) {
   return (
-    <div className="title">
-      <h1>
-        {iconCart2}
-        {props.title}
-      </h1>
-    </div>
+    <h1 className="title px-0">
+      <span className="cart-icon mx-0">{iconCartTitle}</span>
+      {props.title}
+    </h1>
   );
 }
 

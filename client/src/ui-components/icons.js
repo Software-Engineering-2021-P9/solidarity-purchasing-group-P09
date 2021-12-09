@@ -111,12 +111,11 @@ const iconPlus = (
   </svg>
 );
 
-const iconCart2 = (
+const iconCartTitle = (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="50"
     height="50"
-    className="cart-icon"
     fillRule="#635F46"
     className="bi bi-cart4"
     viewBox="0 0 16 16"
@@ -163,7 +162,7 @@ export {
   iconUser,
   iconMinus,
   iconPlus,
-  iconCart2,
+  iconCartTitle,
   iconDelete,
   iconCartEmptySmall,
 };

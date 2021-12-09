@@ -7,11 +7,11 @@ import { Redirect } from "react-router-dom";
 import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponent";
 import { ShoppingCartTitle } from "../ui-components/ShoppingCartComponent/ShoppingCartTitle";
 import { ShoppingCartTable } from "../ui-components/ShoppingCartComponent/ShoppingCartTable";
-import { ShoppingCartControls } from "../ui-components/ShoppingCartComponent/ShoppingCartControls";
 import { ShoppingCartOrderSummary } from "../ui-components/ShoppingCartComponent/ShoppingCartOrderSummary";
 import { ModalOrderConfirmation } from "../ui-components/ShoppingCartComponent/ModalOrderConfirmation";
 import ErrorToast from "../ui-components/ErrorToast/ErrorToast";
 import { AuthContext } from "../contexts/AuthContextProvider";
+import Button from "../ui-components/Button/Button";
 
 import {
   getClientByID,
@@ -19,10 +19,12 @@ import {
   createOrder,
 } from "../services/ApiClient";
 import UserRoles from "../services/models/UserRoles";
+import {useHistory} from "react-router-dom";
 
 function ShoppingCartPage(props) {
   const location = useLocation();
   const authContext = useContext(AuthContext);
+  const history = useHistory();
 
   // as props, ShoppingCartPage receives
   //      - a Map <ItemID, Qty>
@@ -138,13 +140,6 @@ function ShoppingCartPage(props) {
     setSubmitted(true);
   };
 
-  let controlsComponent =         
-  <ShoppingCartControls
-      handleShow={handleShow}
-      clientID={location.state.clientID}
-      cart={cart}
-  />
-
   return (
     <Container className="px-5 py-3" fluid>
       <Row>
@@ -154,9 +149,9 @@ function ShoppingCartPage(props) {
         />
       </Row>
       <Row>
-        <ShoppingCartTitle
-          title={authContext.currentUser.role === UserRoles.CLIENT ?  "Your cart" : `${client.fullName}'s cart`}
-        />
+          <ShoppingCartTitle
+            title={authContext.currentUser.role === UserRoles.CLIENT ?  "Your cart" : `${client.fullName}'s cart`}
+          />
       </Row>
       <Row>
         <Col className="col-10">
@@ -169,20 +164,29 @@ function ShoppingCartPage(props) {
         <Col style={{"margin-left":"-5%"}}>
           {authContext.currentUser.role === UserRoles.CLIENT &&
              <ShoppingCartOrderSummary 
-                tot={amount}
-                controlsComponent={controlsComponent}
+                products={products}
+                cart={cart}
 
+                setAmount={setAmount}
                 setDeliveryAddress={setDeliveryAddress}
                 setDeliveryDate={setDeliveryDate}
                 setDeliveryTime={setDeliveryTime}
                 setDeliveryType={setDeliveryType}
 
+                amount={amount}
                 deliveryAddress={deliveryAddress}
                 deliveryDate={deliveryDate}
                 deliveryTime={deliveryTime}
                 deliveryType={deliveryType}
+
+                handleShow={handleShow}
               />}
         </Col>
+      </Row>
+      <Row>
+        <Button onClick={()=>{history.push("/", { shoppingCart: cart, clientID: location.state.clientID })}} className="cart-button-shopping" variant='light'>
+          CONTINUE SHOPPING
+        </Button>
       </Row>
 
       <Row>
@@ -193,6 +197,7 @@ function ShoppingCartPage(props) {
           cart={cart}
           tot={amount}
           handleSubmit={handleSubmit}
+          deliveryType={deliveryType}
         />
       </Row>
       <ErrorToast
@@ -218,5 +223,4 @@ function ShoppingCartPage(props) {
     </Container>
   );
 }
-
 export { ShoppingCartPage };

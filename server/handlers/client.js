@@ -70,16 +70,12 @@ exports.findClientsHandler = async function (req, res, next) {
 
   let hasPendingCancelation = req.query.hasPendingCancelation;
 
-  if (hasPendingCancelation === "true") {
-    hasPendingCancelation = true;
-  } else if (hasPendingCancelation === "false") {
-    hasPendingCancelation = false;
-  }
-
   try {
     result = await dao.findClients(
       req.query.searchString,
-      hasPendingCancelation
+      hasPendingCancelation != null
+        ? hasPendingCancelation === "true"
+        : undefined
     );
   } catch (err) {
     console.error(`FindClientsHandler() -> couldn't find clients: ${err}`);
@@ -156,7 +152,7 @@ exports.signupClientHandler = async function (req, res, next) {
     return res.status(500).end();
   }
 
-  // Fetch the newly created client
+  // Fetch the created client
   try {
     result = await dao.getClientByID(result.insertedId);
   } catch (err) {

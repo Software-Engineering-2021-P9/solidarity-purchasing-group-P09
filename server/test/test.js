@@ -1,41 +1,52 @@
-let chai = require("chai");
-let expect = chai.expect;
-let chaiHttp = require("chai-http");
-let dao = require("../dao/dao");
-
+const chai = require("chai");
+const expect = chai.expect;
+const chaiHttp = require("chai-http");
 chai.use(chaiHttp);
-const { ObjectId } = require("bson");
+
+const { OrderStatus } = require("../models/order");
+
+const mongoUnit = require("mongo-unit");
+
+const testData = require("./test-data");
+
+// ----------------------------------
+// FAKE DATABASE AND TEST SERVER INIT
+// ----------------------------------
 // This will contain the main server app, needed to listen for requests.
 // This is initialized when the mock MongoDB initialization is completed.
 let app;
 
-// Init mock MongoDB
-const mongoUnit = require("mongo-unit");
-let testData = require("./test-data");
-const { OrderStatus } = require("../models/order");
-
 const mongoTestDBName = "spg-test";
-mongoUnit.start({ dbName: mongoTestDBName }).then(() => {
-  process.env.MONGO_CONN_STR = mongoUnit.getUrl();
+
+before(async () => {
+  // Init mock MongoDB
+  let dbURL = await mongoUnit.start({ dbName: mongoTestDBName });
+  process.env.MONGO_CONN_STR = dbURL;
   process.env.MONGO_DB_NAME = mongoTestDBName;
   app = require("../app");
-  run();
+
+  // Import test files
+  require("./test_weekphase").tests(app);
 });
 
 after(() => {
   return mongoUnit.stop();
 });
 
+// -----
+// TESTS
+// -----
+
 // Employees API tests
 describe("Employees API tests:", () => {
   beforeEach(() => {
-    dao.open();
+    app.dao.open();
     mongoUnit.load(testData.employeesCollection);
   });
 
   afterEach(() => {
     mongoUnit.drop();
-    dao.close();
+    app.dao.close();
   });
 
   describe("GET /employees/:employeeID", () => {
@@ -76,7 +87,7 @@ describe("Employees API tests:", () => {
     });
 
     it("it must fail when mongo fails", (done) => {
-      dao.close();
+      app.dao.close();
       chai
         .request(app)
         .get("/api/employees/6187c957b288576ca26f8257")
@@ -162,7 +173,7 @@ describe("Employees API tests:", () => {
     });
 
     it("it must fail when mongo fails", (done) => {
-      dao.close();
+      app.dao.close();
       chai
         .request(app)
         .post("/api/employees")
@@ -183,15 +194,15 @@ describe("Employees API tests:", () => {
 
 describe("Products API tests: ", () => {
   beforeEach(() => {
-    dao.open();
+    app.dao.open();
     mongoUnit.load(testData.productsCollection);
     mongoUnit.load(testData.productsAvailabilityCollection);
-    dao.createProductsTextSearchIndexes();
+    app.dao.createProductsTextSearchIndexes();
   });
 
   afterEach(() => {
     mongoUnit.drop();
-    dao.close();
+    app.dao.close();
   });
 
   describe("GET /products", () => {
@@ -317,11 +328,11 @@ describe("Products API tests: ", () => {
     it("It should return an error while reading on the db if it has a wrong category: ", (done) => {
       //upload new data set:
       mongoUnit.drop();
-      dao.close();
+      app.dao.close();
 
-      dao.open();
+      app.dao.open();
       mongoUnit.load(testData.productsCollectionWithCategoryError);
-      dao.createProductsTextSearchIndexes();
+      app.dao.createProductsTextSearchIndexes();
       chai
         .request(app)
         .get(
@@ -374,7 +385,7 @@ describe("Products API tests: ", () => {
     });
 
     it("it must fail when mongo fails", (done) => {
-      dao.close();
+      app.dao.close();
       chai
         .request(app)
         .get("/api/products/000000000000000000000010")
@@ -461,7 +472,7 @@ describe("Products API tests: ", () => {
     });
 
     it("it must fail when mongo fails", (done) => {
-      dao.close();
+      app.dao.close();
       chai
         .request(app)
         .post("/api/products/000000000000000000000012/availability")
@@ -565,14 +576,14 @@ describe("Products API tests: ", () => {
 // Clients API tests
 describe("Clients API tests:", () => {
   beforeEach(() => {
-    dao.open();
+    app.dao.open();
     mongoUnit.load(testData.clientsCollection);
-    dao.createClientsTextSearchIndexes();
+    app.dao.createClientsTextSearchIndexes();
   });
 
   afterEach(() => {
     mongoUnit.drop();
-    dao.close();
+    app.dao.close();
   });
 
   describe("GET /clients[?searchString=:searchString]", () => {
@@ -629,7 +640,7 @@ describe("Clients API tests:", () => {
     });
 
     it("it must fail when mongo fails", (done) => {
-      dao.close();
+      app.dao.close();
       chai
         .request(app)
         .get("/api/clients")
@@ -679,7 +690,7 @@ describe("Clients API tests:", () => {
     });
 
     it("it must fail when mongo fails", (done) => {
-      dao.close();
+      app.dao.close();
       chai
         .request(app)
         .get("/api/clients/6a8fc927bb88c762a26f0000")
@@ -693,7 +704,7 @@ describe("Clients API tests:", () => {
   });
   describe("PATCH /clients/:clientID/wallet", () => {
     it("it must fail when mongo fails", (done) => {
-      dao.close();
+      app.dao.close();
       chai
         .request(app)
         .patch("/api/clients/6187c957b288576ca26f8257/wallet")
@@ -762,13 +773,13 @@ describe("Clients API tests:", () => {
   // Orders API tests
   describe("Orders API tests:", () => {
     beforeEach(() => {
-      dao.open();
+      app.dao.open();
       mongoUnit.load(testData.ordersCollection);
     });
 
     afterEach(() => {
       mongoUnit.drop();
-      dao.close();
+      app.dao.close();
     });
 
     describe("POST /orders", () => {
@@ -887,7 +898,7 @@ describe("Clients API tests:", () => {
       });
 
       it("it must fail when mongo fails", (done) => {
-        dao.close();
+        app.dao.close();
         chai
           .request(app)
           .post("/api/orders")
@@ -973,7 +984,7 @@ describe("Clients API tests:", () => {
       });
 
       it("it must fail when mongo fails", (done) => {
-        dao.close();
+        app.dao.close();
         chai
           .request(app)
           .get("/api/orders?clientID=6187c957b288576ca26f8257")
@@ -1085,7 +1096,7 @@ describe("Clients API tests:", () => {
       });
 
       it("it must fail when mongo fails", (done) => {
-        dao.close();
+        app.dao.close();
         chai
           .request(app)
           .patch("/api/orders/6187c957b288576ca26f8251/complete")
@@ -1104,13 +1115,13 @@ describe("Clients API tests:", () => {
 
 describe("Clients API tests:", () => {
   beforeEach(() => {
-    dao.open();
+    app.dao.open();
     mongoUnit.load(testData.clientsCollection);
   });
 
   afterEach(() => {
     mongoUnit.drop();
-    dao.close();
+    app.dao.close();
   });
 
   describe("POST /clients/signup", () => {
@@ -1198,7 +1209,7 @@ describe("Clients API tests:", () => {
     });
 
     it("it must fail when mongo fails", (done) => {
-      dao.close();
+      app.dao.close();
       chai
         .request(app)
         .post("/api/clients/signup")
@@ -1226,14 +1237,14 @@ describe("Clients API tests:", () => {
 
 describe("Clients API tests:", () => {
   beforeEach(() => {
-    dao.open();
+    app.dao.open();
     mongoUnit.load(testData.clientsCollection);
-    dao.createClientsTextSearchIndexes();
+    app.dao.createClientsTextSearchIndexes();
   });
 
   afterEach(() => {
     mongoUnit.drop();
-    dao.close();
+    app.dao.close();
   });
 
   describe("POST /clients", () => {
@@ -1298,7 +1309,7 @@ describe("Clients API tests:", () => {
     });
 
     it("it must fail when mongo fails", (done) => {
-      dao.close();
+      app.dao.close();
       chai
         .request(app)
         .post("/api/clients")
@@ -1325,15 +1336,15 @@ describe("Clients API tests:", () => {
 
 describe("Farmers API tests:", () => {
   beforeEach(() => {
-    dao.open();
+    app.dao.open();
     mongoUnit.load(testData.productsCollection);
     mongoUnit.load(testData.productsAvailabilityCollection2);
-    dao.createProductsTextSearchIndexes();
+    app.dao.createProductsTextSearchIndexes();
   });
 
   afterEach(() => {
     mongoUnit.drop();
-    dao.close();
+    app.dao.close();
   });
 
   it("it must return apples products, one of them with availability set to null", (done) => {
@@ -1444,7 +1455,7 @@ describe("Farmers API tests:", () => {
   });
 
   it("it must fail when mongo fails", (done) => {
-    dao.close();
+    app.dao.close();
     chai
       .request(app)
       .get(
@@ -1492,7 +1503,7 @@ describe("Farmers API tests:", () => {
 // User Login API TESTS
 describe("User Login API tests:", () => {
   beforeEach(() => {
-    dao.open();
+    app.dao.open();
     mongoUnit.load({
       ...testData.clientsCollection,
       ...testData.farmersCollection,
@@ -1501,7 +1512,7 @@ describe("User Login API tests:", () => {
 
     afterEach(() => {
       mongoUnit.drop();
-      dao.close();
+      app.dao.close();
     });
 
     describe("POST /users/login", () => {
@@ -1689,53 +1700,5 @@ describe("User Login API tests:", () => {
           });
       });
     });
-  });
-});
-
-//tests on time
-
-const weekPhasesService = require("../services/WeekPhsaseService/weekPhasesService");
-const { WeekPhaseInterval } = require("../services/WeekPhsaseService/weekPhaseInterval");
-const weekPhases = require("../services/WeekPhsaseService/weekPhaseInterval");
-const { WeekPhaseDate } = require("../services/WeekPhsaseService/weekPhaseDate");
-
-
-describe("weekPhase",()=>{
-  let phase = new WeekPhaseInterval(
-    "1", 
-    new WeekPhaseDate("0","00","00"), 
-    new WeekPhaseDate("1","00","00"),
-    ()=>{console.log("try handle 1");}
-  );
-
-  expect(phase.id).to.be.equal("1");
-  expect(phase.startTime.toString()).to.be.equal("00000");
-  expect(phase.endTime.toString()).to.be.equal("10000");
-  expect(phase.handler).to.be.a("function");
-  expect(phase.isDateWithinInterval( new WeekPhaseDate("0","00","00")) ).to.be.equal(true);
-  expect(phase.isDateWithinInterval( new WeekPhaseDate("0","30","00")) ).to.be.equal(true);
-  expect(phase.isDateWithinInterval( new WeekPhaseDate("1","00","00")) ).to.be.equal(false);
-});
-
-
-describe("timeManager",()=>{
-  describe("check on timeManager object", ()=>{
-    expect(weekPhasesService.getCurrentPhaseID()).to.not.be.null;
-    expect(weekPhases.weekPhases.map(phase=>phase.id)).to.include(weekPhasesService.getCurrentPhaseID());
-    
-    weekPhasesService.setPhaseOverride("1");
-    expect(weekPhasesService.getCurrentPhaseID()).to.be.equal("1");
-    weekPhasesService.setPhaseOverride("2");
-    expect(weekPhasesService.getCurrentPhaseID()).to.be.equal("2");
-   
-    weekPhasesService.setPhaseOverride(null);
-    expect(weekPhases.weekPhases.map(phase=>phase.id)).to.include(weekPhasesService.getCurrentPhaseID());
-   
-    weekPhasesService.setPhaseOverride("2");
-    expect(weekPhasesService.getCurrentPhaseID()).to.be.equal("2");
-    weekPhasesService.setPhaseOverride("1");
-    expect(weekPhasesService.getCurrentPhaseID()).to.be.equal("1");
-    weekPhasesService.setPhaseOverride("1");
-    expect(weekPhasesService.getCurrentPhaseID()).to.be.equal("1");
   });
 });

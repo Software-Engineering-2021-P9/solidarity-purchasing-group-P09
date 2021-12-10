@@ -23,6 +23,7 @@ import "../../ui-components/Title.css";
 import { findClients } from "../../services/ApiClient";
 
 import { AuthContext } from "../../contexts/AuthContextProvider";
+import { RedDropdown } from "../../ui-components/RedDropdownComponent/RedDropdown";
 
 function ClientManagementPage(props) {
   const history = useHistory();
@@ -32,10 +33,31 @@ function ClientManagementPage(props) {
   const [clientInfoList, setClientInfoList] = useState(null);
   const [isClientInfoListLoading, setIsClientInfoListLoading] = useState(false);
   const [requestError, setRequestError] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("All");
+
+  function onCategoryFilterChange(newVal) {
+    setCategoryFilter(newVal);
+  }
 
   function onSearchClientButtonClick() {
     setIsClientInfoListLoading(true);
-    findClients(searchString)
+
+    let hasPendingCancelation;
+    switch(categoryFilter){
+      case("Covered"):
+        hasPendingCancelation=true;
+        break;
+
+      case("Not Covered"):
+        hasPendingCancelation=false;
+        break;
+
+      default:
+        hasPendingCancelation = null;
+        break;
+    }
+
+    findClients(searchString,hasPendingCancelation)
       .then(setClientInfoList)
       .catch((err) => {
         setRequestError(err.message);
@@ -86,6 +108,14 @@ function ClientManagementPage(props) {
             />
             <Button onClick={onSearchClientButtonClick}>Search</Button>
           </InputGroup>
+        </Col>
+        <Col className='pb-3 pb-sm-0 my-4 dropdown-margin' xs='4' sm='3' md='2' lg='1'>
+          <RedDropdown
+              items={["Not Covered","Covered"]}
+              title={categoryFilter ? categoryFilter : "All"}
+              updateSelectedItem={onCategoryFilterChange}
+              activeElement={categoryFilter}
+            />
         </Col>
       </Row>
       <Container>

@@ -116,9 +116,16 @@ export async function getEmployeeByID(employeeID) {
 // Client
 // ------
 
-export async function findClients(searchString) {
+export async function findClients(searchString, hasPendingCancelation) {
   let path = "/api/clients";
-  if (searchString) path += `?searchString=${searchString}`;
+
+  if(searchString){
+    path += `searchString=${searchString}&`;
+  }
+  if(hasPendingCancelation!==null){
+    path += `searchString=${searchString}&`;
+  }
+  path = path.substring(0, path.length-1);//delete the last character, that is &
 
   let response = await fetch(path);
 

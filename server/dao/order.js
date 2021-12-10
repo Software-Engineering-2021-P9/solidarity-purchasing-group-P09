@@ -18,9 +18,12 @@ exports.createOrder = async (
   createdAt,
   shipmentInfo
 ) => {
+  const mongoProducts = products?.map(
+    (p) => new OrderProduct(ObjectID(p.productID), p.quantity)
+  );
   return db.collection(orderCollectionName).insertOne({
     clientID: ObjectID(clientID),
-    products: products,
+    products: mongoProducts,
     status: status,
     totalPrice: totalPrice,
     createdAt: createdAt,

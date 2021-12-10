@@ -38,10 +38,6 @@ exports.createOrderHandler = async function (req, res, next) {
     totalPrice += product.quantity * productPrice;
   });
 
-  const mongoProducts = req.body.products?.map(
-    (p) => new OrderProduct(ObjectID(p.productID.toString()), p.quantity)
-  );
-
   const mongoShipmentInfo = new ShipmentInfo(
     req.body.shipmentInfo.date.toString(),
     req.body.shipmentInfo.time.toString(),
@@ -54,7 +50,7 @@ exports.createOrderHandler = async function (req, res, next) {
   try {
     result = await dao.createOrder(
       req.body.clientID.toString(),
-      mongoProducts,
+      req.body.products,
       OrderStatus.WAITING,
       totalPrice,
       dayjs().toISOString(),

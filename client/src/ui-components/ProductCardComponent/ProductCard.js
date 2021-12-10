@@ -65,11 +65,7 @@ function ProductCard(props) {
             {props.shoppingCart.get(product.id) ? (
               <>
                 <ProgressBar
-                  now={
-                    product.availability.quantity -
-                    left_availability +
-                    props.shoppingCart.get(product.id)
-                  }
+                  now={left_availability - props.shoppingCart.get(product.id)}
                   max={product.availability.quantity}
                   variant={"progressbar"}
                   className="px-0"
@@ -85,7 +81,7 @@ function ProductCard(props) {
             ) : (
               <>
                 <ProgressBar
-                  now={product.availability.quantity - left_availability}
+                  now={left_availability}
                   max={product.availability.quantity}
                   variant={"progressbar"}
                   className="px-0"

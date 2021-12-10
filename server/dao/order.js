@@ -18,16 +18,14 @@ exports.createOrder = async (
   createdAt,
   shipmentInfo
 ) => {
-  const newOrder = {
+  return db.collection(orderCollectionName).insertOne({
     clientID: clientID,
     products: products,
     status: status,
     totalPrice: totalPrice,
     createdAt: createdAt,
     shipmentInfo: shipmentInfo,
-  };
-
-  return db.collection(orderCollectionName).insertOne(newOrder);
+  });
 };
 
 exports.getOrdersByClientID = async (db, clientID) => {

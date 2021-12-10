@@ -23,10 +23,10 @@ exports.createOrder = async (
   );
 
   const mongoShipmentInfo = new ShipmentInfo(
-    shipmentInfo.date,
-    shipmentInfo.time,
-    shipmentInfo.address,
-    shipmentInfo.fee
+    shipmentInfo.date.toString(),
+    shipmentInfo.time.toString(),
+    shipmentInfo.address.toString(),
+    shipmentInfo.fee.toString()
   );
 
   const newOrder = {

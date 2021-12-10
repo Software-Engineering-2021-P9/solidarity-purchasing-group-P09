@@ -121,7 +121,7 @@ function ClientDetailsPage(props) {
       {location.state != null && show ? (
         <Row>
           <Alert
-            variant='success'
+            variant="success"
             style={{
               color: "#635F46",
               fontWeight: "bold",
@@ -131,7 +131,8 @@ function ClientDetailsPage(props) {
               marginLeft: "1%",
             }}
             onClose={() => setShow(false)}
-            dismissible>
+            dismissible
+          >
             {authContext.currentUser.role === UserRoles.CLIENT &&
               "Your order was successfully created"}
             {authContext.currentUser.role === UserRoles.EMPLOYEE &&
@@ -143,18 +144,20 @@ function ClientDetailsPage(props) {
       )}
 
       {!isInitialized ? (
-        <Container className='pt-5 d-flex justify-content-center'>
-          <Spinner variant='dark' animation='border' />
+        <Container className="pt-5 d-flex justify-content-center">
+          <Spinner variant="dark" animation="border" />
         </Container>
       ) : (
         <>
           <Row>
-            <h1 className='title'>Client Details</h1>
+            <h1 className="title">Client Details</h1>
           </Row>
-          <Row className='justify-content-around pt-2'>
-            <Col className='ms-5'>
+          <Row className="justify-content-around pt-2">
+            <Col className="ms-5">
               <ClientDetails clientInfo={clientInfo} />
             </Col>
+          </Row>
+          {/*
             {authContext.currentUser.role === UserRoles.EMPLOYEE && (
               <Col md='5'>
                 <InputGroup className='mb-3 pt-4'>
@@ -172,10 +175,10 @@ function ClientDetailsPage(props) {
             )}
           </Row>
           {authContext.currentUser.role === UserRoles.EMPLOYEE && (
-            <Row className='my-3'>
+            <Row className="my-3">
               <CreateNewOrderButton clientID={clientID} />
             </Row>
-          )}
+          )}*/}
 
           <Container>
             <Divider size={2} />

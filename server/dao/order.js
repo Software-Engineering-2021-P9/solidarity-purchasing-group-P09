@@ -16,28 +16,26 @@ exports.createOrder = async (
   status,
   totalPrice,
   createdAt,
-  date,
-  time,
-  address,
-  fee
+  shipmentInfo
 ) => {
   const mongoProducts = products?.map(
-    (p) => new OrderProduct(ObjectID(p.productID.toString()), p.quantity)
+    (p) => new OrderProduct(ObjectID(p.productID), p.quantity)
   );
 
-  const mongoShipment = new ShipmentInfo(
-    date.toString(),
-    time.toString(),
-    address.toString(),
-    fee
+  const mongoShipmentInfo = new ShipmentInfo(
+    shipmentInfo.date.toString(),
+    shipmentInfo.time.toString(),
+    shipmentInfo.address.toString(),
+    shipmentInfo.fee
   );
+
   return db.collection(orderCollectionName).insertOne({
     clientID: ObjectID(clientID.toString()),
     products: mongoProducts,
     status: status.toString(),
     totalPrice: totalPrice,
     createdAt: createdAt.toString(),
-    shipmentInfo: mongoShipment,
+    shipmentInfo: mongoShipmentInfo,
   });
 };
 

@@ -148,10 +148,7 @@ exports.createOrder = (
   status,
   totalPrice,
   createdAt,
-  date,
-  time,
-  address,
-  fee
+  shipmentInfo
 ) =>
   createOrder(
     db,
@@ -160,10 +157,7 @@ exports.createOrder = (
     status,
     totalPrice,
     createdAt,
-    date,
-    time,
-    address,
-    fee
+    shipmentInfo
   );
 exports.getOrderByID = (orderID) => getOrderByID(db, orderID);
 exports.deleteOrder = (orderID) => deleteOrder(db, orderID);

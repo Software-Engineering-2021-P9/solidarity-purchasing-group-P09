@@ -172,6 +172,12 @@ app.get(
   productHandlers.getNextWeekProductAvailability
 );
 
+app.post(
+  buildAPIPath("/products"),
+  productHandlers.createProductValidatorChain,
+  checkValidationErrorMiddleware,
+  productHandlers.createProductHandler
+);
 // --------
 // /farmers
 // --------

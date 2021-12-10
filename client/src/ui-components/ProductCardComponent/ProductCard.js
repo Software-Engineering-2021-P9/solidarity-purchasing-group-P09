@@ -22,9 +22,12 @@ import ImageService from "../../services/ImageService/ImageService";
 
 function ProductCard(props) {
   const product = props.product;
+  let left_availability = 14; //mock left_availability
   let dropdown_items = [];
-  for (let i = 1; i < 10; i++) {
-    dropdown_items.push(i);
+  for (let i = 1; i < 11; i++) {
+    if (i <= left_availability) {
+      dropdown_items.push(i);
+    }
   }
 
   return (
@@ -59,15 +62,36 @@ function ProductCard(props) {
           </div>
 
           <Row className="mt-4 progressbar-row">
-            <ProgressBar
-              now={32}
-              max={product.availability.quantity}
-              variant={"progressbar"}
-              className="px-0"
-            />
-            <p>
-              <b>32 left</b> of {product.availability.quantity} available
-            </p>
+            {props.shoppingCart.get(product.id) ? (
+              <>
+                <ProgressBar
+                  now={left_availability + props.shoppingCart.get(product.id)}
+                  max={product.availability.quantity}
+                  variant={"progressbar"}
+                  className="px-0"
+                />
+                <p>
+                  <b>
+                    {left_availability + props.shoppingCart.get(product.id)}{" "}
+                    left
+                  </b>{" "}
+                  of {product.availability.quantity} available
+                </p>
+              </>
+            ) : (
+              <>
+                <ProgressBar
+                  now={left_availability}
+                  max={product.availability.quantity}
+                  variant={"progressbar"}
+                  className="px-0"
+                />
+                <p>
+                  <b>{left_availability} left</b> of{" "}
+                  {product.availability.quantity} available
+                </p>
+              </>
+            )}
           </Row>
         </Card.Body>
 
@@ -83,7 +107,7 @@ function ProductCard(props) {
                   >
                     {iconCartEmptySmall}
                   </Col>
-                  {props.shoppingCart.get(product.id) < 10 && (
+                  {props.shoppingCart.get(product.id) <= 10 && (
                     <Col
                       sm="auto"
                       xs="4"
@@ -98,32 +122,39 @@ function ProductCard(props) {
                         }}
                       >
                         {dropdown_items.map((i) => {
-                          return <option value={i}>{i}</option>;
+                          if (i === 10 && left_availability > 10)
+                            return (
+                              <option value={i}>
+                                {i}
+                                {"+"}
+                              </option>
+                            );
+                          else return <option value={i}>{i}</option>;
                         })}
-                        <option value="10">10+</option>
                       </Form.Select>
                     </Col>
                   )}
-                  {props.shoppingCart.get(product.id) >= 10 && (
-                    <Col
-                      sm="auto"
-                      xs="4"
-                      className="px-0 d-flex justify-content-center"
-                    >
-                      <FormControl
-                        className="form-input-gt10"
-                        type="number"
-                        size="sm"
-                        step={1}
-                        value={props.shoppingCart.get(product.id)}
-                        onChange={(e) => {
-                          props.addItem(product.id, e.target.value);
-                        }}
-                        max={100}
-                        min={1}
-                      />
-                    </Col>
-                  )}
+                  {left_availability > 10 &&
+                    props.shoppingCart.get(product.id) >= 10 && (
+                      <Col
+                        sm="auto"
+                        xs="4"
+                        className="px-0 d-flex justify-content-center"
+                      >
+                        <FormControl
+                          className="form-input-gt10"
+                          type="number"
+                          size="sm"
+                          step={1}
+                          value={props.shoppingCart.get(product.id)}
+                          onChange={(e) => {
+                            props.addItem(product.id, e.target.value);
+                          }}
+                          max={left_availability}
+                          min={1}
+                        />
+                      </Col>
+                    )}
                   <Col className="d-flex justify-content-center" sm="2" xs="1">
                     <span
                       className="delete-icon"

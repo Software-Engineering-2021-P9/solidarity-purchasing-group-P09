@@ -26,9 +26,12 @@ function ShoppingCartTable(props) {
 }
 
 function CartRow(props) {
+  let left_availability = 14; //mock left_availability
   let dropdown_items = [];
-  for (let i = 1; i < 10; i++) {
-    dropdown_items.push(i);
+  for (let i = 1; i < 11; i++) {
+    if (i <= left_availability) {
+      dropdown_items.push(i);
+    }
   }
   return (
     <Row className="shopping-cart-row">
@@ -55,9 +58,15 @@ function CartRow(props) {
               }}
             >
               {dropdown_items.map((i) => {
-                return <option value={i}>{i}</option>;
+                if (i === 10 && left_availability > 10)
+                  return (
+                    <option value={i}>
+                      {i}
+                      {"+"}
+                    </option>
+                  );
+                else return <option value={i}>{i}</option>;
               })}
-              <option value="10">10+</option>
             </Form.Select>
           ) : (
             <FormControl
@@ -69,7 +78,7 @@ function CartRow(props) {
               onChange={(e) => {
                 props.updateQuantity(props.product.id, e.target.value);
               }}
-              max={100}
+              max={left_availability}
               min={1}
             />
           )}

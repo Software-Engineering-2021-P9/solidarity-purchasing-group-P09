@@ -49,8 +49,7 @@ function checkPhaseChange() {
   }
 }
 
-exports.getCurrentWeekphase = () =>
-  !overrideWeekphaseID ? currentWeekphaseID : overrideWeekphaseID;
+exports.getCurrentWeekphase = () => overrideWeekphaseID ?? currentWeekphaseID;
 
 exports.setWeekphaseOverride = (weekphaseID) => {
   // Check if the override must be removed:
@@ -84,7 +83,7 @@ exports.checkWeekphaseMiddleware =
     const currWeekphaseID = this.getCurrentWeekphase();
 
     if (!allowedWeekphaseIDs.includes(currWeekphaseID)) {
-      return res.status(400).json("action not allowed");
+      return res.status(401).json("action not allowed");
     }
     next();
   };

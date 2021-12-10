@@ -11,6 +11,10 @@ const {
   availabilityPriceBodyValidator,
   availabilityQuantityBodyValidator,
   availabilityPackagingBodyValidator,
+  productCategoryBodyValidator,
+  productDescriptionBodyValidator,
+  productNameBodyValidator,
+  farmerIDBodyValidator,
 } = require("./shared_validators");
 const { ObjectID } = require("bson");
 
@@ -244,4 +248,30 @@ exports.getNextWeekProductAvailability = async function (req, res, next) {
   }
 
   return res.json(ProductAvailability.fromMongoJSON(result));
+};
+
+exports.createProductValidatorChain = [
+  farmerIDBodyValidator,
+  productNameBodyValidator,
+  productDescriptionBodyValidator,
+  productCategoryBodyValidator,
+];
+exports.createProductHandler = async function (req, res, next) {
+  let result;
+
+  try {
+    result = await dao.createProduct(
+      req.body.farmerID.toString(),
+      req.body.name.toString(),
+      req.body.description.toString(),
+      req.body.category.toString()
+    );
+  } catch (err) {
+    console.error(`CreateProduct() -> couldn't create the product: ${err}`);
+    return res.status(500).end();
+  }
+
+  return res.json({
+    id: result.insertedId,
+  });
 };

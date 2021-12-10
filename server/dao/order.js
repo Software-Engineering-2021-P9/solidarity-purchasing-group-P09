@@ -1,6 +1,6 @@
 "use strict";
 
-const { ObjectId } = require("bson");
+const { ObjectID } = require("bson");
 const { OrderProduct, OrderStatus, ShipmentInfo } = require("../models/order");
 
 const orderCollectionName = "orders";
@@ -19,7 +19,7 @@ exports.createOrder = async (
   shipmentInfo
 ) => {
   const mongoProducts = products?.map(
-    (p) => new OrderProduct(ObjectId(p.productID), p.quantity)
+    (p) => new OrderProduct(ObjectID(p.productID), p.quantity)
   );
 
   const mongoShipmentInfo = new ShipmentInfo(
@@ -30,7 +30,7 @@ exports.createOrder = async (
   );
 
   const newOrder = {
-    clientID: ObjectId(clientID),
+    clientID: ObjectID(clientID),
     products: mongoProducts,
     status: status,
     totalPrice: totalPrice,
@@ -44,7 +44,7 @@ exports.createOrder = async (
 exports.getOrdersByClientID = async (db, clientID) => {
   return db
     .collection(orderCollectionName)
-    .find({ clientID: ObjectId(clientID) })
+    .find({ clientID: ObjectID(clientID) })
     .toArray();
 };
 // ------------
@@ -52,7 +52,7 @@ exports.getOrdersByClientID = async (db, clientID) => {
 // ------------
 
 exports.getOrderByID = async (db, orderID) => {
-  return db.collection(orderCollectionName).findOne(ObjectId(orderID));
+  return db.collection(orderCollectionName).findOne(ObjectID(orderID));
 };
 
 // -----------
@@ -60,7 +60,7 @@ exports.getOrderByID = async (db, orderID) => {
 // -----------
 
 exports.deleteOrder = async (db, orderID) => {
-  return db.collection(orderCollectionName).deleteOne(ObjectId(orderID));
+  return db.collection(orderCollectionName).deleteOne(ObjectID(orderID));
 };
 
 // -------------
@@ -68,7 +68,7 @@ exports.deleteOrder = async (db, orderID) => {
 // -------------
 
 exports.completeOrder = async (db, orderID) => {
-  const query = { _id: ObjectId(orderID), status: OrderStatus.PREPARED };
+  const query = { _id: ObjectID(orderID), status: OrderStatus.PREPARED };
   const update = { $set: { status: OrderStatus.DONE } };
   return db.collection(orderCollectionName).updateOne(query, update);
 };

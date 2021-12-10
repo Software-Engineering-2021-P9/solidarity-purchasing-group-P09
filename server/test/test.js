@@ -181,6 +181,7 @@ describe("Employees API tests:", () => {
   });
 });
 
+//Product API tests
 describe("Products API tests: ", () => {
   beforeEach(() => {
     dao.open();
@@ -886,6 +887,7 @@ describe("Clients API tests:", () => {
   // Orders API tests
 });
 
+//Orders API tests
 describe("Orders API tests:", () => {
   beforeEach(() => {
     dao.open();
@@ -1383,6 +1385,74 @@ describe("Orders API tests:", () => {
       chai
         .request(app)
         .patch("/api/orders/6187c957b288576ca26f8251/complete")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(500);
+
+          done();
+        });
+    });
+  });
+
+  describe("GET /orders/:orderID", () => {
+    it("it should return 404 if the order with given orderID doesn't exists", (done) => {
+      chai
+        .request(app)
+        .get("/api/orders/6187c957b288576ca26f0000")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(404);
+          done();
+        });
+    });
+
+    it("it should retrieve the order with given orderID", (done) => {
+      chai
+        .request(app)
+        .get("/api/orders/6187c957b288576ca26f8251")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          expect(res.body).to.be.an("object");
+          expect(res.body).to.be.eql({
+            id: "6187c957b288576ca26f8251",
+            clientID: "6187c957b288576ca26f8257",
+            products: [
+              { productID: "6187c957b288576ca26f8258", quantity: 3 },
+              { productID: "6187c957b288576ca26f8259", quantity: 1 },
+              { productID: "6187c957b288576ca26f8250", quantity: 2 },
+            ],
+            status: "prepared",
+            totalPrice: "6",
+            createdAt: "2021-11-16T13:00:07.616Z",
+            shipmentInfo: {
+              date: "2021-11-18",
+              time: "T13:00:07.616Z",
+              address: "Via Prapappo Ravanello 54",
+              fee: 54.25,
+            },
+          });
+
+          done();
+        });
+    });
+
+    it("it should return an error if the ID passed is not valid", (done) => {
+      chai
+        .request(app)
+        .get("/api/orders/6187c957b288576ca26f8")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(400);
+          done();
+        });
+    });
+
+    it("it must fail when mongo fails", (done) => {
+      dao.close();
+      chai
+        .request(app)
+        .get("/api/orders/6187c957b288576ca26f8251")
         .end((err, res) => {
           expect(err).to.be.null;
           expect(res.status).to.be.equal(500);

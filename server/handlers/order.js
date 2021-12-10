@@ -95,6 +95,10 @@ exports.getOrderByID = async function (req, res, next) {
     console.error(`getOrderByID() -> couldn't retrieve the order: ${err}`);
     return res.status(500).end();
   }
+  if (!result) {
+    console.error(`getOrderByID() -> couldn't find the order`);
+    return res.status(404).end();
+  }
 
   return res.json(Order.fromMongoJSON(result));
 };

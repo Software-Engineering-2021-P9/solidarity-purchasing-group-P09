@@ -1,0 +1,9 @@
+POST http://localhost:3001/api/products HTTP/1.1
+Content-Type: application/json
+
+{
+ "farmerID": "6187c957b288576ca24f8257",
+ "name": "Apple test",
+ "description": "This apples was added through the CreateProduct.http example",
+ "category": "fruit"
+}

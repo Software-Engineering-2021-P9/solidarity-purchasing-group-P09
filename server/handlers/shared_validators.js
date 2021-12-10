@@ -96,6 +96,33 @@ exports.idsValidator = query("ids")
   })
   .escape();
 
+exports.productCategoryBodyValidator = body("category")
+  .notEmpty()
+  .bail()
+  .isString()
+  .bail()
+  .isIn(Object.values(ProductCategory));
+
+exports.farmerIDBodyValidator = body("farmerID").exists().isMongoId();
+
+exports.productNameBodyValidator = body("name")
+  .notEmpty()
+  .bail()
+  .isString()
+  .bail()
+  .isLength({ max: 35 })
+  .trim()
+  .escape();
+
+exports.productDescriptionBodyValidator = body("description")
+  .notEmpty()
+  .bail()
+  .isString()
+  .bail()
+  .isLength({ max: 100 })
+  .trim()
+  .escape();
+
 // order validators
 exports.orderProductsBodyValidator = body("products")
   .exists()

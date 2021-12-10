@@ -65,14 +65,18 @@ function ProductCard(props) {
             {props.shoppingCart.get(product.id) ? (
               <>
                 <ProgressBar
-                  now={left_availability + props.shoppingCart.get(product.id)}
+                  now={
+                    product.availability.quantity -
+                    left_availability +
+                    props.shoppingCart.get(product.id)
+                  }
                   max={product.availability.quantity}
                   variant={"progressbar"}
                   className="px-0"
                 />
                 <p>
                   <b>
-                    {left_availability + props.shoppingCart.get(product.id)}{" "}
+                    {left_availability - props.shoppingCart.get(product.id)}{" "}
                     left
                   </b>{" "}
                   of {product.availability.quantity} available
@@ -81,7 +85,7 @@ function ProductCard(props) {
             ) : (
               <>
                 <ProgressBar
-                  now={left_availability}
+                  now={product.availability.quantity - left_availability}
                   max={product.availability.quantity}
                   variant={"progressbar"}
                   className="px-0"
@@ -107,7 +111,8 @@ function ProductCard(props) {
                   >
                     {iconCartEmptySmall}
                   </Col>
-                  {props.shoppingCart.get(product.id) <= 10 && (
+                  {(left_availability <= 10 ||
+                    props.shoppingCart.get(product.id) < 10) && (
                     <Col
                       sm="auto"
                       xs="4"

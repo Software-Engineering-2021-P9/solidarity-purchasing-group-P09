@@ -48,7 +48,8 @@ function CartRow(props) {
         <Row>{props.product.description}</Row>
         <Row className="my-1">{props.product.packaging}</Row>
         <Row className="justify-content-md-start mt-3">
-          {props.shoppingCart.get(props.product.id) < 10 ? (
+          {left_availability <= 10 ||
+          props.shoppingCart.get(props.product.id) < 10 ? (
             <Form.Select
               className="form-input-gt10"
               size="sm"

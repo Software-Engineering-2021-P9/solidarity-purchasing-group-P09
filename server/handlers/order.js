@@ -1,12 +1,7 @@
 const dayjs = require("dayjs");
 var dao = require("../dao/dao");
-const { ObjectID } = require("bson");
-const {
-  Order,
-  OrderStatus,
-  OrderProduct,
-  ShipmentInfo,
-} = require("../models/order");
+
+const { Order, OrderStatus, ShipmentInfo } = require("../models/order");
 const {
   clientIDBodyValidator,
   orderProductIDsBodyValidator,
@@ -38,13 +33,6 @@ exports.createOrderHandler = async function (req, res, next) {
     totalPrice += product.quantity * productPrice;
   });
 
-  const mongoShipmentInfo = new ShipmentInfo(
-    req.body.shipmentInfo.date.toString(),
-    req.body.shipmentInfo.time.toString(),
-    req.body.shipmentInfo.address.toString(),
-    req.body.shipmentInfo.fee
-  );
-
   // Insert the new order
   var result;
   try {
@@ -54,7 +42,10 @@ exports.createOrderHandler = async function (req, res, next) {
       OrderStatus.WAITING,
       totalPrice,
       dayjs().toISOString(),
-      mongoShipmentInfo
+      req.body.shipmentInfo.date.toString(),
+      req.body.shipmentInfo.time.toString(),
+      req.body.shipmentInfo.address.toString(),
+      req.body.shipmentInfo.fee
     );
   } catch (err) {
     console.error(`CreateOrder() -> couldn't create order: ${err}`);

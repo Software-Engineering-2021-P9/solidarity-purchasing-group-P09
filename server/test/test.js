@@ -678,7 +678,7 @@ describe("Products API tests: ", () => {
     });
 
     it("it should return 500 when mongo fails ", (done) => {
-      dao.close();
+      app.dao.close();
       chai
         .request(app)
         .post("/api/products")

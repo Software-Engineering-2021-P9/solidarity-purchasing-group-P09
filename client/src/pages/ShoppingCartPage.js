@@ -160,7 +160,7 @@ function ShoppingCartPage(props) {
             updateQuantity={updateQuantity}
           />
         </Col>
-        <Col style={{"margin-left":"-5%"}}>
+        <Col>
           {authContext.currentUser.role === UserRoles.CLIENT &&
              <ShoppingCartOrderSummary 
                 products={products}

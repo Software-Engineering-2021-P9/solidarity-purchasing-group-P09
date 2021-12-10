@@ -8,15 +8,15 @@ import { OrderRecapRow } from "./OrderRecapRow";
 import { useLocation, useHistory } from "react-router-dom";
 
 
-function checkboxShipmentComponent(props){
+function checkboxShipmentComponent(props, feeValue){
     return <div className="form-check">
                 <input onChange={()=>{
                     if(props.deliveryType==="Pickup" || props.deliveryType===""){//i.e. if from "pickup" to "shipment", then clear the address field
                         props.setDeliveryAddress("")
                         props.setDeliveryFee((prev)=>{
-                            props.setAmount(props.amount+20);
-                            return 20;
-                        });//TODO: hardcoded fee value, might change in the future
+                            props.setAmount(props.amount+feeValue);
+                            return feeValue;
+                        });
                     }
                     props.setDeliveryType("Shipment");}} 
                     className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1"
@@ -27,14 +27,14 @@ function checkboxShipmentComponent(props){
             </div>;
 }
 
-function checkboxPickupComponent(props){
+function checkboxPickupComponent(props, feeValue){
     return <div className="form-check">
                 <input onChange={()=>{
                     if(props.deliveryType==="Shipment"){//i.e. if from "shipment" to "pickup", then remove fee
                         props.setDeliveryFee((prev)=>{
-                            props.setAmount(props.amount-20);
+                            props.setAmount(props.amount-feeValue);
                             return 0;
-                        });//TODO: hardcoded fee value, might change in the future
+                        });
                     }
                     props.setDeliveryType("Pickup");
                     props.setDeliveryAddress("Skylab, Via Washington 35, Pizzo Calabro (Store Address)")
@@ -75,11 +75,12 @@ function addressComponent(props){
 
 function ShoppingCartOrderSummary(props) {
 
+    const feeValue = 5; //TODO: backend should validate the hardcoded value fee
     const history = useHistory();
     const location = useLocation();
 
-    let checkboxShipment = checkboxShipmentComponent(props);   
-    let checkboxPickup = checkboxPickupComponent(props);
+    let checkboxShipment = checkboxShipmentComponent(props, feeValue);   
+    let checkboxPickup = checkboxPickupComponent(props, feeValue);
     let address = addressComponent(props);
     let orderSummary = props.products.map((item)=>{
         return (

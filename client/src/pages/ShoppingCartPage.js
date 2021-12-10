@@ -2,7 +2,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useState, useContext, useEffect } from "react";
 import { useLocation } from "react-router";
 import { Container, Row, Col } from "react-bootstrap";
-import { Redirect, useHistory } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 
 import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponent";
 import { ShoppingCartTitle } from "../ui-components/ShoppingCartComponent/ShoppingCartTitle";
@@ -11,7 +11,6 @@ import { ShoppingCartOrderSummary } from "../ui-components/ShoppingCartComponent
 import { ModalOrderConfirmation } from "../ui-components/ShoppingCartComponent/ModalOrderConfirmation";
 import ErrorToast from "../ui-components/ErrorToast/ErrorToast";
 import { AuthContext } from "../contexts/AuthContextProvider";
-import Button from "../ui-components/Button/Button";
 
 import {
   getClientByID,
@@ -23,8 +22,6 @@ import UserRoles from "../services/models/UserRoles";
 function ShoppingCartPage(props) {
   const location = useLocation();
   const authContext = useContext(AuthContext);
-  const history = useHistory();
-
   // as props, ShoppingCartPage receives
   //      - a Map <ItemID, Qty>
   //      - the clientID
@@ -41,6 +38,7 @@ function ShoppingCartPage(props) {
   const [deliveryDate, setDeliveryDate] = useState("");
   const [deliveryTime, setDeliveryTime] = useState("");
   const [deliveryType, setDeliveryType] = useState("");
+  const [deliveryFee, setDeliveryFee] = useState(0);
 
   const [client, setClient] = useState({});
 
@@ -95,6 +93,7 @@ function ShoppingCartPage(props) {
   const [show, setShow] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
+  console.log(amount)
   const updateQuantity = (product, quantity, price) => {
     const prev_qty = cart.get(product);
     // remove from cart
@@ -131,11 +130,8 @@ function ShoppingCartPage(props) {
       date: deliveryDate,
       time: deliveryTime,
       address: deliveryAddress,
-      fee: 0
+      fee: deliveryFee,
     };
-
-    if(deliveryType === "Shipment")
-      shipmentInfo.fee = 20;
       
     //call create order
     createOrder(client.id, orderProducts, shipmentInfo);
@@ -175,23 +171,19 @@ function ShoppingCartPage(props) {
                 setDeliveryDate={setDeliveryDate}
                 setDeliveryTime={setDeliveryTime}
                 setDeliveryType={setDeliveryType}
+                setDeliveryFee={setDeliveryFee}
 
                 amount={amount}
                 deliveryAddress={deliveryAddress}
                 deliveryDate={deliveryDate}
                 deliveryTime={deliveryTime}
                 deliveryType={deliveryType}
+                deliveryFee={deliveryFee}
 
                 handleShow={handleShow}
               />}
         </Col>
       </Row>
-      <Row>
-        <Button onClick={()=>{history.push("/", { shoppingCart: cart, clientID: location.state.clientID })}} className="cart-button-shopping" variant='light'>
-          CONTINUE SHOPPING
-        </Button>
-      </Row>
-
       <Row>
         <ModalOrderConfirmation
           show={show}

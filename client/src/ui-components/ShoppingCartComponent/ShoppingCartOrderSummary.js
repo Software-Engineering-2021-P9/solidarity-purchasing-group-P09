@@ -5,13 +5,18 @@ import { Container, Col, Row, Card, Form, FloatingLabel} from "react-bootstrap";
 import  Divider from "../Divider/Divider";
 import Button from "../Button/Button";
 import { OrderRecapRow } from "./OrderRecapRow";
+import { useLocation, useHistory } from "react-router-dom";
+
 
 function checkboxShipmentComponent(props){
     return <div className="form-check">
                 <input onChange={()=>{
                     if(props.deliveryType==="Pickup" || props.deliveryType===""){//i.e. if from "pickup" to "shipment", then clear the address field
                         props.setDeliveryAddress("")
-                        props.setAmount(props.amount + 20);
+                        props.setDeliveryFee((prev)=>{
+                            props.setAmount(props.amount+20);
+                            return 20;
+                        });//TODO: hardcoded fee value, might change in the future
                     }
                     props.setDeliveryType("Shipment");}} 
                     className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1"
@@ -26,7 +31,10 @@ function checkboxPickupComponent(props){
     return <div className="form-check">
                 <input onChange={()=>{
                     if(props.deliveryType==="Shipment"){//i.e. if from "shipment" to "pickup", then remove fee
-                        props.setAmount(props.amount -20);
+                        props.setDeliveryFee((prev)=>{
+                            props.setAmount(props.amount-20);
+                            return 0;
+                        });//TODO: hardcoded fee value, might change in the future
                     }
                     props.setDeliveryType("Pickup");
                     props.setDeliveryAddress("Skylab, Via Washington 35, Pizzo Calabro (Store Address)")
@@ -67,6 +75,9 @@ function addressComponent(props){
 
 function ShoppingCartOrderSummary(props) {
 
+    const history = useHistory();
+    const location = useLocation();
+
     let checkboxShipment = checkboxShipmentComponent(props);   
     let checkboxPickup = checkboxPickupComponent(props);
     let address = addressComponent(props);
@@ -82,18 +93,18 @@ function ShoppingCartOrderSummary(props) {
 
     return (
     <Card className="cart-order-summary">
-        <h1 className="cart-order-summary-title"> ORDER SUMMARY</h1>
+        <h2 className="cart-order-summary-title"> ORDER SUMMARY</h2>
         
         <Container fluid>
             <Divider/>
                 {orderSummary}
-                    <Row className='d-flex justify-content-between px-2 py-1'>
-                        <Col>Fees</Col>
-                        <Col className='align-end'>{props.deliveryType==="Shipment"?"20 €":"0 €"}</Col>
-                    </Row>
-                <Row>
-                    <Col><h5 className="cart-order-summary-price">{"total:"}</h5></Col>
-                    <Col><h5 className="cart-order-summary-price">{"€ "+props.amount}</h5></Col>
+                <Row className='d-flex justify-content-between px-2 py-1'>
+                    <Col>Fees</Col>
+                    <Col className='align-end'>{props.deliveryFee + " €"}</Col>
+                </Row>
+                <Row className='d-flex justify-content-between px-2 py-1'> 
+                    <Col><h5 className="cart-order-summary-price">{"Total:"}</h5></Col>
+                    <Col className='align-end'><h5 className="cart-order-summary-price">{"€ "+props.amount}</h5></Col>
                 </Row>
             <Divider/>
             <Form>
@@ -121,6 +132,11 @@ function ShoppingCartOrderSummary(props) {
                     //disable "create order button" if one of these is true:
                     //never hit checkboxes, no date, no time, no address
                     }
+                    <Row>
+                        <Button onClick={()=>{history.push("/", { shoppingCart: props.cart, clientID: location.state.clientID })}} className="cart-button-shopping" variant='light'>
+                            CONTINUE SHOPPING
+                        </Button>
+                    </Row>
                     <Row>
                         <Button onClick={props.handleShow} disabled={props.deliveryType==="" || !props.deliveryDate || !props.deliveryTime || !props.deliveryAddress} className="cart-button-placeorder">
                             PLACE ORDER

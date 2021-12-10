@@ -28,11 +28,6 @@ class Order {
     PREPARED: "prepared",
     DONE: "done",
   };
-
-  // static DeliveryType = {
-  //   SHIPMENT: "shipment",
-  //   PICKUP: "pickup",
-  // }
 }
 
 export default Order;

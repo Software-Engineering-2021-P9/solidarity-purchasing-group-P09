@@ -71,7 +71,7 @@ exports.setWeekphaseOverride = (weekphaseID) => {
     const overrideWeekphase = weekphasesConfig.find(
       (wp) => wp.id === weekphaseID
     );
-    if (!overrideWeekphase) throw "weekphase doesn't exist";
+    if (!overrideWeekphase) throw new Error("weekphase doesn't exist");
 
     cronJob.stop();
     overrideWeekphaseID = weekphaseID;
@@ -81,9 +81,9 @@ exports.setWeekphaseOverride = (weekphaseID) => {
 
 exports.checkWeekphaseMiddleware =
   (allowedWeekphaseIDs) => (req, res, next) => {
-    const currentWeekphaseID = this.getCurrentWeekphase();
+    const currWeekphaseID = this.getCurrentWeekphase();
 
-    if (!allowedWeekphaseIDs.includes(currentWeekphaseID)) {
+    if (!allowedWeekphaseIDs.includes(currWeekphaseID)) {
       return res.status(400).json("action not allowed");
     }
     next();

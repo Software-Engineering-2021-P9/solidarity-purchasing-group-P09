@@ -62,6 +62,53 @@ exports.tests = (app) => {
     });
   });
 
+  describe("Weekphases middleware tests:", () => {
+    let nextCalled = false;
+    let error = false;
+    let mockRes = {
+      status: () => {
+        error = true;
+        return mockRes;
+      },
+      json: () => {},
+    };
+    let mockNext = () => (nextCalled = true);
+
+    beforeEach(() => {
+      weekphaseService.init();
+      nextCalled = false;
+      error = false;
+    });
+
+    afterEach(() => {
+      weekphaseService.close();
+    });
+
+    it("it should success if current weekphase is within allowed ones", (done) => {
+      const middleware = weekphaseService.checkWeekphaseMiddleware([
+        "weekphase-1",
+        "weekphase-2",
+      ]);
+      middleware({}, mockRes, mockNext);
+
+      expect(nextCalled).to.be.true;
+      expect(error).to.be.false;
+      done();
+    });
+
+    it("it should fail if the weekphase is not within allowed ones", (done) => {
+      const middleware = weekphaseService.checkWeekphaseMiddleware([
+        "weekphase-5",
+        "weekphase-2",
+      ]);
+      middleware({}, mockRes, mockNext);
+
+      expect(nextCalled).to.be.false;
+      expect(error).to.be.true;
+      done();
+    });
+  });
+
   describe("Weekphases API tests:", () => {
     beforeEach(() => {
       weekphaseService.init();

@@ -11,7 +11,9 @@ exports.setWeekphaseOverrideHandler = async function (req, res, next) {
   try {
     weekphaseService.setWeekphaseOverride(req.body.weekphaseID?.toString());
   } catch (err) {
-    console.error(`SetWeekphaseOverride() -> failed with error: ${err}`);
+    console.error(
+      `SetWeekphaseOverride() -> failed with error: ${err.message}`
+    );
     return res.status(400).end();
   }
   return res.status(204).end();

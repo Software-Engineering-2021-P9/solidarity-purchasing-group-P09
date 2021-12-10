@@ -33,6 +33,12 @@ exports.ordersCollection = {
       status: "prepared",
       totalPrice: "6",
       createdAt: "2021-11-16T13:00:07.616Z",
+      shipmentInfo: {
+        date: "2021-11-18",
+        time: "T13:00:07.616Z",
+        address: "Via Prapappo Ravanello 54",
+        fee: 54.25,
+      },
     },
     {
       _id: ObjectID("6187c957b288576ca26f8999"),
@@ -44,6 +50,12 @@ exports.ordersCollection = {
       status: "done",
       totalPrice: "12",
       createdAt: "2021-12-16T13:00:07.616Z",
+      shipmentInfo: {
+        date: "2021-12-20",
+        time: "T13:00:07.616Z",
+        address: "Via of the market ",
+        fee: 0,
+      },
     },
     {
       _id: ObjectID("6187c957b288576ca26f8990"),
@@ -55,6 +67,12 @@ exports.ordersCollection = {
       status: "waiting",
       totalPrice: "12",
       createdAt: "2021-12-16T13:00:07.616Z",
+      shipmentInfo: {
+        date: "2021-12-18",
+        time: "T13:00:07.616Z",
+        address: "Via it's real trust me 54",
+        fee: 21,
+      },
     },
   ],
 };

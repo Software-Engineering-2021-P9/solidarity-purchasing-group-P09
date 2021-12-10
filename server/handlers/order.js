@@ -8,6 +8,9 @@ const {
   orderProductsBodyValidator,
   orderClientIDQueryValidator,
   orderIDParamValidator,
+  orderAddressBodyValidator,
+  orderFeeBodyValidator,
+  orderShipmentDayBodyValidator,
 } = require("./shared_validators");
 
 exports.createOrderValidatorChain = [
@@ -15,6 +18,9 @@ exports.createOrderValidatorChain = [
   orderProductsBodyValidator,
   orderProductIDsBodyValidator,
   orderProductQtysBodyValidator,
+  orderAddressBodyValidator,
+  orderFeeBodyValidator,
+  orderShipmentDayBodyValidator,
 ];
 
 exports.createOrderHandler = async function (req, res, next) {
@@ -34,31 +40,15 @@ exports.createOrderHandler = async function (req, res, next) {
       req.body.products,
       OrderStatus.WAITING,
       totalPrice,
-      dayjs().toISOString()
+      dayjs().toISOString(),
+      req.body.shipmentInfo
     );
   } catch (err) {
     console.error(`CreateOrder() -> couldn't create order: ${err}`);
     return res.status(500).end();
   }
 
-  // Fetch the newly created order
-  try {
-    result = await dao.getOrderByID(result.insertedId);
-  } catch (err) {
-    // Try reverting the changes made until now, using a best-effort strategy
-    dao.deleteOrder(result.insertedId);
-    console.error(
-      `CreateOrder() -> couldn't retrieve newly created order: ${err}`
-    );
-    return res.status(500).end();
-  }
-
-  if (!result) {
-    console.error(`CreateOrder() -> couldn't retrieve newly created order`);
-    return res.status(404).end();
-  }
-
-  return res.json(Order.fromMongoJSON(result));
+  return res.json({ id: result.insertedId });
 };
 
 exports.getOrdersByClientIDValidator = [orderClientIDQueryValidator];
@@ -92,4 +82,19 @@ exports.completeOrderHandler = async function (req, res, next) {
   }
 
   return res.status(204).end();
+};
+
+exports.getOrderByIDValidatorChain = [orderIDParamValidator];
+
+exports.getOrderByID = async function (req, res, next) {
+  let result;
+
+  try {
+    result = await dao.getOrderByID(req.params.orderID);
+  } catch (err) {
+    console.error(`getOrderByID() -> couldn't retrieve the order: ${err}`);
+    return res.status(500).end();
+  }
+
+  return res.json(Order.fromMongoJSON(result));
 };

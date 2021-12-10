@@ -145,6 +145,39 @@ exports.orderClientIDQueryValidator = query("clientID").isMongoId();
 
 exports.orderIDParamValidator = param("orderID").isMongoId();
 
+exports.orderShipmentDayBodyValidator = body("shipmentInfo.date")
+  .notEmpty()
+  .bail()
+  /*.isDate()
+  .bail()*/
+  .custom((value) => {
+    const shipmentDay = new Date(value);
+    //it can be only for next week from wednesday 9 am to friday 22 pm
+    const today = new Date();
+    const daysToReachNextWednesday = 7 - today.getDay() + 3;
+    const nextWednesday = new Date(
+      today.setDate(today.getDate() + daysToReachNextWednesday)
+    );
+    const nextFriday = new Date(today.setDate(today.getDate() + 2));
+    return nextWednesday <= shipmentDay && shipmentDay <= nextFriday;
+  });
+exports.orderFeeBodyValidator = body("shipmentInfo.fee")
+  .notEmpty()
+  .bail()
+  .isFloat({
+    min: 0,
+    max: 50,
+  });
+
+exports.orderAddressBodyValidator = body("shipmentInfo.address")
+  .notEmpty()
+  .bail()
+  .isString()
+  .bail()
+  .isLength({ max: 50 })
+  .trim()
+  .escape();
+
 //Clients
 
 exports.clientIDPathValidator = param("clientID").isMongoId();

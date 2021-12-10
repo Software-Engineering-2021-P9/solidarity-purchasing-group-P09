@@ -140,6 +140,13 @@ app.patch(
   orderHandlers.completeOrderHandler
 );
 
+app.get(
+  buildAPIPath("/orders/:orderID"),
+  orderHandlers.getOrderByIDValidatorChain,
+  checkValidationErrorMiddleware,
+  orderHandlers.getOrderByID
+);
+
 // ---------
 // /products
 // ---------

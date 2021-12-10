@@ -2,12 +2,13 @@ const chai = require("chai");
 const expect = chai.expect;
 const chaiHttp = require("chai-http");
 chai.use(chaiHttp);
-
-const { OrderStatus } = require("../models/order");
-
 const mongoUnit = require("mongo-unit");
 
 const testData = require("./test-data");
+
+const { OrderStatus } = require("../models/order");
+
+let dao = require("../dao/dao");
 
 // ----------------------------------
 // FAKE DATABASE AND TEST SERVER INIT
@@ -40,13 +41,13 @@ after(() => {
 // Employees API tests
 describe("Employees API tests:", () => {
   beforeEach(() => {
-    app.dao.open();
+    dao.open();
     mongoUnit.load(testData.employeesCollection);
   });
 
   afterEach(() => {
     mongoUnit.drop();
-    app.dao.close();
+    dao.close();
   });
 
   describe("GET /employees/:employeeID", () => {
@@ -87,7 +88,7 @@ describe("Employees API tests:", () => {
     });
 
     it("it must fail when mongo fails", (done) => {
-      app.dao.close();
+      dao.close();
       chai
         .request(app)
         .get("/api/employees/6187c957b288576ca26f8257")
@@ -173,7 +174,7 @@ describe("Employees API tests:", () => {
     });
 
     it("it must fail when mongo fails", (done) => {
-      app.dao.close();
+      dao.close();
       chai
         .request(app)
         .post("/api/employees")
@@ -194,15 +195,15 @@ describe("Employees API tests:", () => {
 
 describe("Products API tests: ", () => {
   beforeEach(() => {
-    app.dao.open();
+    dao.open();
     mongoUnit.load(testData.productsCollection);
     mongoUnit.load(testData.productsAvailabilityCollection);
-    app.dao.createProductsTextSearchIndexes();
+    dao.createProductsTextSearchIndexes();
   });
 
   afterEach(() => {
     mongoUnit.drop();
-    app.dao.close();
+    dao.close();
   });
 
   describe("GET /products", () => {
@@ -328,11 +329,11 @@ describe("Products API tests: ", () => {
     it("It should return an error while reading on the db if it has a wrong category: ", (done) => {
       //upload new data set:
       mongoUnit.drop();
-      app.dao.close();
+      dao.close();
 
-      app.dao.open();
+      dao.open();
       mongoUnit.load(testData.productsCollectionWithCategoryError);
-      app.dao.createProductsTextSearchIndexes();
+      dao.createProductsTextSearchIndexes();
       chai
         .request(app)
         .get(
@@ -385,7 +386,7 @@ describe("Products API tests: ", () => {
     });
 
     it("it must fail when mongo fails", (done) => {
-      app.dao.close();
+      dao.close();
       chai
         .request(app)
         .get("/api/products/000000000000000000000010")
@@ -472,7 +473,7 @@ describe("Products API tests: ", () => {
     });
 
     it("it must fail when mongo fails", (done) => {
-      app.dao.close();
+      dao.close();
       chai
         .request(app)
         .post("/api/products/000000000000000000000012/availability")
@@ -678,7 +679,7 @@ describe("Products API tests: ", () => {
     });
 
     it("it should return 500 when mongo fails ", (done) => {
-      app.dao.close();
+      dao.close();
       chai
         .request(app)
         .post("/api/products")
@@ -700,14 +701,14 @@ describe("Products API tests: ", () => {
 // Clients API tests
 describe("Clients API tests:", () => {
   beforeEach(() => {
-    app.dao.open();
+    dao.open();
     mongoUnit.load(testData.clientsCollection);
-    app.dao.createClientsTextSearchIndexes();
+    dao.createClientsTextSearchIndexes();
   });
 
   afterEach(() => {
     mongoUnit.drop();
-    app.dao.close();
+    dao.close();
   });
 
   describe("GET /clients[?searchString=:searchString]", () => {
@@ -764,7 +765,7 @@ describe("Clients API tests:", () => {
     });
 
     it("it must fail when mongo fails", (done) => {
-      app.dao.close();
+      dao.close();
       chai
         .request(app)
         .get("/api/clients")
@@ -814,7 +815,7 @@ describe("Clients API tests:", () => {
     });
 
     it("it must fail when mongo fails", (done) => {
-      app.dao.close();
+      dao.close();
       chai
         .request(app)
         .get("/api/clients/6a8fc927bb88c762a26f0000")
@@ -828,7 +829,7 @@ describe("Clients API tests:", () => {
   });
   describe("PATCH /clients/:clientID/wallet", () => {
     it("it must fail when mongo fails", (done) => {
-      app.dao.close();
+      dao.close();
       chai
         .request(app)
         .patch("/api/clients/6187c957b288576ca26f8257/wallet")
@@ -897,13 +898,13 @@ describe("Clients API tests:", () => {
   // Orders API tests
   describe("Orders API tests:", () => {
     beforeEach(() => {
-      app.dao.open();
+      dao.open();
       mongoUnit.load(testData.ordersCollection);
     });
 
     afterEach(() => {
       mongoUnit.drop();
-      app.dao.close();
+      dao.close();
     });
 
     describe("POST /orders", () => {
@@ -1022,7 +1023,7 @@ describe("Clients API tests:", () => {
       });
 
       it("it must fail when mongo fails", (done) => {
-        app.dao.close();
+        dao.close();
         chai
           .request(app)
           .post("/api/orders")
@@ -1108,7 +1109,7 @@ describe("Clients API tests:", () => {
       });
 
       it("it must fail when mongo fails", (done) => {
-        app.dao.close();
+        dao.close();
         chai
           .request(app)
           .get("/api/orders?clientID=6187c957b288576ca26f8257")
@@ -1220,7 +1221,7 @@ describe("Clients API tests:", () => {
       });
 
       it("it must fail when mongo fails", (done) => {
-        app.dao.close();
+        dao.close();
         chai
           .request(app)
           .patch("/api/orders/6187c957b288576ca26f8251/complete")
@@ -1239,13 +1240,13 @@ describe("Clients API tests:", () => {
 
 describe("Clients API tests:", () => {
   beforeEach(() => {
-    app.dao.open();
+    dao.open();
     mongoUnit.load(testData.clientsCollection);
   });
 
   afterEach(() => {
     mongoUnit.drop();
-    app.dao.close();
+    dao.close();
   });
 
   describe("POST /clients/signup", () => {
@@ -1333,7 +1334,7 @@ describe("Clients API tests:", () => {
     });
 
     it("it must fail when mongo fails", (done) => {
-      app.dao.close();
+      dao.close();
       chai
         .request(app)
         .post("/api/clients/signup")
@@ -1361,14 +1362,14 @@ describe("Clients API tests:", () => {
 
 describe("Clients API tests:", () => {
   beforeEach(() => {
-    app.dao.open();
+    dao.open();
     mongoUnit.load(testData.clientsCollection);
-    app.dao.createClientsTextSearchIndexes();
+    dao.createClientsTextSearchIndexes();
   });
 
   afterEach(() => {
     mongoUnit.drop();
-    app.dao.close();
+    dao.close();
   });
 
   describe("POST /clients", () => {
@@ -1433,7 +1434,7 @@ describe("Clients API tests:", () => {
     });
 
     it("it must fail when mongo fails", (done) => {
-      app.dao.close();
+      dao.close();
       chai
         .request(app)
         .post("/api/clients")
@@ -1460,15 +1461,15 @@ describe("Clients API tests:", () => {
 
 describe("Farmers API tests:", () => {
   beforeEach(() => {
-    app.dao.open();
+    dao.open();
     mongoUnit.load(testData.productsCollection);
     mongoUnit.load(testData.productsAvailabilityCollection2);
-    app.dao.createProductsTextSearchIndexes();
+    dao.createProductsTextSearchIndexes();
   });
 
   afterEach(() => {
     mongoUnit.drop();
-    app.dao.close();
+    dao.close();
   });
 
   it("it must return apples products, one of them with availability set to null", (done) => {
@@ -1579,7 +1580,7 @@ describe("Farmers API tests:", () => {
   });
 
   it("it must fail when mongo fails", (done) => {
-    app.dao.close();
+    dao.close();
     chai
       .request(app)
       .get(
@@ -1627,7 +1628,7 @@ describe("Farmers API tests:", () => {
 // User Login API TESTS
 describe("User Login API tests:", () => {
   beforeEach(() => {
-    app.dao.open();
+    dao.open();
     mongoUnit.load({
       ...testData.clientsCollection,
       ...testData.farmersCollection,
@@ -1636,7 +1637,7 @@ describe("User Login API tests:", () => {
 
     afterEach(() => {
       mongoUnit.drop();
-      app.dao.close();
+      dao.close();
     });
 
     describe("POST /users/login", () => {

@@ -20,7 +20,6 @@ var weekphaseService = require("../services/weekphase_service/weekphase_service"
 
 // Weekphases API tests
 exports.tests = (app) => {
-  app.weekphaseService = weekphaseService;
   describe("Weekphases Cron tests:", () => {
     beforeEach(() => {
       weekphaseService.init();
@@ -96,7 +95,7 @@ exports.tests = (app) => {
           .end((err, res) => {
             expect(err).to.be.null;
             expect(res.status).to.be.equal(204);
-            expect(app.weekphaseService.getCurrentWeekphase()).to.be.equal(
+            expect(weekphaseService.getCurrentWeekphase()).to.be.equal(
               "weekphase-4"
             );
             done();

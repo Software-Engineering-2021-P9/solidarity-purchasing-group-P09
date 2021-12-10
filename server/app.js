@@ -65,9 +65,6 @@ app.use(passport.session());
 dao.open();
 weekphaseService.init();
 
-app.dao = dao;
-app.weekphaseService = weekphaseService;
-
 // ------------- // login methods // -------------
 
 app.post(buildAPIPath("/users/login"), userHandlers.loginHandler(passport));

@@ -21,16 +21,17 @@ exports.createOrder = async (
   return db.collection(orderCollectionName).insertOne({
     clientID: ObjectID(clientID.toString()),
     products: products?.map(
-      (p) => new OrderProduct(ObjectID(p.productID.toString()), p.quantity)
+      (p) =>
+        new OrderProduct(ObjectID(p.productID.toString()), parseInt(p.quantity))
     ),
     status: status.toString(),
-    totalPrice: totalPrice,
+    totalPrice: parseFloat(totalPrice),
     createdAt: createdAt.toString(),
     shipmentInfo: new ShipmentInfo(
       shipmentInfo.date.toString(),
       shipmentInfo.time.toString(),
       shipmentInfo.address.toString(),
-      shipmentInfo.fee
+      parseFloat(shipmentInfo.fee)
     ),
   });
 };

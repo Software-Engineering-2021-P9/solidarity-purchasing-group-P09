@@ -116,16 +116,19 @@ export async function getEmployeeByID(employeeID) {
 // Client
 // ------
 
-export async function findClients(searchString, hasPendingCancelation) {
+export async function findClients(searchString, hasNotCoveredOrders) {
   let path = "/api/clients";
 
-  if(searchString){
-    path += `searchString=${searchString}&`;
+  if(searchString || hasNotCoveredOrders!==null){
+    path += "?";
+    if(searchString){
+      path += `searchString=${searchString}&`;
+    }
+    if(hasNotCoveredOrders!==null){
+      path += `hasNotCoveredOrders=${hasNotCoveredOrders}&`;
+    }
+    path = path.substring(0, path.length-1);//delete the last character, that is &
   }
-  if(hasPendingCancelation!==null){
-    path += `searchString=${searchString}&`;
-  }
-  path = path.substring(0, path.length-1);//delete the last character, that is &
 
   let response = await fetch(path);
 

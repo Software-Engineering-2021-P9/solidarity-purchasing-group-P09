@@ -33,31 +33,34 @@ function ClientManagementPage(props) {
   const [clientInfoList, setClientInfoList] = useState(null);
   const [isClientInfoListLoading, setIsClientInfoListLoading] = useState(false);
   const [requestError, setRequestError] = useState("");
-  const [categoryFilter, setCategoryFilter] = useState("All");
+  const [coveredOrderFilter, setCoveredOrderFilter] = useState("All");
 
-  function onCategoryFilterChange(newVal) {
-    setCategoryFilter(newVal);
+  function onCoveredOrderFilterChange(newVal) {
+    setCoveredOrderFilter(newVal);
+    onSearchClientButtonClick();
+    //FOR THE REVIEWER: this is like pressing "search" button when selecting the filter "covered/notcovered/all"
+    //might be ugly for someone, tell me in the review if I have to delete this.
   }
 
   function onSearchClientButtonClick() {
     setIsClientInfoListLoading(true);
 
-    let hasPendingCancelation;
-    switch(categoryFilter){
+    let hasNotCoveredOrders;
+    switch(coveredOrderFilter){
       case("Covered"):
-        hasPendingCancelation=true;
+        hasNotCoveredOrders=true;
         break;
 
       case("Not Covered"):
-        hasPendingCancelation=false;
+       hasNotCoveredOrders=false;
         break;
 
       default:
-        hasPendingCancelation = null;
+        hasNotCoveredOrders = null;
         break;
     }
 
-    findClients(searchString,hasPendingCancelation)
+    findClients(searchString,hasNotCoveredOrders)
       .then(setClientInfoList)
       .catch((err) => {
         setRequestError(err.message);
@@ -112,9 +115,9 @@ function ClientManagementPage(props) {
         <Col className='pb-3 pb-sm-0 my-4 dropdown-margin' xs='4' sm='3' md='2' lg='1'>
           <RedDropdown
               items={["Not Covered","Covered"]}
-              title={categoryFilter ? categoryFilter : "All"}
-              updateSelectedItem={onCategoryFilterChange}
-              activeElement={categoryFilter}
+              title={coveredOrderFilter ? coveredOrderFilter : "All"}
+              updateSelectedItem={onCoveredOrderFilterChange}
+              activeElement={coveredOrderFilter}
             />
         </Col>
       </Row>

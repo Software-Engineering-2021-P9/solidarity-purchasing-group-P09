@@ -19,7 +19,7 @@ exports.createOrder = async (
   shipmentInfo
 ) => {
   return db.collection(orderCollectionName).insertOne({
-    clientID: clientID,
+    clientID: ObjectID(clientID),
     products: products,
     status: status,
     totalPrice: totalPrice,

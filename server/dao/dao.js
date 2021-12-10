@@ -87,43 +87,11 @@ exports.getFarmerByEmail = (email) => getFarmerByEmail(db, email);
 // Client
 exports.getClientByID = (clientID) => getClientByID(db, clientID);
 
-exports.createClient = (
-  fullName,
-  phoneNumber,
-  email,
-  address,
-  wallet,
-  hasPendingCancelation
-) =>
-  createClient(
-    db,
-    fullName,
-    phoneNumber,
-    email,
-    address,
-    wallet,
-    hasPendingCancelation
-  );
+exports.createClient = (fullName, phoneNumber, email, address) =>
+  createClient(db, fullName, phoneNumber, email, address);
 
-exports.signupClient = (
-  fullName,
-  phoneNumber,
-  email,
-  password,
-  address,
-  wallet,
-  hasPendingCancelation
-) =>
-  signupClient(
-    db,
-    fullName,
-    phoneNumber,
-    email,
-    password,
-    address,
-    wallet,
-    hasPendingCancelation
-  );
+exports.signupClient = (fullName, phoneNumber, email, password, address) =>
+  signupClient(db, fullName, phoneNumber, email, password, address);
 
 exports.findClients = (searchString, hasPendingCancelation) =>
   findClients(db, searchString, hasPendingCancelation);

@@ -110,9 +110,7 @@ exports.createClientHandler = async function (req, res, next) {
       req.body.fullName.toString(),
       req.body.phoneNumber.toString(),
       req.body.email.toString(),
-      req.body.address.toString(),
-      0.0,
-      false
+      req.body.address.toString()
     );
   } catch (err) {
     console.error(`CreateClient() -> couldn't create client: ${err}`);
@@ -143,9 +141,7 @@ exports.signupClientHandler = async function (req, res, next) {
       req.body.phoneNumber.toString(),
       req.body.email.toString(),
       hashPassword(req.body.password.toString()),
-      req.body.address.toString(),
-      0.0,
-      false
+      req.body.address.toString()
     );
   } catch (err) {
     console.error(`CreateClient() -> couldn't create client: ${err}`);

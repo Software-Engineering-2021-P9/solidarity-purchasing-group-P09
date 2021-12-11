@@ -3,24 +3,14 @@ import React, { useContext, useEffect, useState } from "react";
 import { useHistory, useParams, useLocation } from "react-router";
 import { getAvailableNavbarLinks } from "../Routes";
 
-import {
-  Col,
-  Container,
-  FormControl,
-  InputGroup,
-  Row,
-  Spinner,
-  Alert,
-} from "react-bootstrap";
+import { Col, Container, Row, Spinner, Alert } from "react-bootstrap";
 
 import ActionConfirmationModal from "../ui-components/ActionConfirmationModal/ActionConfirmationModal";
-import Button from "../ui-components/Button/Button";
 import ClientDetails from "../ui-components/ClientDetails/ClientDetails";
 import { ClientOrders } from "../ui-components/ClientOrdersComponent/ClientOrders";
 import Divider from "../ui-components/Divider/Divider";
 import ErrorToast from "../ui-components/ErrorToast/ErrorToast";
 import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponent";
-import { CreateNewOrderButton } from "../ui-components/ClientDetailsComponent/CreateNewOrderButton";
 
 import { addFundToWallet, getClientByID } from "../services/ApiClient";
 
@@ -152,34 +142,17 @@ function ClientDetailsPage(props) {
           <Row>
             <h1 className="title">Client Details</h1>
           </Row>
-          <Row className="justify-content-around pt-2">
-            <Col className="ms-5">
-              <ClientDetails clientInfo={clientInfo} />
+          <Row className="justify-content-between pt-2">
+            <Col className="">
+              <ClientDetails
+                clientInfo={clientInfo}
+                loggedUser={authContext.currentUser}
+                fundsToAddAmount={fundsToAddAmount}
+                onFundsToAddAmountChange={onFundsToAddAmountChange}
+                onAddFundsToWalletButtonClick={onAddFundsToWalletButtonClick}
+              />
             </Col>
           </Row>
-          {/*
-            {authContext.currentUser.role === UserRoles.EMPLOYEE && (
-              <Col md='5'>
-                <InputGroup className='mb-3 pt-4'>
-                  <FormControl
-                    placeholder='50€'
-                    value={fundsToAddAmount}
-                    onChange={onFundsToAddAmountChange}
-                    required
-                  />
-                  <Button onClick={onAddFundsToWalletButtonClick}>
-                    Add funds
-                  </Button>
-                </InputGroup>
-              </Col>
-            )}
-          </Row>
-          {authContext.currentUser.role === UserRoles.EMPLOYEE && (
-            <Row className="my-3">
-              <CreateNewOrderButton clientID={clientID} />
-            </Row>
-          )}*/}
-
           <Container>
             <Divider size={2} />
           </Container>

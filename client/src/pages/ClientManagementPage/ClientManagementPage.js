@@ -33,10 +33,10 @@ function ClientManagementPage(props) {
   const [clientInfoList, setClientInfoList] = useState(null);
   const [isClientInfoListLoading, setIsClientInfoListLoading] = useState(false);
   const [requestError, setRequestError] = useState("");
-  const [coveredOrderFilter, setCoveredOrderFilter] = useState("All");
+  const [hasPendingCancelationFilter, setHasPendingCancelationFilter] = useState("All");
 
   function onCoveredOrderFilterChange(newVal) {
-    setCoveredOrderFilter(newVal);
+    setHasPendingCancelationFilter(newVal);
     onSearchClientButtonClick();
     //FOR THE REVIEWER: this is like pressing "search" button when selecting the filter "covered/notcovered/all"
     //might be ugly for someone, tell me in the review if I have to delete this.
@@ -45,22 +45,22 @@ function ClientManagementPage(props) {
   function onSearchClientButtonClick() {
     setIsClientInfoListLoading(true);
 
-    let hasNotCoveredOrders;
-    switch(coveredOrderFilter){
+    let hasPendingCancelation;
+    switch(hasPendingCancelationFilter){
       case("Covered"):
-        hasNotCoveredOrders=true;
+        hasPendingCancelation=true;
         break;
 
       case("Not Covered"):
-       hasNotCoveredOrders=false;
+       hasPendingCancelation=false;
         break;
 
       default:
-        hasNotCoveredOrders = null;
+        hasPendingCancelation = null;
         break;
     }
 
-    findClients(searchString,hasNotCoveredOrders)
+    findClients(searchString,hasPendingCancelation)
       .then(setClientInfoList)
       .catch((err) => {
         setRequestError(err.message);
@@ -115,9 +115,9 @@ function ClientManagementPage(props) {
         <Col className='pb-3 pb-sm-0 my-4 dropdown-margin' xs='4' sm='3' md='2' lg='1'>
           <RedDropdown
               items={["Not Covered","Covered"]}
-              title={coveredOrderFilter ? coveredOrderFilter : "All"}
+              title={hasPendingCancelationFilter ? hasPendingCancelationFilter : "All"}
               updateSelectedItem={onCoveredOrderFilterChange}
-              activeElement={coveredOrderFilter}
+              activeElement={hasPendingCancelationFilter}
             />
         </Col>
       </Row>

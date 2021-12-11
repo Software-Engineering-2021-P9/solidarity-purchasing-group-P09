@@ -27,21 +27,11 @@ exports.getClientByID = (db, clientID) => {
 // FindClients
 // -----------
 
-exports.findClients = (db, searchString, hasPendingCancelation) => {
-  let query = {};
-
-  if (searchString || hasPendingCancelation !== undefined) {
-    query["$and"] = [];
-  }
+exports.findClients = (db, searchString) => {
+  let query;
 
   if (searchString) {
-    query["$and"].push({
-      $text: { $search: `\"${searchString.toString()}\"` },
-    });
-  }
-
-  if (hasPendingCancelation !== undefined) {
-    query["$and"].push({ hasPendingCancelation: hasPendingCancelation });
+    query = { $text: { $search: `\"${searchString.toString()}\"` } };
   }
 
   return db.collection(clientCollectionName).find(query).limit(50).toArray();

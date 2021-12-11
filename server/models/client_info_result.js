@@ -11,6 +11,14 @@ class ClientInfoResult {
     this.address = address;
     this.phoneNumber = phoneNumber;
     this.wallet = wallet;
+    this.hasNotCoveredOrders = false;
+  }
+
+  /**
+   * @param {boolean} value
+   */
+  set setHasNotCoveredOrders(value) {
+    this.hasNotCoveredOrders = value;
   }
 
   static fromClientInfo(obj) {

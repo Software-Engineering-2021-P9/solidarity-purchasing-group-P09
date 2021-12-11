@@ -1,5 +1,6 @@
 var dao = require("../dao/dao");
-const { ClientInfo } = require("../models/client_info");
+const { ClientInfoResult } = require("../models/client_info_result");
+const { OrderStatus } = require("../models/order");
 const { hashPassword } = require("../services/auth_service");
 
 const {
@@ -11,7 +12,7 @@ const {
   emailBodyValidator,
   addressBodyValidator,
   passwordBodyValidator,
-  hasPendingCancelationValidator,
+  hasNotCoveredOrdersValidator,
 } = require("./shared_validators");
 
 exports.getClientByIDValidatorChain = [clientIDPathValidator];
@@ -32,7 +33,7 @@ exports.getClientByIDHandler = async function (req, res, next) {
     return res.status(404).end();
   }
 
-  return res.json(ClientInfo.fromMongoJSON(result));
+  return res.json(ClientInfoResult.fromMongoJSON(result));
 };
 
 exports.addFundToWalletValidatorChain = [
@@ -63,28 +64,52 @@ exports.addFundToWalletHandler = async function (req, res, next) {
 
 exports.findClientValidatorChain = [
   searchStringValidator,
-  hasPendingCancelationValidator,
+  hasNotCoveredOrdersValidator,
 ];
 exports.findClientsHandler = async function (req, res, next) {
-  let result;
+  let hasNotCoveredOrders = req.query.hasNotCoveredOrders;
+  hasNotCoveredOrders !== undefined
+    ? (hasNotCoveredOrders = hasNotCoveredOrders === "true")
+    : (hasNotCoveredOrders = undefined);
 
-  let hasPendingCancelation = req.query.hasPendingCancelation;
-
+  let clientsResult;
   try {
-    result = await dao.findClients(
-      req.query.searchString,
-      hasPendingCancelation != null
-        ? hasPendingCancelation === "true"
-        : undefined
-    );
+    clientsResult = await dao.findClients(req.query.searchString);
   } catch (err) {
-    console.error(`FindClientsHandler() -> couldn't find clients: ${err}`);
+    console.error(`FindClientsHandler() -> couldn't retrieve clients: ${err}`);
     return res.status(500).end();
   }
 
-  return res.json(
-    result.map((clientMongoJSON) => ClientInfo.fromMongoJSON(clientMongoJSON))
-  );
+  const clientIDList = clientsResult.map((client) => client._id);
+
+  let clientsOrdersResult;
+  try {
+    clientsOrdersResult = await dao.getOrdersByClientIDList(clientIDList);
+  } catch (err) {
+    console.error(
+      `FindClientsHandler() -> couldn't retrieve clients' orders: ${err}`
+    );
+    return res.status(500).end();
+  }
+
+  let clients = [];
+  clientsResult.forEach((client) => {
+    let hasNotCoveredOrdersResult = clientsOrdersResult
+      .filter((order) => order.clientID == client._id.toString())
+      .some((order) => order.status === OrderStatus.NOTCOVERED);
+
+    let clientInfo = ClientInfoResult.fromMongoJSON(client);
+    clientInfo.setHasNotCoveredOrders = hasNotCoveredOrdersResult;
+    clients.push(clientInfo);
+  });
+
+  if (hasNotCoveredOrders !== undefined) {
+    clients = clients.filter(
+      (client) => client.hasNotCoveredOrders === hasNotCoveredOrders
+    );
+  }
+
+  return res.json(clients);
 };
 
 exports.createClientHandlerValidatorChain = [
@@ -128,7 +153,7 @@ exports.createClientHandler = async function (req, res, next) {
     console.error(`CreateClient() -> couldn't retrieve newly created client`);
   }
 
-  return res.json(ClientInfo.fromMongoJSON(result));
+  return res.json(ClientInfoResult.fromMongoJSON(result));
 };
 
 exports.signupClientHandler = async function (req, res, next) {
@@ -159,5 +184,5 @@ exports.signupClientHandler = async function (req, res, next) {
     console.error(`CreateClient() -> couldn't retrieve newly created client`);
   }
 
-  return res.json(ClientInfo.fromMongoJSON(result));
+  return res.json(ClientInfoResult.fromMongoJSON(result));
 };

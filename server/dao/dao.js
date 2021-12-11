@@ -33,6 +33,7 @@ const {
   deleteOrder,
   getOrdersByClientID,
   completeOrder,
+  getOrdersByClientIDList,
 } = require("./order");
 
 const {
@@ -93,8 +94,7 @@ exports.createClient = (fullName, phoneNumber, email, address) =>
 exports.signupClient = (fullName, phoneNumber, email, password, address) =>
   signupClient(db, fullName, phoneNumber, email, password, address);
 
-exports.findClients = (searchString, hasPendingCancelation) =>
-  findClients(db, searchString, hasPendingCancelation);
+exports.findClients = (searchString) => findClients(db, searchString);
 exports.addFundToWallet = (clientID, increaseBy) =>
   addFundToWallet(db, clientID, increaseBy);
 
@@ -143,7 +143,8 @@ exports.getOrderByID = (orderID) => getOrderByID(db, orderID);
 exports.deleteOrder = (orderID) => deleteOrder(db, orderID);
 exports.getOrdersByClientID = (clientID) => getOrdersByClientID(db, clientID);
 exports.completeOrder = (orderID) => completeOrder(db, orderID);
-
+exports.getOrdersByClientIDList = (clientIDList) =>
+  getOrdersByClientIDList(db, clientIDList);
 exports.createClientsTextSearchIndexes = () =>
   createClientsTextSearchIndexes(db);
 

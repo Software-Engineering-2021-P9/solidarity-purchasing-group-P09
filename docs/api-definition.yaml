@@ -147,7 +147,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: "#/definitions/ProductAndAvailabilityResult"
+              $ref: "#/definitions/ProductResult"
         "400":
           description: Bad Request - The request contains invalid parameters
         "500":
@@ -212,6 +212,34 @@ paths:
         "500":
           description: Internal Server Error
 
+  /orders/{orderID}:
+    get:
+      tags:
+        - order
+      summary: retrieve the order with orderID
+      description: "Retrieve the order associated to the given ID"
+      operationId: getOrderByID
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          required: true
+          name: orderID
+          type: string
+          description: Get Order with given orderID
+      responses:
+        "200":
+          description: Success
+          schema:
+            items:
+              $ref: "#/definitions/Order"
+        "400":
+          description: Bad Request - The request contains invalid parameters
+        "401":
+          description: Unauthorized - The user is not logged or is not allowed to make this action
+        "500":
+          description: Internal Server Error
+    
   /orders/{orderID}/complete:
     patch:
       tags:
@@ -239,7 +267,7 @@ paths:
         "500":
           description: Internal Server Error
 
-  /orders/{orderID}/shipmentInfo:
+  /orders/{orderID}/pickUpSlot:
     patch:
       tags:
         - order
@@ -259,7 +287,12 @@ paths:
           description: New ShipmentInfo of the order
           required: true
           schema:
-            $ref: "#/definitions/ShipmentInfo"
+            type: object
+            properties:
+              pickUpSlot:
+                 type: string
+                 example: 50900
+                 description: Format dhhmm dayOfTheWeekHourMinute
       responses:
         "204":
           description: Success
@@ -271,7 +304,6 @@ paths:
           description: Forbidden - The action cannot be executed in the current week phase
         "500":
           description: Internal Server Error
-
 
   /clients/{clientID}:
     get:
@@ -513,7 +545,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: "#/definitions/ProductAndAvailabilityResult"
+              $ref: "#/definitions/ProductResult"
         "400":
           description: Bad Request - The request contains invalid parameters
         "401":
@@ -762,6 +794,7 @@ paths:
           description: Not Found
         "500":
           description: Internal Server Error
+
 definitions:
   ClientInfo:
     description: "At least one between email and (fullName, address, phoneNumber) are required"
@@ -903,7 +936,6 @@ definitions:
         format: date-time
       shipmentInfo:
         $ref: "#/definitions/ShipmentInfo"
-
   OrderProduct:
     type: object
     additionalProperties: false
@@ -931,7 +963,6 @@ definitions:
           - MODIFIED
           - CANCELED
     description: "each product in an order can have different status. WAITING-FOR-CONFIRMATION means that the farmer hasn't yet confirmed the product, CONFIRM means that he confirmed the product and the quantity requested is entirely fulfilled. MODIFIED means that the quantity requested is not entirely covered by the confirmed availability. CANCELED means that there are no more products available for this order"
-
   Product:
     type: object
     additionalProperties: false
@@ -1096,7 +1127,10 @@ definitions:
         type: number
       hasPendingCancelation:
         type: boolean
-        description: "if the client has at least one not covered order (after farmer availability confirmation) hasPendingCancelation will be set to true"
+        description: "if the client has at least one pending-cancelation order hasPendingCancelation will be set to true"
+      hasNotCovered:
+        type: boolean
+        description: "if the client has at least one not-covered order hasNotCovered will be set to true"
   EmployeeInfoResult:
     description: Return model for methods which return EmployeeInfo (sensitive data is stripped).
     type: object
@@ -1148,42 +1182,6 @@ definitions:
         type: string
         maxLength: 60
         example: Via dei castagni 7a|Torino|TO|10140
-  ProductAndAvailabilityResult:
-    description: Return model for methods which return Product. It also contains the information about current week availability.
-    type: object
-    additionalProperties: false
-    required:
-      - id
-      - farmerID
-      - name
-      - description
-      - category
-      - ProductAvailabilityResult
-    properties:
-      id:
-        type: string
-        format: bsonID
-      farmerID:
-        type: string
-        format: bsonID
-      name:
-        type: string
-        maxLength: 25
-        example: Potato
-      description:
-        type: string
-        maxLength: 100
-      category:
-        type: string
-        enum:
-          - fruit
-          - vegetables
-          - spreadable creams
-          - meat
-          - eggs
-          - milk
-      ProductAvailabilityResult:
-        $ref: "#/definitions/ProductAvailabilityResult"
   ProductAvailabilityResult:
     description: Return model for methods which return the Product Availability.
     type: object
@@ -1198,7 +1196,7 @@ definitions:
       - packaging
       - quantity
       - leftQuantity
-      - confirmedStatus
+      - status
     properties:
       id:
         type: string
@@ -1235,19 +1233,16 @@ definitions:
     type: object
     additionalProperties: false
     required:
+      - type
       - date
-      - time
       - address
-      - fee
     properties:
-      date:
+      type:
         type: string
-      time:
-        type: string
+      pickUpSlot:
+        type: string   
       address:
         type: string
-      fee:
-        type: number
   ProductResult:
     description: Return model for methods which return Product. It also contains the information about current week availability.
     type: object
@@ -1258,6 +1253,7 @@ definitions:
       - name
       - description
       - category
+      - ProductAvailabilityResult
     properties:
       id:
         type: string
@@ -1281,3 +1277,5 @@ definitions:
           - meat
           - eggs
           - milk
+      ProductAvailabilityResult:
+        $ref: "#/definitions/ProductAvailabilityResult"

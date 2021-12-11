@@ -731,7 +731,7 @@ describe("Clients API tests:", () => {
               phoneNumber: 3205708803,
               address: "via Domenico Bini,26 Torino,10538",
               wallet: 55.5,
-              hasNotCoveredOrders: true,
+              hasPendingCancelation: true,
             },
           ]);
           expect(res.status).to.be.equal(200);
@@ -740,10 +740,10 @@ describe("Clients API tests:", () => {
         });
     });
 
-    it("it must retrieve client Domenico Bini with hasNotCoveredOrders=true", (done) => {
+    it("it must retrieve client Domenico Bini with hasPendingCancelation=true", (done) => {
       chai
         .request(app)
-        .get("/api/clients?searchString=Torino&hasNotCoveredOrders=true")
+        .get("/api/clients?searchString=Torino&hasPendingCancelation=true")
         .end((err, res) => {
           expect(err).to.be.null;
           expect(res.body).to.be.an("array");
@@ -757,7 +757,7 @@ describe("Clients API tests:", () => {
               phoneNumber: 3205708803,
               address: "via Domenico Bini,26 Torino,10538",
               wallet: 55.5,
-              hasNotCoveredOrders: true,
+              hasPendingCancelation: true,
             },
           ]);
           expect(res.status).to.be.equal(200);
@@ -766,10 +766,10 @@ describe("Clients API tests:", () => {
         });
     });
 
-    it("it must retrieve client Andrea Diprè with hasNotCoveredOrders=false", (done) => {
+    it("it must retrieve client Andrea Diprè with hasPendingCancelation=false", (done) => {
       chai
         .request(app)
-        .get("/api/clients?hasNotCoveredOrders=false")
+        .get("/api/clients?hasPendingCancelation=false")
         .end((err, res) => {
           expect(err).to.be.null;
           expect(res.body).to.be.an("array");
@@ -798,10 +798,10 @@ describe("Clients API tests:", () => {
         });
     });
 
-    it("it must return a bad request due to hasNotCoveredOrders not being a boolean", (done) => {
+    it("it must return a bad request due to hasPendingCancelation not being a boolean", (done) => {
       chai
         .request(app)
-        .get("/api/clients?hasNotCoveredOrders=dsaffa")
+        .get("/api/clients?hasPendingCancelation=dsaffa")
         .end((err, res) => {
           expect(err).to.be.null;
           expect(res.status).to.be.equal(400);
@@ -842,7 +842,7 @@ describe("Clients API tests:", () => {
             role: "client",
             address: "via Andrea Dipre,24 Torino,10538",
             wallet: 0,
-            hasNotCoveredOrders: false,
+            hasPendingCancelation: false,
           });
 
           done();

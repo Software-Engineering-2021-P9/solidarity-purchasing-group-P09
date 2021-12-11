@@ -11,14 +11,14 @@ class ClientInfoResult {
     this.address = address;
     this.phoneNumber = phoneNumber;
     this.wallet = wallet;
-    this.hasNotCoveredOrders = false;
+    this.hasPendingCancelation = false;
   }
 
   /**
    * @param {boolean} value
    */
-  set setHasNotCoveredOrders(value) {
-    this.hasNotCoveredOrders = value;
+  set setHasPendingCancelation(value) {
+    this.hasPendingCancelation = value;
   }
 
   static fromClientInfo(obj) {

@@ -183,7 +183,7 @@ exports.walletBodyValidator = body("wallet")
   .bail()
   .isLength({ min: 0 });
 
-exports.hasNotCoveredOrdersValidator = query("hasNotCoveredOrders")
+exports.hasPendingCancelationValidator = query("hasPendingCancelation")
   .optional()
   .notEmpty()
   .bail()

@@ -12,7 +12,7 @@ const {
   emailBodyValidator,
   addressBodyValidator,
   passwordBodyValidator,
-  hasNotCoveredOrdersValidator,
+  hasPendingCancelationValidator,
 } = require("./shared_validators");
 
 exports.getClientByIDValidatorChain = [clientIDPathValidator];
@@ -64,12 +64,12 @@ exports.addFundToWalletHandler = async function (req, res, next) {
 
 exports.findClientValidatorChain = [
   searchStringValidator,
-  hasNotCoveredOrdersValidator,
+  hasPendingCancelationValidator,
 ];
 exports.findClientsHandler = async function (req, res, next) {
-  let hasNotCoveredOrders =
-    req.query.hasNotCoveredOrders !== undefined
-      ? req.query.hasNotCoveredOrders === "true"
+  let hasPendingCancelation =
+    req.query.hasPendingCancelation !== undefined
+      ? req.query.hasPendingCancelation === "true"
       : undefined;
 
   let clientsResult;
@@ -94,18 +94,18 @@ exports.findClientsHandler = async function (req, res, next) {
 
   let clients = [];
   clientsResult.forEach((client) => {
-    let hasNotCoveredOrdersResult = clientsOrdersResult
+    let hasPendingCancelationResult = clientsOrdersResult
       .filter((order) => order.clientID == client._id.toString())
-      .some((order) => order.status === OrderStatus.NOTCOVERED);
+      .some((order) => order.status === OrderStatus.PENDINGCANCELATION);
 
     let clientInfo = ClientInfoResult.fromMongoJSON(client);
-    clientInfo.setHasNotCoveredOrders = hasNotCoveredOrdersResult;
+    clientInfo.setHasPendingCancelation = hasPendingCancelationResult;
     clients.push(clientInfo);
   });
 
-  if (hasNotCoveredOrders !== undefined) {
+  if (hasPendingCancelation !== undefined) {
     clients = clients.filter(
-      (client) => client.hasNotCoveredOrders === hasNotCoveredOrders
+      (client) => client.hasPendingCancelation === hasPendingCancelation
     );
   }
 

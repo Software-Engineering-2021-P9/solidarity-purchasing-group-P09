@@ -69,7 +69,7 @@ exports.ordersCollection2 = {
         { productID: "6187c957b288576ca26f8259", quantity: 1 },
         { productID: "6187c957b288576ca26f8250", quantity: 2 },
       ],
-      status: "not-covered",
+      status: "pending-cancelation",
       totalPrice: "6",
       createdAt: "2021-11-16T13:00:07.616Z",
     },

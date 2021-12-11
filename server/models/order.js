@@ -3,6 +3,7 @@
 const OrderStatus = {
   WAITING: "waiting",
   NOTCOVERED: "not-covered",
+  PENDINGCANCELATION: "pending-cancelation",
   CONFIRMED: "confirmed",
   PREPARED: "prepared",
   DONE: "done",

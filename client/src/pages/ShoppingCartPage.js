@@ -35,8 +35,7 @@ function ShoppingCartPage(props) {
   const [cart, setCart] = useState(location.state.shoppingCart);
   
   const [deliveryAddress, setDeliveryAddress] = useState("");
-  const [deliveryDate, setDeliveryDate] = useState("");
-  const [deliveryTime, setDeliveryTime] = useState("");
+  const [deliveryDate, setDeliveryDate] = useState("WednesDay");
   const [deliveryType, setDeliveryType] = useState("");
   const [deliveryFee, setDeliveryFee] = useState(0);
 
@@ -93,7 +92,6 @@ function ShoppingCartPage(props) {
   const [show, setShow] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-  console.log(amount)
   const updateQuantity = (product, quantity, price) => {
     const prev_qty = cart.get(product);
     // remove from cart
@@ -127,8 +125,7 @@ function ShoppingCartPage(props) {
     }));
 
     let shipmentInfo = {
-      date: deliveryDate,
-      time: deliveryTime,
+      date: deliveryType==="Pickup"?deliveryDate:null,
       address: deliveryAddress,
       fee: deliveryFee,
     };
@@ -169,14 +166,12 @@ function ShoppingCartPage(props) {
                 setAmount={setAmount}
                 setDeliveryAddress={setDeliveryAddress}
                 setDeliveryDate={setDeliveryDate}
-                setDeliveryTime={setDeliveryTime}
                 setDeliveryType={setDeliveryType}
                 setDeliveryFee={setDeliveryFee}
 
                 amount={amount}
                 deliveryAddress={deliveryAddress}
                 deliveryDate={deliveryDate}
-                deliveryTime={deliveryTime}
                 deliveryType={deliveryType}
                 deliveryFee={deliveryFee}
 

@@ -67,10 +67,10 @@ exports.findClientValidatorChain = [
   hasNotCoveredOrdersValidator,
 ];
 exports.findClientsHandler = async function (req, res, next) {
-  let hasNotCoveredOrders = req.query.hasNotCoveredOrders;
-  hasNotCoveredOrders !== undefined
-    ? (hasNotCoveredOrders = hasNotCoveredOrders === "true")
-    : (hasNotCoveredOrders = undefined);
+  let hasNotCoveredOrders =
+    req.query.hasNotCoveredOrders !== undefined
+      ? req.query.hasNotCoveredOrders === "true"
+      : undefined;
 
   let clientsResult;
   try {

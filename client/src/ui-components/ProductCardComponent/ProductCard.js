@@ -149,7 +149,9 @@ function ProductCard(props) {
                           step={1}
                           value={props.shoppingCart.get(product.id)}
                           onChange={(e) => {
-                            props.addItem(product.id, e.target.value);
+                            if (e.target.value <= left_availability) {
+                              props.addItem(product.id, e.target.value);
+                            }
                           }}
                           max={left_availability}
                           min={1}

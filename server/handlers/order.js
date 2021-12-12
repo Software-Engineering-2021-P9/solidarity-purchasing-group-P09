@@ -1,6 +1,7 @@
 const dayjs = require("dayjs");
 var dao = require("../dao/dao");
 const { Order, OrderStatus } = require("../models/order");
+const { getProductPrice } = require("../dao/productAvailability");
 const {
   clientIDBodyValidator,
   orderProductIDsBodyValidator,
@@ -19,10 +20,11 @@ exports.createOrderValidatorChain = [
 
 exports.createOrderHandler = async function (req, res, next) {
   // productPrice is hardcoded to 1 as a tempoarary solution for now, will be fixed in the next sprints
-  const productPrice = 1;
+  //const productPrice = 1;
 
   var totalPrice = 0.0;
   req.body.products.forEach((product) => {
+    var productPrice = getProductPrice(product.productId);
     totalPrice += product.quantity * productPrice;
   });
 

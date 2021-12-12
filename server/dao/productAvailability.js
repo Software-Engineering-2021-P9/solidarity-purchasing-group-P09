@@ -42,3 +42,8 @@ exports.setProductAvailability = (
     quantity: quantity,
   });
 };
+
+exports.getProductPrice = (db, productID) => {
+  return db.collection(productsAvailabilityCollectionName).findOne({"productID": {"$eq":productID}}, {"price":1});
+}; 
+

@@ -125,9 +125,9 @@ function ShoppingCartPage(props) {
     }));
 
     let shipmentInfo = {
-      date: deliveryType==="Pickup"?deliveryDate:null,
+      type: deliveryType,
       address: deliveryAddress,
-      fee: deliveryFee,
+      pickUpSlot: "", //TODO:
     };
       
     //call create order

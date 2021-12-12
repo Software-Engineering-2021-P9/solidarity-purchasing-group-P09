@@ -81,7 +81,7 @@ function ProductListPage(props) {
   const handleClose = () => setShow(false);
 
   const handleShow = (product) => {
-    setErrorMessage(""); 
+    setErrorMessage("");
     if (cart.get(product.id)) {
       setModalProduct({
         productName: product.name,
@@ -131,8 +131,12 @@ function ProductListPage(props) {
               type="number"
               step={1}
               value={modalProduct.productQty}
-              onChange={(e) =>{
-                setModalProduct({ ...modalProduct, productQty: e.target.value }); setErrorMessage("");
+              onChange={(e) => {
+                setModalProduct({
+                  ...modalProduct,
+                  productQty: e.target.value,
+                });
+                setErrorMessage("");
               }}
               max={100}
               min={1}
@@ -148,10 +152,11 @@ function ProductListPage(props) {
           <Button
             onClick={() =>
               addItem(modalProduct.productId, modalProduct.productQty)
-            }>
+            }
+          >
             Submit
           </Button>
-          <Button variant='light' onClick={handleClose}>
+          <Button variant="light" onClick={handleClose}>
             Close
           </Button>
         </Modal.Footer>

@@ -1,15 +1,16 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./ShoppingCartTableCSS.css";
 import React from "react";
-import { Container, Col, Row} from "react-bootstrap";
+import { Container, Col, Row } from "react-bootstrap";
 import ImageService from "../../services/ImageService/ImageService";
 
 function ShoppingCartTable(props) {
-
+  console.log(props.cart);
+  console.log(props.products);
   return (
     <Container>
       <Col>
-        {props.products.map((item) => {
+        {props.products?.map((item) => {
           return (
             <CartRow
               product={item}
@@ -27,24 +28,32 @@ function ShoppingCartTable(props) {
 function CartRow(props) {
   return (
     <Row className="shopping-cart-row">
-      <Col md={1} >
+      <Col md={1}>
         <img
           alt=""
           width="100"
           src={ImageService.returnImageByCategory(props.product.category)}
         />
       </Col>
-      <Col className="item-cart my-pl-3" md={2}>{props.product.name}</Col>
-      <Col md={4} className="my-pl-3">{props.product.description}</Col>
-      <Col md={2}>{props.product.packaging}</Col>
-      <Col md={1}> 
-        {props.product.price}
+      <Col className="item-cart my-pl-3" md={2}>
+        {props.product.name}
+      </Col>
+      <Col md={4} className="my-pl-3">
+        {props.product.description}
+      </Col>
+      <Col md={2}>{props.product.availability?.packaging}</Col>
+      <Col md={1}>
+        {props.product.availability?.price}
         {" €"}
       </Col>
       <Col md={1}>
         <span
           onClick={() => {
-            props.updateQuantity(props.product.id, -1, props.product.price);
+            props.updateQuantity(
+              props.product.id,
+              -1,
+              props.product.availability?.price
+            );
           }}
         >
           <svg
@@ -62,7 +71,11 @@ function CartRow(props) {
         <span className="mx-2">{props.quantity}</span>
         <span
           onClick={() => {
-            props.updateQuantity(props.product.id, 1, props.product.price);
+            props.updateQuantity(
+              props.product.id,
+              1,
+              props.product.availability?.price
+            );
           }}
         >
           <svg
@@ -79,7 +92,7 @@ function CartRow(props) {
         </span>
       </Col>
       <Col md={1}>
-        {(props.product.price * props.quantity).toFixed(2)}
+        {(props.product.availability?.price * props.quantity).toFixed(2)}
         {" €"}
       </Col>
     </Row>

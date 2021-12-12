@@ -33,7 +33,8 @@ function checkboxPickupComponent(props, feeValue){
                     if(props.deliveryType==="Shipment"){//i.e. if from "shipment" to "pickup", then remove fee
                         props.setDeliveryFee((prev)=>{
                             props.setAmount(props.amount-feeValue);
-                            props.setDeliveryDate("Wednesday");//when switching to pickup, Wednesday is selected in the form. So we update the state
+                            props.setDeliveryDate("3");//when switching to pickup, Wednesday is selected in the form. So we update the state
+                            props.setDeliveryTime("");
                             return 0;
                         });
                     }
@@ -78,16 +79,17 @@ function dateComponent(props){
     return <Form.Group className="mb-3">
             <Form.Label>Select Pickup Day</Form.Label>
                 <select class="form-select">
-                    <option onClick={()=>{props.setDeliveryDate("Wednesday")}} value="0" selected >Wednesday</option>
-                    <option onClick={()=>{props.setDeliveryDate("Thursday")}} value="1">Thursday</option>
-                    <option onClick={()=>{props.setDeliveryDate("Friday")}} value="2">Friday</option>
+                    <option onClick={()=>{props.setDeliveryDate("3")}} value="0" selected >Wednesday</option>
+                    <option onClick={()=>{props.setDeliveryDate("4")}} value="1">Thursday</option>
+                    <option onClick={()=>{props.setDeliveryDate("5")}} value="2">Friday</option>
                 </select>
+            <Form.Label>Select Time</Form.Label>
+            <Form.Control onChange={(event)=>{props.setDeliveryTime(event.target.value)}} type="time" className="cart-order-summary-form"/>
             </Form.Group>
 }
 
 function ShoppingCartOrderSummary(props) {
 
-    console.log(props.deliveryDate)
     const feeValue = 5; //TODO: backend should validate the hardcoded value fee
     const history = useHistory();
     const location = useLocation();
@@ -148,7 +150,7 @@ function ShoppingCartOrderSummary(props) {
                         </Button>
                     </Row>
                     <Row>
-                        <Button onClick={props.handleShow} disabled={props.deliveryType==="" || !props.deliveryDate || !props.deliveryAddress} className="cart-button-placeorder">
+                        <Button onClick={props.handleShow} disabled={props.deliveryType==="" || !props.deliveryDate || !props.deliveryAddress || (!props.deliveryTime && props.deliveryType=="Pickup")} className="cart-button-placeorder">
                             PLACE ORDER
                         </Button>
                     </Row>

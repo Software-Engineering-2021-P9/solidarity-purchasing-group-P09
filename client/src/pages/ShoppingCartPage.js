@@ -36,7 +36,8 @@ function ShoppingCartPage(props) {
   const [cart, setCart] = useState(location.state.shoppingCart);
   
   const [deliveryAddress, setDeliveryAddress] = useState("");
-  const [deliveryDate, setDeliveryDate] = useState("WednesDay");
+  const [deliveryDate, setDeliveryDate] = useState("3");// 3 or 4 or 5th day of week
+  const [deliveryTime, setDeliveryTime] = useState("");
   const [deliveryType, setDeliveryType] = useState("");
   const [deliveryFee, setDeliveryFee] = useState(0);
 
@@ -133,13 +134,15 @@ function ShoppingCartPage(props) {
     let shipmentInfo = {
       type: deliveryType,
       address: deliveryAddress,
-      pickUpSlot: "", //TODO:
+      pickUpSlot: deliveryType=="Pickup"? deliveryDate+""+(deliveryTime.replace(":","")) : null,
     };
+
+    console.log(shipmentInfo);
       
     //call create order
-    createOrder(client.id, orderProducts, shipmentInfo);
-    handleClose();
-    setSubmitted(true);
+    // createOrder(client.id, orderProducts, shipmentInfo);
+    // handleClose();
+    // setSubmitted(true);
   };
 
   return (
@@ -180,12 +183,14 @@ function ShoppingCartPage(props) {
                 setDeliveryDate={setDeliveryDate}
                 setDeliveryType={setDeliveryType}
                 setDeliveryFee={setDeliveryFee}
+                setDeliveryTime={setDeliveryTime}
 
                 amount={amount}
                 deliveryAddress={deliveryAddress}
                 deliveryDate={deliveryDate}
                 deliveryType={deliveryType}
                 deliveryFee={deliveryFee}
+                deliveryTime={deliveryTime}
 
                 handleShow={handleShow}
               />

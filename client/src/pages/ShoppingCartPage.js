@@ -158,7 +158,6 @@ function ShoppingCartPage(props) {
           />
         </Col>
         <Col>
-          {authContext.currentUser.role === UserRoles.CLIENT &&
              <ShoppingCartOrderSummary 
                 products={products}
                 cart={cart}
@@ -176,7 +175,7 @@ function ShoppingCartPage(props) {
                 deliveryFee={deliveryFee}
 
                 handleShow={handleShow}
-              />}
+              />
         </Col>
       </Row>
       <Row>

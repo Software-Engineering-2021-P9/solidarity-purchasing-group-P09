@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import UserRoles from "../../services/models/UserRoles";
 import Button from "../Button/Button";
 import { Link } from "react-router-dom";
-import { personCircleIcon, pinMapIcon, walletIcon } from "../icon";
+import { personCircleIcon, pinMapIcon, walletIcon } from "../icons";
 import { getOrders } from "../../services/ApiClient";
 import "./ClientDetailsCSS.css";
 

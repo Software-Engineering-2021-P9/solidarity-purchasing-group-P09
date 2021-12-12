@@ -9,7 +9,7 @@ import {
   listIcon,
   pinMapSmallIcon,
   statusIcon,
-} from "../icon";
+} from "../icons";
 function ClientOrders(props) {
   const [orders, setOrders] = useState([]);
 

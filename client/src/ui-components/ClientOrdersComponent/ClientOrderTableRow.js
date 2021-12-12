@@ -10,7 +10,7 @@ import {
   listIcon,
   pinMapSmallIcon,
   statusIcon,
-} from "../icon";
+} from "../icons";
 import dayjs from "dayjs";
 import UserRoles from "../../services/models/UserRoles";
 

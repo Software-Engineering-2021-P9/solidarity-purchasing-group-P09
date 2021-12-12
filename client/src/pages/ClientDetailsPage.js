@@ -157,7 +157,10 @@ function ClientDetailsPage(props) {
             <Divider size={2} />
           </Container>
           <Row>
-            <ClientOrders clientID={clientID} />
+            <ClientOrders
+              loggedUser={authContext.currentUser}
+              clientID={clientID}
+            />
           </Row>
         </>
       )}

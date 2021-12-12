@@ -10,6 +10,7 @@
   background-color: #db9471;
   border-radius: 50%;
   padding: 5%;
+  height: fit-content;
   margin-left: 12px;
 }
 .fullname {

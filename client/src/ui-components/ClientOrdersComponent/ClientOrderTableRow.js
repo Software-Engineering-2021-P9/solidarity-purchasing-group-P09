@@ -12,6 +12,7 @@ import {
   statusIcon,
 } from "../icon";
 import dayjs from "dayjs";
+import UserRoles from "../../services/models/UserRoles";
 
 function ClientOrderTableRow(props) {
   const [status, setStatus] = useState(props.order.status);
@@ -24,14 +25,14 @@ function ClientOrderTableRow(props) {
   };
 
   return (
-    <Row className="my-3 container-sm mx-0 px-0">
+    <Row className="my-3 px-0">
       <PopUpForCompleteOrder
         handleSubmit={handleSubmit}
         modalIsOpen={modalIsOpen}
         setModalIsOpen={setModalIsOpen}
       />
       <Row className="mx-0 px-0 align-items-center table-cell-visibility">
-        <Col md="3" lg="3" xl="3" className="mx-0 px-0">
+        <Col md="3" lg="3" xl="3" className="mx-0 px-3">
           {props.order.id}
         </Col>
         <Col className="mx-0 px-0">{props.order.totalPrice} €</Col>
@@ -54,28 +55,29 @@ function ClientOrderTableRow(props) {
                 </span>
               )}
             </Col>
-            <Col md="auto" lg="auto" xl="auto">
-              {status === Order.OrderStatus.PREPARED && (
-                <span className="d-flex justify-content-end">
-                  <span
-                    className="px-1 change-status"
-                    onClick={() => setModalIsOpen(true)}
-                  >
-                    Change Status
+            {status === Order.OrderStatus.PREPARED &&
+              props.loggedUser.role === UserRoles.EMPLOYEE && (
+                <Col md="auto" lg="auto" xl="auto">
+                  <span className="d-flex justify-content-end">
+                    <span
+                      className="px-1 change-status"
+                      onClick={() => setModalIsOpen(true)}
+                    >
+                      Change Status
+                    </span>
                   </span>
-                </span>
+                </Col>
               )}
-            </Col>
           </Row>
         </Col>
       </Row>
-      <Row className="mx-0 px-0 table-cell-visibility-small">
+      <Row className="mx-0 px-0 container-sm table-cell-visibility-small">
         <Col md="12">
           <Row>
             <Col sm="auto" xs="auto">
               {listIcon}
             </Col>
-            <Col>{props.order.id}</Col>
+            <Col className="small-text">{props.order.id}</Col>
           </Row>
           <Row>
             <Col sm="auto" xs="auto">
@@ -111,16 +113,17 @@ function ClientOrderTableRow(props) {
                 {status}
               </Col>
             )}
-            {status === Order.OrderStatus.PREPARED && (
-              <Col className="d-flex justify-content-end">
-                <span
-                  className="px-1 change-status"
-                  onClick={() => setModalIsOpen(true)}
-                >
-                  Change Status
-                </span>
-              </Col>
-            )}
+            {status === Order.OrderStatus.PREPARED &&
+              props.loggedUser.role === UserRoles.EMPLOYEE && (
+                <Col className="d-flex justify-content-end">
+                  <span
+                    className="px-1 change-status"
+                    onClick={() => setModalIsOpen(true)}
+                  >
+                    Change Status
+                  </span>
+                </Col>
+              )}
           </Row>
         </Col>
       </Row>

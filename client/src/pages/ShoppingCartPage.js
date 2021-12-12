@@ -170,7 +170,7 @@ function ShoppingCartPage(props) {
             />
           </Row>
         </Col>
-        <Col md="4" sm="12" className="mx-0 px-0">
+        <Col md="4" sm="12">
         <ShoppingCartOrderSummary 
                 products={products}
                 cart={cart}
@@ -191,23 +191,7 @@ function ShoppingCartPage(props) {
               />
         </Col>
       </Row>
-      <Row className="my-4">
-        <div className="mx-0 px-0">
-          <Link
-            className="px-0 mx-0"
-            to={{
-              pathname: "/",
-              state: {
-                creatingOrderMode: true,
-                shoppingCart: cart,
-                clientID: location.state.clientID,
-              },
-            }}
-          >
-            <Button variant="light">CONTINUE SHOPPING</Button>
-          </Link>
-        </div>
-      </Row>
+    
 
       <ModalOrderConfirmation
         show={show}

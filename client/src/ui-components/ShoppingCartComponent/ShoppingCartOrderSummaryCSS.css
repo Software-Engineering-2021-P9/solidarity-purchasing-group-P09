@@ -1,11 +1,9 @@
 .cart-order-summary {
   border: 1px solid black;
   padding: 3%;
-  border-color: #db9471;
+  border-color: #db9471 !important;
   border-radius: 15px;
   box-shadow: 0px 10px 5px rgb(192, 192, 192);
-  margin-left: -5%;
-  margin-right: -5%;
 }
 
 .cart-order-summary-title {

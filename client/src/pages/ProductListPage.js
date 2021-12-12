@@ -1,20 +1,11 @@
 import { React, useEffect, useState, useContext } from "react";
 import { useLocation } from "react-router";
-import {
-  Row,
-  Col,
-  Form,
-  CardGroup,
-  FormControl,
-  Modal,
-  Container,
-} from "react-bootstrap";
+import { Row, Col, CardGroup } from "react-bootstrap";
 import { getAvailableNavbarLinks } from "../Routes";
 
 import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponent";
 import { FilterRow } from "../ui-components/FilterRow/FilterRow";
 import ProductCard from "../ui-components/ProductCardComponent/ProductCard";
-import Button from "../ui-components/Button/Button";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -43,13 +34,6 @@ function ProductListPage(props) {
     location.state ? location.state.shoppingCart : new Map()
   );
 
-  // modal states
-  const [show, setShow] = useState(false);
-
-  const [modalProduct, setModalProduct] = useState({});
-
-  const [errorMessage, setErrorMessage] = useState("");
-
   useEffect(() => {
     //call from props the function for fetching the new products
     async function updateProducts() {
@@ -77,32 +61,21 @@ function ProductListPage(props) {
     setCategory(newCategory);
   };
 
-  const handleClose = () => setShow(false);
-
-  const handleShow = (product) => {
-    setErrorMessage(""); 
-    if (cart.get(product.id)) {
-      setModalProduct({
-        productName: product.name,
-        productId: product.id,
-        productQty: cart.get(product.id),
-      });
-    } else
-      setModalProduct({
-        productName: product.name,
-        productId: product.id,
-        productQty: 1,
-      });
-    setShow(true);
-  };
-
   const addItem = (productID, quantity) => {
     if (quantity > 0) {
       setCart(new Map(cart.set(productID, parseInt(quantity))));
-      setShow(false);
-    } else {
-      setErrorMessage("Insert a valid quantity.");
     }
+  };
+
+  const deleteItem = (productID) => {
+    let new_cart = new Map();
+    Array.from(cart.entries()).map((entry) => {
+      const [key, val] = entry;
+      if (key === productID) return null;
+      new_cart.set(key, val);
+      return entry;
+    });
+    setCart(new_cart);
   };
 
   return (
@@ -117,45 +90,6 @@ function ProductListPage(props) {
         userIconLink={authContext.getUserIconLink()}
       />
 
-      <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>{modalProduct.productName}</Modal.Title>
-        </Modal.Header>
-        <Container>
-          <Row>
-            <Form.Label>Select a quantity</Form.Label>
-          </Row>
-          <Row className="my-1 mb-3 px-3">
-            <FormControl
-              type="number"
-              step={1}
-              value={modalProduct.productQty}
-              onChange={(e) =>{
-                setModalProduct({ ...modalProduct, productQty: e.target.value }); setErrorMessage("");
-              }}
-              max={100}
-              min={1}
-            />
-          </Row>
-          {errorMessage && (
-            <Row>
-              <p className="text-danger">{errorMessage}</p>
-            </Row>
-          )}
-        </Container>
-        <Modal.Footer>
-          <Button
-            onClick={() =>
-              addItem(modalProduct.productId, modalProduct.productQty)
-            }>
-            Submit
-          </Button>
-          <Button variant='light' onClick={handleClose}>
-            Close
-          </Button>
-        </Modal.Footer>
-      </Modal>
-
       <FilterRow
         text={text}
         handleCategoryChanged={handleCategoryChanged}
@@ -166,23 +100,25 @@ function ProductListPage(props) {
       />
 
       <Row lg={4} md={3} sm={2} xs={1} className="g-4">
-        {products
-          ? products.map((item) => {
-              return (
-                <CardGroup as={Col}>
-                  <ProductCard
-                    product={item}
-                    // if the employee is creating a new order or is just showing available products
-                    creatingOrderMode={
-                      location.state?.creatingOrderMode ||
-                      authContext?.currentUser?.role === UserRoles.CLIENT
-                    }
-                    handleShow={handleShow}
-                  />
-                </CardGroup>
-              );
-            })
-          : {}}
+        {products &&
+          products.map((item) => {
+            return (
+              <CardGroup as={Col}>
+                <ProductCard
+                  product={item}
+                  shoppingCart={cart}
+                  addItem={addItem}
+                  deleteItem={deleteItem}
+                  key={item.id}
+                  // if the employee is creating a new order or is just showing available products
+                  creatingOrderMode={
+                    location.state?.creatingOrderMode ||
+                    authContext?.currentUser?.role === UserRoles.CLIENT
+                  }
+                />
+              </CardGroup>
+            );
+          })}
       </Row>
     </>
   );

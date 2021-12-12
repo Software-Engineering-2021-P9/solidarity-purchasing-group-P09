@@ -9,7 +9,7 @@ function ModalOrderConfirmation(props) {
   return (
     <Modal show={props.show} onHide={props.handleClose}>
       <Modal.Header closeButton>
-        <Modal.Title className='modal-title'>Are you sure?</Modal.Title>
+        <Modal.Title className="modal-title">Are you sure?</Modal.Title>
       </Modal.Header>
       <Container>
         {props.products.map((item) => {
@@ -26,8 +26,8 @@ function ModalOrderConfirmation(props) {
             <Col className='align-end'>{props.deliveryType==="Shipment"?"20 €":"0 €"}</Col>
         </Row>
         <br />
-        <Row className='px-2 pb-2'>
-          <Col xs={5} className='amount'>
+        <Row className="px-2 pb-2">
+          <Col xs={5} className="amount">
             Total amount: {props.tot.toFixed(2)}
             {" €"}
           </Col>
@@ -36,7 +36,7 @@ function ModalOrderConfirmation(props) {
       </Container>
       <Modal.Footer>
         <Button onClick={props.handleSubmit}>Send the order</Button>
-        <Button onClick={props.handleClose} variant='light' className='mx-3'>
+        <Button onClick={props.handleClose} variant="light" className="mx-3">
           Close
         </Button>
       </Modal.Footer>

@@ -3,18 +3,27 @@
 const OrderStatus = {
   WAITING: "waiting",
   CONFIRMED: "confirmed",
-  PREPARED: "prepared",
-  DONE: "done",
+  MODIFIED: "modified",
+  CANCELED: "canceled",
 };
 
 class OrderProduct {
-  constructor(productID, quantity) {
+  constructor(productID, quantity, price, packaging, status) {
     this.productID = productID;
     this.quantity = quantity;
+    this.price = price;
+    this.packaging = packaging;
+    this.status = status;
   }
 
   static fromMongoJSON(json) {
-    return new OrderProduct(json.productID, json.quantity);
+    return new OrderProduct(
+      json.productID,
+      json.quantity,
+      json.price,
+      json.packaging,
+      json.status
+    );
   }
 }
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Form, Container } from "react-bootstrap";
 import "./CreateProductForm.css";
 import Product from "../../services/models/Product";

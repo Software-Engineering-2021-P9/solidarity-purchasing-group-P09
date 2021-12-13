@@ -1,7 +1,7 @@
 "use strict";
 
 const { ObjectID } = require("bson");
-const { OrderProduct, OrderStatus, ShipmentInfo } = require("../models/order");
+const { OrderStatus } = require("../models/order");
 
 const orderCollectionName = "orders";
 
@@ -9,31 +9,8 @@ const orderCollectionName = "orders";
 // Create Order
 // ------------
 
-exports.createOrder = async (
-  db,
-  clientID,
-  products,
-  status,
-  totalPrice,
-  createdAt,
-  shipmentInfo
-) => {
-  return db.collection(orderCollectionName).insertOne({
-    clientID: ObjectID(clientID.toString()),
-    products: products?.map(
-      (p) =>
-        new OrderProduct(ObjectID(p.productID.toString()), parseInt(p.quantity))
-    ),
-    status: status.toString(),
-    totalPrice: parseFloat(totalPrice),
-    createdAt: createdAt.toString(),
-    shipmentInfo: new ShipmentInfo(
-      shipmentInfo.date.toString(),
-      shipmentInfo.time.toString(),
-      shipmentInfo.address.toString(),
-      parseFloat(shipmentInfo.fee)
-    ),
-  });
+exports.createOrder = async (db, order) => {
+  return db.collection(orderCollectionName).insertOne(order);
 };
 
 exports.getOrdersByClientID = async (db, clientID) => {

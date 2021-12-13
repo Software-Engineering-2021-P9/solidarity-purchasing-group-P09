@@ -1,7 +1,12 @@
 const dayjs = require("dayjs");
 var dao = require("../dao/dao");
-
-const { Order, OrderStatus } = require("../models/order");
+const { ObjectID } = require("bson");
+const {
+  OrderProduct,
+  OrderStatus,
+  ShipmentInfo,
+  Order,
+} = require("../models/order");
 const {
   clientIDBodyValidator,
   orderProductIDsBodyValidator,
@@ -10,8 +15,8 @@ const {
   orderClientIDQueryValidator,
   orderIDParamValidator,
   orderAddressBodyValidator,
-  orderFeeBodyValidator,
-  orderShipmentDayBodyValidator,
+  orderShipmentTypeBodyValidator,
+  orderPickUpSlotBodyValidator,
 } = require("./shared_validators");
 
 exports.createOrderValidatorChain = [
@@ -19,9 +24,9 @@ exports.createOrderValidatorChain = [
   orderProductsBodyValidator,
   orderProductIDsBodyValidator,
   orderProductQtysBodyValidator,
+  orderShipmentTypeBodyValidator,
   orderAddressBodyValidator,
-  orderFeeBodyValidator,
-  orderShipmentDayBodyValidator,
+  orderPickUpSlotBodyValidator,
 ];
 
 exports.createOrderHandler = async function (req, res, next) {
@@ -33,17 +38,26 @@ exports.createOrderHandler = async function (req, res, next) {
     totalPrice += product.quantity * productPrice;
   });
 
+  const order = {
+    clientID: ObjectID(req.body.clientID.toString()),
+    products: req.body.products?.map(
+      (p) =>
+        new OrderProduct(ObjectID(p.productID.toString()), parseInt(p.quantity))
+    ),
+    status: OrderStatus.WAITING,
+    totalPrice: parseFloat(totalPrice),
+    createdAt: dayjs().toISOString(),
+    shipmentInfo: new ShipmentInfo(
+      req.body.shipmentInfo.type.toString(),
+      req.body.shipmentInfo.pickUpSlot?.toString(),
+      req.body.shipmentInfo.address.toString()
+    ),
+  };
+
   // Insert the new order
   var result;
   try {
-    result = await dao.createOrder(
-      req.body.clientID.toString(),
-      req.body.products,
-      OrderStatus.WAITING,
-      totalPrice,
-      dayjs().toISOString(),
-      req.body.shipmentInfo
-    );
+    result = await dao.createOrder(order);
   } catch (err) {
     console.error(`CreateOrder() -> couldn't create order: ${err}`);
     return res.status(500).end();

@@ -34,10 +34,9 @@ exports.ordersCollection = {
       totalPrice: "6",
       createdAt: "2021-11-16T13:00:07.616Z",
       shipmentInfo: {
-        date: "2021-11-18",
-        time: "T13:00:07.616Z",
+        type: "pickup",
+        pickUpSlot: "32200",
         address: "Via Prapappo Ravanello 54",
-        fee: 54.25,
       },
     },
     {
@@ -51,10 +50,9 @@ exports.ordersCollection = {
       totalPrice: "12",
       createdAt: "2021-12-16T13:00:07.616Z",
       shipmentInfo: {
-        date: "2021-12-20",
-        time: "T13:00:07.616Z",
+        type: "pickup",
+        pickUpSlot: "42200",
         address: "Via of the market ",
-        fee: 0,
       },
     },
     {
@@ -68,10 +66,8 @@ exports.ordersCollection = {
       totalPrice: "12",
       createdAt: "2021-12-16T13:00:07.616Z",
       shipmentInfo: {
-        date: "2021-12-18",
-        time: "T13:00:07.616Z",
+        type: "shipment",
         address: "Via it's real trust me 54",
-        fee: 21,
       },
     },
   ],

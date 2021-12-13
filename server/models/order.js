@@ -19,15 +19,14 @@ class OrderProduct {
 }
 
 class ShipmentInfo {
-  constructor(date, time, address, fee) {
-    this.date = date;
-    this.time = time;
+  constructor(type, pickUpSlot, address) {
+    this.type = type;
     this.address = address;
-    this.fee = fee;
+    type === "pickup" ? (this.pickUpSlot = pickUpSlot) : null;
   }
 
   static fromMongoJSON(json) {
-    return new ShipmentInfo(json.date, json.time, json.address, json.fee);
+    return new ShipmentInfo(json.type, json.pickUpSlot, json.address);
   }
 }
 

@@ -142,23 +142,7 @@ exports.createProduct = (farmerID, name, description, category) =>
   createProduct(db, farmerID, name, description, category);
 
 // Order
-exports.createOrder = (
-  clientID,
-  products,
-  status,
-  totalPrice,
-  createdAt,
-  shipmentInfo
-) =>
-  createOrder(
-    db,
-    clientID,
-    products,
-    status,
-    totalPrice,
-    createdAt,
-    shipmentInfo
-  );
+exports.createOrder = (order) => createOrder(db, order);
 exports.getOrderByID = (orderID) => getOrderByID(db, orderID);
 exports.deleteOrder = (orderID) => deleteOrder(db, orderID);
 exports.getOrdersByClientID = (clientID) => getOrdersByClientID(db, clientID);

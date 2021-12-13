@@ -145,28 +145,29 @@ exports.orderClientIDQueryValidator = query("clientID").isMongoId();
 
 exports.orderIDParamValidator = param("orderID").isMongoId();
 
-exports.orderShipmentDayBodyValidator = body("shipmentInfo.date")
+exports.orderPickUpSlotBodyValidator = body("shipmentInfo.pickUpSlot")
+  .optional()
   .notEmpty()
   .bail()
-  /*.isDate()
-  .bail()*/
+  .isString()
   .custom((value) => {
-    const shipmentDay = new Date(value);
-    //it can be only for next week from wednesday 9 am to friday 22 pm
-    const today = new Date();
-    const daysToReachNextWednesday = 7 - today.getDay() + 3;
-    const nextWednesday = new Date(
-      today.setDate(today.getDate() + daysToReachNextWednesday)
+    const possiblePickUpSlots = [
+      { /*"WED 09:00-23:59": */ from: "30900", to: "32359 " },
+      { /*"THU 00:00-23:59": */ from: "40000", to: "42359" },
+      { /*"FRI 00:00-22:00": */ from: "50000", to: "52200" },
+    ];
+
+    return possiblePickUpSlots.some(
+      (slot) => value >= slot.from && value <= slot.to
     );
-    const nextFriday = new Date(today.setDate(today.getDate() + 2));
-    return nextWednesday <= shipmentDay && shipmentDay <= nextFriday;
   });
-exports.orderFeeBodyValidator = body("shipmentInfo.fee")
+
+exports.orderShipmentTypeBodyValidator = body("shipmentInfo.type")
   .notEmpty()
   .bail()
-  .isFloat({
-    min: 0,
-    max: 50,
+  .isString()
+  .custom((value) => {
+    return value === "pickup" || value === "shipment";
   });
 
 exports.orderAddressBodyValidator = body("shipmentInfo.address")

@@ -899,17 +899,8 @@ describe("Orders API tests:", () => {
     dao.close();
   });
 
-  var day = new Date();
-  //shipment dateis valid only if it is for next week and is between wednesday & friday
-  //7 days a week, tjursday is day number 4
-  var daysToReachNextThursday = 7 - day.getDay() + 4;
-  var nextThursday = new Date(
-    day.setDate(day.getDate() + daysToReachNextThursday)
-  );
-  var nextTuesday = new Date(day.setDate(day.getDate() - 2));
-
   describe("POST /orders", () => {
-    it("it should create a new order", (done) => {
+    it("it should create a new order of type shipment", (done) => {
       chai
         .request(app)
         .post("/api/orders")
@@ -921,16 +912,14 @@ describe("Orders API tests:", () => {
             { productID: "6187c957b288576ca26f8250", quantity: 2 },
           ],
           shipmentInfo: {
-            date: nextThursday.toDateString(),
-            time: nextThursday.toTimeString(),
-            address: "Via Prapappo Ravanello 54",
-            fee: 5.2,
+            type: "shipment",
+            address: "Via its real trust me 54",
           },
         })
         .end((err, res) => {
           expect(err).to.be.null;
           expect(res.status).to.be.equal(200);
-          var id = res.body.id;
+          const id = res.body.id;
 
           chai
             .request(app)
@@ -948,10 +937,8 @@ describe("Orders API tests:", () => {
                 { productID: "6187c957b288576ca26f8250", quantity: 2 },
               ]);
               expect(res.body.shipmentInfo).to.be.eql({
-                date: nextThursday.toDateString(),
-                time: nextThursday.toTimeString(),
-                address: "Via Prapappo Ravanello 54",
-                fee: 5.2,
+                type: "shipment",
+                address: "Via its real trust me 54",
               });
               expect(res.body.status).to.be.equal("waiting");
               done();
@@ -959,48 +946,98 @@ describe("Orders API tests:", () => {
         });
     });
 
-    it("it should give Bad request error because Fee is negative", (done) => {
+    it("it should create a new order of type pickUp", (done) => {
       chai
         .request(app)
         .post("/api/orders")
         .send({
           clientID: "6187c957b288576ca26f8257",
-          products: [{ productID: "6187c957b288576ca26f8258", quantity: -2 }],
-
+          products: [
+            { productID: "6187c957b288576ca26f8258", quantity: 3 },
+            { productID: "6187c957b288576ca26f8259", quantity: 1 },
+            { productID: "6187c957b288576ca26f8250", quantity: 2 },
+          ],
           shipmentInfo: {
-            date: nextThursday.toDateString(),
-            time: nextThursday.toTimeString(),
-            address: "Via Prapappo Ravanello 54",
-            fee: -5.2,
+            type: "pickup",
+            pickUpSlot: "41111",
+            address: "Via its real trust me 54",
           },
         })
         .end((err, res) => {
           expect(err).to.be.null;
-          expect(res.status).to.be.equal(400);
-          expect(res.body).to.be.an("object");
-          done();
+          expect(res.status).to.be.equal(200);
+          const id = res.body.id;
+
+          chai
+            .request(app)
+            .get("/api/orders/" + id)
+            .end((err, res) => {
+              expect(err).to.be.null;
+              expect(res.status).to.be.equal(200);
+              expect(res.body).to.be.an("object");
+
+              expect(res.body.clientID).to.be.equal("6187c957b288576ca26f8257");
+              expect(res.body.id).to.be.equal(id);
+              expect(res.body.products).to.be.eql([
+                { productID: "6187c957b288576ca26f8258", quantity: 3 },
+                { productID: "6187c957b288576ca26f8259", quantity: 1 },
+                { productID: "6187c957b288576ca26f8250", quantity: 2 },
+              ]);
+              expect(res.body.shipmentInfo).to.be.eql({
+                type: "pickup",
+                pickUpSlot: "41111",
+                address: "Via its real trust me 54",
+              });
+              expect(res.body.status).to.be.equal("waiting");
+              done();
+            });
         });
     });
 
-    it("it should give Bad request error because Fee is over 50€", (done) => {
+    it("it should create a new order of type shipment and return it without pickUpSlot since it's not pickUp type", (done) => {
       chai
         .request(app)
         .post("/api/orders")
         .send({
           clientID: "6187c957b288576ca26f8257",
-          products: [{ productID: "6187c957b288576ca26f8258", quantity: -2 }],
+          products: [
+            { productID: "6187c957b288576ca26f8258", quantity: 3 },
+            { productID: "6187c957b288576ca26f8259", quantity: 1 },
+            { productID: "6187c957b288576ca26f8250", quantity: 2 },
+          ],
           shipmentInfo: {
-            date: nextThursday.toDateString(),
-            time: nextThursday.toTimeString(),
-            address: "Via Prapappo Ravanello 54",
-            fee: 50.2,
+            type: "shipment",
+            pickUpSlot: "41111",
+            address: "Via its real trust me 54",
           },
         })
         .end((err, res) => {
           expect(err).to.be.null;
-          expect(res.status).to.be.equal(400);
-          expect(res.body).to.be.an("object");
-          done();
+          expect(res.status).to.be.equal(200);
+          const id = res.body.id;
+
+          chai
+            .request(app)
+            .get("/api/orders/" + id)
+            .end((err, res) => {
+              expect(err).to.be.null;
+              expect(res.status).to.be.equal(200);
+              expect(res.body).to.be.an("object");
+
+              expect(res.body.clientID).to.be.equal("6187c957b288576ca26f8257");
+              expect(res.body.id).to.be.equal(id);
+              expect(res.body.products).to.be.eql([
+                { productID: "6187c957b288576ca26f8258", quantity: 3 },
+                { productID: "6187c957b288576ca26f8259", quantity: 1 },
+                { productID: "6187c957b288576ca26f8250", quantity: 2 },
+              ]);
+              expect(res.body.shipmentInfo).to.be.eql({
+                type: "shipment",
+                address: "Via its real trust me 54",
+              });
+              expect(res.body.status).to.be.equal("waiting");
+              done();
+            });
         });
     });
 
@@ -1012,10 +1049,8 @@ describe("Orders API tests:", () => {
           clientID: "6187c957b288576ca26f8257",
           products: [{ productID: "6187c957b288576ca26f8258", quantity: -2 }],
           shipmentInfo: {
-            date: nextThursday.toDateString(),
-            time: nextThursday.toTimeString(),
+            type: "shipment",
             address: "",
-            fee: 5.2,
           },
         })
         .end((err, res) => {
@@ -1026,7 +1061,7 @@ describe("Orders API tests:", () => {
         });
     });
 
-    it("it should give Bad request error because the date is wrong (it's from next week but not from wed-friday) ", (done) => {
+    it("it should give Bad request error because the pickUpSlot is wrong ", (done) => {
       chai
         .request(app)
         .post("/api/orders")
@@ -1034,10 +1069,9 @@ describe("Orders API tests:", () => {
           clientID: "6187c957b288576ca26f8257",
           products: [{ productID: "6187c957b288576ca26f8258", quantity: -2 }],
           shipmentInfo: {
-            date: nextTuesday.toDateString(),
-            time: nextThursday.toTimeString(),
+            type: "pickup",
+            pickUpSlot: "52359",
             address: "Via Prapappo Ravanello 54",
-            fee: 5.2,
           },
         })
         .end((err, res) => {
@@ -1048,18 +1082,17 @@ describe("Orders API tests:", () => {
         });
     });
 
-    it("it should give Bad request error because the date is wrong (it's thursday but not from next week) ", (done) => {
+    it("it should give Bad request error because the type of the shipment is wrong ", (done) => {
       chai
         .request(app)
         .post("/api/orders")
         .send({
           clientID: "6187c957b288576ca26f8257",
-          products: [{ productID: "6187c957b288576ca26f8258", quantity: -2 }],
+          products: [{ productID: "6187c957b288576ca26f8258", quantity: 2 }],
           shipmentInfo: {
-            date: new Date("2021-12-9"),
-            time: nextThursday.toTimeString(),
+            type: "WRONG",
+            pickUpSlot: "52359",
             address: "Via Prapappo Ravanello 54",
-            fee: 5.2,
           },
         })
         .end((err, res) => {
@@ -1180,10 +1213,9 @@ describe("Orders API tests:", () => {
             { productID: "6187c957b288576ca26f8250", quantity: 2 },
           ],
           shipmentInfo: {
-            date: nextThursday.toDateString(),
-            time: nextThursday.toTimeString(),
+            type: "pickup",
+            pickUpSlot: "32200",
             address: "Via Prapappo Ravanello 54",
-            fee: 5.25,
           },
         })
         .end((err, res) => {
@@ -1218,10 +1250,9 @@ describe("Orders API tests:", () => {
               totalPrice: "6",
               createdAt: "2021-11-16T13:00:07.616Z",
               shipmentInfo: {
-                date: "2021-11-18",
-                time: "T13:00:07.616Z",
+                type: "pickup",
+                pickUpSlot: "32200",
                 address: "Via Prapappo Ravanello 54",
-                fee: 54.25,
               },
             },
             {
@@ -1235,10 +1266,9 @@ describe("Orders API tests:", () => {
               totalPrice: "12",
               createdAt: "2021-12-16T13:00:07.616Z",
               shipmentInfo: {
-                date: "2021-12-20",
-                time: "T13:00:07.616Z",
+                type: "pickup",
+                pickUpSlot: "42200",
                 address: "Via of the market ",
-                fee: 0,
               },
             },
           ]);
@@ -1313,10 +1343,9 @@ describe("Orders API tests:", () => {
             totalPrice: "6",
             createdAt: "2021-11-16T13:00:07.616Z",
             shipmentInfo: {
-              date: "2021-11-18",
-              time: "T13:00:07.616Z",
+              type: "pickup",
+              pickUpSlot: "32200",
               address: "Via Prapappo Ravanello 54",
-              fee: 54.25,
             },
           });
           done();
@@ -1348,10 +1377,8 @@ describe("Orders API tests:", () => {
             totalPrice: "12",
             createdAt: "2021-12-16T13:00:07.616Z",
             shipmentInfo: {
-              date: "2021-12-18",
-              time: "T13:00:07.616Z",
+              type: "shipment",
               address: "Via it's real trust me 54",
-              fee: 21,
             },
           });
           done();
@@ -1426,10 +1453,9 @@ describe("Orders API tests:", () => {
             totalPrice: "6",
             createdAt: "2021-11-16T13:00:07.616Z",
             shipmentInfo: {
-              date: "2021-11-18",
-              time: "T13:00:07.616Z",
+              type: "pickup",
+              pickUpSlot: "32200",
               address: "Via Prapappo Ravanello 54",
-              fee: 54.25,
             },
           });
 

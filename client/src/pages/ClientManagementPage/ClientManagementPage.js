@@ -35,11 +35,8 @@ function ClientManagementPage(props) {
   const [requestError, setRequestError] = useState("");
   const [hasPendingCancelationFilter, setHasPendingCancelationFilter] = useState("All");
 
-  function onCoveredOrderFilterChange(newVal) {
+  function onPendingCancelationFilter(newVal) {
     setHasPendingCancelationFilter(newVal);
-    //onSearchClientButtonClick();
-    //FOR THE REVIEWER: this is like pressing "search" button when selecting the filter "covered/notcovered/all"
-    //might be ugly for someone, tell me in the review if I have to delete this.
   }
 
   function onSearchClientButtonClick() {
@@ -47,12 +44,12 @@ function ClientManagementPage(props) {
 
     let hasPendingCancelation;
     switch(hasPendingCancelationFilter){
-      case("Covered"):
+      case("Has Pending"):
         hasPendingCancelation=true;
         break;
 
-      case("Not Covered"):
-       hasPendingCancelation=false;
+      case("Without Pending"):
+        hasPendingCancelation=false;
         break;
 
       default:
@@ -122,11 +119,11 @@ function ClientManagementPage(props) {
             <Button onClick={onSearchClientButtonClick}>Search</Button>
           </InputGroup>
         </Col>
-        <Col className='pb-3 pb-sm-0 my-4 dropdown-margin' xs='4' sm='3' md='2' lg='1'>
+        <Col className='dropdown-margin' xs='4' sm='3' md='2' lg='1'>
           <RedDropdown
-              items={["Not Covered","Covered"]}
+              items={["Has Pending","Without Pending"]}
               title={hasPendingCancelationFilter ? hasPendingCancelationFilter : "All"}
-              updateSelectedItem={onCoveredOrderFilterChange}
+              updateSelectedItem={onPendingCancelationFilter}
               activeElement={hasPendingCancelationFilter}
             />
         </Col>

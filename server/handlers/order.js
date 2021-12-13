@@ -22,26 +22,17 @@ exports.createOrderValidatorChain = [
 exports.createOrderHandler = async function (req, res, next) {
   // productPrice is hardcoded to 1 as a tempoarary solution for now, will be fixed in the next sprints
   //const productPrice = 1;
-  //const [week, year] = getNextWeek(dayjs());
+  const [week, year] = getNextWeek(dayjs());
   var totalPrice = 0.0;
-  console.log("Hellooooo");
-  await req.body.products.forEach(async (product) => {
+
+  for (const p of req.body.products) {
     var productPrice = await dao.getProductPrice(
-      product.productID,
+      p.productID,
       ...getNextWeek(dayjs())
     );
-    totalPrice += product.quantity * 2;
-    console.log("***********************Product price:", product.price);
-  });
-  console.log("Hellooooo11111");
-  console.log("Priceeeeeeeeeeeeee:", totalPrice);
-  /*
-  var totalPrice = 0.0;
-  req.body.products.forEach((product) => {
-    var productPrice = getProductPrice(product.productId);
-    totalPrice += product.quantity * productPrice;
-  });
-*/
+    totalPrice += p.quantity * productPrice;
+  }
+
   // Insert the new order
   var result;
   try {

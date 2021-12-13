@@ -1,0 +1,6 @@
+PATCH http://localhost:3001/api/testing/weekphases/current HTTP/1.1
+Content-Type: application/json
+
+{
+    "weekphaseID":"weekphase-4"
+}

@@ -1,30 +1,42 @@
-let chai = require("chai");
-let expect = chai.expect;
-let chaiHttp = require("chai-http");
+const chai = require("chai");
+const expect = chai.expect;
+const chaiHttp = require("chai-http");
+chai.use(chaiHttp);
+const mongoUnit = require("mongo-unit");
+
+const testData = require("./test-data");
+
+const { OrderStatus } = require("../models/order");
+
 let dao = require("../dao/dao");
 
-chai.use(chaiHttp);
-const { ObjectId } = require("bson");
+// ----------------------------------
+// FAKE DATABASE AND TEST SERVER INIT
+// ----------------------------------
 // This will contain the main server app, needed to listen for requests.
 // This is initialized when the mock MongoDB initialization is completed.
 let app;
 
-// Init mock MongoDB
-const mongoUnit = require("mongo-unit");
-let testData = require("./test-data");
-const { OrderStatus } = require("../models/order");
-
 const mongoTestDBName = "spg-test";
-mongoUnit.start({ dbName: mongoTestDBName }).then(() => {
-  process.env.MONGO_CONN_STR = mongoUnit.getUrl();
+
+before(async () => {
+  // Init mock MongoDB
+  let dbURL = await mongoUnit.start({ dbName: mongoTestDBName });
+  process.env.MONGO_CONN_STR = dbURL;
   process.env.MONGO_DB_NAME = mongoTestDBName;
   app = require("../app");
-  run();
+
+  // Import test files
+  require("./test_weekphase").tests(app);
 });
 
 after(() => {
   return mongoUnit.stop();
 });
+
+// -----
+// TESTS
+// -----
 
 // Employees API tests
 describe("Employees API tests:", () => {
@@ -181,6 +193,7 @@ describe("Employees API tests:", () => {
   });
 });
 
+//Product API tests
 describe("Products API tests: ", () => {
   beforeEach(() => {
     dao.open();
@@ -691,6 +704,7 @@ describe("Clients API tests:", () => {
   beforeEach(() => {
     dao.open();
     mongoUnit.load(testData.clientsCollection);
+    mongoUnit.load(testData.ordersCollection2);
     dao.createClientsTextSearchIndexes();
   });
 
@@ -730,7 +744,52 @@ describe("Clients API tests:", () => {
               phoneNumber: 3205708803,
               address: "via Domenico Bini,26 Torino,10538",
               wallet: 55.5,
+              hasPendingCancelation: true,
             },
+          ]);
+          expect(res.status).to.be.equal(200);
+
+          done();
+        });
+    });
+
+    it("it must retrieve client Domenico Bini with hasPendingCancelation=true", (done) => {
+      chai
+        .request(app)
+        .get("/api/clients?searchString=Torino&hasPendingCancelation=true")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.body).to.be.an("array");
+          expect(res.body.length).to.be.equal(1);
+          expect(res.body).to.be.eql([
+            {
+              id: "6187c957b288576ca26f8257",
+              email: "client1@test.com",
+              role: "client",
+              fullName: " Domenico Bini",
+              phoneNumber: 3205708803,
+              address: "via Domenico Bini,26 Torino,10538",
+              wallet: 55.5,
+              hasPendingCancelation: true,
+            },
+          ]);
+          expect(res.status).to.be.equal(200);
+
+          done();
+        });
+    });
+
+    it("it must retrieve client Andrea Diprè with hasPendingCancelation=false", (done) => {
+      chai
+        .request(app)
+        .get("/api/clients?hasPendingCancelation=false")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.body).to.be.an("array");
+          expect(res.body.length).to.be.equal(2);
+          expect(res.body.map((client) => client.id)).to.include.members([
+            "6a8fc927bb88c762a26f0000",
+            "618d4ad3736f2caf2d3b3ca5",
           ]);
           expect(res.status).to.be.equal(200);
 
@@ -747,6 +806,18 @@ describe("Clients API tests:", () => {
           expect(res.body).to.be.an("array");
           expect(res.body.length).to.be.equal(0);
           expect(res.status).to.be.equal(200);
+
+          done();
+        });
+    });
+
+    it("it must return a bad request due to hasPendingCancelation not being a boolean", (done) => {
+      chai
+        .request(app)
+        .get("/api/clients?hasPendingCancelation=dsaffa")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(400);
 
           done();
         });
@@ -776,15 +847,15 @@ describe("Clients API tests:", () => {
           expect(err).to.be.null;
           expect(res.status).to.be.equal(200);
           expect(res.body).to.be.an("object");
-
           expect(res.body).to.be.eql({
             id: "6a8fc927bb88c762a26f0000",
             email: "client2@test.com",
-            role: "client",
             fullName: "Andrea Diprè",
             phoneNumber: 3205755555,
+            role: "client",
             address: "via Andrea Dipre,24 Torino,10538",
             wallet: 0,
+            hasPendingCancelation: false,
           });
 
           done();
@@ -815,6 +886,7 @@ describe("Clients API tests:", () => {
         });
     });
   });
+
   describe("PATCH /clients/:clientID/wallet", () => {
     it("it must fail when mongo fails", (done) => {
       dao.close();
@@ -882,344 +954,606 @@ describe("Clients API tests:", () => {
         });
     });
   });
+});
 
-  // Orders API tests
-  describe("Orders API tests:", () => {
-    beforeEach(() => {
-      dao.open();
-      mongoUnit.load(testData.ordersCollection);
+//Orders API tests
+describe("Orders API tests:", () => {
+  beforeEach(() => {
+    dao.open();
+    mongoUnit.load(testData.ordersCollection);
+  });
+
+  afterEach(() => {
+    mongoUnit.drop();
+    dao.close();
+  });
+
+  describe("POST /orders", () => {
+    it("it should create a new order of type shipment", (done) => {
+      chai
+        .request(app)
+        .post("/api/orders")
+        .send({
+          clientID: "6187c957b288576ca26f8257",
+          products: [
+            { productID: "6187c957b288576ca26f8258", quantity: 3 },
+            { productID: "6187c957b288576ca26f8259", quantity: 1 },
+            { productID: "6187c957b288576ca26f8250", quantity: 2 },
+          ],
+          shipmentInfo: {
+            type: "shipment",
+            address: "Via its real trust me 54",
+          },
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          const id = res.body.id;
+
+          chai
+            .request(app)
+            .get("/api/orders/" + id)
+            .end((err, res) => {
+              expect(err).to.be.null;
+              expect(res.status).to.be.equal(200);
+              expect(res.body).to.be.an("object");
+
+              expect(res.body.clientID).to.be.equal("6187c957b288576ca26f8257");
+              expect(res.body.id).to.be.equal(id);
+              expect(res.body.products).to.be.eql([
+                { productID: "6187c957b288576ca26f8258", quantity: 3 },
+                { productID: "6187c957b288576ca26f8259", quantity: 1 },
+                { productID: "6187c957b288576ca26f8250", quantity: 2 },
+              ]);
+              expect(res.body.shipmentInfo).to.be.eql({
+                type: "shipment",
+                address: "Via its real trust me 54",
+              });
+              expect(res.body.status).to.be.equal("waiting");
+              done();
+            });
+        });
     });
 
-    afterEach(() => {
-      mongoUnit.drop();
+    it("it should create a new order of type pickUp", (done) => {
+      chai
+        .request(app)
+        .post("/api/orders")
+        .send({
+          clientID: "6187c957b288576ca26f8257",
+          products: [
+            { productID: "6187c957b288576ca26f8258", quantity: 3 },
+            { productID: "6187c957b288576ca26f8259", quantity: 1 },
+            { productID: "6187c957b288576ca26f8250", quantity: 2 },
+          ],
+          shipmentInfo: {
+            type: "pickup",
+            pickUpSlot: "41111",
+            address: "Via its real trust me 54",
+          },
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          const id = res.body.id;
+
+          chai
+            .request(app)
+            .get("/api/orders/" + id)
+            .end((err, res) => {
+              expect(err).to.be.null;
+              expect(res.status).to.be.equal(200);
+              expect(res.body).to.be.an("object");
+
+              expect(res.body.clientID).to.be.equal("6187c957b288576ca26f8257");
+              expect(res.body.id).to.be.equal(id);
+              expect(res.body.products).to.be.eql([
+                { productID: "6187c957b288576ca26f8258", quantity: 3 },
+                { productID: "6187c957b288576ca26f8259", quantity: 1 },
+                { productID: "6187c957b288576ca26f8250", quantity: 2 },
+              ]);
+              expect(res.body.shipmentInfo).to.be.eql({
+                type: "pickup",
+                pickUpSlot: "41111",
+                address: "Via its real trust me 54",
+              });
+              expect(res.body.status).to.be.equal("waiting");
+              done();
+            });
+        });
+    });
+
+    it("it should create a new order of type shipment and return it without pickUpSlot since it's not pickUp type", (done) => {
+      chai
+        .request(app)
+        .post("/api/orders")
+        .send({
+          clientID: "6187c957b288576ca26f8257",
+          products: [
+            { productID: "6187c957b288576ca26f8258", quantity: 3 },
+            { productID: "6187c957b288576ca26f8259", quantity: 1 },
+            { productID: "6187c957b288576ca26f8250", quantity: 2 },
+          ],
+          shipmentInfo: {
+            type: "shipment",
+            pickUpSlot: "41111",
+            address: "Via its real trust me 54",
+          },
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          const id = res.body.id;
+
+          chai
+            .request(app)
+            .get("/api/orders/" + id)
+            .end((err, res) => {
+              expect(err).to.be.null;
+              expect(res.status).to.be.equal(200);
+              expect(res.body).to.be.an("object");
+
+              expect(res.body.clientID).to.be.equal("6187c957b288576ca26f8257");
+              expect(res.body.id).to.be.equal(id);
+              expect(res.body.products).to.be.eql([
+                { productID: "6187c957b288576ca26f8258", quantity: 3 },
+                { productID: "6187c957b288576ca26f8259", quantity: 1 },
+                { productID: "6187c957b288576ca26f8250", quantity: 2 },
+              ]);
+              expect(res.body.shipmentInfo).to.be.eql({
+                type: "shipment",
+                address: "Via its real trust me 54",
+              });
+              expect(res.body.status).to.be.equal("waiting");
+              done();
+            });
+        });
+    });
+
+    it("it should give Bad request error because the address is empty", (done) => {
+      chai
+        .request(app)
+        .post("/api/orders")
+        .send({
+          clientID: "6187c957b288576ca26f8257",
+          products: [{ productID: "6187c957b288576ca26f8258", quantity: -2 }],
+          shipmentInfo: {
+            type: "shipment",
+            address: "",
+          },
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(400);
+          expect(res.body).to.be.an("object");
+          done();
+        });
+    });
+
+    it("it should give Bad request error because the pickUpSlot is wrong ", (done) => {
+      chai
+        .request(app)
+        .post("/api/orders")
+        .send({
+          clientID: "6187c957b288576ca26f8257",
+          products: [{ productID: "6187c957b288576ca26f8258", quantity: -2 }],
+          shipmentInfo: {
+            type: "pickup",
+            pickUpSlot: "52359",
+            address: "Via Prapappo Ravanello 54",
+          },
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(400);
+          expect(res.body).to.be.an("object");
+          done();
+        });
+    });
+
+    it("it should give Bad request error because the type of the shipment is wrong ", (done) => {
+      chai
+        .request(app)
+        .post("/api/orders")
+        .send({
+          clientID: "6187c957b288576ca26f8257",
+          products: [{ productID: "6187c957b288576ca26f8258", quantity: 2 }],
+          shipmentInfo: {
+            type: "WRONG",
+            pickUpSlot: "52359",
+            address: "Via Prapappo Ravanello 54",
+          },
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(400);
+          expect(res.body).to.be.an("object");
+          done();
+        });
+    });
+
+    it("it should give Bad request error because quantity is negative", (done) => {
+      chai
+        .request(app)
+        .post("/api/orders")
+        .send({
+          clientID: "6187c957b288576ca26f8257",
+          products: [{ productID: "6187c957b288576ca26f8258", quantity: -2 }],
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(400);
+          expect(res.body).to.be.an("object");
+          done();
+        });
+    });
+    it("it should give Bad request error when clientID is not mongo db id", (done) => {
+      chai
+        .request(app)
+        .post("/api/orders")
+        .send({
+          clientID: "1",
+          products: [
+            { productID: "6187c957b288576ca26f8258", quantity: 3 },
+            { productID: "6187c957b288576ca26f8259", quantity: 1 },
+            { productID: "6187c957b288576ca26f8250", quantity: 2 },
+          ],
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(400);
+          expect(res.body).to.be.an("object");
+          done();
+        });
+    });
+
+    it("it should give Bad request error when clientID is integer", (done) => {
+      chai
+        .request(app)
+        .post("/api/orders")
+        .send({
+          clientID: 1,
+          products: [{ productID: "6187c957b288576ca26f8258", quantity: 3 }],
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(400);
+          expect(res.body).to.be.an("object");
+
+          done();
+        });
+    });
+
+    it("it should give Bad request error when product ID is integer", (done) => {
+      chai
+        .request(app)
+        .post("/api/orders")
+        .send({
+          clientID: 1,
+          products: [{ productID: 1, quantity: 3 }],
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(400);
+          expect(res.body).to.be.an("object");
+
+          done();
+        });
+    });
+
+    it("it should give Bad request error because object is not correct", (done) => {
+      chai
+        .request(app)
+        .post("/api/orders")
+        .send({
+          clientID: "6187c957b288576ca26f8257",
+          products: [
+            { productID: "6187c957b288576ca26f8258", quantity: 3 },
+            { productID: "6187c957b288576ca26f8259", quantity: 1 },
+            { productID: "6187c957b288576ca26f8250", quantity: 2 },
+          ],
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(400);
+          expect(res.body).to.be.an("object");
+
+          done();
+        });
+    });
+
+    it("it must fail when mongo fails", (done) => {
       dao.close();
+      var day = new Date();
+      //shipment dateis valid only if it is for next week and is between wednesday & friday
+      //7 days a week, tjursday is day number 4
+      var daysToReachNextThursday = 7 - day.getDay() + 4;
+      var nextThursday = new Date(
+        day.setDate(day.getDate() + daysToReachNextThursday)
+      );
+      chai
+        .request(app)
+        .post("/api/orders")
+        .send({
+          clientID: "6187c957b288576ca26f8257",
+          products: [
+            { productID: "6187c957b288576ca26f8258", quantity: 3 },
+            { productID: "6187c957b288576ca26f8259", quantity: 1 },
+            { productID: "6187c957b288576ca26f8250", quantity: 2 },
+          ],
+          shipmentInfo: {
+            type: "pickup",
+            pickUpSlot: "32200",
+            address: "Via Prapappo Ravanello 54",
+          },
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(500);
+
+          done();
+        });
+    });
+  });
+
+  describe("GET /orders", () => {
+    it("it should retrieve the client's orders with given ClientID", (done) => {
+      chai
+        .request(app)
+        .get("/api/orders?clientID=6187c957b288576ca26f8257")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          expect(res.body).to.be.an("array");
+
+          expect(res.body).to.be.eql([
+            {
+              id: "6187c957b288576ca26f8251",
+              clientID: "6187c957b288576ca26f8257",
+              products: [
+                { productID: "6187c957b288576ca26f8258", quantity: 3 },
+                { productID: "6187c957b288576ca26f8259", quantity: 1 },
+                { productID: "6187c957b288576ca26f8250", quantity: 2 },
+              ],
+              status: "prepared",
+              totalPrice: "6",
+              createdAt: "2021-11-16T13:00:07.616Z",
+              shipmentInfo: {
+                type: "pickup",
+                pickUpSlot: "32200",
+                address: "Via Prapappo Ravanello 54",
+              },
+            },
+            {
+              id: "6187c957b288576ca26f8999",
+              clientID: "6187c957b288576ca26f8257",
+              products: [
+                { productID: "6187c957b288576ca26f8258", quantity: 10 },
+                { productID: "6187c957b288576ca26f8259", quantity: 2 },
+              ],
+              status: "done",
+              totalPrice: "12",
+              createdAt: "2021-12-16T13:00:07.616Z",
+              shipmentInfo: {
+                type: "pickup",
+                pickUpSlot: "42200",
+                address: "Via of the market ",
+              },
+            },
+          ]);
+
+          done();
+        });
     });
 
-    describe("POST /orders", () => {
-      it("it should create a new order", (done) => {
-        chai
-          .request(app)
-          .post("/api/orders")
-          .send({
+    it("it should return an empty array if there are no orders for given clientID", (done) => {
+      chai
+        .request(app)
+        .get("/api/orders?clientID=6187c957b288576ca26f8000")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          expect(res.body).to.be.an("array");
+          expect(res.body.length).to.be.equal(0);
+          done();
+        });
+    });
+
+    it("it should return an error if the ID passed is not valid", (done) => {
+      chai
+        .request(app)
+        .get("/api/orders?clientID=68000")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(400);
+          done();
+        });
+    });
+
+    it("it must fail when mongo fails", (done) => {
+      dao.close();
+      chai
+        .request(app)
+        .get("/api/orders?clientID=6187c957b288576ca26f8257")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(500);
+
+          done();
+        });
+    });
+  });
+
+  describe("PATCH /orders", () => {
+    it("it should update the order's status with given orderID", (done) => {
+      chai
+        .request(app)
+        .patch("/api/orders/6187c957b288576ca26f8251/complete")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(204);
+        });
+
+      chai
+        .request(app)
+        .get("/api/orders/6187c957b288576ca26f8251")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          expect(res.body).to.be.eql({
+            id: "6187c957b288576ca26f8251",
             clientID: "6187c957b288576ca26f8257",
             products: [
               { productID: "6187c957b288576ca26f8258", quantity: 3 },
               { productID: "6187c957b288576ca26f8259", quantity: 1 },
               { productID: "6187c957b288576ca26f8250", quantity: 2 },
             ],
-          })
-          .end((err, res) => {
-            expect(err).to.be.null;
-            expect(res.status).to.be.equal(200);
-            expect(res.body.clientID).to.be.equal("6187c957b288576ca26f8257");
-            expect(res.body.products).to.be.an.string;
-            expect(res.body.status).to.be.equal(OrderStatus.WAITING);
-            expect(res.body.totalPrice).to.be.equal(6);
-
-            done();
+            status: "done",
+            totalPrice: "6",
+            createdAt: "2021-11-16T13:00:07.616Z",
+            shipmentInfo: {
+              type: "pickup",
+              pickUpSlot: "32200",
+              address: "Via Prapappo Ravanello 54",
+            },
           });
-      });
+          done();
+        });
+    });
 
-      it("it should give Bad request error because quantity is negative", (done) => {
-        chai
-          .request(app)
-          .post("/api/orders")
-          .send({
-            clientID: "6187c957b288576ca26f8257",
-            products: [{ productID: "6187c957b288576ca26f8258", quantity: -2 }],
-          })
-          .end((err, res) => {
-            expect(err).to.be.null;
-            expect(res.status).to.be.equal(400);
-            expect(res.body).to.be.an("object");
-            done();
-          });
-      });
-      it("it should give Bad request error when clientID is not mongo db id", (done) => {
-        chai
-          .request(app)
-          .post("/api/orders")
-          .send({
-            clientID: "1",
+    it("it should not update the order if it is not in PREPARING status", (done) => {
+      chai
+        .request(app)
+        .patch("/api/orders/6187c957b288576ca26f8990/complete")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(204);
+        });
+      chai
+        .request(app)
+        .get("/api/orders/6187c957b288576ca26f8990")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          expect(res.body).to.be.eql({
+            id: "6187c957b288576ca26f8990",
+            clientID: "6187c957b288576ca26f8251",
             products: [
-              { productID: "6187c957b288576ca26f8258", quantity: 3 },
-              { productID: "6187c957b288576ca26f8259", quantity: 1 },
-              { productID: "6187c957b288576ca26f8250", quantity: 2 },
+              { productID: "6187c957b288576ca26f8258", quantity: 10 },
+              { productID: "6187c957b288576ca26f8259", quantity: 2 },
             ],
-          })
-          .end((err, res) => {
-            expect(err).to.be.null;
-            expect(res.status).to.be.equal(400);
-            expect(res.body).to.be.an("object");
-            done();
+            status: "waiting",
+            totalPrice: "12",
+            createdAt: "2021-12-16T13:00:07.616Z",
+            shipmentInfo: {
+              type: "shipment",
+              address: "Via it's real trust me 54",
+            },
           });
-      });
+          done();
+        });
+    });
 
-      it("it should give Bad request error when clientID is integer", (done) => {
-        chai
-          .request(app)
-          .post("/api/orders")
-          .send({
-            clientID: 1,
-            products: [{ productID: "6187c957b288576ca26f8258", quantity: 3 }],
-          })
-          .end((err, res) => {
-            expect(err).to.be.null;
-            expect(res.status).to.be.equal(400);
-            expect(res.body).to.be.an("object");
+    it("Even if the ID passed is valid but not present in the collection, the response status should be 204", (done) => {
+      chai
+        .request(app)
+        .patch("/api/orders/6187c957b288576ca26f8259/complete")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(204);
+          done();
+        });
+    });
 
-            done();
-          });
-      });
+    it("it should return an error if the ID passed is not valid", (done) => {
+      chai
+        .request(app)
+        .patch("/api/orders/12/complete")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(400);
+          done();
+        });
+    });
 
-      it("it should give Bad request error when product ID is integer", (done) => {
-        chai
-          .request(app)
-          .post("/api/orders")
-          .send({
-            clientID: 1,
-            products: [{ productID: 1, quantity: 3 }],
-          })
-          .end((err, res) => {
-            expect(err).to.be.null;
-            expect(res.status).to.be.equal(400);
-            expect(res.body).to.be.an("object");
+    it("it must fail when mongo fails", (done) => {
+      dao.close();
+      chai
+        .request(app)
+        .patch("/api/orders/6187c957b288576ca26f8251/complete")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(500);
 
-            done();
-          });
-      });
+          done();
+        });
+    });
+  });
 
-      it("it should give Bad request error because object is not correct", (done) => {
-        chai
-          .request(app)
-          .post("/api/orders")
-          .send({
-            clientID: "6187c957b288576ca26f8257",
-            products: [
-              { wrongId: "6187c957b288576ca26f8258", quantity: 3 },
-              { wrongId: "6187c957b288576ca26f8259", quantity: 1 },
-              { wrongId: "6187c957b288576ca26f8250", quantity: 2 },
-            ],
-          })
-          .end((err, res) => {
-            expect(err).to.be.null;
-            expect(res.status).to.be.equal(400);
-            expect(res.body).to.be.an("object");
+  describe("GET /orders/:orderID", () => {
+    it("it should return 404 if the order with given orderID doesn't exists", (done) => {
+      chai
+        .request(app)
+        .get("/api/orders/6187c957b288576ca26f0000")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(404);
+          done();
+        });
+    });
 
-            done();
-          });
-      });
-
-      it("it must fail when mongo fails", (done) => {
-        dao.close();
-        chai
-          .request(app)
-          .post("/api/orders")
-          .send({
+    it("it should retrieve the order with given orderID", (done) => {
+      chai
+        .request(app)
+        .get("/api/orders/6187c957b288576ca26f8251")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          expect(res.body).to.be.an("object");
+          expect(res.body).to.be.eql({
+            id: "6187c957b288576ca26f8251",
             clientID: "6187c957b288576ca26f8257",
             products: [
               { productID: "6187c957b288576ca26f8258", quantity: 3 },
               { productID: "6187c957b288576ca26f8259", quantity: 1 },
               { productID: "6187c957b288576ca26f8250", quantity: 2 },
             ],
-          })
-          .end((err, res) => {
-            expect(err).to.be.null;
-            expect(res.status).to.be.equal(500);
-
-            done();
+            status: "prepared",
+            totalPrice: "6",
+            createdAt: "2021-11-16T13:00:07.616Z",
+            shipmentInfo: {
+              type: "pickup",
+              pickUpSlot: "32200",
+              address: "Via Prapappo Ravanello 54",
+            },
           });
-      });
+
+          done();
+        });
     });
 
-    describe("GET /orders", () => {
-      it("it should retrieve the client's orders with given ClientID", (done) => {
-        chai
-          .request(app)
-          .get("/api/orders?clientID=6187c957b288576ca26f8257")
-          .end((err, res) => {
-            expect(err).to.be.null;
-            expect(res.status).to.be.equal(200);
-            expect(res.body).to.be.an("array");
-
-            expect(res.body).to.be.eql([
-              {
-                id: "6187c957b288576ca26f8251",
-                clientID: "6187c957b288576ca26f8257",
-                products: [
-                  { productID: "6187c957b288576ca26f8258", quantity: 3 },
-                  { productID: "6187c957b288576ca26f8259", quantity: 1 },
-                  { productID: "6187c957b288576ca26f8250", quantity: 2 },
-                ],
-                status: "prepared",
-                totalPrice: "6",
-                createdAt: "2021-11-16T13:00:07.616Z",
-              },
-              {
-                id: "6187c957b288576ca26f8999",
-                clientID: "6187c957b288576ca26f8257",
-                products: [
-                  { productID: "6187c957b288576ca26f8258", quantity: 10 },
-                  { productID: "6187c957b288576ca26f8259", quantity: 2 },
-                ],
-                status: "done",
-                totalPrice: "12",
-                createdAt: "2021-12-16T13:00:07.616Z",
-              },
-            ]);
-
-            done();
-          });
-      });
-
-      it("it should return an empty array if there are no orders for given clientID", (done) => {
-        chai
-          .request(app)
-          .get("/api/orders?clientID=6187c957b288576ca26f8000")
-          .end((err, res) => {
-            expect(err).to.be.null;
-            expect(res.status).to.be.equal(200);
-            expect(res.body).to.be.an("array");
-            expect(res.body.length).to.be.equal(0);
-            done();
-          });
-      });
-
-      it("it should return an error if the ID passed is not valid", (done) => {
-        chai
-          .request(app)
-          .get("/api/orders?clientID=68000")
-          .end((err, res) => {
-            expect(err).to.be.null;
-            expect(res.status).to.be.equal(400);
-            done();
-          });
-      });
-
-      it("it must fail when mongo fails", (done) => {
-        dao.close();
-        chai
-          .request(app)
-          .get("/api/orders?clientID=6187c957b288576ca26f8257")
-          .end((err, res) => {
-            expect(err).to.be.null;
-            expect(res.status).to.be.equal(500);
-
-            done();
-          });
-      });
+    it("it should return an error if the ID passed is not valid", (done) => {
+      chai
+        .request(app)
+        .get("/api/orders/6187c957b288576ca26f8")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(400);
+          done();
+        });
     });
 
-    describe("PATCH /orders", () => {
-      it("it should update the order's status with given orderID", (done) => {
-        chai
-          .request(app)
-          .patch("/api/orders/6187c957b288576ca26f8251/complete")
-          .end((err, res) => {
-            expect(err).to.be.null;
-            expect(res.status).to.be.equal(204);
-          });
+    it("it must fail when mongo fails", (done) => {
+      dao.close();
+      chai
+        .request(app)
+        .get("/api/orders/6187c957b288576ca26f8251")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(500);
 
-        chai
-          .request(app)
-          .get("/api/orders?clientID=6187c957b288576ca26f8257")
-          .end((err, res) => {
-            expect(err).to.be.null;
-            expect(res.status).to.be.equal(200);
-            expect(res.body).to.be.eql([
-              {
-                id: "6187c957b288576ca26f8251",
-                clientID: "6187c957b288576ca26f8257",
-                products: [
-                  { productID: "6187c957b288576ca26f8258", quantity: 3 },
-                  { productID: "6187c957b288576ca26f8259", quantity: 1 },
-                  { productID: "6187c957b288576ca26f8250", quantity: 2 },
-                ],
-                status: "done",
-                totalPrice: "6",
-                createdAt: "2021-11-16T13:00:07.616Z",
-              },
-              {
-                id: "6187c957b288576ca26f8999",
-                clientID: "6187c957b288576ca26f8257",
-                products: [
-                  { productID: "6187c957b288576ca26f8258", quantity: 10 },
-                  { productID: "6187c957b288576ca26f8259", quantity: 2 },
-                ],
-                status: "done",
-                totalPrice: "12",
-                createdAt: "2021-12-16T13:00:07.616Z",
-              },
-            ]);
-            done();
-          });
-      });
-
-      it("it should not update the order if it is not in PREPARING status", (done) => {
-        chai
-          .request(app)
-          .patch("/api/orders/6187c957b288576ca26f8990/complete")
-          .end((err, res) => {
-            expect(err).to.be.null;
-            expect(res.status).to.be.equal(204);
-          });
-        chai
-          .request(app)
-          .get("/api/orders?clientID=6187c957b288576ca26f8251")
-          .end((err, res) => {
-            expect(err).to.be.null;
-            expect(res.status).to.be.equal(200);
-            expect(res.body).to.be.eql([
-              {
-                id: "6187c957b288576ca26f8990",
-                clientID: "6187c957b288576ca26f8251",
-                products: [
-                  { productID: "6187c957b288576ca26f8258", quantity: 10 },
-                  { productID: "6187c957b288576ca26f8259", quantity: 2 },
-                ],
-                status: "waiting",
-                totalPrice: "12",
-                createdAt: "2021-12-16T13:00:07.616Z",
-              },
-            ]);
-            done();
-          });
-      });
-
-      it("Even if the ID passed is valid but not present in the collection, the response status should be 204", (done) => {
-        chai
-          .request(app)
-          .patch("/api/orders/6187c957b288576ca26f8259/complete")
-          .end((err, res) => {
-            expect(err).to.be.null;
-            expect(res.status).to.be.equal(204);
-            done();
-          });
-      });
-
-      it("it should return an error if the ID passed is not valid", (done) => {
-        chai
-          .request(app)
-          .patch("/api/orders/12/complete")
-          .end((err, res) => {
-            expect(err).to.be.null;
-            expect(res.status).to.be.equal(400);
-            done();
-          });
-      });
-
-      it("it must fail when mongo fails", (done) => {
-        dao.close();
-        chai
-          .request(app)
-          .patch("/api/orders/6187c957b288576ca26f8251/complete")
-          .end((err, res) => {
-            expect(err).to.be.null;
-            expect(res.status).to.be.equal(500);
-
-            done();
-          });
-      });
+          done();
+        });
     });
   });
 });
@@ -1248,7 +1582,6 @@ describe("Clients API tests:", () => {
           email: "client@test.com",
           password: "password",
           address: "via giacinto,22 Torino, 10127",
-          wallet: 0.0,
         })
         .end((err, res) => {
           expect(err).to.be.null;
@@ -1271,7 +1604,6 @@ describe("Clients API tests:", () => {
           email: "notanemail",
           password: "password",
           address: "via giacinto,22 Torino, 10127",
-          wallet: 0.0,
         })
         .end((err, res) => {
           expect(err).to.be.null;
@@ -1291,7 +1623,6 @@ describe("Clients API tests:", () => {
           email: "client@test.com",
           password: "pas",
           address: "via giacinto,22 Torino, 10127",
-          wallet: 0.0,
         })
         .end((err, res) => {
           expect(err).to.be.null;
@@ -1311,7 +1642,6 @@ describe("Clients API tests:", () => {
           email: "client@test.com",
           password: "password",
           address: "via giacinto,22 Torino, 10127",
-          wallet: 0.0,
         })
         .end((err, res) => {
           expect(err).to.be.null;
@@ -1332,7 +1662,6 @@ describe("Clients API tests:", () => {
           email: "client@test.com",
           password: "password",
           address: "via giacinto,22 Torino, 10127",
-          wallet: 0.0,
         })
         .end((err, res) => {
           expect(err).to.be.null;
@@ -1370,7 +1699,6 @@ describe("Clients API tests:", () => {
           phoneNumber: "1236678",
           email: "ansari@email.com",
           address: "via giacinto,22 Torino, 10127",
-          wallet: 0.0,
         })
         .end((err, res) => {
           expect(err).to.be.null;
@@ -1392,7 +1720,6 @@ describe("Clients API tests:", () => {
           phoneNumber: "1236678",
           email: "nomail",
           address: "via giacinto,22 Torino, 10127",
-          wallet: 0.0,
         })
         .end((err, res) => {
           expect(err).to.be.null;
@@ -1411,7 +1738,6 @@ describe("Clients API tests:", () => {
           phoneNumber: "1236678",
           email: "ansari@email.com",
           address: "via giacinto,22 Torino, 10127",
-          wallet: 0.0,
         })
         .end((err, res) => {
           expect(err).to.be.null;
@@ -1431,7 +1757,6 @@ describe("Clients API tests:", () => {
           phoneNumber: "1236678",
           email: "ansari@email.com",
           address: "via giacinto,22 Torino, 10127",
-          wallet: 0.0,
         })
         .end((err, res) => {
           expect(err).to.be.null;

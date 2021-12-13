@@ -150,7 +150,7 @@ function ShoppingCartOrderSummary(props) {
                         </Button>
                     </Row>
                     <Row>
-                        <Button onClick={props.handleShow} disabled={props.deliveryType==="" || !props.deliveryDate || !props.deliveryAddress || (!props.deliveryTime && props.deliveryType=="Pickup")} className="cart-button-placeorder">
+                        <Button onClick={props.handleShow} disabled={props.deliveryType==="" || !props.deliveryDate || !props.deliveryAddress || (!props.deliveryTime && props.deliveryType==="Pickup")} className="cart-button-placeorder">
                             PLACE ORDER
                         </Button>
                     </Row>

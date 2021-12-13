@@ -451,6 +451,10 @@ export async function createOrder(clientID, products, shipmentInfo) {
       let responseBody;
       responseBody = await response.json();
       return Order.fromJSON(responseBody);
+    case 401:
+      throw new Error("Unauthorized - The user is not logged or is not allowed to make this action");
+    case 403:
+      throw new Error("Forbidden - The action cannot be executed in the current week phase");
     default:
       throw new Error("An error occurred during order fetch");
   }

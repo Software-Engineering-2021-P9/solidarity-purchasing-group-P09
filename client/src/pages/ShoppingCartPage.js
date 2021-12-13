@@ -2,8 +2,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useState, useContext, useEffect } from "react";
 import { useLocation } from "react-router";
 import { Container, Row, Col } from "react-bootstrap";
-import { Redirect, Link } from "react-router-dom";
-import Button from "../ui-components/Button/Button";
+import { Redirect } from "react-router-dom";
 
 import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponent";
 import { ShoppingCartTitle } from "../ui-components/ShoppingCartComponent/ShoppingCartTitle";
@@ -134,15 +133,13 @@ function ShoppingCartPage(props) {
     let shipmentInfo = {
       type: deliveryType,
       address: deliveryAddress,
-      pickUpSlot: deliveryType=="Pickup"? deliveryDate+""+(deliveryTime.replace(":","")) : null,
+      pickUpSlot: deliveryType==="Pickup"? deliveryDate+""+(deliveryTime.replace(":","")) : null,
     };
-
-    console.log(shipmentInfo);
       
     //call create order
-    // createOrder(client.id, orderProducts, shipmentInfo);
-    // handleClose();
-    // setSubmitted(true);
+    createOrder(client.id, orderProducts, shipmentInfo);
+    handleClose();
+    setSubmitted(true);
   };
 
   return (

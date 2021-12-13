@@ -59,13 +59,13 @@ exports.createClientsTextSearchIndexes = (db) => {
 // CreateClient
 // --------------
 
-exports.createClient = (db, fullName, phoneNumber, email, address, wallet) => {
+exports.createClient = (db, fullName, phoneNumber, email, address) => {
   return db.collection(clientCollectionName).insertOne({
     fullName: fullName,
     phoneNumber: phoneNumber,
     email: email,
     address: address,
-    wallet: wallet,
+    wallet: 0.0,
   });
 };
 
@@ -75,8 +75,7 @@ exports.signupClient = async (
   phoneNumber,
   email,
   password,
-  address,
-  wallet
+  address
 ) => {
   return db.collection(clientCollectionName).insertOne({
     fullName: fullName,
@@ -84,7 +83,6 @@ exports.signupClient = async (
     email: email,
     password: password,
     address: address,
-    wallet: wallet,
+    wallet: 0.0,
   });
-
 };

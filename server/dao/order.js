@@ -36,3 +36,9 @@ exports.completeOrder = async (db, orderID) => {
   const update = { $set: { status: OrderStatus.DONE } };
   return db.collection(orderCollectionName).updateOne(query, update);
 };
+
+exports.getOrdersByClientIDList = async (db, clientIDList) => {
+  const query = { clientID: { $in: clientIDList } };
+
+  return db.collection(orderCollectionName).find(query).toArray();
+};

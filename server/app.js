@@ -134,14 +134,14 @@ app.post(
 
 app.post(
   buildAPIPath("/orders"),
-  weekphaseService.checkWeekphaseMiddleware([
+  /*   weekphaseService.checkWeekphaseMiddleware([
     "weekphase-1",
     "weekphase-5",
     "weekphase-6",
     "weekphase-7",
     "weekphase-8",
     "weekphase-9",
-  ]),
+  ]), */
   orderHandlers.createOrderValidatorChain,
   checkValidationErrorMiddleware,
   orderHandlers.createOrderHandler

@@ -37,7 +37,7 @@ function ClientManagementPage(props) {
 
   function onCoveredOrderFilterChange(newVal) {
     setHasPendingCancelationFilter(newVal);
-    onSearchClientButtonClick();
+    //onSearchClientButtonClick();
     //FOR THE REVIEWER: this is like pressing "search" button when selecting the filter "covered/notcovered/all"
     //might be ugly for someone, tell me in the review if I have to delete this.
   }

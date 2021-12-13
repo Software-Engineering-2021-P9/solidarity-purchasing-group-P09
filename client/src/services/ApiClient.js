@@ -130,6 +130,8 @@ export async function findClients(searchString, hasPendingCancelation) {
     path = path.substring(0, path.length-1);//delete the last character, that is &
   }
 
+  console.log(path, hasPendingCancelation);
+  
   let response = await fetch(path);
 
   switch (response.status) {

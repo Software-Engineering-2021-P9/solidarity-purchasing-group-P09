@@ -1,7 +1,6 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import "../ShoppingCartComponent/ShoppingCartControls";
 import React from "react";
-import { Button } from "react-bootstrap";
+import Button from "../Button/Button";
 import { Link } from "react-router-dom";
 
 function CreateNewOrderButton(props) {

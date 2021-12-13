@@ -20,8 +20,6 @@ exports.createOrderValidatorChain = [
 ];
 
 exports.createOrderHandler = async function (req, res, next) {
-  // productPrice is hardcoded to 1 as a tempoarary solution for now, will be fixed in the next sprints
-  //const productPrice = 1;
   const [week, year] = getNextWeek(dayjs());
   var totalPrice = 0.0;
 

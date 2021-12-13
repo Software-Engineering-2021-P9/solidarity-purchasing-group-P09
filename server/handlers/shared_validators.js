@@ -17,6 +17,10 @@ exports.employeeIDPathValidator = param("employeeID").exists().isMongoId();
 exports.clientIDPathValidator = param("clientID").exists().isMongoId();
 exports.productIDPathValidator = param("productID").exists().isMongoId();
 exports.farmerIDPathValidator = param("farmerID").exists().isMongoId();
+exports.weekphaseIDBodyValidator = body("weekphaseID")
+  .exists()
+  .optional({ nullable: true })
+  .isAlphanumeric(undefined, { ignore: "-" });
 
 exports.emailBodyValidator = body("email")
   .notEmpty()

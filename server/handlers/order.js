@@ -8,7 +8,7 @@
    ShipmentInfo,
    Order,
  } = require("../models/order");
- const { Order, OrderStatus } = require("../models/order");
+ 
  const { getProductPrice } = require("../dao/productAvailability");
  const { getNextWeek } = require("../services/time_service");
  const {
@@ -76,17 +76,9 @@
     console.error(`CreateOrder() -> couldn't retrieve newly created order`);
     return res.status(404).end();
   }
-
+else{
   return res.json(Order.fromMongoJSON(result));
-};
-
-
-   if (!result) {
-     console.error(`CreateOrder() -> couldn't retrieve newly created order`);
-     return res.status(404).end();
-   }
-
-   return res.json(Order.fromMongoJSON(result));
+}
  };
 
  exports.getOrdersByClientIDValidator = [orderClientIDQueryValidator];
@@ -112,4 +104,4 @@
 
    return res.json(Order.fromMongoJSON(result));
  };
- >>>>>>> main
+ 

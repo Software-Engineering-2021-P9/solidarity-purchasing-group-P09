@@ -976,9 +976,9 @@ describe("Orders API tests:", () => {
         .send({
           clientID: "6187c957b288576ca26f8257",
           products: [
-            { productID: "6187c957b288576ca26f8258", quantity: 3 },
-            { productID: "6187c957b288576ca26f8259", quantity: 1 },
-            { productID: "6187c957b288576ca26f8250", quantity: 2 },
+            { productID: "000000000000000000000001", quantity: 3 },
+            { productID: "000000000000000000000011", quantity: 1 },
+            { productID: "000000000000000000000006", quantity: 2 },
           ],
           shipmentInfo: {
             type: "shipment",
@@ -1001,9 +1001,9 @@ describe("Orders API tests:", () => {
               expect(res.body.clientID).to.be.equal("6187c957b288576ca26f8257");
               expect(res.body.id).to.be.equal(id);
               expect(res.body.products).to.be.eql([
-                { productID: "6187c957b288576ca26f8258", quantity: 3 },
-                { productID: "6187c957b288576ca26f8259", quantity: 1 },
-                { productID: "6187c957b288576ca26f8250", quantity: 2 },
+                { productID: "000000000000000000000001", quantity: 3 },
+                { productID: "000000000000000000000011", quantity: 1 },
+                { productID: "000000000000000000000006", quantity: 2 },
               ]);
               expect(res.body.shipmentInfo).to.be.eql({
                 type: "shipment",
@@ -1022,9 +1022,9 @@ describe("Orders API tests:", () => {
         .send({
           clientID: "6187c957b288576ca26f8257",
           products: [
-            { productID: "6187c957b288576ca26f8258", quantity: 3 },
-            { productID: "6187c957b288576ca26f8259", quantity: 1 },
-            { productID: "6187c957b288576ca26f8250", quantity: 2 },
+            { productID: "000000000000000000000001", quantity: 3 },
+            { productID: "000000000000000000000011", quantity: 1 },
+            { productID: "000000000000000000000006", quantity: 2 },
           ],
           shipmentInfo: {
             type: "pickup",
@@ -1048,9 +1048,9 @@ describe("Orders API tests:", () => {
               expect(res.body.clientID).to.be.equal("6187c957b288576ca26f8257");
               expect(res.body.id).to.be.equal(id);
               expect(res.body.products).to.be.eql([
-                { productID: "6187c957b288576ca26f8258", quantity: 3 },
-                { productID: "6187c957b288576ca26f8259", quantity: 1 },
-                { productID: "6187c957b288576ca26f8250", quantity: 2 },
+                { productID: "000000000000000000000001", quantity: 3 },
+                { productID: "000000000000000000000011", quantity: 1 },
+                { productID: "000000000000000000000006", quantity: 2 },
               ]);
               expect(res.body.shipmentInfo).to.be.eql({
                 type: "pickup",
@@ -1070,9 +1070,9 @@ describe("Orders API tests:", () => {
         .send({
           clientID: "6187c957b288576ca26f8257",
           products: [
-            { productID: "6187c957b288576ca26f8258", quantity: 3 },
-            { productID: "6187c957b288576ca26f8259", quantity: 1 },
-            { productID: "6187c957b288576ca26f8250", quantity: 2 },
+            { productID: "000000000000000000000001", quantity: 3 },
+            { productID: "000000000000000000000011", quantity: 1 },
+            { productID: "000000000000000000000006", quantity: 2 },
           ],
           shipmentInfo: {
             type: "shipment",
@@ -1096,9 +1096,9 @@ describe("Orders API tests:", () => {
               expect(res.body.clientID).to.be.equal("6187c957b288576ca26f8257");
               expect(res.body.id).to.be.equal(id);
               expect(res.body.products).to.be.eql([
-                { productID: "6187c957b288576ca26f8258", quantity: 3 },
-                { productID: "6187c957b288576ca26f8259", quantity: 1 },
-                { productID: "6187c957b288576ca26f8250", quantity: 2 },
+                { productID: "000000000000000000000001", quantity: 3 },
+                { productID: "000000000000000000000011", quantity: 1 },
+                { productID: "000000000000000000000006", quantity: 2 },
               ]);
               expect(res.body.shipmentInfo).to.be.eql({
                 type: "shipment",
@@ -1116,7 +1116,7 @@ describe("Orders API tests:", () => {
         .post("/api/orders")
         .send({
           clientID: "6187c957b288576ca26f8257",
-          products: [{ productID: "6187c957b288576ca26f8258", quantity: -2 }],
+          products: [{ productID: "000000000000000000000001", quantity: -2 }],
           shipmentInfo: {
             type: "shipment",
             address: "",
@@ -1136,7 +1136,7 @@ describe("Orders API tests:", () => {
         .post("/api/orders")
         .send({
           clientID: "6187c957b288576ca26f8257",
-          products: [{ productID: "6187c957b288576ca26f8258", quantity: -2 }],
+          products: [{ productID: "000000000000000000000001", quantity: -2 }],
           shipmentInfo: {
             type: "pickup",
             pickUpSlot: "52359",
@@ -1157,7 +1157,7 @@ describe("Orders API tests:", () => {
         .post("/api/orders")
         .send({
           clientID: "6187c957b288576ca26f8257",
-          products: [{ productID: "6187c957b288576ca26f8258", quantity: 2 }],
+          products: [{ productID: "000000000000000000000001", quantity: 2 }],
           shipmentInfo: {
             type: "WRONG",
             pickUpSlot: "52359",
@@ -1178,7 +1178,7 @@ describe("Orders API tests:", () => {
         .post("/api/orders")
         .send({
           clientID: "6187c957b288576ca26f8257",
-          products: [{ productID: "6187c957b288576ca26f8258", quantity: -2 }],
+          products: [{ productID: "000000000000000000000001", quantity: -2 }],
         })
         .end((err, res) => {
           expect(err).to.be.null;
@@ -1194,9 +1194,9 @@ describe("Orders API tests:", () => {
         .send({
           clientID: "1",
           products: [
-            { productID: "6187c957b288576ca26f8258", quantity: 3 },
-            { productID: "6187c957b288576ca26f8259", quantity: 1 },
-            { productID: "6187c957b288576ca26f8250", quantity: 2 },
+            { productID: "000000000000000000000001", quantity: 3 },
+                { productID: "000000000000000000000011", quantity: 1 },
+                { productID: "000000000000000000000006", quantity: 2 },
           ],
         })
         .end((err, res) => {
@@ -1213,7 +1213,7 @@ describe("Orders API tests:", () => {
         .post("/api/orders")
         .send({
           clientID: 1,
-          products: [{ productID: "6187c957b288576ca26f8258", quantity: 3 }],
+          products: [{ productID: "000000000000000000000001", quantity: 3 }],
         })
         .end((err, res) => {
           expect(err).to.be.null;
@@ -1248,9 +1248,9 @@ describe("Orders API tests:", () => {
         .send({
           clientID: "6187c957b288576ca26f8257",
           products: [
-            { productID: "6187c957b288576ca26f8258", quantity: 3 },
-            { productID: "6187c957b288576ca26f8259", quantity: 1 },
-            { productID: "6187c957b288576ca26f8250", quantity: 2 },
+               { productID: "000000000000000000000001", quantity: 3 },
+                { productID: "000000000000000000000011", quantity: 1 },
+                { productID: "000000000000000000000006", quantity: 2 },
           ],
         })
         .end((err, res) => {
@@ -1277,9 +1277,9 @@ describe("Orders API tests:", () => {
         .send({
           clientID: "6187c957b288576ca26f8257",
           products: [
-            { productID: "6187c957b288576ca26f8258", quantity: 3 },
-            { productID: "6187c957b288576ca26f8259", quantity: 1 },
-            { productID: "6187c957b288576ca26f8250", quantity: 2 },
+            { productID: "000000000000000000000001", quantity: 3 },
+            { productID: "000000000000000000000011", quantity: 1 },
+            { productID: "000000000000000000000006", quantity: 2 },
           ],
           shipmentInfo: {
             type: "pickup",

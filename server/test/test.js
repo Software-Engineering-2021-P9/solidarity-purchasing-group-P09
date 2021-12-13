@@ -1,30 +1,42 @@
-let chai = require("chai");
-let expect = chai.expect;
-let chaiHttp = require("chai-http");
+const chai = require("chai");
+const expect = chai.expect;
+const chaiHttp = require("chai-http");
+chai.use(chaiHttp);
+const mongoUnit = require("mongo-unit");
+
+const testData = require("./test-data");
+
+const { OrderStatus } = require("../models/order");
+
 let dao = require("../dao/dao");
 
-chai.use(chaiHttp);
-const { ObjectId } = require("bson");
+// ----------------------------------
+// FAKE DATABASE AND TEST SERVER INIT
+// ----------------------------------
 // This will contain the main server app, needed to listen for requests.
 // This is initialized when the mock MongoDB initialization is completed.
 let app;
 
-// Init mock MongoDB
-const mongoUnit = require("mongo-unit");
-let testData = require("./test-data");
-const { OrderStatus } = require("../models/order");
-
 const mongoTestDBName = "spg-test";
-mongoUnit.start({ dbName: mongoTestDBName }).then(() => {
-  process.env.MONGO_CONN_STR = mongoUnit.getUrl();
+
+before(async () => {
+  // Init mock MongoDB
+  let dbURL = await mongoUnit.start({ dbName: mongoTestDBName });
+  process.env.MONGO_CONN_STR = dbURL;
   process.env.MONGO_DB_NAME = mongoTestDBName;
   app = require("../app");
-  run();
+
+  // Import test files
+  require("./test_weekphase").tests(app);
 });
 
 after(() => {
   return mongoUnit.stop();
 });
+
+// -----
+// TESTS
+// -----
 
 // Employees API tests
 describe("Employees API tests:", () => {

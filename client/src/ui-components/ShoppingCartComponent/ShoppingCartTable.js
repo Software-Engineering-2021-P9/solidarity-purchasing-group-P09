@@ -77,7 +77,7 @@ function CartRow(props) {
               step={1}
               value={props.shoppingCart.get(props.product.id)}
               onChange={(e) => {
-                if (e.target.value < left_availability) {
+                if (e.target.value <= left_availability) {
                   props.updateQuantity(props.product.id, e.target.value);
                 }
               }}

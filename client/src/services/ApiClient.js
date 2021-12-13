@@ -473,3 +473,34 @@ export async function createOrder(clientID, products) {
       throw new Error("An error occurred during order fetch");
   }
 }
+
+// ----------
+// Weekphases
+// ----------
+
+export async function getCurrentWeekphase() {
+  const response = await fetch("/api/weekphases/current");
+
+  if (response.status !== 200) {
+    throw new Error("An error occurred during current weekphase fetch");
+  }
+  let responseBody = await response.json();
+  return responseBody?.currentWeekphase;
+}
+
+export async function setWeekphaseOverride(weekphaseID) {
+  const response = await fetch("/api/testing/weekphases/current", {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ weekphaseID: weekphaseID }),
+  });
+
+  switch (response.status) {
+    case 400:
+      throw new Error("Validation error occurred");
+    case 204:
+      return;
+    default:
+      throw new Error("An error occurred during weekphase override");
+  }
+}

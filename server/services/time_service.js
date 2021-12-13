@@ -10,8 +10,10 @@ dayjs.extend(isoWeek);
 dayjs.extend(isoWeeksInYear);
 dayjs.extend(isLeapYear);
 
-exports.getNextWeek = (date) => {
-  let now = dayjs(date).utc();
+exports.getNowDate = () => dayjs().utc();
+
+exports.getNextWeek = () => {
+  let now = this.getNowDate();
 
   let currentWeek = now.isoWeek() + 1;
   let currentYear = now.year();
@@ -20,8 +22,8 @@ exports.getNextWeek = (date) => {
   return [currentWeek, currentYear];
 };
 
-exports.getCurrentWeek = (date) => {
-  let now = dayjs(date).utc();
+exports.getCurrentWeek = () => {
+  let now = this.getNowDate();
 
   let currentWeek = now.isoWeek();
   let currentYear = now.year();

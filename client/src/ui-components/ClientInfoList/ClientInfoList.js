@@ -1,5 +1,4 @@
 import { Col, Container, Row, Spinner } from "react-bootstrap";
-import ClientInfoListHeader from "./ClientInfoListHeader";
 import ClientInfoListItem from "./ClientInfoListItem";
 
 function ClientInfoList(props) {
@@ -13,33 +12,40 @@ function ClientInfoList(props) {
   return (
     <Container>
       <Col>
-        <ClientInfoListHeader />
         {props.isLoading ? (
-          <Container className='pt-5 d-flex justify-content-center'>
-            <Spinner variant='dark' animation='border' />
+          <Container className="pt-5 d-flex justify-content-center">
+            <Spinner variant="dark" animation="border" />
           </Container>
         ) : (
           <>
             {getEmptyListText() !== "" ? (
-              <Row className='justify-content-center pt-3'>
-                <Col sm='6'>
+              <Row className="justify-content-center pt-3">
+                <Col sm="6">
                   {getEmptyListText()
                     .split("\n")
                     .map((line) => (
-                      <h4 className='title text-center'>{line}</h4>
+                      <h4 className="title text-center">{line}</h4>
                     ))}
                 </Col>
               </Row>
             ) : (
-              <>
+              <Row
+                lg={3}
+                md={2}
+                sm={2}
+                xs={1}
+                className="my-3 d-flex justify-content-around"
+              >
                 {props.clientInfoList?.map((item, index) => (
-                  <ClientInfoListItem
-                    key={"client-info-item-" + index}
-                    clientInfo={item}
-                    onClick={() => props.onItemClick(index)}
-                  />
+                  <Col>
+                    <ClientInfoListItem
+                      key={"client-info-item-" + index}
+                      clientInfo={item}
+                      onClick={() => props.onItemClick(index)}
+                    />
+                  </Col>
                 ))}
-              </>
+              </Row>
             )}
           </>
         )}

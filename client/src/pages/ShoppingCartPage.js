@@ -133,8 +133,10 @@ function ShoppingCartPage(props) {
     let shipmentInfo = {
       type: deliveryType,
       address: deliveryAddress,
-      pickUpSlot: deliveryType==="Pickup"? deliveryDate+""+(deliveryTime.replace(":","")) : null,
     };
+
+    if(deliveryType==="pickup") 
+      shipmentInfo["pickUpSlot"]=deliveryDate+""+(deliveryTime.replace(":",""));
       
     //call create order
     createOrder(client.id, orderProducts, shipmentInfo);

@@ -11,14 +11,14 @@ import { useLocation, useHistory } from "react-router-dom";
 function checkboxShipmentComponent(props, feeValue){
     return <div className="form-check">
                 <input onChange={()=>{
-                    if(props.deliveryType==="Pickup" || props.deliveryType===""){//i.e. if from "pickup" to "shipment", then clear the address field
+                    if(props.deliveryType==="pickup" || props.deliveryType===""){//i.e. if from "pickup" to "shipment", then clear the address field
                         props.setDeliveryAddress("")
                         props.setDeliveryFee((prev)=>{
                             props.setAmount(props.amount+feeValue);
                             return feeValue;
                         });
                     }
-                    props.setDeliveryType("Shipment");}} 
+                    props.setDeliveryType("shipment");}} 
                     className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1"
                 />
                 <label className="form-check-label" for="flexCheckDefault">
@@ -30,7 +30,7 @@ function checkboxShipmentComponent(props, feeValue){
 function checkboxPickupComponent(props, feeValue){
     return <div className="form-check">
                 <input onChange={()=>{
-                    if(props.deliveryType==="Shipment"){//i.e. if from "shipment" to "pickup", then remove fee
+                    if(props.deliveryType==="shipment"){//i.e. if from "shipment" to "pickup", then remove fee
                         props.setDeliveryFee((prev)=>{
                             props.setAmount(props.amount-feeValue);
                             props.setDeliveryDate("3");//when switching to pickup, Wednesday is selected in the form. So we update the state
@@ -38,7 +38,7 @@ function checkboxPickupComponent(props, feeValue){
                             return 0;
                         });
                     }
-                    props.setDeliveryType("Pickup");
+                    props.setDeliveryType("pickup");
                     props.setDeliveryAddress("Skylab, Via Washington 35, Pizzo Calabro (Store Address)")
                 }} 
                     className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2"
@@ -53,7 +53,7 @@ function addressComponent(props){
     let address;
 
     switch(props.deliveryType){
-        case("Shipment"):
+        case("shipment"):
         address =   <Form.Group className="mb-3">
                         <FloatingLabel
                             controlId="floatingInput"
@@ -65,7 +65,7 @@ function addressComponent(props){
                     </Form.Group>
         break;
 
-        case("Pickup"):
+        case("pickup"):
             address = <h6>Skylab, Via Washington 35, Pizzo Calabro (Store Address)</h6>;
         break;
 
@@ -137,7 +137,7 @@ function ShoppingCartOrderSummary(props) {
                 </Form.Group>
 
                 {address}
-                {props.deliveryType==="Pickup"?date:null}
+                {props.deliveryType==="pickup"?date:null}
 
                 <Form.Group className="mb-3">
                     {
@@ -150,7 +150,7 @@ function ShoppingCartOrderSummary(props) {
                         </Button>
                     </Row>
                     <Row>
-                        <Button onClick={props.handleShow} disabled={props.deliveryType==="" || !props.deliveryDate || !props.deliveryAddress || (!props.deliveryTime && props.deliveryType==="Pickup")} className="cart-button-placeorder">
+                        <Button onClick={props.handleShow} disabled={props.deliveryType==="" || !props.deliveryDate || !props.deliveryAddress || (!props.deliveryTime && props.deliveryType==="pickup")} className="cart-button-placeorder">
                             PLACE ORDER
                         </Button>
                     </Row>

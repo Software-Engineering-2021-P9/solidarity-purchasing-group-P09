@@ -17,6 +17,10 @@ exports.employeeIDPathValidator = param("employeeID").exists().isMongoId();
 exports.clientIDPathValidator = param("clientID").exists().isMongoId();
 exports.productIDPathValidator = param("productID").exists().isMongoId();
 exports.farmerIDPathValidator = param("farmerID").exists().isMongoId();
+exports.weekphaseIDBodyValidator = body("weekphaseID")
+  .exists()
+  .optional({ nullable: true })
+  .isAlphanumeric(undefined, { ignore: "-" });
 
 exports.emailBodyValidator = body("email")
   .notEmpty()
@@ -96,6 +100,33 @@ exports.idsValidator = query("ids")
   })
   .escape();
 
+exports.productCategoryBodyValidator = body("category")
+  .notEmpty()
+  .bail()
+  .isString()
+  .bail()
+  .isIn(Object.values(ProductCategory));
+
+exports.farmerIDBodyValidator = body("farmerID").exists().isMongoId();
+
+exports.productNameBodyValidator = body("name")
+  .notEmpty()
+  .bail()
+  .isString()
+  .bail()
+  .isLength({ max: 35 })
+  .trim()
+  .escape();
+
+exports.productDescriptionBodyValidator = body("description")
+  .notEmpty()
+  .bail()
+  .isString()
+  .bail()
+  .isLength({ max: 100 })
+  .trim()
+  .escape();
+
 // order validators
 exports.orderProductsBodyValidator = body("products")
   .exists()
@@ -155,6 +186,12 @@ exports.walletBodyValidator = body("wallet")
   .notEmpty()
   .bail()
   .isLength({ min: 0 });
+
+exports.hasPendingCancelationValidator = query("hasPendingCancelation")
+  .optional()
+  .notEmpty()
+  .bail()
+  .isBoolean();
 
 // availability validators
 

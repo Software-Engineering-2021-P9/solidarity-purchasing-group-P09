@@ -33,6 +33,7 @@ const {
   deleteOrder,
   getOrdersByClientID,
   completeOrder,
+  getOrdersByClientIDList,
 } = require("./order");
 
 const {
@@ -41,6 +42,7 @@ const {
   createProductsTextSearchIndexes,
   getProductByID,
   findProductsByFarmerID,
+  createProduct,
 } = require("./product");
 
 const { ClientInfo } = require("../models/client_info");
@@ -86,17 +88,11 @@ exports.getFarmerByEmail = (email) => getFarmerByEmail(db, email);
 // Client
 exports.getClientByID = (clientID) => getClientByID(db, clientID);
 
-exports.createClient = (fullName, phoneNumber, email, address, wallet) =>
-  createClient(db, fullName, phoneNumber, email, address, wallet);
+exports.createClient = (fullName, phoneNumber, email, address) =>
+  createClient(db, fullName, phoneNumber, email, address);
 
-exports.signupClient = (
-  fullName,
-  phoneNumber,
-  email,
-  password,
-  address,
-  wallet
-) => signupClient(db, fullName, phoneNumber, email, password, address, wallet);
+exports.signupClient = (fullName, phoneNumber, email, password, address) =>
+  signupClient(db, fullName, phoneNumber, email, password, address);
 
 exports.findClients = (searchString) => findClients(db, searchString);
 exports.addFundToWallet = (clientID, increaseBy) =>
@@ -137,6 +133,8 @@ exports.setProductAvailability = (
   );
 exports.findProductsByFarmerID = (farmerID, searchString, category) =>
   findProductsByFarmerID(db, farmerID, searchString, category);
+exports.createProduct = (farmerID, name, description, category) =>
+  createProduct(db, farmerID, name, description, category);
 
 // Order
 exports.createOrder = (clientID, products, status, totalPrice, createdAt) =>
@@ -145,7 +143,8 @@ exports.getOrderByID = (orderID) => getOrderByID(db, orderID);
 exports.deleteOrder = (orderID) => deleteOrder(db, orderID);
 exports.getOrdersByClientID = (clientID) => getOrdersByClientID(db, clientID);
 exports.completeOrder = (orderID) => completeOrder(db, orderID);
-
+exports.getOrdersByClientIDList = (clientIDList) =>
+  getOrdersByClientIDList(db, clientIDList);
 exports.createClientsTextSearchIndexes = () =>
   createClientsTextSearchIndexes(db);
 

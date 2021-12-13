@@ -6,13 +6,13 @@ import "./FilterRow.css";
 function FilterRow(props) {
   return (
     <>
-      <Row className='align-items-center'>
-        <h1 className='title'>Available products</h1>
+      <Row className="align-items-center">
+        <h1 className="title">Next week available products</h1>
       </Row>
 
-      <Row className='sticky'>
+      <Row className="sticky">
         <Col
-          className='ms-auto padding'
+          className="ms-auto padding"
           sm={{ span: 4, order: "first" }}
           xs={12}
         >
@@ -25,14 +25,14 @@ function FilterRow(props) {
             />
           </Row>
         </Col>
-        <Col className='me-auto' xs={{ order: "first" }}>
+        <Col className="me-auto" xs={{ order: "first" }}>
           <InputGroup
-            className='padding'
+            className="padding"
             onSubmit={(ev) => props.handleFormSubmit(ev)}
           >
             <FormControl
-              type='textarea'
-              placeholder='Filter'
+              type="textarea"
+              placeholder="Filter"
               value={props.text}
               onChange={(ev) => props.setText(ev.target.value)}
             />
@@ -40,7 +40,7 @@ function FilterRow(props) {
             <Button onClick={props.handleOnSearchSubmit}> Search </Button>
           </InputGroup>
         </Col>
-        <hr className='line' />
+        <hr className="line" />
       </Row>
     </>
   );

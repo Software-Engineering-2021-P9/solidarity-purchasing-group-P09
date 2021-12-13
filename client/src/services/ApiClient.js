@@ -463,13 +463,11 @@ export async function createOrder(clientID, products) {
 export async function getCurrentWeekphase() {
   const response = await fetch("/api/weekphases/current");
 
-  switch (response.status) {
-    case 200:
-      let responseBody = await response.json();
-      return responseBody?.currentWeekphase;
-    default:
-      throw new Error("An error occurred during current weekphase fetch");
+  if (response.status !== 200) {
+    throw new Error("An error occurred during current weekphase fetch");
   }
+  let responseBody = await response.json();
+  return responseBody?.currentWeekphase;
 }
 
 export async function setWeekphaseOverride(weekphaseID) {

@@ -7,18 +7,18 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 
 class WeekPhase {
-  constructor(id, from, to, timezone, handler) {
+  constructor(id, from, to, tz, handler) {
     this.id = id;
     this.from = from;
     this.to = to;
-    this.timezone = timezone;
+    this.tz = tz;
     this.handler = handler;
   }
 
   // Checks if a date is within the weekphase boundaries.
   // Input date must be a DayJS object.
   containsDate(date) {
-    let weekTimeToCheck = date.tz(this.timezone).format("dHHmm");
+    let weekTimeToCheck = date.tz(this.tz).format("dHHmm");
     return weekTimeToCheck >= this.from && weekTimeToCheck < this.to;
   }
 }

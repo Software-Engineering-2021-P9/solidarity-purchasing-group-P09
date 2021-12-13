@@ -7,7 +7,7 @@ function CreateProductForm(props) {
   const handleChange = (e) => {
     let value = e.target.value;
     if (e.target.name === "name") {
-      value = value.replace(/[^A-Za-z ]/gi, "");
+      value = value.replace(/[^a-z ]/gi, "");
     }
     props.setCreatedProduct({
       ...props.createdProduct,

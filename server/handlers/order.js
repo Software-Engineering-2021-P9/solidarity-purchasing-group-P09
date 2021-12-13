@@ -2,6 +2,7 @@ const dayjs = require("dayjs");
 var dao = require("../dao/dao");
 const { Order, OrderStatus } = require("../models/order");
 const { getProductPrice } = require("../dao/productAvailability");
+const { getNextWeek } = require("../services/time_service");
 const {
   clientIDBodyValidator,
   orderProductIDsBodyValidator,
@@ -21,13 +22,26 @@ exports.createOrderValidatorChain = [
 exports.createOrderHandler = async function (req, res, next) {
   // productPrice is hardcoded to 1 as a tempoarary solution for now, will be fixed in the next sprints
   //const productPrice = 1;
-
+  //const [week, year] = getNextWeek(dayjs());
+  var totalPrice = 0.0;
+  console.log("Hellooooo");
+  await req.body.products.forEach(async (product) => {
+    var productPrice = await dao.getProductPrice(
+      product.productID,
+      ...getNextWeek(dayjs())
+    );
+    totalPrice += product.quantity * 2;
+    console.log("***********************Product price:", product.price);
+  });
+  console.log("Hellooooo11111");
+  console.log("Priceeeeeeeeeeeeee:", totalPrice);
+  /*
   var totalPrice = 0.0;
   req.body.products.forEach((product) => {
     var productPrice = getProductPrice(product.productId);
     totalPrice += product.quantity * productPrice;
   });
-
+*/
   // Insert the new order
   var result;
   try {

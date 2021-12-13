@@ -1,4 +1,5 @@
-import { Col, Container, Row } from "react-bootstrap";
+import { Col, Container, Row, ProgressBar } from "react-bootstrap";
+import Divider from "../Divider/Divider";
 
 function ProductAvailabilityDetails(props) {
   function buildAvailabilityIndicator() {
@@ -30,35 +31,49 @@ function ProductAvailabilityDetails(props) {
     );
   }
 
+  function buildAvailabilityWidget() {
+    return (
+      <Container>
+        <Container className='text-center pb-2'>
+          {buildAvailabilityIndicator()}
+        </Container>
+        <ProgressBar
+          now={props.availability?.quantity - 10}
+          max={props.availability?.quantity}
+          variant='progressbar'
+          className='px-0 mx-2'
+        />
+        <Container className='text-center'>
+          <b>10 left</b> of {props.availability?.quantity} available
+        </Container>
+      </Container>
+    );
+  }
+
   return (
     <>
       <Container>
         <Row className='justify-content-center'>
           <Col
-            className='fw-light pt-2 ps-4'
+            className='fw-light ps-4'
             xs='7'
-            sm='5'
+            sm='6'
+            md='6'
+            lg='4'
             style={{ backgroundColor: "#FFFFFF" }}>
             <Row>Price (x1 package):</Row>
             <Row>Packaging:</Row>
           </Col>
-          <Col
-            className='pt-2 pb-2'
-            xs='2'
-            style={{ backgroundColor: "#FFFFFF" }}>
-            <Row>{props.availability?.price}</Row>
+          <Col className='pb-3' xs='2' style={{ backgroundColor: "#FFFFFF" }}>
+            <Row>{props.availability?.price}€</Row>
             <Row>{props.availability?.packaging}</Row>
           </Col>
         </Row>
       </Container>
+      <Divider />
       <Container>
-        <Row className='pt-3  justify-content-center'>
-          <Col xs='3' className='d-flex justify-content-end align-items-center'>
-            {buildAvailabilityIndicator()}
-          </Col>
-          <Col xs='5' className='fw-light'>
-            Store Availability: {props.availability?.quantity}
-          </Col>
+        <Row className='justify-content-center'>
+          {buildAvailabilityWidget()}
         </Row>
       </Container>
     </>

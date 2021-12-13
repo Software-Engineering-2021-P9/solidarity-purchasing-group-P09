@@ -3,9 +3,10 @@ import React, { useContext, useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router";
 import { getAvailableNavbarLinks } from "../Routes";
 
-import { Col, Container, Image, Row, Spinner } from "react-bootstrap";
+import { Col, Container, Image, Row, Spinner, Card } from "react-bootstrap";
 
 import ActionConfirmationModal from "../ui-components/ActionConfirmationModal/ActionConfirmationModal";
+import Button from "../ui-components/Button/Button";
 import Divider from "../ui-components/Divider/Divider";
 import ErrorToast from "../ui-components/ErrorToast/ErrorToast";
 import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponent";
@@ -101,13 +102,35 @@ function ProductDetailsPage(props) {
   function buildCurrentWeekAvailabilitySection() {
     return (
       <>
-        {product?.availability ? (
-          <Row className='pt-3'>
-            <ProductAvailabilityDetails availability={product?.availability} />
-          </Row>
-        ) : (
-          <h4 className='title text-center'>No availability set</h4>
-        )}
+        <Card>
+          <Card.Title>
+            <h2 className='subtitle ps-3 pt-1'>Current Week Availability</h2>
+          </Card.Title>
+          <Card.Body className='pt-0'>
+            {product?.availability ? (
+              <Row>
+                <ProductAvailabilityDetails
+                  availability={product?.availability}
+                />
+              </Row>
+            ) : (
+              <h4 className='title text-center'>No availability set</h4>
+            )}
+          </Card.Body>
+          <Card.Footer className='text-center'>
+            {product?.availability && (
+              <>
+                <Button>Confirm</Button>
+                <Button className='ms-3' variant='light'>
+                  Update
+                </Button>
+                <Button className='ms-3' variant='secondary'>
+                  Remove
+                </Button>
+              </>
+            )}
+          </Card.Footer>
+        </Card>
       </>
     );
   }
@@ -115,20 +138,39 @@ function ProductDetailsPage(props) {
   function buildNextWeekAvailabilitySection() {
     return (
       <>
-        {nextWeekAvailability ? (
-          <Row className='pt-3'>
-            <ProductAvailabilityDetails availability={nextWeekAvailability} />
-          </Row>
-        ) : (
-          <>
-            <Container className='pt-3'>
-              <ProductAvailabilityForm
-                isLoading={isActionLoading}
-                onSubmit={onSetNextWeekProductAvailabilitySubmit}
-              />
-            </Container>
-          </>
-        )}
+        <Card>
+          <Card.Title>
+            <h2 className='subtitle ps-3 pt-1'>Next Week Availability</h2>
+          </Card.Title>
+          <Card.Body className='pt-0'>
+            {nextWeekAvailability ? (
+              <Row>
+                <ProductAvailabilityDetails
+                  availability={nextWeekAvailability}
+                />
+              </Row>
+            ) : (
+              <>
+                <Container>
+                  <ProductAvailabilityForm
+                    isLoading={isActionLoading}
+                    onSubmit={onSetNextWeekProductAvailabilitySubmit}
+                  />
+                </Container>
+              </>
+            )}
+          </Card.Body>
+          <Card.Footer className='text-center'>
+            {nextWeekAvailability && (
+              <>
+                <Button className='ms-3'>Update</Button>
+                <Button className='ms-3' variant='secondary'>
+                  Remove
+                </Button>
+              </>
+            )}
+          </Card.Footer>
+        </Card>
       </>
     );
   }
@@ -169,16 +211,10 @@ function ProductDetailsPage(props) {
           <Divider />
           <Row>
             <Col xs='12' md='6' className='pb-3'>
-              <Row>
-                <h2 className='subtitle'>Current Week Availability</h2>
-              </Row>
               {buildCurrentWeekAvailabilitySection()}
             </Col>
             <Divider className='d-block d-md-none' />
             <Col xs='12' md='6' className='pb-3'>
-              <Row>
-                <h2 className='subtitle'>Next Week Availability</h2>
-              </Row>
               {buildNextWeekAvailabilitySection()}
             </Col>
           </Row>

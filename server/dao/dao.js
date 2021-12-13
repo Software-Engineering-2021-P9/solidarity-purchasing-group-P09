@@ -144,7 +144,6 @@ exports.createProduct = (farmerID, name, description, category) =>
 // Order
 exports.createOrder = (order) => createOrder(db, order);
 exports.getOrderByID = (orderID) => getOrderByID(db, orderID);
-exports.deleteOrder = (orderID) => deleteOrder(db, orderID);
 exports.getOrdersByClientID = (clientID) => getOrdersByClientID(db, clientID);
 exports.completeOrder = (orderID) => completeOrder(db, orderID);
 

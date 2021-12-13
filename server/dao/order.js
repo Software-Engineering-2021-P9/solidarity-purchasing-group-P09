@@ -27,14 +27,6 @@ exports.getOrderByID = async (db, orderID) => {
   return db.collection(orderCollectionName).findOne(ObjectID(orderID));
 };
 
-// -----------
-// DeleteOrder
-// -----------
-
-exports.deleteOrder = async (db, orderID) => {
-  return db.collection(orderCollectionName).deleteOne(ObjectID(orderID));
-};
-
 // -------------
 // CompleteOrder
 // -------------

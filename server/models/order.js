@@ -22,7 +22,7 @@ class ShipmentInfo {
   constructor(type, pickUpSlot, address) {
     this.type = type;
     this.address = address;
-    type === "pickup" ? (this.pickUpSlot = pickUpSlot) : null;
+    if (type === "pickup") this.pickUpSlot = pickUpSlot;
   }
 
   static fromMongoJSON(json) {

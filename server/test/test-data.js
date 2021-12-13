@@ -33,6 +33,11 @@ exports.ordersCollection = {
       status: "prepared",
       totalPrice: "6",
       createdAt: "2021-11-16T13:00:07.616Z",
+      shipmentInfo: {
+        type: "pickup",
+        pickUpSlot: "32200",
+        address: "Via Prapappo Ravanello 54",
+      },
     },
     {
       _id: ObjectID("6187c957b288576ca26f8999"),
@@ -44,6 +49,11 @@ exports.ordersCollection = {
       status: "done",
       totalPrice: "12",
       createdAt: "2021-12-16T13:00:07.616Z",
+      shipmentInfo: {
+        type: "pickup",
+        pickUpSlot: "42200",
+        address: "Via of the market ",
+      },
     },
     {
       _id: ObjectID("6187c957b288576ca26f8990"),
@@ -55,6 +65,10 @@ exports.ordersCollection = {
       status: "waiting",
       totalPrice: "12",
       createdAt: "2021-12-16T13:00:07.616Z",
+      shipmentInfo: {
+        type: "shipment",
+        address: "Via it's real trust me 54",
+      },
     },
   ],
 };

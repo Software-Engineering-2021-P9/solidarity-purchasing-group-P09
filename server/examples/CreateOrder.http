@@ -12,5 +12,10 @@ Content-Type: application/json
             "productID": "298d971d89d6240eb03742d7",
             "quantity": 4
         }
-    ]
+    ],
+    "shipmentInfo": {
+        "type":"pickup",
+        "pickUpSlot": "41600",
+        "address": "Via Rucola Cotta 33"
+    }
 }

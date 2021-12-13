@@ -469,8 +469,8 @@ export async function updateStatus(status, orderID) {
   }
 }
 
-export async function createOrder(clientID, products) {
-  var obj = { clientID: clientID, products: products };
+export async function createOrder(clientID, products, shipmentInfo) {
+  var obj = { clientID: clientID, products: products, shipmentInfo: shipmentInfo};
 
   const response = await fetch("/api/orders", {
     method: "POST",
@@ -485,6 +485,10 @@ export async function createOrder(clientID, products) {
       let responseBody;
       responseBody = await response.json();
       return Order.fromJSON(responseBody);
+    case 401:
+      throw new Error("Unauthorized - The user is not logged or is not allowed to make this action");
+    case 403:
+      throw new Error("Forbidden - The action cannot be executed in the current week phase");
     default:
       throw new Error("An error occurred during order fetch");
   }

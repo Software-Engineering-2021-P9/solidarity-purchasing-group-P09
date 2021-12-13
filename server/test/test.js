@@ -193,6 +193,7 @@ describe("Employees API tests:", () => {
   });
 });
 
+//Product API tests
 describe("Products API tests: ", () => {
   beforeEach(() => {
     dao.open();
@@ -955,7 +956,7 @@ describe("Clients API tests:", () => {
   });
 });
 
-// Orders API tests
+//Orders API tests
 describe("Orders API tests:", () => {
   beforeEach(() => {
     dao.open();
@@ -968,7 +969,7 @@ describe("Orders API tests:", () => {
   });
 
   describe("POST /orders", () => {
-    it("it should create a new order", (done) => {
+    it("it should create a new order of type shipment", (done) => {
       chai
         .request(app)
         .post("/api/orders")
@@ -979,15 +980,194 @@ describe("Orders API tests:", () => {
             { productID: "6187c957b288576ca26f8259", quantity: 1 },
             { productID: "6187c957b288576ca26f8250", quantity: 2 },
           ],
+          shipmentInfo: {
+            type: "shipment",
+            address: "Via its real trust me 54",
+          },
         })
         .end((err, res) => {
           expect(err).to.be.null;
           expect(res.status).to.be.equal(200);
-          expect(res.body.clientID).to.be.equal("6187c957b288576ca26f8257");
-          expect(res.body.products).to.be.an.string;
-          expect(res.body.status).to.be.equal(OrderStatus.WAITING);
-          expect(res.body.totalPrice).to.be.equal(6);
+          const id = res.body.id;
 
+          chai
+            .request(app)
+            .get("/api/orders/" + id)
+            .end((err, res) => {
+              expect(err).to.be.null;
+              expect(res.status).to.be.equal(200);
+              expect(res.body).to.be.an("object");
+
+              expect(res.body.clientID).to.be.equal("6187c957b288576ca26f8257");
+              expect(res.body.id).to.be.equal(id);
+              expect(res.body.products).to.be.eql([
+                { productID: "6187c957b288576ca26f8258", quantity: 3 },
+                { productID: "6187c957b288576ca26f8259", quantity: 1 },
+                { productID: "6187c957b288576ca26f8250", quantity: 2 },
+              ]);
+              expect(res.body.shipmentInfo).to.be.eql({
+                type: "shipment",
+                address: "Via its real trust me 54",
+              });
+              expect(res.body.status).to.be.equal("waiting");
+              done();
+            });
+        });
+    });
+
+    it("it should create a new order of type pickUp", (done) => {
+      chai
+        .request(app)
+        .post("/api/orders")
+        .send({
+          clientID: "6187c957b288576ca26f8257",
+          products: [
+            { productID: "6187c957b288576ca26f8258", quantity: 3 },
+            { productID: "6187c957b288576ca26f8259", quantity: 1 },
+            { productID: "6187c957b288576ca26f8250", quantity: 2 },
+          ],
+          shipmentInfo: {
+            type: "pickup",
+            pickUpSlot: "41111",
+            address: "Via its real trust me 54",
+          },
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          const id = res.body.id;
+
+          chai
+            .request(app)
+            .get("/api/orders/" + id)
+            .end((err, res) => {
+              expect(err).to.be.null;
+              expect(res.status).to.be.equal(200);
+              expect(res.body).to.be.an("object");
+
+              expect(res.body.clientID).to.be.equal("6187c957b288576ca26f8257");
+              expect(res.body.id).to.be.equal(id);
+              expect(res.body.products).to.be.eql([
+                { productID: "6187c957b288576ca26f8258", quantity: 3 },
+                { productID: "6187c957b288576ca26f8259", quantity: 1 },
+                { productID: "6187c957b288576ca26f8250", quantity: 2 },
+              ]);
+              expect(res.body.shipmentInfo).to.be.eql({
+                type: "pickup",
+                pickUpSlot: "41111",
+                address: "Via its real trust me 54",
+              });
+              expect(res.body.status).to.be.equal("waiting");
+              done();
+            });
+        });
+    });
+
+    it("it should create a new order of type shipment and return it without pickUpSlot since it's not pickUp type", (done) => {
+      chai
+        .request(app)
+        .post("/api/orders")
+        .send({
+          clientID: "6187c957b288576ca26f8257",
+          products: [
+            { productID: "6187c957b288576ca26f8258", quantity: 3 },
+            { productID: "6187c957b288576ca26f8259", quantity: 1 },
+            { productID: "6187c957b288576ca26f8250", quantity: 2 },
+          ],
+          shipmentInfo: {
+            type: "shipment",
+            pickUpSlot: "41111",
+            address: "Via its real trust me 54",
+          },
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          const id = res.body.id;
+
+          chai
+            .request(app)
+            .get("/api/orders/" + id)
+            .end((err, res) => {
+              expect(err).to.be.null;
+              expect(res.status).to.be.equal(200);
+              expect(res.body).to.be.an("object");
+
+              expect(res.body.clientID).to.be.equal("6187c957b288576ca26f8257");
+              expect(res.body.id).to.be.equal(id);
+              expect(res.body.products).to.be.eql([
+                { productID: "6187c957b288576ca26f8258", quantity: 3 },
+                { productID: "6187c957b288576ca26f8259", quantity: 1 },
+                { productID: "6187c957b288576ca26f8250", quantity: 2 },
+              ]);
+              expect(res.body.shipmentInfo).to.be.eql({
+                type: "shipment",
+                address: "Via its real trust me 54",
+              });
+              expect(res.body.status).to.be.equal("waiting");
+              done();
+            });
+        });
+    });
+
+    it("it should give Bad request error because the address is empty", (done) => {
+      chai
+        .request(app)
+        .post("/api/orders")
+        .send({
+          clientID: "6187c957b288576ca26f8257",
+          products: [{ productID: "6187c957b288576ca26f8258", quantity: -2 }],
+          shipmentInfo: {
+            type: "shipment",
+            address: "",
+          },
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(400);
+          expect(res.body).to.be.an("object");
+          done();
+        });
+    });
+
+    it("it should give Bad request error because the pickUpSlot is wrong ", (done) => {
+      chai
+        .request(app)
+        .post("/api/orders")
+        .send({
+          clientID: "6187c957b288576ca26f8257",
+          products: [{ productID: "6187c957b288576ca26f8258", quantity: -2 }],
+          shipmentInfo: {
+            type: "pickup",
+            pickUpSlot: "52359",
+            address: "Via Prapappo Ravanello 54",
+          },
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(400);
+          expect(res.body).to.be.an("object");
+          done();
+        });
+    });
+
+    it("it should give Bad request error because the type of the shipment is wrong ", (done) => {
+      chai
+        .request(app)
+        .post("/api/orders")
+        .send({
+          clientID: "6187c957b288576ca26f8257",
+          products: [{ productID: "6187c957b288576ca26f8258", quantity: 2 }],
+          shipmentInfo: {
+            type: "WRONG",
+            pickUpSlot: "52359",
+            address: "Via Prapappo Ravanello 54",
+          },
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(400);
+          expect(res.body).to.be.an("object");
           done();
         });
     });
@@ -1068,9 +1248,9 @@ describe("Orders API tests:", () => {
         .send({
           clientID: "6187c957b288576ca26f8257",
           products: [
-            { wrongId: "6187c957b288576ca26f8258", quantity: 3 },
-            { wrongId: "6187c957b288576ca26f8259", quantity: 1 },
-            { wrongId: "6187c957b288576ca26f8250", quantity: 2 },
+            { productID: "6187c957b288576ca26f8258", quantity: 3 },
+            { productID: "6187c957b288576ca26f8259", quantity: 1 },
+            { productID: "6187c957b288576ca26f8250", quantity: 2 },
           ],
         })
         .end((err, res) => {
@@ -1084,6 +1264,13 @@ describe("Orders API tests:", () => {
 
     it("it must fail when mongo fails", (done) => {
       dao.close();
+      var day = new Date();
+      //shipment dateis valid only if it is for next week and is between wednesday & friday
+      //7 days a week, tjursday is day number 4
+      var daysToReachNextThursday = 7 - day.getDay() + 4;
+      var nextThursday = new Date(
+        day.setDate(day.getDate() + daysToReachNextThursday)
+      );
       chai
         .request(app)
         .post("/api/orders")
@@ -1094,6 +1281,11 @@ describe("Orders API tests:", () => {
             { productID: "6187c957b288576ca26f8259", quantity: 1 },
             { productID: "6187c957b288576ca26f8250", quantity: 2 },
           ],
+          shipmentInfo: {
+            type: "pickup",
+            pickUpSlot: "32200",
+            address: "Via Prapappo Ravanello 54",
+          },
         })
         .end((err, res) => {
           expect(err).to.be.null;
@@ -1113,6 +1305,7 @@ describe("Orders API tests:", () => {
           expect(err).to.be.null;
           expect(res.status).to.be.equal(200);
           expect(res.body).to.be.an("array");
+
           expect(res.body).to.be.eql([
             {
               id: "6187c957b288576ca26f8251",
@@ -1125,6 +1318,11 @@ describe("Orders API tests:", () => {
               status: "prepared",
               totalPrice: "6",
               createdAt: "2021-11-16T13:00:07.616Z",
+              shipmentInfo: {
+                type: "pickup",
+                pickUpSlot: "32200",
+                address: "Via Prapappo Ravanello 54",
+              },
             },
             {
               id: "6187c957b288576ca26f8999",
@@ -1136,6 +1334,11 @@ describe("Orders API tests:", () => {
               status: "done",
               totalPrice: "12",
               createdAt: "2021-12-16T13:00:07.616Z",
+              shipmentInfo: {
+                type: "pickup",
+                pickUpSlot: "42200",
+                address: "Via of the market ",
+              },
             },
           ]);
 
@@ -1185,14 +1388,6 @@ describe("Orders API tests:", () => {
     it("it should update the order's status with given orderID", (done) => {
       chai
         .request(app)
-        .get("/api/orders?clientID=6187c957b288576ca26f8257")
-        .end((err, res) => {
-          expect(err).to.be.null;
-          expect(res.status).to.be.equal(200);
-        });
-
-      chai
-        .request(app)
         .patch("/api/orders/6187c957b288576ca26f8251/complete")
         .end((err, res) => {
           expect(err).to.be.null;
@@ -1201,35 +1396,27 @@ describe("Orders API tests:", () => {
 
       chai
         .request(app)
-        .get("/api/orders?clientID=6187c957b288576ca26f8257")
+        .get("/api/orders/6187c957b288576ca26f8251")
         .end((err, res) => {
           expect(err).to.be.null;
           expect(res.status).to.be.equal(200);
-          expect(res.body).to.be.eql([
-            {
-              id: "6187c957b288576ca26f8251",
-              clientID: "6187c957b288576ca26f8257",
-              products: [
-                { productID: "6187c957b288576ca26f8258", quantity: 3 },
-                { productID: "6187c957b288576ca26f8259", quantity: 1 },
-                { productID: "6187c957b288576ca26f8250", quantity: 2 },
-              ],
-              status: "done",
-              totalPrice: "6",
-              createdAt: "2021-11-16T13:00:07.616Z",
+          expect(res.body).to.be.eql({
+            id: "6187c957b288576ca26f8251",
+            clientID: "6187c957b288576ca26f8257",
+            products: [
+              { productID: "6187c957b288576ca26f8258", quantity: 3 },
+              { productID: "6187c957b288576ca26f8259", quantity: 1 },
+              { productID: "6187c957b288576ca26f8250", quantity: 2 },
+            ],
+            status: "done",
+            totalPrice: "6",
+            createdAt: "2021-11-16T13:00:07.616Z",
+            shipmentInfo: {
+              type: "pickup",
+              pickUpSlot: "32200",
+              address: "Via Prapappo Ravanello 54",
             },
-            {
-              id: "6187c957b288576ca26f8999",
-              clientID: "6187c957b288576ca26f8257",
-              products: [
-                { productID: "6187c957b288576ca26f8258", quantity: 10 },
-                { productID: "6187c957b288576ca26f8259", quantity: 2 },
-              ],
-              status: "done",
-              totalPrice: "12",
-              createdAt: "2021-12-16T13:00:07.616Z",
-            },
-          ]);
+          });
           done();
         });
     });
@@ -1244,23 +1431,25 @@ describe("Orders API tests:", () => {
         });
       chai
         .request(app)
-        .get("/api/orders?clientID=6187c957b288576ca26f8251")
+        .get("/api/orders/6187c957b288576ca26f8990")
         .end((err, res) => {
           expect(err).to.be.null;
           expect(res.status).to.be.equal(200);
-          expect(res.body).to.be.eql([
-            {
-              id: "6187c957b288576ca26f8990",
-              clientID: "6187c957b288576ca26f8251",
-              products: [
-                { productID: "6187c957b288576ca26f8258", quantity: 10 },
-                { productID: "6187c957b288576ca26f8259", quantity: 2 },
-              ],
-              status: "waiting",
-              totalPrice: "12",
-              createdAt: "2021-12-16T13:00:07.616Z",
+          expect(res.body).to.be.eql({
+            id: "6187c957b288576ca26f8990",
+            clientID: "6187c957b288576ca26f8251",
+            products: [
+              { productID: "6187c957b288576ca26f8258", quantity: 10 },
+              { productID: "6187c957b288576ca26f8259", quantity: 2 },
+            ],
+            status: "waiting",
+            totalPrice: "12",
+            createdAt: "2021-12-16T13:00:07.616Z",
+            shipmentInfo: {
+              type: "shipment",
+              address: "Via it's real trust me 54",
             },
-          ]);
+          });
           done();
         });
     });
@@ -1292,6 +1481,73 @@ describe("Orders API tests:", () => {
       chai
         .request(app)
         .patch("/api/orders/6187c957b288576ca26f8251/complete")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(500);
+
+          done();
+        });
+    });
+  });
+
+  describe("GET /orders/:orderID", () => {
+    it("it should return 404 if the order with given orderID doesn't exists", (done) => {
+      chai
+        .request(app)
+        .get("/api/orders/6187c957b288576ca26f0000")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(404);
+          done();
+        });
+    });
+
+    it("it should retrieve the order with given orderID", (done) => {
+      chai
+        .request(app)
+        .get("/api/orders/6187c957b288576ca26f8251")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          expect(res.body).to.be.an("object");
+          expect(res.body).to.be.eql({
+            id: "6187c957b288576ca26f8251",
+            clientID: "6187c957b288576ca26f8257",
+            products: [
+              { productID: "6187c957b288576ca26f8258", quantity: 3 },
+              { productID: "6187c957b288576ca26f8259", quantity: 1 },
+              { productID: "6187c957b288576ca26f8250", quantity: 2 },
+            ],
+            status: "prepared",
+            totalPrice: "6",
+            createdAt: "2021-11-16T13:00:07.616Z",
+            shipmentInfo: {
+              type: "pickup",
+              pickUpSlot: "32200",
+              address: "Via Prapappo Ravanello 54",
+            },
+          });
+
+          done();
+        });
+    });
+
+    it("it should return an error if the ID passed is not valid", (done) => {
+      chai
+        .request(app)
+        .get("/api/orders/6187c957b288576ca26f8")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(400);
+          done();
+        });
+    });
+
+    it("it must fail when mongo fails", (done) => {
+      dao.close();
+      chai
+        .request(app)
+        .get("/api/orders/6187c957b288576ca26f8251")
         .end((err, res) => {
           expect(err).to.be.null;
           expect(res.status).to.be.equal(500);

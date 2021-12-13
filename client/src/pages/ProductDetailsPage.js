@@ -189,32 +189,39 @@ function ProductDetailsPage(props) {
         </Container>
       ) : (
         <>
-          <Row>
-            <h1 className='title'>{product.name}</h1>
-          </Row>
-          <Row className='pt-2 pb-3'>
-            <Col
-              xs='12'
-              sm='12'
-              md='5'
-              className='d-flex justify-content-center pb-3'>
-              <Image
-                style={{ width: "270px" }}
-                src={ImageService.returnImageByCategory(product.category)}
-                rounded
-              />
-            </Col>
-            <Col xs='12' sm='12' md='6'>
-              <ProductDetails product={product} />
+          <Row className='justify-content-center mb-3'>
+            <Col xs='12' sm='12' md='12' lg='9' xl='8' xxl='7'>
+              <Card className='mt-2'>
+                <Card.Title>
+                  <h1 className='title ms-3'>{product.name}</h1>
+                </Card.Title>
+                <Card.Body className='text-center'>
+                  <Row>
+                    <Col xs='12' md='5'>
+                      <Image
+                        style={{ width: "270px" }}
+                        src={ImageService.returnImageByCategory(
+                          product.category
+                        )}
+                        rounded
+                      />
+                    </Col>
+                    <Divider className='d-block d-md-none mt-4' />
+                    <Col xs='12' md='7'>
+                      <ProductDetails product={product} />
+                    </Col>
+                  </Row>
+                </Card.Body>
+              </Card>
             </Col>
           </Row>
           <Divider />
           <Row>
-            <Col xs='12' md='6' className='pb-3'>
+            <Col xs='12' lg='6' className='pb-3'>
               {buildCurrentWeekAvailabilitySection()}
             </Col>
             <Divider className='d-block d-md-none' />
-            <Col xs='12' md='6' className='pb-3'>
+            <Col xs='12' lg='6' className='pb-3'>
               {buildNextWeekAvailabilitySection()}
             </Col>
           </Row>

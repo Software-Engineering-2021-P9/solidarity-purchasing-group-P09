@@ -17,7 +17,7 @@ function ProductAvailabilityDetails(props) {
             color: color,
           }}>
           {text}
-        </span>
+        </span>{" "}
         <span
           style={{
             height: "10px",

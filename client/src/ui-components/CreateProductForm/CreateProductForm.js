@@ -27,6 +27,7 @@ function CreateProductForm(props) {
               name="name"
               type="text"
               placeholder="Enter name of the product"
+              maxLength="35"
             />
           </Form.Group>
 
@@ -42,6 +43,7 @@ function CreateProductForm(props) {
               as="textarea"
               placeholder="Enter some description for product"
               rows={3}
+              maxLength="100"
             />
           </Form.Group>
           <Form.Group
@@ -55,7 +57,7 @@ function CreateProductForm(props) {
             <Form.Select name="category" aria-label="Default select example">
               {Object.keys(Product.Categories).map((key) => {
                 return (
-                  <option key={key} value={key}>
+                  <option key={key} value={Product.Categories[key]}>
                     {Product.Categories[key]}{" "}
                   </option>
                 );

@@ -227,7 +227,7 @@ export async function signupClient(client) {
 // -------
 
 export async function createProduct(product) {
-  const response = await fetch("api/products", {
+  const response = await fetch("http://localhost:3000/api/products", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
 
@@ -239,8 +239,14 @@ export async function createProduct(product) {
       let responseBody;
       responseBody = await response.json();
       return Product.fromJSON(responseBody);
+    case 400:
+      throw new Error("Validation error occurred");
+    case 401:
+      throw new Error("Unauthorized");
+    case 500:
+      throw new Error("Internal Server Error");
     default:
-      throw new Error("An error occurred during client fetch");
+      throw new Error("An error occurred during post createProduct request");
   }
 }
 

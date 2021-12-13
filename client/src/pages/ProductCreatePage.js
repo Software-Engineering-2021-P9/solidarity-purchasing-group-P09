@@ -5,7 +5,7 @@ import { AuthContext } from "../contexts/AuthContextProvider";
 import CreateProductForm from "../ui-components/CreateProductForm/CreateProductForm";
 import InformationPopUp from "../ui-components/InformationPopUp/InformationPopUp";
 
-//import { createProduct } from "../services/ApiClient";
+import { createProduct } from "../services/ApiClient";
 function ProductCreatePage() {
   const authContext = useContext(AuthContext);
   const [popUpMessage, setPopUpMessage] = useState("");
@@ -17,7 +17,8 @@ function ProductCreatePage() {
   const initialState = {
     name: "",
     description: "",
-    category: "Fruit",
+    category: "fruit",
+    farmerID: authContext.currentUser.id,
   };
   const [createdProduct, setCreatedProduct] = useState(initialState);
 
@@ -37,7 +38,7 @@ function ProductCreatePage() {
     e.preventDefault();
     e.target.reset();
     console.log(createdProduct);
-    //createProduct(createdProduct);       API CALL FOR BACKEND, also uncomment the import
+    createProduct(createdProduct);
     handleReset();
     setPopUpMessage("You have successfully added : " + createdProduct.name);
     handleShow();

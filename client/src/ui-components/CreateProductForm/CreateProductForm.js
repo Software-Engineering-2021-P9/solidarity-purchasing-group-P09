@@ -1,30 +1,32 @@
-import React from "react";
+import React, { useState } from "react";
 import { Form, Container } from "react-bootstrap";
 import "./CreateProductForm.css";
 import Product from "../../services/models/Product";
 import Button from "../Button/Button";
 function CreateProductForm(props) {
   const handleChange = (e) => {
+    let value = e.target.value;
+    if (e.target.name === "name") {
+      value = value.replace(/[^A-Za-z ]/gi, "");
+    }
     props.setCreatedProduct({
       ...props.createdProduct,
-      [e.target.name]: e.target.value,
+      [e.target.name]: value,
     });
   };
 
   return (
     <Container>
-      <h1 className="title">Create Product</h1>
+      <h1 className="title-product-form">Create Product</h1>
       <Container className="createProductForm">
         <Form onSubmit={props.handleSubmit}>
-          <Form.Group
-            className="mb-3"
-            value={props.createdProduct.name}
-            onChange={handleChange}
-          >
+          <Form.Group className="mb-3">
             <Form.Label>Name</Form.Label>
             <Form.Control
               required
               name="name"
+              value={props.createdProduct.name}
+              onChange={handleChange}
               type="text"
               placeholder="Enter name of the product"
               maxLength="35"

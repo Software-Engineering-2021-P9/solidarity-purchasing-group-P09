@@ -7,9 +7,12 @@ const passport = require("passport");
 
 var dao = require("./dao/dao");
 
+var weekphaseService = require("./services/weekphase_service/weekphase_service");
+
 const {
   checkValidationErrorMiddleware,
 } = require("./handlers/shared_validators");
+
 var userHandlers = require("./handlers/user");
 
 var employeeHandlers = require("./handlers/employee");
@@ -22,6 +25,8 @@ var productHandlers = require("./handlers/product");
 
 var farmerHandlers = require("./handlers/farmer");
 
+var weekphaseHandlers = require("./handlers/weekphase");
+
 const {
   sessionSettings,
   passportStrategy,
@@ -29,6 +34,9 @@ const {
   deserializeUser,
 } = require("./services/auth_service");
 
+// ------------
+// SERVER SETUP
+// ------------
 const port = process.env.PORT || 3001;
 const buildAPIPath = (apiPath) => "/api" + apiPath;
 
@@ -41,6 +49,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(cors());
 
+// ----------
+// AUTH SETUP
+// ----------
 passport.use(passportStrategy);
 passport.serializeUser(serializeUser);
 passport.deserializeUser(deserializeUser);
@@ -48,11 +59,13 @@ app.use(sessionSettings);
 app.use(passport.initialize());
 app.use(passport.session());
 
+// -----------------------
+// SERVICES INITIALIZATION
+// -----------------------
 dao.open();
+weekphaseService.init();
 
-// -------------
-// login methods
-// -------------
+// ------------- // login methods // -------------
 
 app.post(buildAPIPath("/users/login"), userHandlers.loginHandler(passport));
 app.get(buildAPIPath("/users/current"), userHandlers.getCurrentUserHandler);
@@ -121,6 +134,14 @@ app.post(
 
 app.post(
   buildAPIPath("/orders"),
+  /*   weekphaseService.checkWeekphaseMiddleware([
+    "weekphase-1",
+    "weekphase-5",
+    "weekphase-6",
+    "weekphase-7",
+    "weekphase-8",
+    "weekphase-9",
+  ]), */
   orderHandlers.createOrderValidatorChain,
   checkValidationErrorMiddleware,
   orderHandlers.createOrderHandler
@@ -194,6 +215,22 @@ app.get(
   farmerHandlers.getFarmerProductsValidatorChain,
   checkValidationErrorMiddleware,
   farmerHandlers.getFarmerProductsHandler
+);
+
+// -----------
+// /weekphases
+// -----------
+
+app.get(
+  buildAPIPath("/weekphases/current"),
+  weekphaseHandlers.getCurrentWeekphaseHandler
+);
+
+app.patch(
+  buildAPIPath("/testing/weekphases/current"),
+  weekphaseHandlers.setWeekphaseOverrideValidatorChain,
+  checkValidationErrorMiddleware,
+  weekphaseHandlers.setWeekphaseOverrideHandler
 );
 
 // Serve client app

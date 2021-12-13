@@ -179,7 +179,7 @@ exports.orderAddressBodyValidator = body("shipmentInfo.address")
   .bail()
   .isString()
   .bail()
-  .isLength({ max: 50 })
+  .isLength({ max: 150 })
   .trim()
   .escape();
 

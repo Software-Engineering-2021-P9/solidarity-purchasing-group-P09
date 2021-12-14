@@ -100,7 +100,12 @@ function ClientOrderTableRow(props) {
             <Col sm="auto" xs="auto">
               {pinMapSmallIcon}{" "}
             </Col>
-            <Col> {props.order.location}</Col>
+            <Col>
+              {" "}
+              {props.order.shipmentInfo.type === "shipment"
+                ? `S - ${props.order.shipmentInfo.address}`
+                : `P - ${props.order.shipmentInfo.pickUpSlot}`}
+            </Col>
           </Row>
           <Row>
             <Col className="d-flex align-items-center" sm="auto" xs="auto">

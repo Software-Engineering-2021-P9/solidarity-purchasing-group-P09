@@ -40,7 +40,9 @@ function ClientOrderTableRow(props) {
           {dayjs(props.order.createdAt).format("DD/MM/YYYY  hh:mm")}
         </Col>
         <Col md="3" lg="3" xl="3" className="mx-0 px-0">
-          {props.order.location}
+          {props.order.shipmentInfo.type === "shipment"
+            ? `S - ${props.order.shipmentInfo.address}`
+            : `P - ${props.order.shipmentInfo.pickUpSlot}`}
         </Col>
         <Col md="3" lg="3" xl="3" className="mx-0 px-0">
           <Row>

@@ -23,7 +23,7 @@ import ImageService from "../../services/ImageService/ImageService";
 function ProductCard(props) {
   const product = props.product;
 
-  let left_availability = product.availability.leftQuantity; //mock left_availability
+  let left_availability = product.availability.leftQuantity;
   let dropdown_items = [];
   for (let i = 1; i < 11; i++) {
     if (i <= left_availability) {

@@ -26,7 +26,7 @@ function ShoppingCartTable(props) {
 }
 
 function CartRow(props) {
-  let left_availability = props.product.availability.leftQuantity; //mock left_availability
+  let left_availability = props.product.availability.leftQuantity;
   let dropdown_items = [];
   for (let i = 1; i < 11; i++) {
     if (i <= left_availability) {

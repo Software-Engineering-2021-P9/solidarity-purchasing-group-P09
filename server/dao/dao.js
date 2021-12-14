@@ -165,3 +165,9 @@ exports.getUserByEmail = async (email) => {
   }
   return usersFound[0];
 };
+
+
+exports.getProductPrice = async (productID, week, year) => {
+  const res = await getProductAvailability(db, productID, week, year);
+  return res.price;
+};

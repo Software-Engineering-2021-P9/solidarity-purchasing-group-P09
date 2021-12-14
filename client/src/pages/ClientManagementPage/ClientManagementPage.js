@@ -23,6 +23,7 @@ import "../../ui-components/Title.css";
 import { findClients } from "../../services/ApiClient";
 
 import { AuthContext } from "../../contexts/AuthContextProvider";
+import { RedDropdown } from "../../ui-components/RedDropdownComponent/RedDropdown";
 
 function ClientManagementPage(props) {
   const history = useHistory();
@@ -32,10 +33,31 @@ function ClientManagementPage(props) {
   const [clientInfoList, setClientInfoList] = useState(null);
   const [isClientInfoListLoading, setIsClientInfoListLoading] = useState(false);
   const [requestError, setRequestError] = useState("");
+  const [hasPendingCancelationFilter, setHasPendingCancelationFilter] = useState("All");
+
+  function onPendingCancelationFilter(newVal) {
+    setHasPendingCancelationFilter(newVal);
+  }
 
   function onSearchClientButtonClick() {
     setIsClientInfoListLoading(true);
-    findClients(searchString)
+
+    let hasPendingCancelation;
+    switch(hasPendingCancelationFilter){
+      case("Has Pending"):
+        hasPendingCancelation=true;
+        break;
+
+      case("Without Pending"):
+        hasPendingCancelation=false;
+        break;
+
+      default:
+        hasPendingCancelation = null;
+        break;
+    }
+
+    findClients(searchString,hasPendingCancelation)
       .then(setClientInfoList)
       .catch((err) => {
         setRequestError(err.message);
@@ -73,19 +95,37 @@ function ClientManagementPage(props) {
         links={getAvailableNavbarLinks(authContext.currentUser)}
         loggedUser={authContext.currentUser}
       />
-      <Row>
-        <Col md='5'>
-          <h1 className='title'>Manage Clients</h1>
+      <Row className="d-flex justify-content-between">
+        <Col lg="auto" md="auto" sm="12" xs="12">
+          <Row>
+            <Col lg="auto" md="auto" sm="auto" xs="auto">
+              <h1 className="title ">Manage Clients</h1>
+            </Col>
+            <Col className="w-auto margin-top-35">
+              <Button className="p-1" onClick={onCreateClientButtonClick}>
+                NEW CLIENT
+              </Button>
+            </Col>
+          </Row>
         </Col>
-        <Col className='pt-2'>
-          <InputGroup className='my-3'>
+
+        <Col className="margin-top" md="5" sm="12" xs="12">
+          <InputGroup className="my-3">
             <FormControl
-              placeholder='Mario Rossi'
+              placeholder="Mario Rossi"
               value={searchString}
               onChange={onSearchStringChange}
             />
             <Button onClick={onSearchClientButtonClick}>Search</Button>
           </InputGroup>
+        </Col>
+        <Col className='dropdown-margin' xs='4' sm='3' md='2' lg='1'>
+          <RedDropdown
+              items={["Has Pending","Without Pending"]}
+              title={hasPendingCancelationFilter ? hasPendingCancelationFilter : "All"}
+              updateSelectedItem={onPendingCancelationFilter}
+              activeElement={hasPendingCancelationFilter}
+            />
         </Col>
       </Row>
       <Container>
@@ -98,12 +138,7 @@ function ClientManagementPage(props) {
           onItemClick={onClientInfoListItemClick}
         />
       </Row>
-      <Container className='client-management-page-bottom-space' />
-      <Container className='d-flex position-fixed bottom-0 justify-content-end mb-4 '>
-        <Button className='p-4' onClick={onCreateClientButtonClick}>
-          Add a new client
-        </Button>
-      </Container>
+
       <ErrorToast
         onClose={() => setRequestError("")}
         errorMessage={requestError}

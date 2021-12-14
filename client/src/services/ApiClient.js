@@ -116,10 +116,22 @@ export async function getEmployeeByID(employeeID) {
 // Client
 // ------
 
-export async function findClients(searchString) {
+export async function findClients(searchString, hasPendingCancelation) {
   let path = "/api/clients";
-  if (searchString) path += `?searchString=${searchString}`;
 
+  if(searchString || hasPendingCancelation!==null){
+    path += "?";
+    if(searchString){
+      path += `searchString=${searchString}&`;
+    }
+    if(hasPendingCancelation!==null){
+      path += `hasPendingCancelation=${hasPendingCancelation}&`;
+    }
+    path = path.substring(0, path.length-1);//delete the last character, that is &
+  }
+
+  console.log(path, hasPendingCancelation);
+  
   let response = await fetch(path);
 
   switch (response.status) {
@@ -225,6 +237,30 @@ export async function signupClient(client) {
 // -------
 // Product
 // -------
+
+export async function createProduct(product) {
+  const response = await fetch("http://localhost:3000/api/products", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+
+    body: JSON.stringify({ ...product }),
+  });
+
+  switch (response.status) {
+    case 200:
+      let responseBody;
+      responseBody = await response.json();
+      return Product.fromJSON(responseBody);
+    case 400:
+      throw new Error("Validation error occurred");
+    case 401:
+      throw new Error("Unauthorized");
+    case 500:
+      throw new Error("Internal Server Error");
+    default:
+      throw new Error("An error occurred during post createProduct request");
+  }
+}
 
 export async function findProducts(category, searchString) {
   let urlRequest = "/api/products?";
@@ -435,8 +471,8 @@ export async function updateStatus(status, orderID) {
   }
 }
 
-export async function createOrder(clientID, products) {
-  var obj = { clientID: clientID, products: products };
+export async function createOrder(clientID, products, shipmentInfo) {
+  var obj = { clientID: clientID, products: products, shipmentInfo: shipmentInfo};
 
   const response = await fetch("/api/orders", {
     method: "POST",
@@ -451,7 +487,42 @@ export async function createOrder(clientID, products) {
       let responseBody;
       responseBody = await response.json();
       return Order.fromJSON(responseBody);
+    case 401:
+      throw new Error("Unauthorized - The user is not logged or is not allowed to make this action");
+    case 403:
+      throw new Error("Forbidden - The action cannot be executed in the current week phase");
     default:
       throw new Error("An error occurred during order fetch");
+  }
+}
+
+// ----------
+// Weekphases
+// ----------
+
+export async function getCurrentWeekphase() {
+  const response = await fetch("/api/weekphases/current");
+
+  if (response.status !== 200) {
+    throw new Error("An error occurred during current weekphase fetch");
+  }
+  let responseBody = await response.json();
+  return responseBody?.currentWeekphase;
+}
+
+export async function setWeekphaseOverride(weekphaseID) {
+  const response = await fetch("/api/testing/weekphases/current", {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ weekphaseID: weekphaseID }),
+  });
+
+  switch (response.status) {
+    case 400:
+      throw new Error("Validation error occurred");
+    case 204:
+      return;
+    default:
+      throw new Error("An error occurred during weekphase override");
   }
 }

@@ -1,9 +1,17 @@
-.create-client-button {
-  position: absolute;
-  bottom: 0;
-  right: 0;
+.margin-top-35 {
+  margin-top: 35px;
+}
+.margin-top {
+  margin-top: 17px;
 }
 
-.client-management-page-bottom-space {
-  height: 150px;
+@media only screen and (max-width: 600px) {
+  .margin-top-35 {
+    margin-top: 25px;
+  }
+}
+
+.dropdown-margin {
+  margin-top: 35px;
+  margin-right: 5%;
 }

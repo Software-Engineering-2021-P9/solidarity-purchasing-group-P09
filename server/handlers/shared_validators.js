@@ -89,7 +89,6 @@ exports.idsValidator = query("ids")
   .bail()
   .isString()
   .bail()
-  .isLength({ max: 100 })
   .trim()
   .custom((value) => {
     const splittedIDs = value.split(",");

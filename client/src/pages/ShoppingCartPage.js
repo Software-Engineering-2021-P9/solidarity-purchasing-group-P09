@@ -16,6 +16,7 @@ import {
   getClientByID,
   getProductsByIDs,
   createOrder,
+  getNextWeekProductAvailability,
 } from "../services/ApiClient";
 import UserRoles from "../services/models/UserRoles";
 
@@ -46,6 +47,10 @@ function ShoppingCartPage(props) {
 
   const [requestError, setRequestError] = useState("");
 
+  const [amount, setAmount] = useState(0);
+  const [show, setShow] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+
   const clientID =
     authContext.currentUser.role === UserRoles.CLIENT
       ? authContext.currentUser.id
@@ -72,8 +77,16 @@ function ShoppingCartPage(props) {
     const updateProducts = () => {
       const productIDs = Array.from(cart.keys());
       getProductsByIDs(productIDs)
-        .then((result) => {
-          setProducts(result);
+        .then(async (serverProducts) => {
+          let sum = 0;
+          let temp_products = [];
+          for (let p of serverProducts) {
+            p.availability = await getNextWeekProductAvailability(p.id);
+            temp_products.push(p);
+            sum = sum + p.availability.price * cart.get(p.id);
+          }
+          await setProducts(temp_products);
+          setAmount(sum);
         })
         .catch((err) => {
           setRequestError("Failed to fetch products data: " + err.message);
@@ -81,17 +94,6 @@ function ShoppingCartPage(props) {
     };
     updateProducts();
   }, [cart]);
-
-  /* compute initial total amount */
-  var sum = 0.0;
-  Array.from(cart.entries()).map((entry) => {
-    sum += 1.0 * entry[1]; // mock price
-    return entry;
-  });
-
-  const [amount, setAmount] = useState(sum);
-  const [show, setShow] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
 
   const updateQuantity = (productID, quantity) => {
     if (quantity > 0) {

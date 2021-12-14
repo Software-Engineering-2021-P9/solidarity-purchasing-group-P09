@@ -119,19 +119,19 @@ export async function getEmployeeByID(employeeID) {
 export async function findClients(searchString, hasPendingCancelation) {
   let path = "/api/clients";
 
-  if(searchString || hasPendingCancelation!==null){
+  if (searchString || hasPendingCancelation !== null) {
     path += "?";
-    if(searchString){
+    if (searchString) {
       path += `searchString=${searchString}&`;
     }
-    if(hasPendingCancelation!==null){
+    if (hasPendingCancelation !== null) {
       path += `hasPendingCancelation=${hasPendingCancelation}&`;
     }
-    path = path.substring(0, path.length-1);//delete the last character, that is &
+    path = path.substring(0, path.length - 1); //delete the last character, that is &
   }
 
   console.log(path, hasPendingCancelation);
-  
+
   let response = await fetch(path);
 
   switch (response.status) {
@@ -380,6 +380,7 @@ export async function getNextWeekProductAvailability(productID) {
   switch (response.status) {
     case 200:
       let responseBody = await response.json();
+      console.log(responseBody);
       return ProductAvailability.fromJSON(responseBody);
     case 400:
       throw new Error("Validation error occurred");
@@ -472,7 +473,11 @@ export async function updateStatus(status, orderID) {
 }
 
 export async function createOrder(clientID, products, shipmentInfo) {
-  var obj = { clientID: clientID, products: products, shipmentInfo: shipmentInfo};
+  var obj = {
+    clientID: clientID,
+    products: products,
+    shipmentInfo: shipmentInfo,
+  };
 
   const response = await fetch("/api/orders", {
     method: "POST",
@@ -488,9 +493,13 @@ export async function createOrder(clientID, products, shipmentInfo) {
       responseBody = await response.json();
       return Order.fromJSON(responseBody);
     case 401:
-      throw new Error("Unauthorized - The user is not logged or is not allowed to make this action");
+      throw new Error(
+        "Unauthorized - The user is not logged or is not allowed to make this action"
+      );
     case 403:
-      throw new Error("Forbidden - The action cannot be executed in the current week phase");
+      throw new Error(
+        "Forbidden - The action cannot be executed in the current week phase"
+      );
     default:
       throw new Error("An error occurred during order fetch");
   }

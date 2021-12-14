@@ -9,7 +9,7 @@ function ShoppingCartTable(props) {
   return (
     <Container>
       <Col>
-        {props.products.map((item) => {
+        {props.products?.map((item) => {
           return (
             <CartRow
               product={item}
@@ -26,7 +26,7 @@ function ShoppingCartTable(props) {
 }
 
 function CartRow(props) {
-  let left_availability = 14; //mock left_availability
+  let left_availability = props.product.availability.leftQuantity;
   let dropdown_items = [];
   for (let i = 1; i < 11; i++) {
     if (i <= left_availability) {
@@ -46,7 +46,7 @@ function CartRow(props) {
       <Col md="7" className="px-4">
         <Row className="item-cart-name">{props.product.name}</Row>
         <Row>{props.product.description}</Row>
-        <Row className="my-1">{props.product.packaging}</Row>
+        <Row className="my-1">{props.product.availability?.packaging}</Row>
         <Row className="justify-content-md-start mt-3">
           {left_availability <= 10 ||
           props.shoppingCart.get(props.product.id) < 10 ? (
@@ -94,7 +94,7 @@ function CartRow(props) {
         </Row>
       </Col>
       <Col className="item-cart-name text-right">
-        {props.product.price}
+        {props.product.availability?.price}
         {" €"}
       </Col>
     </Row>

@@ -26,7 +26,7 @@ function ShoppingCartTable(props) {
 }
 
 function CartRow(props) {
-  let left_availability = 14; //mock left_availability
+  let left_availability = props.product.availability.leftQuantity; //mock left_availability
   let dropdown_items = [];
   for (let i = 1; i < 11; i++) {
     if (i <= left_availability) {
@@ -94,7 +94,7 @@ function CartRow(props) {
         </Row>
       </Col>
       <Col className="item-cart-name text-right">
-      {props.product.availability?.price}
+        {props.product.availability?.price}
         {" €"}
       </Col>
     </Row>

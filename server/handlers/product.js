@@ -2,7 +2,10 @@ var dao = require("../dao/dao");
 const dayjs = require("dayjs");
 const { Product } = require("../models/product");
 const { ProductAvailability } = require("../models/product_availability");
-const { getNextWeek, getCurrentWeek } = require("../services/time_service");
+const {
+  getNextWeekClient,
+  getCurrentWeekClient,
+} = require("../services/time_service");
 const {
   searchStringValidator,
   productCategoryValidator,
@@ -68,7 +71,7 @@ exports.getProductsByIDHandler = async function (req, res, next) {
   try {
     productsAvailabilitiesResult = await dao.getProductsAvailability(
       productsResult.map((product) => product._id),
-      ...getNextWeek(dayjs())
+      ...getNextWeekClient(dayjs())
     );
   } catch (err) {
     console.error(
@@ -114,7 +117,7 @@ exports.getProductByIDHandler = async function (req, res, next) {
   try {
     result = await dao.getProductAvailability(
       req.params.productID,
-      ...getCurrentWeek(dayjs())
+      ...getCurrentWeekClient()
     );
   } catch (err) {
     console.error(
@@ -169,7 +172,7 @@ exports.setNextWeekProductAvailabilityHandler = async function (
   }
 
   const farmerID = result.farmerID;
-  const [week, year] = getNextWeek(dayjs());
+  const [week, year] = getNextWeekClient();
 
   try {
     result = await dao.getProductAvailability(req.params.productID, week, year);
@@ -231,7 +234,7 @@ exports.getNextWeekProductAvailability = async function (req, res, next) {
   try {
     result = await dao.getProductAvailability(
       req.params.productID,
-      ...getNextWeek(dayjs())
+      ...getNextWeekClient()
     );
   } catch (err) {
     console.error(

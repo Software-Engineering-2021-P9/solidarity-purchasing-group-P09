@@ -1,6 +1,10 @@
+const { ObjectId } = require("bson");
 const dayjs = require("dayjs");
 var dao = require("../dao/dao");
-const { Order, OrderStatus } = require("../models/order");
+const { Order, OrderStatus, OrderProduct } = require("../models/order");
+const { Product } = require("../models/product");
+const { ProductAvailability } = require("../models/product_availability");
+const { getNextWeekClient, getNowDate } = require("../services/time_service");
 const {
   clientIDBodyValidator,
   orderProductIDsBodyValidator,
@@ -18,23 +22,46 @@ exports.createOrderValidatorChain = [
 ];
 
 exports.createOrderHandler = async function (req, res, next) {
-  // productPrice is hardcoded to 1 as a tempoarary solution for now, will be fixed in the next sprints
-  const productPrice = 1;
+  const orderProducts = req.body.products.map((op) =>
+    OrderProduct.fromMongoJSON(op)
+  );
+
+  // Get products for each of the order products
+  let result;
+  try {
+    result = await dao.getProductsAvailability(
+      orderProducts.map((p) => new ObjectId(p.productID)),
+      ...getNextWeekClient()
+    );
+  } catch (err) {
+    console.error(
+      `CreateOrder() -> couldn't retrieve order products availabilities: ${err}`
+    );
+    return res.status(500).end();
+  }
+  let productsAvailabilities = result.map((r) =>
+    ProductAvailability.fromMongoJSON(r)
+  );
 
   var totalPrice = 0.0;
-  req.body.products.forEach((product) => {
-    totalPrice += product.quantity * productPrice;
-  });
+  for (let orderProduct of orderProducts) {
+    const productAvailability = productsAvailabilities.find(
+      (pa) => pa.productID.toString() === orderProduct.productID.toString()
+    );
+    orderProduct.price = productAvailability.price;
+    orderProduct.packaging = productAvailability.packaging;
+    totalPrice += orderProduct.quantity * orderProduct.price;
+  }
 
   // Insert the new order
-  var result;
   try {
     result = await dao.createOrder(
       req.body.clientID.toString(),
-      req.body.products,
+      orderProducts,
       OrderStatus.WAITING,
       totalPrice,
-      dayjs().toISOString()
+      getNowDate(),
+      ...getNextWeekClient()
     );
   } catch (err) {
     console.error(`CreateOrder() -> couldn't create order: ${err}`);

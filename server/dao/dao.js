@@ -25,7 +25,10 @@ const {
   getProductsAvailability,
   getProductAvailability,
   setProductAvailability,
-} = require("./productAvailability");
+  getProductAvailabilityByID,
+  updateProductAvailability,
+  confirmProductAvailability,
+} = require("./product_availability");
 
 const {
   createOrder,
@@ -33,6 +36,8 @@ const {
   deleteOrder,
   getOrdersByClientID,
   completeOrder,
+  getOrdersContainingProducts,
+  updateOrders,
 } = require("./order");
 
 const {
@@ -72,6 +77,23 @@ exports.close = () => {
   client = null;
 };
 
+// Runs the passed callback in a single mongodb transaction.
+exports.runInTransaction = (callback) => {
+  const session = client.startSession();
+
+  const transactionOptions = {
+    readPreference: "primary",
+    readConcern: { level: "local" },
+    writeConcern: { w: "majority" },
+  };
+
+  return session
+    .withTransaction(() => callback(session), transactionOptions)
+    .finally(() => {
+      session.endSession();
+    });
+};
+
 // Exported database access methods
 // Employee
 exports.getEmployeeByID = (employeeID) => getEmployeeByID(db, employeeID);
@@ -104,19 +126,26 @@ exports.addFundToWallet = (clientID, increaseBy) =>
   addFundToWallet(db, clientID, increaseBy);
 
 // Product
+exports.getProductByID = (productID) => getProductByID(db, productID);
 exports.getProductsByIDs = (ids) => getProductsByIDs(db, ids);
 exports.findProducts = (searchString, category) =>
   findProducts(db, searchString, category);
+exports.findProductsByFarmerID = (farmerID, searchString, category) =>
+  findProductsByFarmerID(db, farmerID, searchString, category);
+exports.createProduct = (farmerID, name, description, category) =>
+  createProduct(db, farmerID, name, description, category);
 
 exports.createProductsTextSearchIndexes = () => {
   createProductsTextSearchIndexes(db);
 };
 
+// ProductAvailability
+exports.getProductAvailabilityByID = (availabilityID) =>
+  getProductAvailabilityByID(db, availabilityID);
 exports.getProductsAvailability = (listOfIDs, week, year) =>
   getProductsAvailability(db, listOfIDs, week, year);
 exports.getProductAvailability = (productID, week, year) =>
   getProductAvailability(db, productID, week, year);
-exports.getProductByID = (productID) => getProductByID(db, productID);
 exports.setProductAvailability = (
   farmerID,
   productID,
@@ -136,18 +165,38 @@ exports.setProductAvailability = (
     packaging,
     quantity
   );
-exports.findProductsByFarmerID = (farmerID, searchString, category) =>
-  findProductsByFarmerID(db, farmerID, searchString, category);
-exports.createProduct = (farmerID, name, description, category) =>
-  createProduct(db, farmerID, name, description, category);
+exports.updateProductAvailability = (availabilityID, quantity) =>
+  updateProductAvailability(db, availabilityID, quantity);
+exports.confirmProductAvailability = (availabilityID) =>
+  confirmProductAvailability(db, availabilityID);
 
 // Order
-exports.createOrder = (clientID, products, status, totalPrice, createdAt) =>
-  createOrder(db, clientID, products, status, totalPrice, createdAt);
+exports.createOrder = (
+  clientID,
+  products,
+  status,
+  totalPrice,
+  createdAt,
+  week,
+  year
+) =>
+  createOrder(
+    db,
+    clientID,
+    products,
+    status,
+    totalPrice,
+    createdAt,
+    week,
+    year
+  );
 exports.getOrderByID = (orderID) => getOrderByID(db, orderID);
+exports.getOrdersContainingProducts = (productID, week, year, sortByCreation) =>
+  getOrdersContainingProducts(db, productID, week, year, sortByCreation);
 exports.deleteOrder = (orderID) => deleteOrder(db, orderID);
 exports.getOrdersByClientID = (clientID) => getOrdersByClientID(db, clientID);
 exports.completeOrder = (orderID) => completeOrder(db, orderID);
+exports.updateOrders = (orders) => updateOrders(db, orders);
 
 exports.createClientsTextSearchIndexes = () =>
   createClientsTextSearchIndexes(db);

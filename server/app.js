@@ -23,6 +23,8 @@ var orderHandlers = require("./handlers/order");
 
 var productHandlers = require("./handlers/product");
 
+var productAvailabilityHandlers = require("./handlers/product_availability");
+
 var farmerHandlers = require("./handlers/farmer");
 
 var weekphaseHandlers = require("./handlers/weekphase");
@@ -180,6 +182,23 @@ app.get(
 );
 
 app.post(
+  buildAPIPath("/products"),
+  productHandlers.createProductValidatorChain,
+  checkValidationErrorMiddleware,
+  productHandlers.createProductHandler
+);
+
+// ---------------
+// /availabilities
+// ---------------
+app.get(
+  buildAPIPath("/availabilities/:availabilityID"),
+  productAvailabilityHandlers.getProductAvailabilityByIDValidatorChain,
+  checkValidationErrorMiddleware,
+  productAvailabilityHandlers.getProductAvailabilityByIDHandler
+);
+
+app.post(
   buildAPIPath("/products/:productID/availability"),
   productHandlers.setNextWeekProductAvailabilityValidatorChain,
   checkValidationErrorMiddleware,
@@ -193,12 +212,20 @@ app.get(
   productHandlers.getNextWeekProductAvailability
 );
 
-app.post(
-  buildAPIPath("/products"),
-  productHandlers.createProductValidatorChain,
+app.patch(
+  buildAPIPath("/availabilities/:availabilityID/confirm"),
+  productAvailabilityHandlers.confirmProductAvailabilityValidatorChain,
   checkValidationErrorMiddleware,
-  productHandlers.createProductHandler
+  productAvailabilityHandlers.confirmProductAvailabilityHandler
 );
+
+app.patch(
+  buildAPIPath("/availabilities/:availabilityID"),
+  productAvailabilityHandlers.updateProductAvailabilityValidatorChain,
+  checkValidationErrorMiddleware,
+  productAvailabilityHandlers.updateProductAvailabilityHandler
+);
+
 // --------
 // /farmers
 // --------

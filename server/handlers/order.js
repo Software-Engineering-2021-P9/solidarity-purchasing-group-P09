@@ -29,7 +29,7 @@ exports.createOrderValidatorChain = [
   orderAddressBodyValidator,
   orderPickUpSlotBodyValidator,
 ];
-
+/*
 exports.createOrderHandler = async function (req, res, next) {
   // productPrice is hardcoded to 1 as a tempoarary solution for now, will be fixed in the next sprints
   //const productPrice = 1;
@@ -78,7 +78,49 @@ exports.createOrderHandler = async function (req, res, next) {
 
   return res.json(Order.fromMongoJSON(result));
 };
+*/
 
+exports.createOrderHandler = async function (req, res, next) {
+  // productPrice is hardcoded to 1 as a tempoarary solution for now, will be fixed in the next sprints
+  //const productPrice = 1;
+  //const [week, year] = getNextWeek(dayjs());
+  var totalPrice = 0.0;
+
+  for (const p of req.body.products) {
+    var productPrice = await dao.getProductPrice(
+      p.productID,
+      ...getNextWeek(dayjs())
+    );
+    totalPrice += p.quantity * productPrice;
+  }
+
+  const order = {
+    clientID: ObjectID(req.body.clientID.toString()),
+    products: req.body.products?.map(
+      (p) =>
+        new OrderProduct(ObjectID(p.productID.toString()), parseInt(p.quantity))
+    ),
+    status: OrderStatus.WAITING,
+    totalPrice: parseFloat(totalPrice),
+    createdAt: dayjs().toISOString(),
+    shipmentInfo: new ShipmentInfo(
+      req.body.shipmentInfo.type.toString(),
+      req.body.shipmentInfo.pickUpSlot?.toString(),
+      req.body.shipmentInfo.address.toString()
+    ),
+  };
+
+  // Insert the new order
+  var result;
+  try {
+    result = await dao.createOrder(order);
+  } catch (err) {
+    console.error(CreateOrder() -> couldn't create order: ${err});
+    return res.status(500).end();
+  }
+
+  return res.json({ id: result.insertedId });
+};
 exports.getOrdersByClientIDValidator = [orderClientIDQueryValidator];
 
 exports.getOrdersByClientID = async function (req, res, next) {

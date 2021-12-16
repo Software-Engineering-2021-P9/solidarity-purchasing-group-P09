@@ -13,7 +13,7 @@ sections:
 
 - Number of stories committed vs done  -> 5 stories done out of 7 stories(2 of them from previous sprint 1 is done)
 - Total points committed vs done -> 13 points done out of 20
-- Nr of hours planned vs spent (as a team) -> Nr of hours planned is 111h and spent 115h 35m
+- Nr of hours planned vs spent (as a team) -> Nr of hours planned is 111h 40m and spent 115h 35m
 
 **Remember** a story is done ONLY if it fits the Definition of Done:
 

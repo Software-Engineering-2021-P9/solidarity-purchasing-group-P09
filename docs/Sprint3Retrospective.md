@@ -11,9 +11,9 @@ sections:
 
 ### Macro statistics
 
-- Number of stories committed vs done
-- Total points committed vs done
-- Nr of hours planned vs spent (as a team)
+- Number of stories committed vs done  -> 5 stories done out of 7 stories(2 of them from previous sprint 1 is done)
+- Total points committed vs done -> 13 points done out of 20
+- Nr of hours planned vs spent (as a team) -> Nr of hours planned is 111h and spent 
 
 **Remember** a story is done ONLY if it fits the Definition of Done:
 
@@ -28,8 +28,18 @@ sections:
 
 | Story | # Tasks | Points | Hours est. | Hours actual |
 | ----- | ------- | ------ | ---------- | ------------ |
-| _#0_  |         | -      |            |              |
-| n     |         |        |            |              |
+| _#0_  |     15    | -      |     78h 40m       |       99h       |
+|*[Insufficient Balance Reminder](https://polito-se2-21-09.myjetbrains.com/youtrack/issue/S202109SPG-8) |     2    |    2    |   4h        |    1h          |
+|*[Product given to client](https://polito-se2-21-09.myjetbrains.com/youtrack/issue/S202109SPG-4) |     1    |    3    |   15m        |    0h          |
+|[Schedule bag delivery](https://polito-se2-21-09.myjetbrains.com/youtrack/issue/S202109SPG-43) |     1    |    2    |   3h 30m         |    8h          |
+|[Schedule pick-up](https://polito-se2-21-09.myjetbrains.com/youtrack/issue/S202109SPG-44) |     1    |    2    |   3h         |    4h         |
+|[Check orders pending cancelation](https://polito-se2-21-09.myjetbrains.com/youtrack/issue/S202109SPG-10) |     2    |    3    |   8h         |   8h 30m         |
+|[Browse availability](https://polito-se2-21-09.myjetbrains.com/youtrack/issue/S202109SPG-37) |     1    |    3    |   3h 30m         |    3h         |
+|[Confirm booking](https://polito-se2-21-09.myjetbrains.com/youtrack/issue/S202109SPG-48) |     2    |    5    |   9h         |    10h         |
+
+
+- * corresponds the stories from the previous sprint
+
 
 > place technical tasks corresponding to story `#0` and leave out story points (not applicable in this case)
 
@@ -39,24 +49,24 @@ sections:
 ## QUALITY MEASURES
 
 - Unit Testing:
-  - Total hours estimated
-  - Total hours spent
-  - Nr of automated unit test cases
-  - Coverage (if available)
+  - Total hours estimated = 8h
+  - Total hours spent = 6h
+  - Nr of automated unit test cases = 108
+  - Coverage (if available) = 81.3%
 - E2E testing:
-  - Total hours estimated
-  - Total hours spent
+  - Total hours estimated = 4h
+  - Total hours spent = 4h
 - Code review
-  - Total hours estimated
-  - Total hours spent
+  - Total hours estimated  = 10h
+  - Total hours spent = 5h 30m
 - Technical Debt management:
-  - Total hours estimated
-  - Total hours spent
-  - Hours estimated for remediation by SonarQube
-  - Hours estimated for remediation by SonarQube only for the selected and planned issues
-  - Hours spent on remediation
-  - debt ratio (as reported by SonarQube under "Measures-Maintainability")
-  - rating for each quality characteristic reported in SonarQube under "Measures" (namely reliability, security, maintainability )
+  - Total hours estimated = 5h 30m
+  - Total hours spent = 6h
+  - Hours estimated for remediation by SonarQube  = 2m
+  - Hours estimated for remediation by SonarQube only for the selected and planned issues = 2m
+  - Hours spent on remediation = 3h
+  - debt ratio (as reported by SonarQube under "Measures-Maintainability") = 0.0%
+  - rating for each quality characteristic reported in SonarQube under "Measures" (namely reliability, security, maintainability ) all A
 
 ## ASSESSMENT
 
@@ -70,8 +80,6 @@ sections:
 1. It's hard to share the same global vision for all the team members. Development must be slowed down a little bit, to improve accuracy in decisions. The best way to handle this situation is to keep everyone aligned and reduce the gap between the individual and the global vision.
 
 2. Nobody have to work on their own, following their individual vision.
-
-3. Adriana is a UI monster designer
 
 - Which improvement goals set in the previous retrospective were you able to achieve?
 

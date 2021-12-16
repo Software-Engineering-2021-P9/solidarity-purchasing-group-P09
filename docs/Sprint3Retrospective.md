@@ -13,7 +13,7 @@ sections:
 
 - Number of stories committed vs done  -> 5 stories done out of 7 stories(2 of them from previous sprint 1 is done)
 - Total points committed vs done -> 13 points done out of 20
-- Nr of hours planned vs spent (as a team) -> Nr of hours planned is 111h and spent 
+- Nr of hours planned vs spent (as a team) -> Nr of hours planned is 111h and spent 115h 35m
 
 **Remember** a story is done ONLY if it fits the Definition of Done:
 
@@ -28,12 +28,12 @@ sections:
 
 | Story | # Tasks | Points | Hours est. | Hours actual |
 | ----- | ------- | ------ | ---------- | ------------ |
-| _#0_  |     15    | -      |     78h 40m       |       99h       |
+| _#0_  |     15    | -      |     78h 40m       |       80h       |
 |*[Insufficient Balance Reminder](https://polito-se2-21-09.myjetbrains.com/youtrack/issue/S202109SPG-8) |     2    |    2    |   4h        |    1h          |
 |*[Product given to client](https://polito-se2-21-09.myjetbrains.com/youtrack/issue/S202109SPG-4) |     1    |    3    |   15m        |    0h          |
 |[Schedule bag delivery](https://polito-se2-21-09.myjetbrains.com/youtrack/issue/S202109SPG-43) |     1    |    2    |   3h 30m         |    8h          |
 |[Schedule pick-up](https://polito-se2-21-09.myjetbrains.com/youtrack/issue/S202109SPG-44) |     1    |    2    |   3h         |    4h         |
-|[Check orders pending cancelation](https://polito-se2-21-09.myjetbrains.com/youtrack/issue/S202109SPG-10) |     2    |    3    |   8h         |   8h 30m         |
+|[Check orders pending cancelation](https://polito-se2-21-09.myjetbrains.com/youtrack/issue/S202109SPG-10) |     2    |    3    |   8h         |   9h 30m         |
 |[Browse availability](https://polito-se2-21-09.myjetbrains.com/youtrack/issue/S202109SPG-37) |     1    |    3    |   3h 30m         |    3h         |
 |[Confirm booking](https://polito-se2-21-09.myjetbrains.com/youtrack/issue/S202109SPG-48) |     2    |    5    |   9h         |    10h         |
 
@@ -43,8 +43,8 @@ sections:
 
 > place technical tasks corresponding to story `#0` and leave out story points (not applicable in this case)
 
-- Hours per task (average, standard deviation)
-- Total task estimation error ratio: sum of total hours estimation / sum of total hours spent from previous table
+- Hours per task (average, standard deviation): average=4h 30m, standard deviation= 4.01
+- Total task estimation error ratio: sum of total hours estimation / sum of total hours spent from previous table=110h 40m / 115h 35m = 0.958 
 
 ## QUALITY MEASURES
 

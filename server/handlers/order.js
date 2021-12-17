@@ -7,7 +7,10 @@ const {
   Order,
   OrderProductStatus,
 } = require("../models/order");
-const { ProductAvailability } = require("../models/product_availability");
+const {
+  ProductAvailability,
+  ProductAvailabilityStatus,
+} = require("../models/product_availability");
 const {
   clientIDBodyValidator,
   orderProductIDsBodyValidator,
@@ -78,6 +81,10 @@ exports.createOrderHandler = async function (req, res, next) {
       productAvailability.leftQuantity -= orderProduct.quantity;
 
       // Update order products missing fields
+      orderProduct.status =
+        productAvailability.status === ProductAvailabilityStatus.CONFIRMED
+          ? OrderProductStatus.CONFIRMED
+          : OrderProductStatus.WAITING;
       orderProduct.price = productAvailability.price;
       orderProduct.packaging = productAvailability.packaging;
 
@@ -102,13 +109,13 @@ exports.createOrderHandler = async function (req, res, next) {
     const order = {
       clientID: ObjectID(req.body.clientID.toString()),
       products: orderProducts?.map(
-        (p) =>
+        (op) =>
           new OrderProduct(
-            ObjectID(p.productID.toString()),
-            OrderProductStatus.WAITING,
-            p.quantity,
-            p.price,
-            p.packaging
+            ObjectID(op.productID.toString()),
+            op.status,
+            op.quantity,
+            op.price,
+            op.packaging
           )
       ),
       status: OrderStatus.WAITING,

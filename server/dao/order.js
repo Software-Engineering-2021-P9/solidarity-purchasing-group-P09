@@ -67,8 +67,10 @@ exports.completeOrder = async (db, orderID) => {
 
 exports.updateOrders = async (db, orders) => {
   const bulkData = orders.map((order) => {
-    order._id = order.id;
-    delete order.id;
+    if (!order._id) {
+      order._id = order.id;
+      delete order.id;
+    }
     return {
       replaceOne: {
         upsert: false,

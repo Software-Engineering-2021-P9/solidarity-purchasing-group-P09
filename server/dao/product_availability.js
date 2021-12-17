@@ -94,3 +94,26 @@ exports.confirmProductAvailability = (db, availabilityID) => {
     { $set: { status: ProductAvailabilityStatus.CONFIRMED } }
   );
 };
+
+// ---------------------------
+// UpdateProductAvailabilities
+// ---------------------------
+
+exports.updateProductAvailabilities = (db, productAvailabilities) => {
+  const bulkData = productAvailabilities.map((pa) => {
+    if (!pa._id) {
+      pa._id = pa.id;
+      delete pa.id;
+    }
+    return {
+      replaceOne: {
+        upsert: false,
+        filter: {
+          _id: pa._id,
+        },
+        replacement: pa,
+      },
+    };
+  });
+  return db.collection(productsAvailabilityCollectionName).bulkWrite(bulkData);
+};

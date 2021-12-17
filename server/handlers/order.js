@@ -5,6 +5,7 @@ const {
   OrderStatus,
   ShipmentInfo,
   Order,
+  OrderProductStatus,
 } = require("../models/order");
 const { ProductAvailability } = require("../models/product_availability");
 const {
@@ -20,6 +21,10 @@ const {
 } = require("./shared_validators");
 const { getNextWeekClient, getNowDate } = require("../services/time_service");
 
+// -----------
+// CreateOrder
+// -----------
+
 exports.createOrderValidatorChain = [
   clientIDBodyValidator,
   orderProductsBodyValidator,
@@ -31,74 +36,109 @@ exports.createOrderValidatorChain = [
 ];
 
 exports.createOrderHandler = async function (req, res, next) {
-  const orderProducts = req.body.products.map((op) =>
-    OrderProduct.fromMongoJSON(op)
-  );
-
-  // Get products for each of the order products
-  let result;
-  try {
-    result = await dao.getProductsAvailability(
-      orderProducts.map((p) => new ObjectID(p.productID)),
-      ...getNextWeekClient()
+  await dao.runInTransaction(async (session) => {
+    // Get products availability for each of the order products
+    const orderProducts = req.body.products.map((op) =>
+      OrderProduct.fromMongoJSON(op)
     );
-  } catch (err) {
-    console.error(
-      `CreateOrder() -> couldn't retrieve order products availabilities: ${err}`
+    let result;
+    try {
+      result = await dao.getProductsAvailability(
+        orderProducts.map((p) => new ObjectID(p.productID)),
+        ...getNextWeekClient()
+      );
+    } catch (err) {
+      console.error(
+        `CreateOrder() -> couldn't retrieve order products availabilities: ${err}`
+      );
+      await session.abortTransaction();
+      return res.status(500).end();
+    }
+
+    let productAvailabilities = result.map((r) =>
+      ProductAvailability.fromMongoJSON(r)
     );
-    return res.status(500).end();
-  }
 
-  let productsAvailabilities = result.map((r) =>
-    ProductAvailability.fromMongoJSON(r)
-  );
+    let totalPrice = 0.0;
+    for (let orderProduct of orderProducts) {
+      let productAvailability = productAvailabilities.find(
+        (pa) => pa.productID.toString() === orderProduct.productID.toString()
+      );
 
-  var totalPrice = 0.0;
-  for (let orderProduct of orderProducts) {
-    const productAvailability = productsAvailabilities.find(
-      (pa) => pa.productID.toString() === orderProduct.productID.toString()
-    );
-    orderProduct.price = productAvailability.price;
-    orderProduct.packaging = productAvailability.packaging;
-    totalPrice += orderProduct.quantity * orderProduct.price;
-  }
+      // Check if product is still available
+      if (productAvailability.leftQuantity < orderProduct.quantity) {
+        console.error(
+          `CreateOrder() -> product availability is lesser than required`
+        );
+        await session.abortTransaction();
+        return res.status(400).end();
+      }
 
-  const [week, year] = getNextWeekClient();
-  const order = {
-    clientID: ObjectID(req.body.clientID.toString()),
-    products: orderProducts?.map(
-      (p) =>
-        new OrderProduct(
-          ObjectID(p.productID.toString()),
-          OrderProductStatus.WAITING,
-          p.quantity,
-          p.price,
-          p.packaging
-        )
-    ),
-    status: OrderStatus.WAITING,
-    totalPrice: totalPrice,
-    createdAt: getNowDate().toISOString(),
-    week: week,
-    year: year,
-    shipmentInfo: new ShipmentInfo(
-      req.body.shipmentInfo.type.toString(),
-      req.body.shipmentInfo.pickUpSlot?.toString(),
-      req.body.shipmentInfo.address.toString()
-    ),
-  };
+      // Update leftQuantity
+      productAvailability.leftQuantity -= orderProduct.quantity;
 
-  // Insert the new order
-  var result;
-  try {
-    result = await dao.createOrder(order);
-  } catch (err) {
-    console.error(`CreateOrder() -> couldn't create order: ${err}`);
-    return res.status(500).end();
-  }
+      // Update order products missing fields
+      orderProduct.price = productAvailability.price;
+      orderProduct.packaging = productAvailability.packaging;
 
-  return res.json({ id: result.insertedId });
+      // Calculate new total
+      totalPrice += orderProduct.quantity * orderProduct.price;
+    }
+
+    // Update products availabilities
+    try {
+      result = await dao.updateProductAvailabilities(productAvailabilities);
+    } catch (err) {
+      console.error(
+        `CreateOrder() -> couldn't update product availabilities: ${err}`
+      );
+      await session.abortTransaction();
+      return res.status(500).end();
+    }
+
+    // Build new order
+    const [week, year] = getNextWeekClient();
+
+    const order = {
+      clientID: ObjectID(req.body.clientID.toString()),
+      products: orderProducts?.map(
+        (p) =>
+          new OrderProduct(
+            ObjectID(p.productID.toString()),
+            OrderProductStatus.WAITING,
+            p.quantity,
+            p.price,
+            p.packaging
+          )
+      ),
+      status: OrderStatus.WAITING,
+      totalPrice: totalPrice,
+      createdAt: getNowDate().toISOString(),
+      week: week,
+      year: year,
+      shipmentInfo: new ShipmentInfo(
+        req.body.shipmentInfo.type.toString(),
+        req.body.shipmentInfo.pickUpSlot?.toString(),
+        req.body.shipmentInfo.address.toString()
+      ),
+    };
+
+    // Insert the new order
+    try {
+      result = await dao.createOrder(order);
+    } catch (err) {
+      console.error(`CreateOrder() -> couldn't create order: ${err}`);
+      await session.abortTransaction();
+      return res.status(500).end();
+    }
+
+    return res.json({ id: result.insertedId });
+  });
 };
+
+// -------------------
+// GetOrdersByClientID
+// -------------------
 
 exports.getOrdersByClientIDValidator = [orderClientIDQueryValidator];
 
@@ -118,6 +158,10 @@ exports.getOrdersByClientID = async function (req, res, next) {
   return res.json(orders);
 };
 
+// -------------
+// CompleteOrder
+// -------------
+
 exports.completeOrderValidatorChain = [orderIDParamValidator];
 
 exports.completeOrderHandler = async function (req, res, next) {
@@ -132,6 +176,10 @@ exports.completeOrderHandler = async function (req, res, next) {
 
   return res.status(204).end();
 };
+
+// ------------
+// GetOrderByID
+// ------------
 
 exports.getOrderByIDValidatorChain = [orderIDParamValidator];
 

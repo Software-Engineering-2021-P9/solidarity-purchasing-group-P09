@@ -26,6 +26,7 @@ const {
   getProductAvailabilityByID,
   updateProductAvailability,
   confirmProductAvailability,
+  updateProductAvailabilities,
 } = require("./product_availability");
 
 const {
@@ -161,6 +162,8 @@ exports.updateProductAvailability = (availabilityID, quantity) =>
   updateProductAvailability(db, availabilityID, quantity);
 exports.confirmProductAvailability = (availabilityID) =>
   confirmProductAvailability(db, availabilityID);
+exports.updateProductAvailabilities = (productAvailabilities) =>
+  updateProductAvailabilities(db, productAvailabilities);
 
 // Order
 exports.createOrder = (order) => createOrder(db, order);

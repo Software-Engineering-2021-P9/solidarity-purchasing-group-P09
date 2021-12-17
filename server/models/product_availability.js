@@ -15,7 +15,8 @@ class ProductAvailability {
     status,
     packaging,
     quantity,
-    price
+    price,
+    leftQuantity
   ) {
     this.id = id;
     this.farmerID = farmerID;
@@ -26,6 +27,7 @@ class ProductAvailability {
     this.packaging = packaging;
     this.quantity = quantity;
     this.price = price;
+    this.leftQuantity = leftQuantity;
   }
 
   static fromMongoJSON(json) {
@@ -38,7 +40,8 @@ class ProductAvailability {
       json.status,
       json.packaging,
       json.quantity,
-      json.price
+      json.price,
+      json.leftQuantity
     );
   }
 }

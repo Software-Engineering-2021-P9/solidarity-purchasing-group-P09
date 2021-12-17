@@ -2,6 +2,8 @@
 
 const OrderProductStatus = {
   WAITING: "waiting",
+  NOTCOVERED: "not-covered",
+  PENDINGCANCELATION: "pending-cancelation",
   CONFIRMED: "confirmed",
   MODIFIED: "modified",
   CANCELED: "canceled",
@@ -35,6 +37,18 @@ const OrderStatus = {
   CANCELED: "canceled",
 };
 
+class ShipmentInfo {
+  constructor(type, pickUpSlot, address) {
+    this.type = type;
+    this.address = address;
+    if (type === "pickup") this.pickUpSlot = pickUpSlot;
+  }
+
+  static fromMongoJSON(json) {
+    return new ShipmentInfo(json.type, json.pickUpSlot, json.address);
+  }
+}
+
 class Order {
   constructor(
     id,
@@ -44,7 +58,8 @@ class Order {
     totalPrice,
     createdAt,
     week,
-    year
+    year,
+    shipmentInfo
   ) {
     this.id = id;
     this.clientID = clientID;
@@ -54,6 +69,7 @@ class Order {
     this.createdAt = createdAt;
     this.week = week;
     this.year = year;
+    this.shipmentInfo = shipmentInfo;
   }
 
   static fromMongoJSON(json) {
@@ -61,6 +77,8 @@ class Order {
     json.products?.forEach((orderProductJson) =>
       orderProducts.push(OrderProduct.fromMongoJSON(orderProductJson))
     );
+
+    const shipmentInfo = ShipmentInfo.fromMongoJSON(json.shipmentInfo);
 
     return new Order(
       json._id,
@@ -70,9 +88,16 @@ class Order {
       json.totalPrice,
       json.createdAt,
       json.week,
-      json.year
+      json.year,
+      shipmentInfo
     );
   }
 }
 
-module.exports = { Order, OrderProduct, OrderStatus, OrderProductStatus };
+module.exports = {
+  Order,
+  OrderProduct,
+  OrderStatus,
+  ShipmentInfo,
+  OrderProductStatus,
+};

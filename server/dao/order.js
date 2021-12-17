@@ -1,11 +1,7 @@
 "use strict";
 
-const { ObjectId } = require("bson");
-const {
-  OrderProduct,
-  OrderStatus,
-  OrderProductStatus,
-} = require("../models/order");
+const { OrderStatus } = require("../models/order");
+const { ObjectID } = require("bson");
 
 const orderCollectionName = "orders";
 
@@ -13,44 +9,14 @@ const orderCollectionName = "orders";
 // Create Order
 // ------------
 
-exports.createOrder = async (
-  db,
-  clientID,
-  products,
-  status,
-  totalPrice,
-  createdAt,
-  week,
-  year
-) => {
-  const mongoProducts = products?.map(
-    (p) =>
-      new OrderProduct(
-        ObjectId(p.productID),
-        OrderProductStatus.WAITING,
-        p.quantity,
-        p.price,
-        p.packaging
-      )
-  );
-
-  const newOrder = {
-    clientID: ObjectId(clientID),
-    products: mongoProducts,
-    status: status,
-    totalPrice: totalPrice,
-    createdAt: createdAt.toISOString(),
-    week: week,
-    year: year,
-  };
-
-  return db.collection(orderCollectionName).insertOne(newOrder);
+exports.createOrder = async (db, order) => {
+  return db.collection(orderCollectionName).insertOne(order);
 };
 
 exports.getOrdersByClientID = async (db, clientID) => {
   return db
     .collection(orderCollectionName)
-    .find({ clientID: ObjectId(clientID) })
+    .find({ clientID: ObjectID(clientID) })
     .toArray();
 };
 // ------------
@@ -58,7 +24,7 @@ exports.getOrdersByClientID = async (db, clientID) => {
 // ------------
 
 exports.getOrderByID = async (db, orderID) => {
-  return db.collection(orderCollectionName).findOne(ObjectId(orderID));
+  return db.collection(orderCollectionName).findOne(ObjectID(orderID));
 };
 
 // --------------------------
@@ -85,20 +51,12 @@ exports.getOrdersContainingProducts = (
     .toArray();
 };
 
-// -----------
-// DeleteOrder
-// -----------
-
-exports.deleteOrder = async (db, orderID) => {
-  return db.collection(orderCollectionName).deleteOne(ObjectId(orderID));
-};
-
 // -------------
 // CompleteOrder
 // -------------
 
 exports.completeOrder = async (db, orderID) => {
-  const query = { _id: ObjectId(orderID), status: OrderStatus.PREPARED };
+  const query = { _id: ObjectID(orderID), status: OrderStatus.PREPARED };
   const update = { $set: { status: OrderStatus.DONE } };
   return db.collection(orderCollectionName).updateOne(query, update);
 };
@@ -122,4 +80,14 @@ exports.updateOrders = async (db, orders) => {
     };
   });
   return db.collection(orderCollectionName).bulkWrite(bulkData);
+};
+
+// -----------------------
+// GetOrdersByClientIDList
+// -----------------------
+
+exports.getOrdersByClientIDList = async (db, clientIDList) => {
+  const query = { clientID: { $in: clientIDList } };
+
+  return db.collection(orderCollectionName).find(query).toArray();
 };

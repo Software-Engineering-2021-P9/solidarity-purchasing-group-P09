@@ -1,10 +1,12 @@
-const { ObjectId } = require("bson");
-const dayjs = require("dayjs");
 var dao = require("../dao/dao");
-const { Order, OrderStatus, OrderProduct } = require("../models/order");
-const { Product } = require("../models/product");
+const { ObjectID } = require("bson");
+const {
+  OrderProduct,
+  OrderStatus,
+  ShipmentInfo,
+  Order,
+} = require("../models/order");
 const { ProductAvailability } = require("../models/product_availability");
-const { getNextWeekClient, getNowDate } = require("../services/time_service");
 const {
   clientIDBodyValidator,
   orderProductIDsBodyValidator,
@@ -12,13 +14,20 @@ const {
   orderProductsBodyValidator,
   orderClientIDQueryValidator,
   orderIDParamValidator,
+  orderAddressBodyValidator,
+  orderShipmentTypeBodyValidator,
+  orderPickUpSlotBodyValidator,
 } = require("./shared_validators");
+const { getNextWeekClient, getNowDate } = require("../services/time_service");
 
 exports.createOrderValidatorChain = [
   clientIDBodyValidator,
   orderProductsBodyValidator,
   orderProductIDsBodyValidator,
   orderProductQtysBodyValidator,
+  orderShipmentTypeBodyValidator,
+  orderAddressBodyValidator,
+  orderPickUpSlotBodyValidator,
 ];
 
 exports.createOrderHandler = async function (req, res, next) {
@@ -30,7 +39,7 @@ exports.createOrderHandler = async function (req, res, next) {
   let result;
   try {
     result = await dao.getProductsAvailability(
-      orderProducts.map((p) => new ObjectId(p.productID)),
+      orderProducts.map((p) => new ObjectID(p.productID)),
       ...getNextWeekClient()
     );
   } catch (err) {
@@ -39,6 +48,7 @@ exports.createOrderHandler = async function (req, res, next) {
     );
     return res.status(500).end();
   }
+
   let productsAvailabilities = result.map((r) =>
     ProductAvailability.fromMongoJSON(r)
   );
@@ -53,39 +63,41 @@ exports.createOrderHandler = async function (req, res, next) {
     totalPrice += orderProduct.quantity * orderProduct.price;
   }
 
+  const [week, year] = getNextWeekClient();
+  const order = {
+    clientID: ObjectID(req.body.clientID.toString()),
+    products: orderProducts?.map(
+      (p) =>
+        new OrderProduct(
+          ObjectID(p.productID.toString()),
+          OrderProductStatus.WAITING,
+          p.quantity,
+          p.price,
+          p.packaging
+        )
+    ),
+    status: OrderStatus.WAITING,
+    totalPrice: totalPrice,
+    createdAt: getNowDate().toISOString(),
+    week: week,
+    year: year,
+    shipmentInfo: new ShipmentInfo(
+      req.body.shipmentInfo.type.toString(),
+      req.body.shipmentInfo.pickUpSlot?.toString(),
+      req.body.shipmentInfo.address.toString()
+    ),
+  };
+
   // Insert the new order
+  var result;
   try {
-    result = await dao.createOrder(
-      req.body.clientID.toString(),
-      orderProducts,
-      OrderStatus.WAITING,
-      totalPrice,
-      getNowDate(),
-      ...getNextWeekClient()
-    );
+    result = await dao.createOrder(order);
   } catch (err) {
     console.error(`CreateOrder() -> couldn't create order: ${err}`);
     return res.status(500).end();
   }
 
-  // Fetch the newly created order
-  try {
-    result = await dao.getOrderByID(result.insertedId);
-  } catch (err) {
-    // Try reverting the changes made until now, using a best-effort strategy
-    dao.deleteOrder(result.insertedId);
-    console.error(
-      `CreateOrder() -> couldn't retrieve newly created order: ${err}`
-    );
-    return res.status(500).end();
-  }
-
-  if (!result) {
-    console.error(`CreateOrder() -> couldn't retrieve newly created order`);
-    return res.status(404).end();
-  }
-
-  return res.json(Order.fromMongoJSON(result));
+  return res.json({ id: result.insertedId });
 };
 
 exports.getOrdersByClientIDValidator = [orderClientIDQueryValidator];
@@ -119,4 +131,23 @@ exports.completeOrderHandler = async function (req, res, next) {
   }
 
   return res.status(204).end();
+};
+
+exports.getOrderByIDValidatorChain = [orderIDParamValidator];
+
+exports.getOrderByID = async function (req, res, next) {
+  let result;
+
+  try {
+    result = await dao.getOrderByID(req.params.orderID);
+  } catch (err) {
+    console.error(`getOrderByID() -> couldn't retrieve the order: ${err}`);
+    return res.status(500).end();
+  }
+  if (!result) {
+    console.error(`getOrderByID() -> couldn't find the order`);
+    return res.status(404).end();
+  }
+
+  return res.json(Order.fromMongoJSON(result));
 };

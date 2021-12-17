@@ -78,7 +78,20 @@ exports.updateProductAvailability = (db, availabilityID, quantity) => {
       _id: ObjectID(availabilityID),
       status: ProductAvailabilityStatus.WAITING,
     },
-    { $set: { quantity: quantity } }
+    {
+      $set: {
+        quantity: {
+          $cond: {
+            // Check if the leftQuantity value is bigger than the updated quantity
+            if: {
+              leftQuantity: { $gte: quantity },
+            },
+            then: quantity,
+            else: "$leftQuantity",
+          },
+        },
+      },
+    }
   );
 };
 

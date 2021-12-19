@@ -84,6 +84,7 @@ exports.createOrderHandler = async function (req, res, next) {
   // productPrice is hardcoded to 1 as a tempoarary solution for now, will be fixed in the next sprints
   //const productPrice = 1;
   //const [week, year] = getNextWeek(dayjs());
+  
   var totalPrice = 0.0;
 
   for (const p of req.body.products) {
@@ -94,6 +95,8 @@ exports.createOrderHandler = async function (req, res, next) {
     totalPrice += p.quantity * productPrice;
   }
 
+
+ 
   const order = {
     clientID: ObjectID(req.body.clientID.toString()),
     products: req.body.products?.map(

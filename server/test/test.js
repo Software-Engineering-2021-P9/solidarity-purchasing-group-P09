@@ -976,9 +976,7 @@ describe("Orders API tests:", () => {
         .send({
           clientID: "6187c957b288576ca26f8257",
           products: [
-            { productID: "6187c957b288576ca26f8258", quantity: 3 },
-            { productID: "6187c957b288576ca26f8259", quantity: 1 },
-            { productID: "6187c957b288576ca26f8250", quantity: 2 },
+            { productID: "000000000000000000000001", quantity: 1 },
           ],
           shipmentInfo: {
             type: "shipment",
@@ -1001,9 +999,7 @@ describe("Orders API tests:", () => {
               expect(res.body.clientID).to.be.equal("6187c957b288576ca26f8257");
               expect(res.body.id).to.be.equal(id);
               expect(res.body.products).to.be.eql([
-                { productID: "6187c957b288576ca26f8258", quantity: 3 },
-                { productID: "6187c957b288576ca26f8259", quantity: 1 },
-                { productID: "6187c957b288576ca26f8250", quantity: 2 },
+                { productID: "000000000000000000000001", quantity: 1 },
               ]);
               expect(res.body.shipmentInfo).to.be.eql({
                 type: "shipment",
@@ -1022,9 +1018,7 @@ describe("Orders API tests:", () => {
         .send({
           clientID: "6187c957b288576ca26f8257",
           products: [
-            { productID: "6187c957b288576ca26f8258", quantity: 3 },
-            { productID: "6187c957b288576ca26f8259", quantity: 1 },
-            { productID: "6187c957b288576ca26f8250", quantity: 2 },
+            { productID: "000000000000000000000004", quantity: 1 },
           ],
           shipmentInfo: {
             type: "pickup",
@@ -1048,9 +1042,7 @@ describe("Orders API tests:", () => {
               expect(res.body.clientID).to.be.equal("6187c957b288576ca26f8257");
               expect(res.body.id).to.be.equal(id);
               expect(res.body.products).to.be.eql([
-                { productID: "6187c957b288576ca26f8258", quantity: 3 },
-                { productID: "6187c957b288576ca26f8259", quantity: 1 },
-                { productID: "6187c957b288576ca26f8250", quantity: 2 },
+                { productID: "000000000000000000000004", quantity: 1 },
               ]);
               expect(res.body.shipmentInfo).to.be.eql({
                 type: "pickup",
@@ -1070,9 +1062,7 @@ describe("Orders API tests:", () => {
         .send({
           clientID: "6187c957b288576ca26f8257",
           products: [
-            { productID: "6187c957b288576ca26f8258", quantity: 3 },
-            { productID: "6187c957b288576ca26f8259", quantity: 1 },
-            { productID: "6187c957b288576ca26f8250", quantity: 2 },
+            { productID: "000000000000000000000004", quantity: 1 },
           ],
           shipmentInfo: {
             type: "shipment",
@@ -1096,9 +1086,7 @@ describe("Orders API tests:", () => {
               expect(res.body.clientID).to.be.equal("6187c957b288576ca26f8257");
               expect(res.body.id).to.be.equal(id);
               expect(res.body.products).to.be.eql([
-                { productID: "6187c957b288576ca26f8258", quantity: 3 },
-                { productID: "6187c957b288576ca26f8259", quantity: 1 },
-                { productID: "6187c957b288576ca26f8250", quantity: 2 },
+                { productID: "000000000000000000000004", quantity: 1 },
               ]);
               expect(res.body.shipmentInfo).to.be.eql({
                 type: "shipment",
@@ -1194,9 +1182,7 @@ describe("Orders API tests:", () => {
         .send({
           clientID: "1",
           products: [
-            { productID: "6187c957b288576ca26f8258", quantity: 3 },
-            { productID: "6187c957b288576ca26f8259", quantity: 1 },
-            { productID: "6187c957b288576ca26f8250", quantity: 2 },
+            { productID: "000000000000000000000004", quantity: 1 },
           ],
         })
         .end((err, res) => {
@@ -1248,9 +1234,7 @@ describe("Orders API tests:", () => {
         .send({
           clientID: "6187c957b288576ca26f8257",
           products: [
-            { productID: "6187c957b288576ca26f8258", quantity: 3 },
-            { productID: "6187c957b288576ca26f8259", quantity: 1 },
-            { productID: "6187c957b288576ca26f8250", quantity: 2 },
+            { productID: "000000000000000000000004", quantity: 1 },
           ],
         })
         .end((err, res) => {
@@ -1277,9 +1261,7 @@ describe("Orders API tests:", () => {
         .send({
           clientID: "6187c957b288576ca26f8257",
           products: [
-            { productID: "6187c957b288576ca26f8258", quantity: 3 },
-            { productID: "6187c957b288576ca26f8259", quantity: 1 },
-            { productID: "6187c957b288576ca26f8250", quantity: 2 },
+            { productID: "000000000000000000000004", quantity: 1 },
           ],
           shipmentInfo: {
             type: "pickup",
@@ -1311,12 +1293,10 @@ describe("Orders API tests:", () => {
               id: "6187c957b288576ca26f8251",
               clientID: "6187c957b288576ca26f8257",
               products: [
-                { productID: "6187c957b288576ca26f8258", quantity: 3 },
-                { productID: "6187c957b288576ca26f8259", quantity: 1 },
-                { productID: "6187c957b288576ca26f8250", quantity: 2 },
+                { productID: "000000000000000000000001", quantity: 1 },
               ],
               status: "prepared",
-              totalPrice: "6",
+              totalPrice: "3.5",
               createdAt: "2021-11-16T13:00:07.616Z",
               shipmentInfo: {
                 type: "pickup",
@@ -1328,11 +1308,10 @@ describe("Orders API tests:", () => {
               id: "6187c957b288576ca26f8999",
               clientID: "6187c957b288576ca26f8257",
               products: [
-                { productID: "6187c957b288576ca26f8258", quantity: 10 },
-                { productID: "6187c957b288576ca26f8259", quantity: 2 },
+                { productID: "000000000000000000000004", quantity: 1 },
               ],
               status: "done",
-              totalPrice: "12",
+              totalPrice: "2.3",
               createdAt: "2021-12-16T13:00:07.616Z",
               shipmentInfo: {
                 type: "pickup",
@@ -1404,12 +1383,10 @@ describe("Orders API tests:", () => {
             id: "6187c957b288576ca26f8251",
             clientID: "6187c957b288576ca26f8257",
             products: [
-              { productID: "6187c957b288576ca26f8258", quantity: 3 },
-              { productID: "6187c957b288576ca26f8259", quantity: 1 },
-              { productID: "6187c957b288576ca26f8250", quantity: 2 },
+              { productID: "000000000000000000000001", quantity: 1 },
             ],
             status: "done",
-            totalPrice: "6",
+            totalPrice: "3.5",
             createdAt: "2021-11-16T13:00:07.616Z",
             shipmentInfo: {
               type: "pickup",
@@ -1439,11 +1416,10 @@ describe("Orders API tests:", () => {
             id: "6187c957b288576ca26f8990",
             clientID: "6187c957b288576ca26f8251",
             products: [
-              { productID: "6187c957b288576ca26f8258", quantity: 10 },
-              { productID: "6187c957b288576ca26f8259", quantity: 2 },
+              { productID: "000000000000000000000004", quantity: 1 },
             ],
             status: "waiting",
-            totalPrice: "12",
+            totalPrice: "2.3",
             createdAt: "2021-12-16T13:00:07.616Z",
             shipmentInfo: {
               type: "shipment",
@@ -1514,12 +1490,10 @@ describe("Orders API tests:", () => {
             id: "6187c957b288576ca26f8251",
             clientID: "6187c957b288576ca26f8257",
             products: [
-              { productID: "6187c957b288576ca26f8258", quantity: 3 },
-              { productID: "6187c957b288576ca26f8259", quantity: 1 },
-              { productID: "6187c957b288576ca26f8250", quantity: 2 },
+              { productID: "000000000000000000000001", quantity: 1 },
             ],
             status: "prepared",
-            totalPrice: "6",
+            totalPrice: "3.5",
             createdAt: "2021-11-16T13:00:07.616Z",
             shipmentInfo: {
               type: "pickup",

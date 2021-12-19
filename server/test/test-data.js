@@ -26,12 +26,11 @@ exports.ordersCollection = {
       _id: ObjectID("6187c957b288576ca26f8251"),
       clientID: ObjectID("6187c957b288576ca26f8257"),
       products: [
-        { productID: "6187c957b288576ca26f8258", quantity: 3 },
-        { productID: "6187c957b288576ca26f8259", quantity: 1 },
-        { productID: "6187c957b288576ca26f8250", quantity: 2 },
+        { productID: "000000000000000000000001", quantity: 1 },
+       
       ],
       status: "prepared",
-      totalPrice: "6",
+      totalPrice: "3.5",
       createdAt: "2021-11-16T13:00:07.616Z",
       shipmentInfo: {
         type: "pickup",
@@ -43,11 +42,11 @@ exports.ordersCollection = {
       _id: ObjectID("6187c957b288576ca26f8999"),
       clientID: ObjectID("6187c957b288576ca26f8257"),
       products: [
-        { productID: "6187c957b288576ca26f8258", quantity: 10 },
-        { productID: "6187c957b288576ca26f8259", quantity: 2 },
+        { productID: "000000000000000000000004", quantity: 1 },
+        
       ],
       status: "done",
-      totalPrice: "12",
+      totalPrice: "2.3",
       createdAt: "2021-12-16T13:00:07.616Z",
       shipmentInfo: {
         type: "pickup",
@@ -59,11 +58,11 @@ exports.ordersCollection = {
       _id: ObjectID("6187c957b288576ca26f8990"),
       clientID: ObjectID("6187c957b288576ca26f8251"),
       products: [
-        { productID: "6187c957b288576ca26f8258", quantity: 10 },
-        { productID: "6187c957b288576ca26f8259", quantity: 2 },
+        { productID: "000000000000000000000004", quantity: 1 },
+        
       ],
       status: "waiting",
-      totalPrice: "12",
+      totalPrice: "2.3",
       createdAt: "2021-12-16T13:00:07.616Z",
       shipmentInfo: {
         type: "shipment",
@@ -79,34 +78,30 @@ exports.ordersCollection2 = {
       _id: ObjectID("6187c957b288576ca26f8251"),
       clientID: ObjectID("6187c957b288576ca26f8257"),
       products: [
-        { productID: "6187c957b288576ca26f8258", quantity: 3 },
-        { productID: "6187c957b288576ca26f8259", quantity: 1 },
-        { productID: "6187c957b288576ca26f8250", quantity: 2 },
+        { productID: "000000000000000000000001", quantity: 1 },
       ],
       status: "pending-cancelation",
-      totalPrice: "6",
+      totalPrice: "3.5",
       createdAt: "2021-11-16T13:00:07.616Z",
     },
     {
       _id: ObjectID("6187c957b288576ca26f8999"),
       clientID: ObjectID("6187c957b288576ca26f8257"),
       products: [
-        { productID: "6187c957b288576ca26f8258", quantity: 10 },
-        { productID: "6187c957b288576ca26f8259", quantity: 2 },
+        { productID: "000000000000000000000004", quantity: 1 },
       ],
       status: "done",
-      totalPrice: "12",
+      totalPrice: "2.3",
       createdAt: "2021-12-16T13:00:07.616Z",
     },
     {
       _id: ObjectID("6187c957b288576ca26f8990"),
       clientID: ObjectID("6187c957b288576ca26f8257"),
       products: [
-        { productID: "6187c957b288576ca26f8258", quantity: 10 },
-        { productID: "6187c957b288576ca26f8259", quantity: 2 },
+        { productID: "000000000000000000000004", quantity: 1 },
       ],
       status: "waiting",
-      totalPrice: "12",
+      totalPrice: "2.3",
       createdAt: "2021-12-16T13:00:07.616Z",
     },
   ],

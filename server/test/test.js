@@ -969,12 +969,12 @@ describe("Orders API tests:", () => {
   });
 
   describe("POST /orders", () => {
-   /* it("it should create a new order of type shipment", (done) => {
+    it("it should create a new order of type shipment", (done) => {
       chai
         .request(app)
         .post("/api/orders")
         .send({
-          clientID: "6187c957b288576ca26f8257",
+          clientID: "618d4ad3736f2caf2d3b3ca5",
           products: [
             { productID: "000000000000000000000001", quantity: 3 },
              { productID: "000000000000000000000011", quantity: 1 },
@@ -998,7 +998,7 @@ describe("Orders API tests:", () => {
               expect(res.status).to.be.equal(200);
               expect(res.body).to.be.an("object");
 
-              expect(res.body.clientID).to.be.equal("6187c957b288576ca26f8257");
+              expect(res.body.clientID).to.be.equal("618d4ad3736f2caf2d3b3ca5");
               expect(res.body.id).to.be.equal(id);
               expect(res.body.products).to.be.eql([
                 { productID: "000000000000000000000001", quantity: 3 },
@@ -1020,7 +1020,7 @@ describe("Orders API tests:", () => {
         .request(app)
         .post("/api/orders")
         .send({
-          clientID: "6187c957b288576ca26f8257",
+          clientID: "618d4ad3736f2caf2d3b3ca5",
           products: [
             { productID: "000000000000000000000001", quantity: 3 },
              { productID: "000000000000000000000011", quantity: 1 },
@@ -1045,7 +1045,7 @@ describe("Orders API tests:", () => {
               expect(res.status).to.be.equal(200);
               expect(res.body).to.be.an("object");
 
-              expect(res.body.clientID).to.be.equal("6187c957b288576ca26f8257");
+              expect(res.body.clientID).to.be.equal("618d4ad3736f2caf2d3b3ca5");
               expect(res.body.id).to.be.equal(id);
               expect(res.body.products).to.be.eql([
                 { productID: "000000000000000000000001", quantity: 3 },
@@ -1108,7 +1108,7 @@ describe("Orders API tests:", () => {
               done();
             });
         });
-    }); */
+    }); 
 
     it("it should give Bad request error because the address is empty", (done) => {
       chai
@@ -1261,7 +1261,7 @@ describe("Orders API tests:", () => {
           done();
         });
     });
-/*
+
     it("it must fail when mongo fails", (done) => {
       dao.close();
       var day = new Date();
@@ -1293,7 +1293,7 @@ describe("Orders API tests:", () => {
 
           done();
         });
-    }); */
+    }); 
   });
 
   describe("GET /orders", () => {

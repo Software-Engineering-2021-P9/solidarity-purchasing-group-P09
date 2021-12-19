@@ -115,7 +115,7 @@ exports.createOrderHandler = async function (req, res, next) {
   try {
     result = await dao.createOrder(order);
   } catch (err) {
-    console.error(CreateOrder() -> couldn't create order: ${err});
+    console.error(`CreateOrder() => couldn't create order: ${err}`);
     return res.status(500).end();
   }
 

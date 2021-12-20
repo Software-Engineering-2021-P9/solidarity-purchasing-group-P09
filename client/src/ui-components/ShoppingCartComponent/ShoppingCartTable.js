@@ -17,6 +17,8 @@ function ShoppingCartTable(props) {
               deleteItem={props.deleteItem}
               shoppingCart={props.shoppingCart}
               key={item.id}
+              input={props.input}
+              handleInputChange={props.handleInputChange}
             ></CartRow>
           );
         })}
@@ -48,14 +50,14 @@ function CartRow(props) {
         <Row>{props.product.description}</Row>
         <Row className="my-1">{props.product.availability?.packaging}</Row>
         <Row className="justify-content-md-start mt-3">
-          {left_availability <= 10 ||
-          props.shoppingCart.get(props.product.id) < 10 ? (
+          {!props.input ? (
             <Form.Select
               className="form-input-gt10"
               size="sm"
               value={props.shoppingCart.get(props.product.id)}
               onChange={(e) => {
                 props.updateQuantity(props.product.id, e.target.value);
+                props.handleInputChange(e.target.value);
               }}
             >
               {dropdown_items.map((i) => {

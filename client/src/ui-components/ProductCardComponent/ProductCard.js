@@ -108,8 +108,7 @@ function ProductCard(props) {
                   >
                     {iconCartEmptySmall}
                   </Col>
-                  {(left_availability <= 10 ||
-                    props.shoppingCart.get(product.id) < 10) && (
+                  {!props.input && (
                     <Col
                       sm="auto"
                       xs="4"
@@ -120,6 +119,7 @@ function ProductCard(props) {
                         size="sm"
                         value={props.shoppingCart.get(product.id)}
                         onChange={(e) => {
+                          props.handleInputChange(e.target.value);
                           props.addItem(product.id, e.target.value);
                         }}
                       >
@@ -136,29 +136,28 @@ function ProductCard(props) {
                       </Form.Select>
                     </Col>
                   )}
-                  {left_availability > 10 &&
-                    props.shoppingCart.get(product.id) >= 10 && (
-                      <Col
-                        sm="auto"
-                        xs="4"
-                        className="px-0 d-flex justify-content-center"
-                      >
-                        <FormControl
-                          className="form-input-gt10"
-                          type="number"
-                          size="sm"
-                          step={1}
-                          value={props.shoppingCart.get(product.id)}
-                          onChange={(e) => {
-                            if (e.target.value <= left_availability) {
-                              props.addItem(product.id, e.target.value);
-                            }
-                          }}
-                          max={left_availability}
-                          min={1}
-                        />
-                      </Col>
-                    )}
+                  {props.input && (
+                    <Col
+                      sm="auto"
+                      xs="4"
+                      className="px-0 d-flex justify-content-center"
+                    >
+                      <FormControl
+                        className="form-input-gt10"
+                        type="number"
+                        size="sm"
+                        step={1}
+                        value={props.shoppingCart.get(product.id)}
+                        onChange={(e) => {
+                          if (e.target.value <= left_availability) {
+                            props.addItem(product.id, e.target.value);
+                          }
+                        }}
+                        max={left_availability}
+                        min={1}
+                      />
+                    </Col>
+                  )}
                   <Col className="d-flex justify-content-center" sm="2" xs="1">
                     <span
                       className="delete-icon"
@@ -172,6 +171,7 @@ function ProductCard(props) {
                 <Button
                   className="add-to-cart-button"
                   onClick={() => {
+                    props.handleInputChange(null);
                     props.addItem(product.id, 1);
                   }}
                 >

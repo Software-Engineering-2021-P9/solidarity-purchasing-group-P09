@@ -34,6 +34,8 @@ function ProductListPage(props) {
     location.state ? location.state.shoppingCart : new Map()
   );
 
+  const [input, setInput] = useState(false);
+
   useEffect(() => {
     //call from props the function for fetching the new products
     async function updateProducts() {
@@ -59,6 +61,13 @@ function ProductListPage(props) {
 
   const handleCategoryChanged = (newCategory) => {
     setCategory(newCategory);
+  };
+
+  const handleInputChange = (value) => {
+    if (value === null) setInput(false);
+    else if (parseInt(value) === 10) {
+      setInput(true);
+    }
   };
 
   const addItem = (productID, quantity) => {
@@ -110,6 +119,8 @@ function ProductListPage(props) {
                   addItem={addItem}
                   deleteItem={deleteItem}
                   key={item.id}
+                  handleInputChange={handleInputChange}
+                  input={input}
                   // if the employee is creating a new order or is just showing available products
                   creatingOrderMode={
                     location.state?.creatingOrderMode ||

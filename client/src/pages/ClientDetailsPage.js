@@ -19,6 +19,7 @@ import { AuthContext } from "../contexts/AuthContextProvider";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../ui-components/Title.css";
 import UserRoles from "../services/models/UserRoles";
+import { getOrders } from "../services/ApiClient";
 
 const positiveFloatRegex = /^[+]?([0-9]+(?:[.][0-9]{0,2})?|\.[0-9]{1,2})$/;
 
@@ -46,6 +47,7 @@ function ClientDetailsPage(props) {
     useState(null);
   const [isActionLoading, setIsActionLoading] = useState(false);
 
+  const [orders, setOrders] = useState([]);
   useEffect(() => {
     if (!clientID) {
       history.push("/");
@@ -57,11 +59,19 @@ function ClientDetailsPage(props) {
           setClientInfo(result);
           setIsInitialized(true);
           setMustReload(false);
+
+          //fetch orders:
+          getOrders(result.id).then((newO) => {
+            setOrders(
+              newO.sort((newer, older) => newer.createdAt < older.createdAt)
+            );
+          });
         })
         .catch((err) =>
           setRequestError("Failed to fetch client data: " + err.message)
         );
     };
+
     getClientInfo();
   }, [clientID, history, mustReload]);
 
@@ -111,7 +121,7 @@ function ClientDetailsPage(props) {
       {location.state != null && show ? (
         <Row>
           <Alert
-            variant="success"
+            variant='success'
             style={{
               color: "#635F46",
               fontWeight: "bold",
@@ -134,22 +144,23 @@ function ClientDetailsPage(props) {
       )}
 
       {!isInitialized ? (
-        <Container className="pt-5 d-flex justify-content-center">
-          <Spinner variant="dark" animation="border" />
+        <Container className='pt-5 d-flex justify-content-center'>
+          <Spinner variant='dark' animation='border' />
         </Container>
       ) : (
         <>
           <Row>
-            <h1 className="title">Client Details</h1>
+            <h1 className='title'>Client Details</h1>
           </Row>
-          <Row className="justify-content-between pt-2">
-            <Col className="">
+          <Row className='justify-content-between pt-2'>
+            <Col className=''>
               <ClientDetails
                 clientInfo={clientInfo}
                 loggedUser={authContext.currentUser}
                 fundsToAddAmount={fundsToAddAmount}
                 onFundsToAddAmountChange={onFundsToAddAmountChange}
                 onAddFundsToWalletButtonClick={onAddFundsToWalletButtonClick}
+                ordersLength={orders.length}
               />
             </Col>
           </Row>
@@ -160,6 +171,7 @@ function ClientDetailsPage(props) {
             <ClientOrders
               loggedUser={authContext.currentUser}
               clientID={clientID}
+              orders={orders}
             />
           </Row>
         </>

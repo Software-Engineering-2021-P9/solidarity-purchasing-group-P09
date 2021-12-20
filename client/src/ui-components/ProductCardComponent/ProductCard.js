@@ -65,12 +65,21 @@ function ProductCard(props) {
           <Row className="mt-4 progressbar-row">
             {props.shoppingCart.get(product.id) ? (
               <>
-                <ProgressBar
-                  now={left_availability - props.shoppingCart.get(product.id)}
-                  max={product.availability.quantity}
-                  variant={"progressbar"}
-                  className="px-0"
-                />
+                {left_availability - props.shoppingCart.get(product.id) <= 5 ? (
+                  <ProgressBar
+                    now={left_availability - props.shoppingCart.get(product.id)}
+                    max={product.availability.quantity}
+                    variant={"progressbar-5"}
+                    className="px-0"
+                  />
+                ) : (
+                  <ProgressBar
+                    now={left_availability - props.shoppingCart.get(product.id)}
+                    max={product.availability.quantity}
+                    variant={"progressbar"}
+                    className="px-0"
+                  />
+                )}
                 <p>
                   <b>
                     {left_availability - props.shoppingCart.get(product.id)}{" "}
@@ -81,12 +90,22 @@ function ProductCard(props) {
               </>
             ) : (
               <>
-                <ProgressBar
-                  now={left_availability}
-                  max={product.availability.quantity}
-                  variant={"progressbar"}
-                  className="px-0"
-                />
+                {left_availability <= 5 ? (
+                  <ProgressBar
+                    now={left_availability}
+                    max={product.availability.quantity}
+                    variant={"progressbar-5"}
+                    className="px-0"
+                  />
+                ) : (
+                  <ProgressBar
+                    now={left_availability}
+                    max={product.availability.quantity}
+                    variant={"progressbar"}
+                    className="px-0"
+                  />
+                )}
+
                 <p>
                   <b>{left_availability} left</b> of{" "}
                   {product.availability.quantity} available

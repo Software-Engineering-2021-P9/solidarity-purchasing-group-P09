@@ -3,7 +3,6 @@ import { Dropdown, ButtonGroup, Row } from "react-bootstrap";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./RedDropdown.css";
-import { ResponsiveEmbed } from "react-bootstrap";
 //passo un vettore stringa dove ogni stringa è un item del drop Down
 
 function RedDropdown(props) {

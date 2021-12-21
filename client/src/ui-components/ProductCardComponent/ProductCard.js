@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Container,
   Card,
@@ -22,7 +22,7 @@ import ImageService from "../../services/ImageService/ImageService";
 
 function ProductCard(props) {
   const product = props.product;
-
+  const [input, setInput] = useState(false);
   let left_availability = product.availability.leftQuantity;
   let dropdown_items = [];
   for (let i = 1; i < 11; i++) {
@@ -65,14 +65,16 @@ function ProductCard(props) {
           <Row className="mt-4 progressbar-row">
             {props.shoppingCart.get(product.id) ? (
               <>
-                {left_availability - props.shoppingCart.get(product.id) <= 5 ? (
+                {left_availability - props.shoppingCart.get(product.id) <=
+                  5 && (
                   <ProgressBar
                     now={left_availability - props.shoppingCart.get(product.id)}
                     max={product.availability.quantity}
                     variant={"progressbar-5"}
                     className="px-0"
                   />
-                ) : (
+                )}
+                {left_availability - props.shoppingCart.get(product.id) > 5 && (
                   <ProgressBar
                     now={left_availability - props.shoppingCart.get(product.id)}
                     max={product.availability.quantity}
@@ -90,14 +92,15 @@ function ProductCard(props) {
               </>
             ) : (
               <>
-                {left_availability <= 5 ? (
+                {left_availability <= 5 && (
                   <ProgressBar
                     now={left_availability}
                     max={product.availability.quantity}
                     variant={"progressbar-5"}
                     className="px-0"
                   />
-                ) : (
+                )}
+                {left_availability > 5 && (
                   <ProgressBar
                     now={left_availability}
                     max={product.availability.quantity}
@@ -105,7 +108,6 @@ function ProductCard(props) {
                     className="px-0"
                   />
                 )}
-
                 <p>
                   <b>{left_availability} left</b> of{" "}
                   {product.availability.quantity} available
@@ -127,7 +129,7 @@ function ProductCard(props) {
                   >
                     {iconCartEmptySmall}
                   </Col>
-                  {!props.input && (
+                  {!input && (
                     <Col
                       sm="auto"
                       xs="4"
@@ -138,7 +140,7 @@ function ProductCard(props) {
                         size="sm"
                         value={props.shoppingCart.get(product.id)}
                         onChange={(e) => {
-                          props.handleInputChange(e.target.value);
+                          if (parseInt(e.target.value) === 10) setInput(true);
                           props.addItem(product.id, e.target.value);
                         }}
                       >
@@ -155,7 +157,7 @@ function ProductCard(props) {
                       </Form.Select>
                     </Col>
                   )}
-                  {props.input && (
+                  {input && (
                     <Col
                       sm="auto"
                       xs="4"
@@ -190,7 +192,7 @@ function ProductCard(props) {
                 <Button
                   className="add-to-cart-button"
                   onClick={() => {
-                    props.handleInputChange(null);
+                    setInput(false);
                     props.addItem(product.id, 1);
                   }}
                 >

@@ -1,6 +1,6 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./ShoppingCartTableCSS.css";
-import React from "react";
+import React, { useState } from "react";
 import { Container, Col, Row, Form, FormControl } from "react-bootstrap";
 import ImageService from "../../services/ImageService/ImageService";
 import { iconDelete } from "../icons";
@@ -17,8 +17,6 @@ function ShoppingCartTable(props) {
               deleteItem={props.deleteItem}
               shoppingCart={props.shoppingCart}
               key={item.id}
-              input={props.input}
-              handleInputChange={props.handleInputChange}
             ></CartRow>
           );
         })}
@@ -29,6 +27,7 @@ function ShoppingCartTable(props) {
 
 function CartRow(props) {
   let left_availability = props.product.availability.leftQuantity;
+  const [input, setInput] = useState(false);
   let dropdown_items = [];
   for (let i = 1; i < 11; i++) {
     if (i <= left_availability) {
@@ -50,14 +49,14 @@ function CartRow(props) {
         <Row>{props.product.description}</Row>
         <Row className="my-1">{props.product.availability?.packaging}</Row>
         <Row className="justify-content-md-start mt-3">
-          {!props.input ? (
+          {!input ? (
             <Form.Select
               className="form-input-gt10"
               size="sm"
               value={props.shoppingCart.get(props.product.id)}
               onChange={(e) => {
                 props.updateQuantity(props.product.id, e.target.value);
-                props.handleInputChange(e.target.value);
+                if (parseInt(e.target.value) === 10) setInput(true);
               }}
             >
               {dropdown_items.map((i) => {

@@ -51,8 +51,6 @@ function ShoppingCartPage(props) {
   const [show, setShow] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-  const [input, setInput] = useState(false);
-
   const clientID =
     authContext.currentUser.role === UserRoles.CLIENT
       ? authContext.currentUser.id
@@ -125,13 +123,6 @@ function ShoppingCartPage(props) {
     setCart(new_cart);
   };
 
-  const handleInputChange = (value) => {
-    if (value === null) setInput(false);
-    else if (parseInt(value) === 10) {
-      setInput(true);
-    }
-  };
-
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const handleSubmit = () => {
@@ -181,8 +172,6 @@ function ShoppingCartPage(props) {
               products={products}
               updateQuantity={updateQuantity}
               deleteItem={deleteItem}
-              input={input}
-              handleInputChange={handleInputChange}
             />
           </Row>
         </Col>

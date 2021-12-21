@@ -36,6 +36,8 @@ function ProductListPage(props) {
 
   const [input, setInput] = useState(false);
 
+  const [cartUpdated, setCartUpdated] = useState(false);
+
   useEffect(() => {
     //call from props the function for fetching the new products
     async function updateProducts() {
@@ -73,6 +75,11 @@ function ProductListPage(props) {
   const addItem = (productID, quantity) => {
     if (quantity > 0) {
       setCart(new Map(cart.set(productID, parseInt(quantity))));
+      setCartUpdated(true);
+      let interval = setTimeout(() => {
+        setCartUpdated(false);
+        clearTimeout(interval);
+      }, 3000);
     }
   };
 
@@ -85,6 +92,11 @@ function ProductListPage(props) {
       return entry;
     });
     setCart(new_cart);
+    setCartUpdated(true);
+    let interval = setTimeout(() => {
+      setCartUpdated(false);
+      clearTimeout(interval);
+    }, 3000);
   };
 
   return (
@@ -97,6 +109,7 @@ function ProductListPage(props) {
         shoppingCart={cart}
         clientID={location.state ? location.state.clientID : ""}
         userIconLink={authContext.getUserIconLink()}
+        cartUpdated={cartUpdated}
       />
 
       <FilterRow

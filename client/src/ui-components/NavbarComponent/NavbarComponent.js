@@ -65,7 +65,19 @@ function NavbarComponent(props) {
                 </OverlayTrigger>
               </Link>
             ) : (
-              <>{iconCartEmpty}</>
+              <OverlayTrigger
+                show={props.cartEmpty}
+                placement="left"
+                overlay={
+                  <Popover id={`popover-positioned-left`}>
+                    <Popover.Body>
+                      <strong>Cart empty</strong>.
+                    </Popover.Body>
+                  </Popover>
+                }
+              >
+                {iconCartEmpty}
+              </OverlayTrigger>
             )}
           </div>
         )}

@@ -36,6 +36,30 @@ function ProductListPage(props) {
 
   const [cartUpdated, setCartUpdated] = useState(false);
 
+  const [cartEmpty, setCartEmpty] = useState(false);
+
+  useEffect(() => {
+    //call every time that the cart is updated (added, deleted or quantity modified)
+    setCartUpdated(true);
+    if (cart.size === 0) setCartEmpty(true);
+    else setCartEmpty(false);
+  }, [cart]);
+
+  useEffect(() => {
+    if (cartUpdated) {
+      let interval = setTimeout(() => {
+        setCartUpdated(false);
+        clearTimeout(interval);
+      }, 3000);
+    }
+    if (cartEmpty) {
+      let interval = setTimeout(() => {
+        setCartEmpty(false);
+        clearTimeout(interval);
+      }, 3000);
+    }
+  }, [cartUpdated, cartEmpty]);
+
   useEffect(() => {
     //call from props the function for fetching the new products
     async function updateProducts() {
@@ -66,11 +90,6 @@ function ProductListPage(props) {
   const addItem = (productID, quantity) => {
     if (quantity > 0) {
       setCart(new Map(cart.set(productID, parseInt(quantity))));
-      setCartUpdated(true);
-      let interval = setTimeout(() => {
-        setCartUpdated(false);
-        clearTimeout(interval);
-      }, 3000);
     }
   };
 
@@ -83,11 +102,6 @@ function ProductListPage(props) {
       return entry;
     });
     setCart(new_cart);
-    setCartUpdated(true);
-    let interval = setTimeout(() => {
-      setCartUpdated(false);
-      clearTimeout(interval);
-    }, 3000);
   };
 
   return (
@@ -101,6 +115,7 @@ function ProductListPage(props) {
         clientID={location.state ? location.state.clientID : ""}
         userIconLink={authContext.getUserIconLink()}
         cartUpdated={cartUpdated}
+        cartEmpty={cartEmpty}
       />
 
       <FilterRow

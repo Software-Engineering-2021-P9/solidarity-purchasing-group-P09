@@ -47,7 +47,7 @@ function CartRow(props) {
       <Col md="7" className="px-4">
         <Row className="item-cart-name">{props.product.name}</Row>
         <Row>{props.product.description}</Row>
-        <Row className="my-1">{props.product.availability?.packaging}</Row>
+        <Row className="my-2">{props.product.availability?.packaging}</Row>
         <Row className="justify-content-md-start mt-3">
           {!input ? (
             <Form.Select

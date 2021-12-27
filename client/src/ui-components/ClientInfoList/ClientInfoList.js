@@ -29,13 +29,7 @@ function ClientInfoList(props) {
                 </Col>
               </Row>
             ) : (
-              <Row
-                lg={3}
-                md={2}
-                sm={2}
-                xs={1}
-                className="my-3 d-flex justify-content-around"
-              >
+              <Row md={3} sm={3} xs={1} className="my-3 d-flex ">
                 {props.clientInfoList?.map((item, index) => (
                   <Col>
                     <ClientInfoListItem

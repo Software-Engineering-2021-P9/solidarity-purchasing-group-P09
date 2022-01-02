@@ -170,6 +170,9 @@ function createStatusComponent(status){
           {status}
         </span>
       break;
+    default:
+      statusComponent = null;
+      break;
   }
   return statusComponent;
 }

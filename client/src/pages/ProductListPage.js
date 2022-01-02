@@ -139,7 +139,7 @@ function ProductListPage(props) {
       <Modal centered show={currentUser !== null && currentUser.role === "client" && clientHasNotCoveredOrders && firstTimeNotify}>
         <Modal.Header>
           <div style={{"margin":"auto"}}>
-            <Modal.Title >Not Covered Orders</Modal.Title>
+            <Modal.Title >Insufficient Wallet Balance</Modal.Title>
           </div>
         </Modal.Header>
 
@@ -150,10 +150,10 @@ function ProductListPage(props) {
 
         <Modal.Footer>
           <div style={{"margin":"auto"}}>
-            <Button variant="primary" onClick={()=>{setFirstTimeNotify(false)}} style={{"width":"10em"}} >Close</Button>
+            <Button variant="primary" onClick={()=>{setFirstTimeNotify(false)}} style={{"width":"8em"}} >Close</Button>
           </div>
             <div style={{"margin":"auto"}}>
-            <Button variant="primary" onClick={()=>{history.push("/ClientOrders")}} style={{"width":"10em"}}>Check Orders</Button>
+            <Button variant="primary" onClick={()=>{history.push("/ClientOrders")}} style={{"width":"8em"}}>Check Orders</Button>
           </div>
         </Modal.Footer>
       </Modal>

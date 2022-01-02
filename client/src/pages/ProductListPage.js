@@ -42,7 +42,7 @@ function ProductListPage(props) {
 
   if(clientHasNotCoveredOrders === false && currentUser !== null && currentUser.role === "client"){
     getOrders(currentUser.id).then(orders=>{
-      if(orders.filter(order=>order.status === Order.OrderStatus.WAITING).length > 0)
+      if(orders.filter(order=>order.status === Order.OrderStatus.NOT_COVERED).length > 0)
         setClientHasNotCoveredOrders(true);
     }).catch(err=>{
       throw(err);
@@ -136,19 +136,25 @@ function ProductListPage(props) {
           })}
       </Row>
 
-      <Modal show={currentUser !== null && currentUser.role === "client" && clientHasNotCoveredOrders && firstTimeNotify}>
+      <Modal centered show={currentUser !== null && currentUser.role === "client" && clientHasNotCoveredOrders && firstTimeNotify}>
         <Modal.Header>
-          <Modal.Title>Not Covered Orders</Modal.Title>
+          <div style={{"margin":"auto"}}>
+            <Modal.Title >Not Covered Orders</Modal.Title>
+          </div>
         </Modal.Header>
 
         <Modal.Body>
           <p>At the moment there are "not covered orders" waiting for a wallet top up.</p>
-          <p>Not covered order will be deleted at the defined deadline.</p>
+          <p>Not covered orders will be deleted at the defined deadline.</p>
         </Modal.Body>
 
         <Modal.Footer>
-          <Button variant="secondary" onClick={()=>{setFirstTimeNotify(false)}}>Close</Button>
-          <Button variant="primary" onClick={()=>{history.push("/...")}}>Check Orders</Button>
+          <div style={{"margin":"auto"}}>
+            <Button variant="primary" onClick={()=>{setFirstTimeNotify(false)}} style={{"width":"10em"}} >Close</Button>
+          </div>
+            <div style={{"margin":"auto"}}>
+            <Button variant="primary" onClick={()=>{history.push("/ClientOrders")}} style={{"width":"10em"}}>Check Orders</Button>
+          </div>
         </Modal.Footer>
       </Modal>
     </>

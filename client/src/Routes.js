@@ -11,6 +11,7 @@ import ProtectedRoute from "./contexts/ProtectedRoute";
 import UserRoles from "./services/models/UserRoles";
 import { ProductDetailsPage } from "./pages/ProductDetailsPage";
 import ProductCreatePage from "./pages/ProductCreatePage";
+import TestPanelPage from "./pages/TestPanelPage";
 
 const productListRouteName = "product-list-page";
 const shoppingCartRouteName = "shopping-cart-page";
@@ -25,6 +26,7 @@ const userLoginRouteName = "user-login-page";
 const userLogoutRouteName = "user-logout-page";
 const clientSignupRouteName = "client-signup-page";
 const clientDetailsRouteName = "client-details-page";
+const testPanelRouteName = "test-panel";
 
 const routes = {
   [clientSignupRouteName]: {
@@ -136,6 +138,12 @@ const routes = {
     component: () => <UserLogoutRedirect />,
     exact: false,
     linkTitle: "Logout",
+  },
+  [testPanelRouteName]: {
+    path: "/testing",
+    component: () => <TestPanelPage />,
+    exact: false,
+    linkTitle: "",
   },
 };
 

@@ -1,6 +1,12 @@
 const dayjs = require("dayjs");
 var dao = require("../dao/dao");
-const { Order, OrderStatus } = require("../models/order");
+const { ObjectID } = require("bson");
+const {
+  OrderProduct,
+  OrderStatus,
+  ShipmentInfo,
+  Order,
+} = require("../models/order");
 const {
   clientIDBodyValidator,
   orderProductIDsBodyValidator,
@@ -8,6 +14,9 @@ const {
   orderProductsBodyValidator,
   orderClientIDQueryValidator,
   orderIDParamValidator,
+  orderAddressBodyValidator,
+  orderShipmentTypeBodyValidator,
+  orderPickUpSlotBodyValidator,
 } = require("./shared_validators");
 
 exports.createOrderValidatorChain = [
@@ -15,6 +24,9 @@ exports.createOrderValidatorChain = [
   orderProductsBodyValidator,
   orderProductIDsBodyValidator,
   orderProductQtysBodyValidator,
+  orderShipmentTypeBodyValidator,
+  orderAddressBodyValidator,
+  orderPickUpSlotBodyValidator,
 ];
 
 exports.createOrderHandler = async function (req, res, next) {
@@ -25,7 +37,7 @@ exports.createOrderHandler = async function (req, res, next) {
   req.body.products.forEach((product) => {
     totalPrice += product.quantity * productPrice;
   });
-  
+
   //GET CLIENT WALLET
   let client;
 
@@ -48,38 +60,33 @@ exports.createOrderHandler = async function (req, res, next) {
   else
     status = OrderStatus.WAITING;
 
+  //CREATE ORDER
+  const order = {
+    clientID: ObjectID(req.body.clientID.toString()),
+    products: req.body.products?.map(
+      (p) =>
+        new OrderProduct(ObjectID(p.productID.toString()), parseInt(p.quantity))
+    ),
+    status: status,
+    totalPrice: parseFloat(totalPrice),
+    createdAt: dayjs().toISOString(),
+    shipmentInfo: new ShipmentInfo(
+      req.body.shipmentInfo.type.toString(),
+      req.body.shipmentInfo.pickUpSlot?.toString(),
+      req.body.shipmentInfo.address.toString()
+    ),
+  };
+
   // Insert the new order
   var result;
   try {
-    result = await dao.createOrder(
-      req.body.clientID.toString(),
-      req.body.products,
-      status,
-      totalPrice,
-      dayjs().toISOString()
-    );
+    result = await dao.createOrder(order);
   } catch (err) {
     console.error(`CreateOrder() -> couldn't create order: ${err}`);
     return res.status(500).end();
   }
 
-  // Fetch the newly created order
-  try {
-    result = await dao.getOrderByID(result.insertedId);
-  } catch (err) {
-    // Try reverting the changes made until now, using a best-effort strategy
-    dao.deleteOrder(result.insertedId);
-    console.error(
-      `CreateOrder() -> couldn't retrieve newly created order: ${err}`
-    );
-    return res.status(500).end();
-  }
-  if (!result) {
-    console.error(`CreateOrder() -> couldn't retrieve newly created order`);
-    return res.status(404).end();
-  }
-  
-  return res.json(Order.fromMongoJSON(result));
+  return res.json({ id: result.insertedId });
 };
 
 exports.getOrdersByClientIDValidator = [orderClientIDQueryValidator];
@@ -113,4 +120,23 @@ exports.completeOrderHandler = async function (req, res, next) {
   }
 
   return res.status(204).end();
+};
+
+exports.getOrderByIDValidatorChain = [orderIDParamValidator];
+
+exports.getOrderByID = async function (req, res, next) {
+  let result;
+
+  try {
+    result = await dao.getOrderByID(req.params.orderID);
+  } catch (err) {
+    console.error(`getOrderByID() -> couldn't retrieve the order: ${err}`);
+    return res.status(500).end();
+  }
+  if (!result) {
+    console.error(`getOrderByID() -> couldn't find the order`);
+    return res.status(404).end();
+  }
+
+  return res.json(Order.fromMongoJSON(result));
 };

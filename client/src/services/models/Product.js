@@ -9,9 +9,6 @@ class Product {
     if (Object.values(Product.Categories).includes(category))
       this.category = category;
     this.availability = availability;
-    //Mock price
-    this.price = 1.0;
-    this.packaging = "packaging: 1kg";
   }
 
   static fromJSON(json) {

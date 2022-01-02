@@ -67,7 +67,7 @@ exports.addFundToWalletHandler = async function (req, res, next) {
       return res.status(500).end(); 
     }
 
-    orders = orders.filter(order => order.status == OrderStatus.NOT_COVERED).sort((a, b)=>{
+    orders = orders.filter(order => order.status == OrderStatus.NOTCOVERED).sort((a, b)=>{
         if(a.createdAt <= b.createdAt)
           return -1;
         return 1;

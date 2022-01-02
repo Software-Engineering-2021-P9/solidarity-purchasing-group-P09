@@ -4,18 +4,6 @@
 .table-row-status-done {
   color: green !important;
 }
-.table-row-status-not-covered {
-  width: 200px;
-  height: 50px;
-  color: red !important;
-}
-
-.table-row-status-waiting {
-  width: 200px;
-  height: 50px;
-  color: brown !important;
-}
-
 .change-status {
   color: rgba(99, 95, 70, 1);
   font-weight: 400;

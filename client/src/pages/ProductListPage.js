@@ -1,6 +1,6 @@
 import { React, useEffect, useState, useContext } from "react";
-import { useLocation } from "react-router";
-import { Row, Col, CardGroup } from "react-bootstrap";
+import { useLocation, useHistory } from "react-router";
+import { Row, Col, CardGroup, Modal, Button } from "react-bootstrap";
 import { getAvailableNavbarLinks } from "../Routes";
 
 import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponent";
@@ -9,7 +9,8 @@ import ProductCard from "../ui-components/ProductCardComponent/ProductCard";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 
-import { findProducts } from "../services/ApiClient";
+import { findProducts, getOrders } from "../services/ApiClient";
+import  Order  from "../services/models/Order"
 
 import { AuthContext } from "../contexts/AuthContextProvider";
 import UserRoles from "../services/models/UserRoles";
@@ -17,6 +18,7 @@ import UserRoles from "../services/models/UserRoles";
 function ProductListPage(props) {
   const location = useLocation();
   const authContext = useContext(AuthContext);
+  const history = useHistory();
 
   const [products, setProducts] = useState([]);
 
@@ -33,6 +35,19 @@ function ProductListPage(props) {
   const [cart, setCart] = useState(
     location.state ? location.state.shoppingCart : new Map()
   );
+
+  const currentUser = authContext.currentUser;
+  const [firstTimeNotify, setFirstTimeNotify] = useState(true);
+  const [clientHasNotCoveredOrders, setClientHasNotCoveredOrders] = useState(false);
+
+  if(clientHasNotCoveredOrders === false && currentUser !== null && currentUser.role === "client"){
+    getOrders(currentUser.id).then(orders=>{
+      if(orders.filter(order=>order.status === Order.OrderStatus.WAITING).length > 0)
+        setClientHasNotCoveredOrders(true);
+    }).catch(err=>{
+      throw(err);
+    });
+  }
 
   useEffect(() => {
     //call from props the function for fetching the new products
@@ -120,6 +135,22 @@ function ProductListPage(props) {
             );
           })}
       </Row>
+
+      <Modal show={currentUser !== null && currentUser.role === "client" && clientHasNotCoveredOrders && firstTimeNotify}>
+        <Modal.Header>
+          <Modal.Title>Not Covered Orders</Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body>
+          <p>At the moment there are "not covered orders" waiting for a wallet top up.</p>
+          <p>Not covered order will be deleted at the defined deadline.</p>
+        </Modal.Body>
+
+        <Modal.Footer>
+          <Button variant="secondary" onClick={()=>{setFirstTimeNotify(false)}}>Close</Button>
+          <Button variant="primary" onClick={()=>{history.push("/...")}}>Check Orders</Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 }

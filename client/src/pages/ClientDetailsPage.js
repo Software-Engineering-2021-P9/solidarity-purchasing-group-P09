@@ -181,4 +181,4 @@ function ClientDetailsPage(props) {
   );
 }
 
-export { ClientDetailsPage }; 
+export { ClientDetailsPage };

@@ -20,7 +20,7 @@ class Order {
       json.shipmentInfo,
     );
   }
-  
+
   static OrderStatus = {
     NOT_COVERED: "not covered",
     WAITING: "waiting",

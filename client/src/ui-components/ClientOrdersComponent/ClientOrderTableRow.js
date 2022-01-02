@@ -15,17 +15,14 @@ import dayjs from "dayjs";
 import UserRoles from "../../services/models/UserRoles";
 
 function ClientOrderTableRow(props) {
-
   const [status, setStatus] = useState(props.order.status);
   const [modalIsOpen, setModalIsOpen] = useState(false);
-
   const handleSubmit = () => {
     updateStatus(status, props.order.id).then((newS) => {
       setStatus(newS);
     });
     setModalIsOpen(false);
   };
-
 
   return (
     <Row className="my-3 px-0">

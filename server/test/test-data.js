@@ -109,39 +109,6 @@ exports.ordersCollection2 = {
       totalPrice: "12",
       createdAt: "2021-12-16T13:00:07.616Z",
     },
-    {
-      _id: ObjectID("000000000000000000000001"),
-      clientID: ObjectID("0000c957b288576ca26f8999"),
-      products: [
-        { productID: "6187c957b288576ca26f8258", quantity: 10 },
-        { productID: "6187c957b288576ca26f8259", quantity: 2 },
-      ],
-      status: "not covered",
-      totalPrice: "20",
-      createdAt: "2021-12-16T13:00:07.616Z",
-    },
-    {
-      _id: ObjectID("000000000000000000000002"),
-      clientID: ObjectID("0000c957b288576ca26f8999"),
-      products: [
-        { productID: "6187c957b288576ca26f8258", quantity: 10 },
-        { productID: "6187c957b288576ca26f8259", quantity: 2 },
-      ],
-      status: "not covered",
-      totalPrice: "20",
-      createdAt: "2019-12-16T13:00:07.616Z",
-    },
-    {
-      _id: ObjectID("000000000000000000000003"),
-      clientID: ObjectID("0000c957b288576ca26f8999"),
-      products: [
-        { productID: "6187c957b288576ca26f8258", quantity: 10 },
-        { productID: "6187c957b288576ca26f8259", quantity: 2 },
-      ],
-      status: "not covered",
-      totalPrice: "20",
-      createdAt: "2020-12-16T13:00:07.616Z",
-    },
   ],
 };
 
@@ -174,15 +141,6 @@ exports.clientsCollection = {
       phoneNumber: 3205755555,
       address: "via Andrea Dipre,24 Torino,10538",
       wallet: 0,
-    },
-    {
-      _id: ObjectID("0000c957b288576ca26f8999"),
-      email: "client3@test.com",
-      role: "client",
-      fullName: "Giorgio Mastrota",
-      phoneNumber: 3205755555,
-      address: "via X,24 Torino,10538",
-      wallet: 10,
     },
   ],
 };

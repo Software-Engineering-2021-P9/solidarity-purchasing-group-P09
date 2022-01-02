@@ -1,7 +1,6 @@
 "use strict";
 
 const OrderStatus = {
-  NOT_COVERED: "not covered",
   WAITING: "waiting",
   NOTCOVERED: "not-covered",
   PENDINGCANCELATION: "pending-cancelation",

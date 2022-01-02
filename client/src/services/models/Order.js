@@ -21,7 +21,6 @@ class Order {
     );
   }
   
-
   static OrderStatus = {
     NOT_COVERED: "not covered",
     WAITING: "waiting",

@@ -15,7 +15,6 @@ import TestPanelPage from "./pages/TestPanelPage";
 
 const productListRouteName = "product-list-page";
 const shoppingCartRouteName = "shopping-cart-page";
-const ClientInsufficientWalletOrdersRouteName = "client-insufficient-wallet-orders-page";
 const employeeClientManagementRouteName = "employee-client-management-page";
 const employeeClientDetailsRouteName = "employee-client-details-page";
 const employeeClientSignupRouteName = "employee-client-signup-page";
@@ -91,12 +90,6 @@ const routes = {
     exact: false,
     linkTitle: "Signup Client",
   },
-  [ClientInsufficientWalletOrdersRouteName]: {
-    path: "/NotCoveredOrders",
-    component: ClientDetailsPage,
-    exact: false,
-    linkTitle: "Order List",
-  },
   [farmerProductManagementRouteName]: {
     path: "/farmer/products",
     component: () => (
@@ -150,10 +143,7 @@ const routes = {
 function getAvailableNavbarLinks(loggedUser) {
   switch (loggedUser?.role) {
     case UserRoles.CLIENT:
-      return [
-        userLogoutRouteName,
-        ClientInsufficientWalletOrdersRouteName
-      ];
+      return [userLogoutRouteName];
     case UserRoles.EMPLOYEE:
       return [
         employeeClientManagementRouteName,

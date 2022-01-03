@@ -55,8 +55,12 @@ var client;
 var db;
 exports.open = () => {
   if (!client) {
-    client = new MongoClient(process.env.MONGO_CONN_STR);
-    db = client.db(process.env.MONGO_DB_NAME);
+    client = new MongoClient(
+      "mongodb+srv://test:test@p09-best-cluster-ever.n5k3k.mongodb.net/test"
+    );
+    db = client.db("spg-test");
+    //client = new MongoClient(process.env.MONGO_CONN_STR);
+    //db = client.db(process.env.MONGO_DB_NAME);
 
     client.connect((err, result) => {
       if (err) {

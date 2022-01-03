@@ -2,7 +2,7 @@ import { ShoppingCartPage } from "./pages/ShoppingCartPage";
 import { ClientDetailsPage } from "./pages/ClientDetailsPage";
 import { ClientManagementPage } from "./pages/ClientManagementPage/ClientManagementPage";
 import { ClientSignupPage } from "./pages/ClientSignupPage";
-import { ProductListPage } from "./pages/ProductListPage";
+import { ProductListPage } from "./pages/ProductListPage/ProductListPage";
 import { ProductManagementPage } from "./pages/ProductManagementPage/ProductManagementPage";
 import { UserLoginPage } from "./pages/UserLoginPage";
 import { UserLogoutRedirect } from "./pages/UserLogoutRedirect";
@@ -15,7 +15,6 @@ import TestPanelPage from "./pages/TestPanelPage";
 
 const productListRouteName = "product-list-page";
 const shoppingCartRouteName = "shopping-cart-page";
-const ClientOrdersRouteName = "client-orders-page";
 const employeeClientManagementRouteName = "employee-client-management-page";
 const employeeClientDetailsRouteName = "employee-client-details-page";
 const employeeClientSignupRouteName = "employee-client-signup-page";
@@ -91,12 +90,6 @@ const routes = {
     exact: false,
     linkTitle: "Signup Client",
   },
-  [ClientOrdersRouteName]: {
-    path: "/ClientOrders",
-    component: ClientDetailsPage,
-    exact: false,
-    linkTitle: "My Orders",
-  },
   [farmerProductManagementRouteName]: {
     path: "/farmer/products",
     component: () => (
@@ -150,10 +143,7 @@ const routes = {
 function getAvailableNavbarLinks(loggedUser) {
   switch (loggedUser?.role) {
     case UserRoles.CLIENT:
-      return [
-        userLogoutRouteName,
-        ClientOrdersRouteName
-      ];
+      return [userLogoutRouteName];
     case UserRoles.EMPLOYEE:
       return [
         employeeClientManagementRouteName,

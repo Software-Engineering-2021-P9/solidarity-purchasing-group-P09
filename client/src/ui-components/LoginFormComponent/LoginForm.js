@@ -7,7 +7,7 @@ function LoginForm(props) {
   return (
     <Form onSubmit={props.handleSubmit} className="form-login">
       <Form.Group className="form-group">
-        <h2>Login</h2>
+        <h1 className="title">Login</h1>
         {props.errorMessage && (
           <Alert variant="danger">{props.errorMessage}</Alert>
         )}{" "}

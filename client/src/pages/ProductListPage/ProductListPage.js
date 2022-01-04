@@ -146,8 +146,8 @@ function ProductListPage(props) {
         </Modal.Header>
 
         <Modal.Body>
-          <p className="center-text">At the moment there are "not covered orders" waiting for a wallet top up.</p>
-          <p className="center-text">Not covered will be deleted at the defined deadline.</p>
+          <p className="center-text">At the moment there are orders with status "not covered", waiting for a wallet top up.</p>
+          <p className="center-text">Not covered orders will be deleted at the defined deadline.</p>
         </Modal.Body>
 
         <Modal.Footer>

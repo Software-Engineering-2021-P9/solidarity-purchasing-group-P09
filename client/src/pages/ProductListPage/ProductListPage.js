@@ -44,7 +44,7 @@ function ProductListPage(props) {
 
   if(clientHasNotCoveredOrders === false && currentUser !== null && currentUser.role === "client"){
     getOrders(currentUser.id).then(orders=>{
-      if(orders.filter(order=>order.status === Order.OrderStatus.WAITING).length > 0)
+      if(orders.filter(order=>order.status === Order.OrderStatus.NOT_COVERED).length > 0)
         setClientHasNotCoveredOrders(true);
     }).catch(err=>{
       throw(err);

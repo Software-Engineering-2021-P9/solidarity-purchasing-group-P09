@@ -193,7 +193,7 @@ function ShoppingCartOrderSummary(props) {
           </Col>
         </Row>
         <Divider />
-        <Form>
+        <Form onSubmit={e=>{e.preventDefault();}}>
           <Form.Group className="mb-3">
             <Row>
               <Col>{checkboxShipment}</Col>

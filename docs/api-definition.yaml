@@ -14,6 +14,7 @@ tags:
   - name: order
   - name: product
   - name: availability
+  - name: stats
   - name: week-phase
   - name: testing
 schemes:
@@ -109,10 +110,9 @@ paths:
           description: Success
           schema:
             type: object
-            properties: 
+            properties:
               id:
-                type: string 
-             
+                type: string
 
         "400":
           description: Bad Request
@@ -200,9 +200,9 @@ paths:
           description: Success
           schema:
             type: object
-            properties: 
+            properties:
               id:
-                type: string 
+                type: string
         "400":
           description: Bad Request - The request contains invalid parameters
         "401":
@@ -239,7 +239,7 @@ paths:
           description: Unauthorized - The user is not logged or is not allowed to make this action
         "500":
           description: Internal Server Error
-    
+
   /orders/{orderID}/complete:
     patch:
       tags:
@@ -290,9 +290,9 @@ paths:
             type: object
             properties:
               pickUpSlot:
-                 type: string
-                 example: 50900
-                 description: Format dhhmm dayOfTheWeekHourMinute
+                type: string
+                example: 50900
+                description: Format dhhmm dayOfTheWeekHourMinute
       responses:
         "204":
           description: Success
@@ -394,9 +394,9 @@ paths:
           description: Success
           schema:
             type: object
-            properties: 
+            properties:
               id:
-                type: string 
+                type: string
         "400":
           description: Bad Request - The request contains invalid parameters
         "401":
@@ -615,7 +615,7 @@ paths:
           description: Internal Server Error
 
   /availabilities/{productID}:
-   post:
+    post:
       tags:
         - availability
       summary: Set a product availability for the next week.
@@ -639,9 +639,9 @@ paths:
           description: Success
           schema:
             type: object
-            properties: 
+            properties:
               id:
-                type: string 
+                type: string
         "400":
           description: Bad Request - The request contains invalid parameters
         "404":
@@ -650,7 +650,7 @@ paths:
           description: Unauthorized
         "500":
           description: Internal Server Error
-   
+
   /availabilities/{availabilityID}:
     get:
       tags:
@@ -700,8 +700,8 @@ paths:
             type: object
             properties:
               quantity:
-                 type: integer
-                
+                type: integer
+
       responses:
         "204":
           description: No Content
@@ -711,13 +711,13 @@ paths:
           description: Unauthorized
         "500":
           description: Internal Server Error
-  
+
   /availabilities/{availabilityID}/confirm:
     patch:
       tags:
         - availability
       summary: Updates the status of the product's availability to "CONFIRMED".
-      description: Updates the status of the product's availability to "CONFIRMED". Then it checks every order of the current week with this product. For each order, it will update the OrderProduct's status based on the quantity of the product ("CONFIRMED","MODIFIED","CANCELED")
+      description: Updates the status of the product's availability to "CONFIRMED". Then it checks every order of the current week with this product. For each order, it will update the OrderProduct's status based on the quantity of the product ("CONFIRMED","MODIFIED","CANCELED"). At the start the OrderProduct status is "WAITING".
       operationId: confirmProductAvailabilityByID
       produces:
         - application/json
@@ -726,7 +726,7 @@ paths:
           required: true
           name: availabilityID
           type: string
-          description: Parameter that identify and select the availability        
+          description: Parameter that identify and select the availability
       responses:
         "204":
           description: No Content
@@ -738,7 +738,7 @@ paths:
           description: Internal Server Error
 
   /availabilities/{productID}/nextWeek:
-     get:
+    get:
       tags:
         - availability
       summary: Get the next week availability.
@@ -767,7 +767,7 @@ paths:
           description: Internal Server Error
 
   /availabilities/{productID}/currentWeek:
-     get:
+    get:
       tags:
         - availability
       summary: Get the current week availability.
@@ -792,6 +792,74 @@ paths:
           description: Unauthorized
         "404":
           description: Not Found
+        "500":
+          description: Internal Server Error
+
+  /stats/orders/unretrieved/weekly:
+    get:
+      tags:
+        - stats
+      summary: Get the order stats related to the specified week
+      description: week and year are passed in the query and returns a JSON with total numbers of orders and total number of unretrieved orders of that week. If no params are passed in the query the stats are computed from the beginning.
+      operationId: getWeeklyOrdersStat
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: week
+          type: integer
+          description: Select the week number inside the year
+        - in: query
+          name: year
+          type: integer
+          description: Select the year
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/UnretrievedOrdersStats"
+        "400":
+          description: Bad Request - The request contains invalid parameters
+        "401":
+          description: Unauthorized
+        "500":
+          description: Internal Server Error
+
+  /stats/orders/unretrieved/timeInterval:
+    get:
+      tags:
+        - stats
+      summary: Get the order stats related to the specified time interval
+      description: startWeek, startYear and endWeek, endYear are passed in the query, and it returns a JSON with total numbers of orders and total number of unretrieved orders
+      operationId: getWeekIntervalOrdersStat
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: startWeek
+          type: integer
+          description: Select the start week number
+        - in: query
+          name: endWeek
+          type: integer
+          description: Select the end week number
+        - in: query
+          name: startYear
+          type: integer
+          description: Select the start year number
+        - in: query
+          name: endYear
+          type: integer
+          description: Select the end year number
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/UnretrievedOrdersStats"
+        "400":
+          description: Bad Request - The request contains invalid parameters
+        "401":
+          description: Unauthorized
         "500":
           description: Internal Server Error
 
@@ -823,6 +891,11 @@ definitions:
         example: mariorossi@gmail.com
       role:
         type: string
+        enum:
+          - client
+          - employee
+          - farmer
+          - manager
         default: client
       fullName:
         type: string
@@ -931,6 +1004,7 @@ definitions:
           - CONFIRMED
           - PREPARED
           - DONE
+          - UNRETRIEVED
       createdAt:
         type: string
         format: date-time
@@ -958,7 +1032,7 @@ definitions:
       status:
         type: string
         enum:
-          - WAITING-FOR-CONFIRMATION
+          - WAITING
           - CONFIRMED
           - MODIFIED
           - CANCELED
@@ -1100,6 +1174,7 @@ definitions:
       - phoneNumber
       - wallet
       - hasNotCoveredOrders
+      - missedPickupsCount
     properties:
       id:
         type: string
@@ -1110,6 +1185,11 @@ definitions:
         example: mariorossi@gmail.com
       role:
         type: string
+        enum:
+          - client
+          - employee
+          - farmer
+          - manager
         default: client
       fullName:
         type: string
@@ -1131,6 +1211,9 @@ definitions:
       hasNotCovered:
         type: boolean
         description: "if the client has at least one not-covered order hasNotCovered will be set to true"
+      missedPickupsCount:
+        type: integer
+        description: Number of pickups not retrieved
   EmployeeInfoResult:
     description: Return model for methods which return EmployeeInfo (sensitive data is stripped).
     type: object
@@ -1226,8 +1309,8 @@ definitions:
       confirmedStatus:
         type: string
         enum:
-         - WAITING
-         - CONFIRMED
+          - WAITING
+          - CONFIRMED
         description: used to spedify if the product quantuty was confirmed by the farmed or not
   ShipmentInfo:
     type: object
@@ -1240,7 +1323,7 @@ definitions:
       type:
         type: string
       pickUpSlot:
-        type: string   
+        type: string
       address:
         type: string
   ProductResult:
@@ -1279,3 +1362,17 @@ definitions:
           - milk
       ProductAvailabilityResult:
         $ref: "#/definitions/ProductAvailabilityResult"
+  UnretrievedOrdersStats:
+    description: Return model for the stats of weekly and time interval unretrieved orders.
+    type: object
+    additionalProperties: false
+    required:
+      - totalCount
+      - unretrievedCount
+    properties:
+      totalCount:
+        type: integer
+        format: bsonID
+      unretrievedCount:
+        type: integer
+        format: bsonID

@@ -549,7 +549,7 @@ function ClientForm(props) {
             type="cancel"
             onClick={handleCancel}
           >
-            reset
+            Reset
           </Button>
           <br />
         </Form>

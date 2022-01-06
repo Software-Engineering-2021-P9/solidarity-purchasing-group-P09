@@ -6,7 +6,6 @@ import Button from "../Button/Button";
 import { OrderRecapRow } from "./OrderRecapRow";
 
 function ModalOrderConfirmation(props) {
-  console.log(props.deliveryType)
   return (
     <Modal show={props.show} onHide={props.handleClose}>
       <Modal.Header closeButton>

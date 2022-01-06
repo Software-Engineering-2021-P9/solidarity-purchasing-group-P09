@@ -1,6 +1,5 @@
 const schedule = require("node-schedule");
 const { Telegraf } = require("telegraf");
-// Command for run it BOT_TOKEN='5046161728:AAEWfW7N6FBKViW530nW2qCufa4tZKHF-OA' node telegramBot.js
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
 let users = [];

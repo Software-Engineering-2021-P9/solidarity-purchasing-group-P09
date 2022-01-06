@@ -1,6 +1,8 @@
 const { ObjectID } = require("bson");
-const dayjs = require("dayjs");
-const { getNextWeek, getCurrentWeek } = require("../services/time_service");
+const {
+  getNextWeekClient,
+  getCurrentWeekClient,
+} = require("../services/time_service");
 
 exports.employeesCollection = {
   employees: [
@@ -367,8 +369,8 @@ exports.productsCollectionWithCategoryError = {
 let nextWeek;
 let currentWeek;
 let currentYear;
-[nextWeek, currentYear] = getNextWeek(dayjs());
-[currentWeek, currentYear] = getCurrentWeek(dayjs());
+[nextWeek, currentYear] = getNextWeekClient();
+[currentWeek, currentYear] = getCurrentWeekClient();
 
 exports.productsAvailabilityCollection = {
   availabilities: [
@@ -378,9 +380,11 @@ exports.productsAvailabilityCollection = {
       productID: ObjectID("000000000000000000000001"),
       week: nextWeek,
       year: currentYear,
+      status: "waiting",
       price: 3.5,
       packaging: "100g",
       quantity: 5,
+      reservedQuantity: 0,
     },
     {
       _id: ObjectID("100000000000000000000001"),
@@ -388,9 +392,11 @@ exports.productsAvailabilityCollection = {
       productID: ObjectID("000000000000000000000001"),
       week: currentWeek,
       year: currentYear,
+      status: "waiting",
       price: 3.5,
       packaging: "100g",
       quantity: 5,
+      reservedQuantity: 0,
     },
     {
       _id: ObjectID("000000000000000000000002"),
@@ -398,9 +404,11 @@ exports.productsAvailabilityCollection = {
       productID: ObjectID("000000000000000000000011"),
       week: 15,
       year: 2020,
+      status: "waiting",
       price: 2.3,
       packaging: "4 units",
       quantity: 25,
+      reservedQuantity: 0,
     },
     {
       _id: ObjectID("000000000000000000000003"),
@@ -408,9 +416,11 @@ exports.productsAvailabilityCollection = {
       productID: ObjectID("000000000000000000000004"),
       week: nextWeek,
       year: currentYear,
+      status: "waiting",
       price: 2.3,
       packaging: "4 units",
       quantity: 25,
+      reservedQuantity: 0,
     },
     {
       _id: ObjectID("000000000000000000000004"),
@@ -418,9 +428,11 @@ exports.productsAvailabilityCollection = {
       productID: ObjectID("000000000000000000000006"),
       week: nextWeek,
       year: currentYear,
+      status: "waiting",
       price: 4.5,
       packaging: "1 units",
       quantity: 52,
+      reservedQuantity: 0,
     },
     {
       _id: ObjectID("000000000000000000000014"),
@@ -428,9 +440,11 @@ exports.productsAvailabilityCollection = {
       productID: ObjectID("000000000000000000000006"),
       week: currentWeek,
       year: currentYear,
+      status: "waiting",
       price: 4.5,
       packaging: "1 units",
       quantity: 27,
+      reservedQuantity: 0,
     },
     {
       _id: ObjectID("000000000000000000000005"),
@@ -438,9 +452,11 @@ exports.productsAvailabilityCollection = {
       productID: ObjectID("000000000000000000000012"),
       week: nextWeek,
       year: currentYear,
+      status: "waiting",
       price: 6,
       packaging: "1 units",
       quantity: 30,
+      reservedQuantity: 0,
     },
     {
       _id: ObjectID("000000000000000000000015"),
@@ -448,9 +464,11 @@ exports.productsAvailabilityCollection = {
       productID: ObjectID("000000000000000000000012"),
       week: currentWeek,
       year: currentYear,
+      status: "waiting",
       price: 6,
       packaging: "1 units",
       quantity: 30,
+      reservedQuantity: 0,
     },
     {
       _id: ObjectID("000000000000000000000006"),
@@ -458,9 +476,11 @@ exports.productsAvailabilityCollection = {
       productID: ObjectID("000000000000000000000012"),
       week: 1,
       year: 2021,
+      status: "waiting",
       price: 6,
       packaging: "1 units",
       quantity: 90,
+      reservedQuantity: 0,
     },
   ],
 };
@@ -473,9 +493,11 @@ exports.productsAvailabilityCollection2 = {
       productID: ObjectID("000000000000000000000001"),
       week: nextWeek,
       year: currentYear,
+      status: "waiting",
       price: 3.5,
       packaging: "100g",
       quantity: 5,
+      reservedQuantity: 0,
     },
     {
       _id: ObjectID("000000000000000000000002"),
@@ -483,9 +505,11 @@ exports.productsAvailabilityCollection2 = {
       productID: ObjectID("000000000000000000000010"),
       week: 15,
       year: 2020,
+      status: "waiting",
       price: 2.3,
       packaging: "4 units",
       quantity: 25,
+      reservedQuantity: 0,
     },
     {
       _id: ObjectID("000000000000000000000003"),
@@ -493,9 +517,11 @@ exports.productsAvailabilityCollection2 = {
       productID: ObjectID("000000000000000000000004"),
       week: nextWeek,
       year: currentYear,
+      status: "waiting",
       price: 2.3,
       packaging: "4 units",
       quantity: 25,
+      reservedQuantity: 0,
     },
     {
       _id: ObjectID("000000000000000000000004"),
@@ -503,9 +529,11 @@ exports.productsAvailabilityCollection2 = {
       productID: ObjectID("000000000000000000000006"),
       week: nextWeek,
       year: currentYear,
+      status: "waiting",
       price: 4.5,
       packaging: "1 units",
       quantity: 27,
+      reservedQuantity: 0,
     },
     {
       _id: ObjectID("000000000000000000000005"),
@@ -513,9 +541,11 @@ exports.productsAvailabilityCollection2 = {
       productID: ObjectID("000000000000000000000012"),
       week: nextWeek,
       year: currentYear,
+      status: "waiting",
       price: 6,
       packaging: "1 units",
       quantity: 30,
+      reservedQuantity: 0,
     },
     {
       _id: ObjectID("000000000000000000000006"),
@@ -523,9 +553,11 @@ exports.productsAvailabilityCollection2 = {
       productID: ObjectID("111111111111111111111111"),
       week: nextWeek,
       year: currentYear,
+      status: "waiting",
       price: 3.5,
       packaging: "6 units",
       quantity: 90,
+      reservedQuantity: 0,
     },
     {
       _id: ObjectID("000000000000000000000007"),
@@ -533,9 +565,11 @@ exports.productsAvailabilityCollection2 = {
       productID: ObjectID("222222222222222222222222"),
       week: nextWeek,
       year: currentYear,
+      status: "waiting",
       price: 2,
       packaging: "3 units",
       quantity: 30,
+      reservedQuantity: 0,
     },
     {
       _id: ObjectID("000000000000000000000008"),
@@ -543,9 +577,11 @@ exports.productsAvailabilityCollection2 = {
       productID: ObjectID("333333333333333333333333"),
       week: 12,
       year: 2020,
+      status: "waiting",
       price: 6,
       packaging: "6 units",
       quantity: 99,
+      reservedQuantity: 0,
     },
     {
       _id: ObjectID("000000000000000000000009"),
@@ -553,9 +589,11 @@ exports.productsAvailabilityCollection2 = {
       productID: ObjectID("444444444444444444444444"),
       week: nextWeek,
       year: currentYear,
+      status: "waiting",
       price: 4.5,
       packaging: "1 units",
       quantity: 33,
+      reservedQuantity: 0,
     },
   ],
 };

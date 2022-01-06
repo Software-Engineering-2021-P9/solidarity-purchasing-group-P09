@@ -1,22 +1,26 @@
 import { React, useEffect, useState, useContext } from "react";
-import { useLocation } from "react-router";
-import { Row, Col, CardGroup } from "react-bootstrap";
-import { getAvailableNavbarLinks } from "../Routes";
+import { useLocation, useHistory } from "react-router";
+import { Row, Col, CardGroup, Modal, Button } from "react-bootstrap";
+import { getAvailableNavbarLinks } from "../../Routes";
 
-import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponent";
-import { FilterRow } from "../ui-components/FilterRow/FilterRow";
-import ProductCard from "../ui-components/ProductCardComponent/ProductCard";
+import { NavbarComponent } from "../../ui-components/NavbarComponent/NavbarComponent";
+import { FilterRow } from "../../ui-components/FilterRow/FilterRow";
+import ProductCard from "../../ui-components/ProductCardComponent/ProductCard";
 
 import "bootstrap/dist/css/bootstrap.min.css";
+import "./ProductListPage.css";
+import { alertIcon } from "../../ui-components/icons"
 
-import { findProducts } from "../services/ApiClient";
+import { findProducts, getOrders } from "../../services/ApiClient";
+import  Order  from "../../services/models/Order"
 
-import { AuthContext } from "../contexts/AuthContextProvider";
-import UserRoles from "../services/models/UserRoles";
+import { AuthContext } from "../../contexts/AuthContextProvider";
+import UserRoles from "../../services/models/UserRoles";
 
 function ProductListPage(props) {
   const location = useLocation();
   const authContext = useContext(AuthContext);
+  const history = useHistory();
 
   const [products, setProducts] = useState([]);
 
@@ -37,6 +41,19 @@ function ProductListPage(props) {
   const [cartUpdated, setCartUpdated] = useState(false);
 
   const [cartEmpty, setCartEmpty] = useState(false);
+
+  const currentUser = authContext.currentUser;
+  const [firstTimeNotify, setFirstTimeNotify] = useState(true);
+  const [clientHasNotCoveredOrders, setClientHasNotCoveredOrders] = useState(false);
+
+  if(clientHasNotCoveredOrders === false && currentUser !== null && currentUser.role === "client"){
+    getOrders(currentUser.id).then(orders=>{
+      if(orders.filter(order=>order.status === Order.OrderStatus.NOT_COVERED).length > 0)
+        setClientHasNotCoveredOrders(true);
+    }).catch(err=>{
+      throw(err);
+    });
+  }
 
   useEffect(() => {
     //call every time that the cart is updated (added, deleted or quantity modified)
@@ -59,7 +76,7 @@ function ProductListPage(props) {
       }, 3000);
     }
   }, [cartUpdated, cartEmpty]);
-
+  
   useEffect(() => {
     //call from props the function for fetching the new products
     async function updateProducts() {
@@ -148,6 +165,28 @@ function ProductListPage(props) {
             );
           })}
       </Row>
+
+      <Modal centered show={currentUser !== null && currentUser.role === "client" && clientHasNotCoveredOrders && firstTimeNotify}>
+        <Modal.Header>
+          <div className="margin-auto center-text">
+            <Modal.Title className="margin-auto" > {alertIcon} Insufficient Wallet Balance</Modal.Title>
+          </div>
+        </Modal.Header>
+
+        <Modal.Body>
+          <p className="center-text">At the moment there are orders with status "not covered", waiting for a wallet top up.</p>
+          <p className="center-text">Not covered orders will be deleted at the defined deadline.</p>
+        </Modal.Body>
+
+        <Modal.Footer>
+          <div className="margin-auto">
+            <Button className="product-list-page-popup-buttons" variant="primary" onClick={()=>{setFirstTimeNotify(false)}} >Close</Button>
+          </div>
+            <div className="margin-auto">
+            <Button className="product-list-page-popup-buttons" variant="primary" onClick={()=>{history.push("/client")}}>Check Orders</Button>
+          </div>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 }

@@ -120,7 +120,8 @@ function ClientManagementPage(props) {
             <Button onClick={onSearchClientButtonClick}>Search</Button>
           </InputGroup>
         </Col>
-        <Col className="dropdown-margin" xs="4" sm="3" md="2" lg="1">
+        
+        <Col  className="dropdown-margin margin-top-35" xs="4" sm="3" md="2" lg="1">
           <RedDropdown
             items={["Has Pending", "Without Pending"]}
             title={

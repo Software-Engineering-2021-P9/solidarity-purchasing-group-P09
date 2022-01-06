@@ -304,14 +304,15 @@ function ClientForm(props) {
         style={{ textAlign: "center", maxWidth: "350px" }}
       >
         <Form noValidate onSubmit={handleSubmit}>
-
-          <h3 className="title">User Information</h3>
+          <h3 className="title mb-5">User Information</h3>
 
           <Row className="mb-3">
             <Form.Group md="3" controlId="validationCustom01">
               <Row>
                 <Col>
-                  <Form.Label>First Name:</Form.Label>
+                  <Form.Label className=" d-flex align-item-center">
+                    First Name:
+                  </Form.Label>
                 </Col>
                 <Col>
                   <Form.Control
@@ -330,7 +331,9 @@ function ClientForm(props) {
             <Form.Group md="3" controlId="validationCustom01">
               <Row>
                 <Col>
-                  <Form.Label>Last Name:</Form.Label>
+                  <Form.Label className=" d-flex align-item-center">
+                    Last Name:
+                  </Form.Label>
                 </Col>
                 <Col>
                   <Form.Control
@@ -350,7 +353,9 @@ function ClientForm(props) {
             <Form.Group md="3" controlId="validationCustom01">
               <Row>
                 <Col>
-                  <Form.Label>Phone Number:</Form.Label>
+                  <Form.Label className=" d-flex align-item-center">
+                    Phone Number:
+                  </Form.Label>
                 </Col>
                 <Col>
                   <Form.Control
@@ -369,7 +374,9 @@ function ClientForm(props) {
             <Form.Group md="3" controlId="validationCustom02">
               <Row>
                 <Col>
-                  <Form.Label>Email:</Form.Label>
+                  <Form.Label className=" d-flex align-item-center">
+                    Email:
+                  </Form.Label>
                 </Col>
                 <Col>
                   <Form.Control
@@ -389,7 +396,9 @@ function ClientForm(props) {
                 <Form.Group md="3" controlId="validationCustom02">
                   <Row>
                     <Col>
-                      <Form.Label>Password:</Form.Label>
+                      <Form.Label className=" d-flex align-item-center">
+                        Password:
+                      </Form.Label>
                     </Col>
                     <Col>
                       <Form.Control
@@ -407,7 +416,9 @@ function ClientForm(props) {
                 <Form.Group md="3" controlId="validationCustom02">
                   <Row>
                     <Col>
-                      <Form.Label>Password Confirmation:</Form.Label>
+                      <Form.Label className=" d-flex align-item-center">
+                        Password Confirm:
+                      </Form.Label>
                     </Col>
                     <Col>
                       <Form.Control
@@ -428,16 +439,16 @@ function ClientForm(props) {
 
           <Row></Row>
 
-
-          <h3 className="title">Residential Address</h3>
-
+          <h3 className="title mb-5">Residential Address</h3>
 
           <Row className="mb-3">
             <Row className="mb-3">
               <Form.Group md="6" controlId="validationCustom03">
                 <Row>
                   <Col>
-                    <Form.Label>Address:</Form.Label>
+                    <Form.Label className=" d-flex align-item-center">
+                      Address:
+                    </Form.Label>
                   </Col>
                   <Col>
                     <Form.Control
@@ -458,7 +469,10 @@ function ClientForm(props) {
               <Form.Group md="6" controlId="validationCustom05">
                 <Row>
                   <Col>
-                    <Form.Label className="mx-3"> Number: </Form.Label>
+                    <Form.Label className=" d-flex align-item-center">
+                      {" "}
+                      Number:{" "}
+                    </Form.Label>
                   </Col>
                   <Col>
                     <Form.Control
@@ -478,11 +492,11 @@ function ClientForm(props) {
 
             <Row className="mb-3">
               <Form.Group md="6" controlId="validationCustom04">
-
                 <Row>
-
                   <Col>
-                    <Form.Label>City:</Form.Label>
+                    <Form.Label className=" d-flex align-item-center">
+                      City:
+                    </Form.Label>
                   </Col>
                   <Col>
                     <Form.Control
@@ -498,14 +512,15 @@ function ClientForm(props) {
                   </Col>
                 </Row>
               </Form.Group>
-
             </Row>
             <Row className="mb-3">
-
               <Form.Group md="6" controlId="validationCustom05">
                 <Row>
                   <Col>
-                    <Form.Label className="mx-3"> Postal code: </Form.Label>
+                    <Form.Label className=" d-flex align-item-center">
+                      {" "}
+                      Postal code:{" "}
+                    </Form.Label>
                   </Col>
                   <Col>
                     <Form.Control

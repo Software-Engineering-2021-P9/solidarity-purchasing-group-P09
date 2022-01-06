@@ -34,10 +34,10 @@ function ShoppingCartPage(props) {
   // it uses function createOrder(clientID, cart) -> POST /api/orders
 
   const [cart, setCart] = useState(location.state.shoppingCart);
-  const feeValue = 5; //TODO: backend should validate the hardcoded fee value
-  
+  const feeValue = 5; // backend should validate the hardcoded fee value
+
   const [deliveryAddress, setDeliveryAddress] = useState("");
-  const [deliveryDate, setDeliveryDate] = useState("3");// 3 or 4 or 5th day of week
+  const [deliveryDate, setDeliveryDate] = useState("3"); // 3 or 4 or 5th day of week
   const [deliveryTime, setDeliveryTime] = useState("");
   const [deliveryType, setDeliveryType] = useState("");
   const [deliveryFee, setDeliveryFee] = useState(0);
@@ -138,9 +138,10 @@ function ShoppingCartPage(props) {
       address: deliveryAddress,
     };
 
-    if(deliveryType==="pickup") 
-      shipmentInfo["pickUpSlot"]=deliveryDate+""+(deliveryTime.replace(":",""));
-      
+    if (deliveryType === "pickup")
+      shipmentInfo["pickUpSlot"] =
+        deliveryDate + "" + deliveryTime.replace(":", "");
+
     //call create order
     createOrder(client.id, orderProducts, shipmentInfo);
     handleClose();
@@ -176,30 +177,26 @@ function ShoppingCartPage(props) {
           </Row>
         </Col>
         <Col md="4" sm="12">
-        <ShoppingCartOrderSummary 
-                products={products}
-                cart={cart}
-                feeValue={feeValue}
-
-                setAmount={setAmount}
-                setDeliveryAddress={setDeliveryAddress}
-                setDeliveryDate={setDeliveryDate}
-                setDeliveryType={setDeliveryType}
-                setDeliveryFee={setDeliveryFee}
-                setDeliveryTime={setDeliveryTime}
-
-                amount={amount}
-                deliveryAddress={deliveryAddress}
-                deliveryDate={deliveryDate}
-                deliveryType={deliveryType}
-                deliveryFee={deliveryFee}
-                deliveryTime={deliveryTime}
-
-                handleShow={handleShow}
-              />
+          <ShoppingCartOrderSummary
+            products={products}
+            cart={cart}
+            feeValue={feeValue}
+            setAmount={setAmount}
+            setDeliveryAddress={setDeliveryAddress}
+            setDeliveryDate={setDeliveryDate}
+            setDeliveryType={setDeliveryType}
+            setDeliveryFee={setDeliveryFee}
+            setDeliveryTime={setDeliveryTime}
+            amount={amount}
+            deliveryAddress={deliveryAddress}
+            deliveryDate={deliveryDate}
+            deliveryType={deliveryType}
+            deliveryFee={deliveryFee}
+            deliveryTime={deliveryTime}
+            handleShow={handleShow}
+          />
         </Col>
       </Row>
-    
 
       <ModalOrderConfirmation
         show={show}

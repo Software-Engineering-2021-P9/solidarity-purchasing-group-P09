@@ -13,6 +13,8 @@ function ManagerOrdersStatsPage(props) {
   const totalOrders = 1000; // get # total orders
   const totalUnretrievedOrders = 150;
 
+  const [week, setWeek] = useState(1);
+  const [year, setYear] = useState(2022);
   const [typeReports, setTypeReports] = useState(0); // 0 weekly, 1 monthly
 
   return (
@@ -35,7 +37,12 @@ function ManagerOrdersStatsPage(props) {
       <Row className="my-4 mx-3">
         {typeReports == 0 ? (
           <>
-            <WeeklyReports />
+            <WeeklyReports
+              week={week}
+              year={year}
+              setWeek={setWeek}
+              setYear={setYear}
+            />
           </>
         ) : (
           <>

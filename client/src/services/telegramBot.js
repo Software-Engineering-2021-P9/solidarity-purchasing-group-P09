@@ -1,9 +1,8 @@
-const schedule = require("node-schedule");
 const { Telegraf } = require("telegraf");
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
 let users = [];
-bot.start((ctx) => ctx.reply("Welcome"));
+//bot.start((ctx) => ctx.reply("Welcome"));
 bot.help((ctx) => ctx.reply("Send me a sticker"));
 bot.on("sticker", (ctx) => ctx.reply("👍"));
 bot.hears("hi", (ctx) => ctx.reply("Hey there"));
@@ -19,12 +18,4 @@ bot.command("start", (ctx) => {
   );
 });
 
-// can be used for testing,to send messages to users at a certain time
-const j = schedule.scheduleJob({ dayOfWeek: 1, hour: 10, minute: 30 }, () => {
-  console.log("Job runs every day at 5:30AM");
-  users.forEach((id) => {
-    console.log(id);
-    bot.telegram.sendMessage(id, "Hello userssss");
-  });
-});
 bot.launch();

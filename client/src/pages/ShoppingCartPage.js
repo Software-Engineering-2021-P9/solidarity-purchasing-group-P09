@@ -25,6 +25,7 @@ function ShoppingCartPage(props) {
   const authContext = useContext(AuthContext);
 
   const [cart, setCart] = useState(location.state.shoppingCart);
+  const feeValue = 5; // backend should validate the hardcoded fee value
 
   const [deliveryAddress, setDeliveryAddress] = useState("");
   const [deliveryDate, setDeliveryDate] = useState("3"); // 3 or 4 or 5th day of week
@@ -157,10 +158,11 @@ function ShoppingCartPage(props) {
             />
           </Row>
         </Col>
-        <Col md="4" sm="12" className="px-0">
+        <Col md="4" sm="12">
           <ShoppingCartOrderSummary
             products={products}
             cart={cart}
+            feeValue={feeValue}
             setAmount={setAmount}
             setDeliveryAddress={setDeliveryAddress}
             setDeliveryDate={setDeliveryDate}
@@ -186,6 +188,7 @@ function ShoppingCartPage(props) {
         tot={amount}
         handleSubmit={handleSubmit}
         deliveryType={deliveryType}
+        feeValue={feeValue}
       />
       <ErrorToast
         errorMessage={requestError}

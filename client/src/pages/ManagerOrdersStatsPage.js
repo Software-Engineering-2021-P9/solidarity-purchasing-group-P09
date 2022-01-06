@@ -2,16 +2,46 @@ import React, { useContext, useState } from "react";
 import { Container, Row, Alert } from "react-bootstrap";
 import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponent";
 import { AuthContext } from "../contexts/AuthContextProvider";
+
 import "bootstrap/dist/css/bootstrap.min.css";
+import GeneralReports from "../ui-components/ManagerStatsComponent/GeneralReports";
+import TypeReportsForm from "../ui-components/ManagerStatsComponent/TypeReportsForm";
+import WeeklyReports from "../ui-components/ManagerStatsComponent/WeeklyReports";
+import MonthlyReports from "../ui-components/ManagerStatsComponent/MonthlyReports";
 
 function ManagerOrdersStatsPage(props) {
+  const totalOrders = 1000; // get # total orders
+  const totalUnretrievedOrders = 150;
+
+  const [typeReports, setTypeReports] = useState(0); // 0 weekly, 1 monthly
+
   return (
     <Container>
       <Row>
         <NavbarComponent links={[]} />
       </Row>
-      <Row>
-        <h1>Manager page</h1>
+      <Row className="my-4 mx-3">
+        <GeneralReports
+          totalOrders={totalOrders}
+          totalUnretrievedOrders={totalUnretrievedOrders}
+        />
+      </Row>
+      <Row className="my-4 mx-3">
+        <TypeReportsForm
+          typeReports={typeReports}
+          setTypeReports={setTypeReports}
+        />
+      </Row>
+      <Row className="my-4 mx-3">
+        {typeReports == 0 ? (
+          <>
+            <WeeklyReports />
+          </>
+        ) : (
+          <>
+            <MonthlyReports />
+          </>
+        )}
       </Row>
     </Container>
   );

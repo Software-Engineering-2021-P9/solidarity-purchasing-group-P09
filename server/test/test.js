@@ -1946,6 +1946,7 @@ describe("User Login API tests:", () => {
       ...testData.clientsCollection,
       ...testData.farmersCollection,
       ...testData.employeesCollection,
+      ...testData.managersCollection,
     });
 
     afterEach(() => {
@@ -2005,6 +2006,27 @@ describe("User Login API tests:", () => {
             expect(res.body.password).not.to.exist;
             expect(res.body.role).to.be.equal("farmer");
             expect(res.body.id).to.be.equal("6187c957b288576ca24f8257");
+
+            done();
+          });
+      });
+
+      it("it should success with a manager", (done) => {
+        chai
+          .request(app)
+          .post("/api/users/login")
+          .send({
+            username: "manager1@test.com",
+            password: "123456789",
+          })
+          .end((err, res) => {
+            expect(err).to.be.null;
+            expect(res.status).to.be.equal(200);
+            expect(res.body).to.be.an("object");
+            expect(res.body.email).to.be.equal("manager1@test.com");
+            expect(res.body.password).not.to.exist;
+            expect(res.body.role).to.be.equal("manager");
+            expect(res.body.id).to.be.equal("1187c957b288576ca26f8257");
 
             done();
           });

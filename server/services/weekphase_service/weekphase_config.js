@@ -2,6 +2,7 @@
 
 const dayjs = require("dayjs");
 const { WeekPhase } = require("./models/weekphase");
+const bot = require("../../../client/src/services/TelegramBot/telegramBot");
 
 // Weekphases configuration
 // No overlapping phases are allowed
@@ -89,6 +90,9 @@ NWC => Next Week for Clients
 //    - Can update pickup time (NWC)
 function weekphaseOneHandler() {
   console.log("weekphase-1", dayjs().toISOString());
+  //bot needs to write to every clients about the possibility to make new ordes
+  console.log("BOT devi scrivere");
+  bot.WriteList();
 }
 
 // Weekphase 2 (SUN 23:00 - MON 09:00):

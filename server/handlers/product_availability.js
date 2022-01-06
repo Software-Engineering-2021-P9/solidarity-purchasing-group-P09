@@ -1,10 +1,16 @@
 var dao = require("../dao/dao");
-const { OrderProductStatus, Order, OrderStatus } = require("../models/order");
+const {
+  OrderProductStatus,
+  Order,
+  OrderStatus,
+  ShipmentType,
+} = require("../models/order");
 const { ProductAvailability } = require("../models/product_availability");
 const { getCurrentWeekFarmer } = require("../services/time_service");
 const {
   productAvailabilityIDPathValidator,
   availabilityQuantityBodyValidator,
+  weekphaseIDBodyValidator,
 } = require("./shared_validators");
 
 // ----------------------
@@ -46,27 +52,52 @@ exports.updateProductAvailabilityValidatorChain = [
 ];
 
 exports.updateProductAvailabilityHandler = async function (req, res, next) {
-  let result;
-  try {
-    result = await dao.updateProductAvailability(
-      req.params.availabilityID,
-      req.body.quantity
-    );
-  } catch (err) {
-    console.error(
-      `updateProductAvailability() -> couldn't update availability: ${err}`
-    );
-    return res.status(500).end();
-  }
+  await dao.runInTransaction(async (session) => {
+    // TODO: remove?! Retrieve product availability
+    let result;
+    try {
+      result = await dao.getProductAvailabilityByID(req.params.availabilityID);
+    } catch (err) {
+      console.error(
+        `updateProductAvailability() -> couldn't retrieve availability: ${err}`
+      );
+      await session.abortTransaction();
+      return res.status(500).end();
+    }
 
-  if (!result.matchedCount) {
-    console.error(
-      `updateProductAvailability() -> couldn't retrieve availability: not found`
-    );
-    return res.status(400).end();
-  }
+    if (!result) {
+      console.error(
+        `updateProductAvailability() -> couldn't retrieve availability: not found`
+      );
+      await session.abortTransaction();
+      return res.status(404).end();
+    }
 
-  return res.status(204).end();
+    let productAvailability = ProductAvailability.fromMongoJSON(result);
+
+    try {
+      result = await dao.updateProductAvailability(
+        req.params.availabilityID,
+        parseInt(req.body.quantity)
+      );
+    } catch (err) {
+      console.error(
+        `updateProductAvailability() -> couldn't update availability: ${err}`
+      );
+      await session.abortTransaction();
+      return res.status(500).end();
+    }
+
+    if (!result.matchedCount) {
+      console.error(
+        `updateProductAvailability() -> couldn't retrieve availability: not found`
+      );
+      await session.abortTransaction();
+      return res.status(400).end();
+    }
+
+    return res.status(204).end();
+  });
 };
 
 // --------------------------
@@ -116,10 +147,12 @@ exports.confirmProductAvailabilityHandler = async function (req, res, next) {
     // Retrieve all the orders containing the product in ascending order by creation date,
     // for the current farmer week
     let orders = [];
+    [w, y] = getCurrentWeekFarmer();
     try {
       result = await dao.getOrdersContainingProducts(
         productAvailability.productID,
-        ...getCurrentWeekFarmer(),
+        w + 1,
+        y,
         1
       );
       orders = result.map((r) => Order.fromMongoJSON(r));
@@ -133,7 +166,7 @@ exports.confirmProductAvailabilityHandler = async function (req, res, next) {
 
     // Update all the orders' products.
     // The orders are confirmed following the creation order.
-    let leftQuantity = productAvailability.quantity;
+    let remainingQuantity = productAvailability.quantity;
     for (let order of orders) {
       for (let orderProduct of order.products) {
         if (
@@ -144,18 +177,18 @@ exports.confirmProductAvailabilityHandler = async function (req, res, next) {
         }
 
         // If the order product quantity can be fullfilled by the availability, set it as confirmed.
-        if (leftQuantity - orderProduct.quantity > 0) {
+        if (remainingQuantity - orderProduct.quantity > 0) {
           orderProduct.status = OrderProductStatus.CONFIRMED;
-          leftQuantity -= orderProduct.quantity;
+          remainingQuantity -= orderProduct.quantity;
           // Else, if the order product quantity can be only partially fullfilled,
           // modify its quantity to match the availability and set it's state as modified.
         } else if (
-          leftQuantity - orderProduct.quantity < 0 &&
-          leftQuantity > 0
+          remainingQuantity - orderProduct.quantity < 0 &&
+          remainingQuantity > 0
         ) {
           orderProduct.status = OrderProductStatus.MODIFIED;
-          orderProduct.quantity = leftQuantity;
-          leftQuantity = 0;
+          orderProduct.quantity = remainingQuantity;
+          remainingQuantity = 0;
           // Else, if the order product cannot be fullfilled by the availability, set it as canceled.
         } else {
           orderProduct.status = OrderProductStatus.CANCELED;
@@ -168,6 +201,10 @@ exports.confirmProductAvailabilityHandler = async function (req, res, next) {
       order.totalPrice = order.products
         .map((op) => op.quantity * op.price)
         .reduce((a, b) => a + b);
+
+      // Add shipment fee
+      order.totalPrice +=
+        order.shipmentInfo.type === ShipmentType.SHIPMENT ? 5 : 0;
 
       // If all products are canceled, set the order as canceled
       if (

@@ -6,6 +6,7 @@ const {
   ShipmentInfo,
   Order,
   OrderProductStatus,
+  ShipmentType,
 } = require("../models/order");
 const {
   ProductAvailability,
@@ -62,7 +63,9 @@ exports.createOrderHandler = async function (req, res, next) {
       ProductAvailability.fromMongoJSON(r)
     );
 
-    let totalPrice = 0.0;
+    let totalPrice =
+      req.body.shipmentType === ShipmentType.SHIPMENT ? 5.0 : 0.0;
+
     for (let orderProduct of orderProducts) {
       let productAvailability = productAvailabilities.find(
         (pa) => pa.productID.toString() === orderProduct.productID.toString()
@@ -77,8 +80,8 @@ exports.createOrderHandler = async function (req, res, next) {
         return res.status(400).end();
       }
 
-      // Update leftQuantity
-      productAvailability.leftQuantity -= orderProduct.quantity;
+      // Update reservedQuantity
+      productAvailability.reservedQuantity += orderProduct.quantity;
 
       // Update order products missing fields
       orderProduct.status =

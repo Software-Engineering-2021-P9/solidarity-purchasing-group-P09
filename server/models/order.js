@@ -37,11 +37,16 @@ const OrderStatus = {
   CANCELED: "canceled",
 };
 
+const ShipmentType = {
+  PICKUP: "pickup",
+  SHIPMENT: "shipment",
+};
+
 class ShipmentInfo {
   constructor(type, pickUpSlot, address) {
     this.type = type;
     this.address = address;
-    if (type === "pickup") this.pickUpSlot = pickUpSlot;
+    if (type === ShipmentType.PICKUP) this.pickUpSlot = pickUpSlot;
   }
 
   static fromMongoJSON(json) {
@@ -98,6 +103,7 @@ module.exports = {
   Order,
   OrderProduct,
   OrderStatus,
+  ShipmentType,
   ShipmentInfo,
   OrderProductStatus,
 };

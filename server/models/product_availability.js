@@ -16,7 +16,7 @@ class ProductAvailability {
     packaging,
     quantity,
     price,
-    leftQuantity
+    reservedQuantity
   ) {
     this.id = id;
     this.farmerID = farmerID;
@@ -27,7 +27,12 @@ class ProductAvailability {
     this.packaging = packaging;
     this.quantity = quantity;
     this.price = price;
-    this.leftQuantity = leftQuantity;
+    this.reservedQuantity = reservedQuantity;
+  }
+
+  get leftQuantity() {
+    let leftQuantity = this.quantity - this.reservedQuantity;
+    return leftQuantity > 0 ? leftQuantity : 0;
   }
 
   static fromMongoJSON(json) {
@@ -41,7 +46,7 @@ class ProductAvailability {
       json.packaging,
       json.quantity,
       json.price,
-      json.leftQuantity
+      json.reservedQuantity
     );
   }
 }

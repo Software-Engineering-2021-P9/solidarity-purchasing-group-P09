@@ -24,7 +24,6 @@ exports.getProductsAvailability = (db, listOfIDs, week, year) => {
     $and: [{ productID: { $in: listOfIDs } }, { week: week }, { year: year }],
   };
 
-  console.log(listOfIDs);
   return db
     .collection(productsAvailabilityCollectionName)
     .find(query)
@@ -65,6 +64,7 @@ exports.setProductAvailability = (
     price: price,
     packaging: packaging,
     quantity: quantity,
+    reservedQuantity: 0,
   });
 };
 
@@ -80,16 +80,7 @@ exports.updateProductAvailability = (db, availabilityID, quantity) => {
     },
     {
       $set: {
-        quantity: {
-          $cond: {
-            // Check if the leftQuantity value is bigger than the updated quantity
-            if: {
-              leftQuantity: { $gte: quantity },
-            },
-            then: quantity,
-            else: "$leftQuantity",
-          },
-        },
+        quantity: quantity,
       },
     }
   );

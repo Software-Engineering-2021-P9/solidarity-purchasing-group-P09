@@ -38,7 +38,6 @@ exports.getOrdersContainingProducts = (
   year,
   sortByCreation
 ) => {
-  console.log(week, year);
   return db
     .collection(orderCollectionName)
     .find({

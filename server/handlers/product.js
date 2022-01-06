@@ -20,6 +20,9 @@ const {
   farmerIDBodyValidator,
 } = require("./shared_validators");
 const { ObjectID } = require("bson");
+const {
+  ProductAvailabilityResult,
+} = require("../models/product_availability_result");
 
 exports.getProductsByIDValidatorChain = [
   searchStringValidator,
@@ -29,19 +32,19 @@ exports.getProductsByIDValidatorChain = [
 
 exports.getProductsByIDHandler = async function (req, res, next) {
   // If the ids query parameter is set, retrieve the products associated to the ids in the list
-  let productsResult;
+  let productsMongo;
   let products = [];
 
   if (req.query.ids) {
     try {
-      productsResult = await dao.getProductsByIDs(req.query.ids);
+      productsMongo = await dao.getProductsByIDs(req.query.ids);
     } catch (err) {
       console.error(`getProductsByIDs() -> couldn't retrieve products: ${err}`);
       return res.status(500).end();
     }
 
     try {
-      products = productsResult.map((product) =>
+      products = productsMongo.map((product) =>
         Product.fromMongoJSON({ ...product })
       );
     } catch (err) {
@@ -58,7 +61,7 @@ exports.getProductsByIDHandler = async function (req, res, next) {
   // Else, find the available products by the given searchString and category
 
   try {
-    productsResult = await dao.findProducts(
+    productsMongo = await dao.findProducts(
       req.query.searchString,
       req.query.category
     );
@@ -67,10 +70,10 @@ exports.getProductsByIDHandler = async function (req, res, next) {
     return res.status(500).end();
   }
 
-  let productsAvailabilitiesResult;
+  let productsAvailabilitiesMongo;
   try {
-    productsAvailabilitiesResult = await dao.getProductsAvailability(
-      productsResult.map((product) => product._id),
+    productsAvailabilitiesMongo = await dao.getProductsAvailability(
+      productsMongo.map((product) => product._id),
       ...getNextWeekClient(dayjs())
     );
   } catch (err) {
@@ -79,18 +82,24 @@ exports.getProductsByIDHandler = async function (req, res, next) {
     );
     return res.status(500).end();
   }
+  for (let productAvailabilityMongo of productsAvailabilitiesMongo) {
+    let productAvailability = ProductAvailability.fromMongoJSON(
+      productAvailabilityMongo
+    );
 
-  productsAvailabilitiesResult.forEach((productAvailability) => {
+    if (productAvailability.leftQuantity === 0) continue;
+
     let product = Product.fromMongoJSON(
-      productsResult.find((p) => {
-        return p._id == productAvailability.productID.toString();
+      productsMongo.find((p) => {
+        return p._id.toString() === productAvailability.productID.toString();
       })
     );
 
     product.availability =
-      ProductAvailability.fromMongoJSON(productAvailability);
+      ProductAvailabilityResult.fromProductAvailability(productAvailability);
+
     products.push(product);
-  });
+  }
 
   return res.json(products);
 };

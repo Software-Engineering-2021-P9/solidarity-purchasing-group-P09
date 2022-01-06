@@ -2017,7 +2017,7 @@ describe("User Login API tests:", () => {
           .post("/api/users/login")
           .send({
             username: "manager1@test.com",
-            password: "123456789",
+            password: passwordData.pass,
           })
           .end((err, res) => {
             expect(err).to.be.null;
@@ -2274,5 +2274,12 @@ describe("manager functions", function () {
     expect(managerInfoResult.email).to.be.equal("manager2@test.com");
     expect(managerInfoResult.fullName).to.be.equal("Manager 2");
     expect(managerInfoResult.role).to.be.equal("manager");
+  });
+
+  it("getUserByEmail works", async () => {
+    let user = await dao.getUserByEmail("manager1@test.com");
+    expect(user.email).to.be.equal("manager1@test.com");
+    expect(user.fullName).to.be.equal("Mario Biondi");
+    expect(user.role).to.be.equal("manager");
   });
 });

@@ -7,7 +7,7 @@ const mongoUnit = require("mongo-unit");
 const testData = require("./test-data");
 
 const { OrderStatus } = require("../models/order");
-
+const passwordData = require("../password-settings.json");
 let dao = require("../dao/dao");
 
 // ----------------------------------
@@ -1937,69 +1937,6 @@ describe("Farmers API tests:", () => {
       });
   });
 });
-// begin a test suite of one or more tests
-describe("getManagerByID and getManagerByEmail", function () {
-  // add a test hook
-  beforeEach(function () {
-    dao.open();
-    mongoUnit.load({
-      ...testData.managersCollection,
-    });
-  });
-
-  afterEach(() => {
-    mongoUnit.drop();
-    dao.close();
-  });
-
-  // test a functionality
-  it("getManagerByID works", async () => {
-    // add an assertion
-
-    let user = await dao.getManagerByID("1187c957b288576ca26f8257");
-
-    expect(user.email).to.be.equal("manager1@test.com");
-    expect(user.fullName).to.be.equal("Mario Biondi");
-    expect(user.role).to.be.equal("manager");
-  });
-  it("getManagerByEmail works", async () => {
-    // add an assertion
-
-    let user = await dao.getManagerByEmail("manager1@test.com");
-
-    expect(user.email).to.be.equal("manager1@test.com");
-    expect(user.fullName).to.be.equal("Mario Biondi");
-    expect(user.role).to.be.equal("manager");
-  });
-
-  it("ManagerInfo constructor works", async () => {
-    const { ManagerInfo } = require("../models/manager_info");
-    let managerInfo = new ManagerInfo(
-      "2187c957b288576ca26f8257",
-      "manager2@test.com",
-      "123456789",
-      "Manager 2"
-    );
-
-    expect(managerInfo.email).to.be.equal("manager2@test.com");
-    expect(managerInfo.fullName).to.be.equal("Manager 2");
-    expect(managerInfo.role).to.be.equal("manager");
-  });
-
-  it("ManagerInfoResult constructor works", async () => {
-    const { ManagerInfoResult } = require("../models/manager_info_result");
-    let managerInfo = new ManagerInfoResult(
-      "2187c957b288576ca26f8257",
-      "manager2@test.com",
-
-      "Manager 2"
-    );
-
-    expect(managerInfo.email).to.be.equal("manager2@test.com");
-    expect(managerInfo.fullName).to.be.equal("Manager 2");
-    expect(managerInfo.role).to.be.equal("manager");
-  });
-});
 
 // User Login API TESTS
 describe("User Login API tests:", () => {
@@ -2223,5 +2160,119 @@ describe("User Login API tests:", () => {
           });
       });
     });
+  });
+});
+
+describe("manager functions", function () {
+  // add a test hook
+  beforeEach(function () {
+    dao.open();
+    mongoUnit.load({
+      ...testData.managersCollection,
+    });
+  });
+
+  afterEach(() => {
+    mongoUnit.drop();
+    dao.close();
+  });
+
+  // test a functionality
+  it("getManagerByID works", async () => {
+    // add an assertion
+
+    let user = await dao.getManagerByID("1187c957b288576ca26f8257");
+
+    expect(user.email).to.be.equal("manager1@test.com");
+    expect(user.fullName).to.be.equal("Mario Biondi");
+    expect(user.role).to.be.equal("manager");
+  });
+  it("getManagerByEmail works", async () => {
+    // add an assertion
+
+    let user = await dao.getManagerByEmail("manager1@test.com");
+
+    expect(user.email).to.be.equal("manager1@test.com");
+    expect(user.fullName).to.be.equal("Mario Biondi");
+    expect(user.role).to.be.equal("manager");
+  });
+
+  it("ManagerInfo constructor works", async () => {
+    const { ManagerInfo } = require("../models/manager_info");
+    let managerInfo = new ManagerInfo(
+      "2187c957b288576ca26f8257",
+      "manager2@test.com",
+      passwordData.pass,
+      "Manager 2"
+    );
+
+    expect(managerInfo.email).to.be.equal("manager2@test.com");
+    expect(managerInfo.fullName).to.be.equal("Manager 2");
+    expect(managerInfo.role).to.be.equal("manager");
+  });
+
+  it("ManagerInfoResult constructor works", async () => {
+    const { ManagerInfoResult } = require("../models/manager_info_result");
+    let managerInfo = new ManagerInfoResult(
+      "2187c957b288576ca26f8257",
+      "manager2@test.com",
+
+      "Manager 2"
+    );
+    expect(managerInfo.email).to.be.equal("manager2@test.com");
+    expect(managerInfo.fullName).to.be.equal("Manager 2");
+    expect(managerInfo.role).to.be.equal("manager");
+  });
+
+  it("fromManagerInfo function works", async () => {
+    const { ManagerInfoResult } = require("../models/manager_info_result");
+    const { ManagerInfo } = require("../models/manager_info");
+
+    let managerInfo = new ManagerInfo(
+      "2187c957b288576ca26f8257",
+      "manager2@test.com",
+      passwordData.pass,
+      "Manager 2"
+    );
+
+    let managerInfoResult = ManagerInfoResult.fromManagerInfo(managerInfo);
+
+    expect(managerInfoResult.email).to.be.equal("manager2@test.com");
+    expect(managerInfoResult.fullName).to.be.equal("Manager 2");
+    expect(managerInfoResult.role).to.be.equal("manager");
+  });
+
+  it("fromMongoJSON ManagerInfoResult function works", async () => {
+    const { ManagerInfoResult } = require("../models/manager_info_result");
+
+    let obj = {
+      id: "2187c957b288576ca26f8257",
+      email: "manager2@test.com",
+      password: passwordData.pass,
+      fullName: "Manager 2",
+    };
+
+    let managerInfoResult = ManagerInfoResult.fromMongoJSON(obj);
+
+    expect(managerInfoResult.email).to.be.equal("manager2@test.com");
+    expect(managerInfoResult.fullName).to.be.equal("Manager 2");
+    expect(managerInfoResult.role).to.be.equal("manager");
+  });
+
+  it("fromMongoJSON ManagerInfo function works", async () => {
+    const { ManagerInfo } = require("../models/manager_info");
+
+    let obj = {
+      id: "2187c957b288576ca26f8257",
+      email: "manager2@test.com",
+      password: passwordData.pass,
+      fullName: "Manager 2",
+    };
+
+    let managerInfoResult = ManagerInfo.fromMongoJSON(obj);
+
+    expect(managerInfoResult.email).to.be.equal("manager2@test.com");
+    expect(managerInfoResult.fullName).to.be.equal("Manager 2");
+    expect(managerInfoResult.role).to.be.equal("manager");
   });
 });

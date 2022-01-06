@@ -34,6 +34,7 @@ function ShoppingCartPage(props) {
   // it uses function createOrder(clientID, cart) -> POST /api/orders
 
   const [cart, setCart] = useState(location.state.shoppingCart);
+  const feeValue = 5; //TODO: backend should validate the hardcoded fee value
   
   const [deliveryAddress, setDeliveryAddress] = useState("");
   const [deliveryDate, setDeliveryDate] = useState("3");// 3 or 4 or 5th day of week
@@ -178,6 +179,7 @@ function ShoppingCartPage(props) {
         <ShoppingCartOrderSummary 
                 products={products}
                 cart={cart}
+                feeValue={feeValue}
 
                 setAmount={setAmount}
                 setDeliveryAddress={setDeliveryAddress}
@@ -207,6 +209,7 @@ function ShoppingCartPage(props) {
         tot={amount}
         handleSubmit={handleSubmit}
         deliveryType={deliveryType}
+        feeValue={feeValue}
       />
       <ErrorToast
         errorMessage={requestError}

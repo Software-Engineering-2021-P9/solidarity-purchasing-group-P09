@@ -304,7 +304,9 @@ function ClientForm(props) {
         style={{ textAlign: "center", maxWidth: "350px" }}
       >
         <Form noValidate onSubmit={handleSubmit}>
+
           <h3 className="title">User Information</h3>
+
           <Row className="mb-3">
             <Form.Group md="3" controlId="validationCustom01">
               <Row>
@@ -426,7 +428,9 @@ function ClientForm(props) {
 
           <Row></Row>
 
+
           <h3 className="title">Residential Address</h3>
+
 
           <Row className="mb-3">
             <Row className="mb-3">
@@ -474,7 +478,9 @@ function ClientForm(props) {
 
             <Row className="mb-3">
               <Form.Group md="6" controlId="validationCustom04">
+
                 <Row>
+
                   <Col>
                     <Form.Label>City:</Form.Label>
                   </Col>
@@ -492,8 +498,10 @@ function ClientForm(props) {
                   </Col>
                 </Row>
               </Form.Group>
+
             </Row>
             <Row className="mb-3">
+
               <Form.Group md="6" controlId="validationCustom05">
                 <Row>
                   <Col>

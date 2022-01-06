@@ -3,7 +3,7 @@
 const { UserRoles } = require("./user_roles");
 
 class ManagerInfo {
-  constructor(id, email, password, fullName, address) {
+  constructor(id, email, password, fullName) {
     this.id = id;
     this.email = email;
     this.password = password;

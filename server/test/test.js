@@ -1971,6 +1971,34 @@ describe("getManagerByID and getManagerByEmail", function () {
     expect(user.fullName).to.be.equal("Mario Biondi");
     expect(user.role).to.be.equal("manager");
   });
+
+  it("ManagerInfo constructor works", async () => {
+    const { ManagerInfo } = require("../models/manager_info");
+    let managerInfo = new ManagerInfo(
+      "2187c957b288576ca26f8257",
+      "manager2@test.com",
+      "123456789",
+      "Manager 2"
+    );
+
+    expect(managerInfo.email).to.be.equal("manager2@test.com");
+    expect(managerInfo.fullName).to.be.equal("Manager 2");
+    expect(managerInfo.role).to.be.equal("manager");
+  });
+
+  it("ManagerInfoResult constructor works", async () => {
+    const { ManagerInfoResult } = require("../models/manager_info_result");
+    let managerInfo = new ManagerInfoResult(
+      "2187c957b288576ca26f8257",
+      "manager2@test.com",
+
+      "Manager 2"
+    );
+
+    expect(managerInfo.email).to.be.equal("manager2@test.com");
+    expect(managerInfo.fullName).to.be.equal("Manager 2");
+    expect(managerInfo.role).to.be.equal("manager");
+  });
 });
 
 // User Login API TESTS

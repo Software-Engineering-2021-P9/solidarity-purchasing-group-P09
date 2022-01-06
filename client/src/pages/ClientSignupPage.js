@@ -304,7 +304,7 @@ function ClientForm(props) {
         style={{ textAlign: "center", maxWidth: "350px" }}
       >
         <Form noValidate onSubmit={handleSubmit}>
-          <h4 className="my-3">User Information</h4>
+          <h3 className="title">User Information</h3>
           <Row className="mb-3">
             <Form.Group md="3" controlId="validationCustom01">
               <Row>
@@ -426,7 +426,7 @@ function ClientForm(props) {
 
           <Row></Row>
 
-          <h4 className="my-3">Residential Address</h4>
+          <h3 className="title">Residential Address</h3>
 
           <Row className="mb-3">
             <Row className="mb-3">
@@ -447,7 +447,12 @@ function ClientForm(props) {
                       Please provide a valid address.
                     </Form.Control.Feedback>
                   </Col>
-
+                </Row>
+              </Form.Group>
+            </Row>
+            <Row className="mb-3">
+              <Form.Group md="6" controlId="validationCustom05">
+                <Row>
                   <Col>
                     <Form.Label className="mx-3"> Number: </Form.Label>
                   </Col>
@@ -469,7 +474,7 @@ function ClientForm(props) {
 
             <Row className="mb-3">
               <Form.Group md="6" controlId="validationCustom04">
-                <Row className="mb-3">
+                <Row>
                   <Col>
                     <Form.Label>City:</Form.Label>
                   </Col>
@@ -487,7 +492,8 @@ function ClientForm(props) {
                   </Col>
                 </Row>
               </Form.Group>
-
+            </Row>
+            <Row className="mb-3">
               <Form.Group md="6" controlId="validationCustom05">
                 <Row>
                   <Col>

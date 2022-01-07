@@ -40,7 +40,7 @@ function FilterRow(props) {
             <Button onClick={props.handleOnSearchSubmit}> Search </Button>
           </InputGroup>
         </Col>
-        <hr className="line my-0 py-0" />
+        <hr className="line" />
       </Row>
     </>
   );

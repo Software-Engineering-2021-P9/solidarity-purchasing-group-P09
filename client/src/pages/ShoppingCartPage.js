@@ -23,6 +23,15 @@ import UserRoles from "../services/models/UserRoles";
 function ShoppingCartPage(props) {
   const location = useLocation();
   const authContext = useContext(AuthContext);
+  // as props, ShoppingCartPage receives
+  //      - a Map <ItemID, Qty>
+  //      - the clientID
+  // it mantains as main states
+  //      - a cart (Map <ItemID, Qty>)
+  //      - the total amount of the current cart
+  // it uses function getProductsByIDs(id) -> product object
+  // it uses function getClientByID(id) -> client object
+  // it uses function createOrder(clientID, cart) -> POST /api/orders
 
   const [cart, setCart] = useState(location.state.shoppingCart);
   const feeValue = 5; // backend should validate the hardcoded fee value
@@ -91,18 +100,27 @@ function ShoppingCartPage(props) {
     if (quantity > 0) {
       setCart(new Map(cart.set(productID, parseInt(quantity))));
     }
+    var new_sum = 0.0;
+    Array.from(cart.entries()).map((entry) => {
+      new_sum += 1.0 * entry[1]; // mock price
+      return entry;
+    });
+    setAmount(new_sum);
   };
 
   const deleteItem = (productID) => {
     let new_cart = new Map();
+    var new_sum = 0.0;
     if (cart.size > 1) {
       Array.from(cart.entries()).map((entry) => {
         const [key, val] = entry;
         if (key === productID) return null;
         new_cart.set(key, val);
+        new_sum += 1.0 * entry[1];
         return entry;
       });
     }
+    setAmount(new_sum);
     setCart(new_cart);
   };
 

@@ -16,6 +16,7 @@
     "react-minimal-pie-chart": "^8.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "^5.0.0",
+    "recharts": "^2.1.8",
     "telegraf": "^4.5.2",
     "validator": "^13.7.0",
     "validatore": "^1.0.1",

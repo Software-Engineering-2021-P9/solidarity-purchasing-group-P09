@@ -1,7 +1,6 @@
-import React, { useContext, useState } from "react";
-import { Container, Row, Alert } from "react-bootstrap";
+import React, { useState } from "react";
+import { Container, Row } from "react-bootstrap";
 import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponent";
-import { AuthContext } from "../contexts/AuthContextProvider";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import GeneralReports from "../ui-components/ManagerStatsComponent/GeneralReports";
@@ -36,7 +35,7 @@ function ManagerOrdersStatsPage(props) {
         />
       </Row>
       <Row className="my-4 mx-3">
-        {typeReports == 0 ? (
+        {typeReports === 0 ? (
           <>
             <WeeklyReports
               week={week}

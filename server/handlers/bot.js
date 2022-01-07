@@ -19,6 +19,7 @@ exports.getTelegramUsersHandler = async function (req, res, next) {
 };
 
 exports.addTelegramUsersHandler = async function (req, res, next) {
+  let telegramUser;
   try {
     telegramUser = await dao.addTelegramUsers(parseInt(req.body.chatID));
   } catch (err) {

@@ -27,7 +27,7 @@ bot.on("message", async (ctx) => {
   }
 });
 
-writeProductList = async function (id) {
+const writeProductList = async function (id) {
   const prods = await API.findProducts();
 
   await bot.telegram.sendMessage(

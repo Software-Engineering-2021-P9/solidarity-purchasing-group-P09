@@ -23,7 +23,7 @@ function ModalOrderConfirmation(props) {
         })}
         <Row className='d-flex justify-content-between px-2 py-1'>
             <Col>Fees</Col>
-            <Col className='align-end'>{props.deliveryType==="Shipment"?"20 €":"0 €"}</Col>
+            <Col className='align-end'>{props.deliveryType==="shipment"?props.feeValue:"0 €"}</Col>
         </Row>
         <br />
         <Row className="px-2 pb-2">

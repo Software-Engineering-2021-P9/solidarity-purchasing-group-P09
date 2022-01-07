@@ -58,9 +58,7 @@ function ClientOrderTableRow(props) {
         </Col>
         <Col md='3' lg='3' xl='3' className='mx-0 px-0'>
           <Row>
-            <Col className="d-flex align-items-center">
-              {statusComponent}
-            </Col>
+            <Col className='d-flex align-items-center'>{statusComponent}</Col>
             {status === Order.OrderStatus.PREPARED &&
               props.loggedUser.role === UserRoles.EMPLOYEE && (
                 <Col md='auto' lg='auto' xl='auto'>
@@ -120,9 +118,7 @@ function ClientOrderTableRow(props) {
             <Col className='d-flex align-items-center' sm='auto' xs='auto'>
               {statusIcon}
             </Col>
-            <Col className="d-flex align-items-center">
-              {statusComponent}
-            </Col>
+            <Col className='d-flex align-items-center'>{statusComponent}</Col>
             {status === Order.OrderStatus.PREPARED &&
               props.loggedUser.role === UserRoles.EMPLOYEE && (
                 <Col className='d-flex justify-content-end'>
@@ -167,7 +163,7 @@ function PickUpSlot(props) {
           {pinMapSmallIcon}
         </Col>
       )}
-      <Col xs='auto'>{DayString(day)}</Col>
+      <Col xs='auto'>{DayString()}</Col>
       <Col>
         {timeIcon} {hour}:{minute}{" "}
       </Col>
@@ -188,49 +184,47 @@ function ShipmentSlot(props) {
     </Row>
   );
 }
-function createStatusComponent(status){
+function createStatusComponent(status) {
   let statusComponent;
-  switch(status){
+  switch (status) {
     case Order.OrderStatus.NOT_COVERED:
-      statusComponent =     
-        <span className="table-row-status-not-covered mx-0 px-0">
-          {status}
-        </span>
+      statusComponent = (
+        <span className='table-row-status-not-covered mx-0 px-0'>{status}</span>
+      );
       break;
 
     case Order.OrderStatus.WAITING:
-      statusComponent =     
-        <span className="table-row-status-waiting mx-0 px-0">
-          {status}
-        </span>
+      statusComponent = (
+        <span className='table-row-status-waiting mx-0 px-0'>{status}</span>
+      );
       break;
 
     case Order.OrderStatus.PREPARED:
-      statusComponent =     
-        <span className="table-row-status-prepared mx-0 px-0">
-          {status}
-        </span>
+      statusComponent = (
+        <span className='table-row-status-prepared mx-0 px-0'>{status}</span>
+      );
       break;
 
     case Order.OrderStatus.DONE:
-      statusComponent =     
-        <span className="table-row-status-done mx-0 px-0">
-          {status}
-        </span>
+      statusComponent = (
+        <span className='table-row-status-done mx-0 px-0'>{status}</span>
+      );
       break;
 
     case Order.OrderStatus.PENDINGCANCELATION:
-      statusComponent =     
-        <span className="table-row-status-pending-cancelation mx-0 px-0">
+      statusComponent = (
+        <span className='table-row-status-pending-cancelation mx-0 px-0'>
           {status}
         </span>
+      );
       break;
 
     case Order.OrderStatus.CONFIRMED:
-      statusComponent =     
-        <span className="table-row-status-pending-confirmed mx-0 px-0">
+      statusComponent = (
+        <span className='table-row-status-pending-confirmed mx-0 px-0'>
           {status}
         </span>
+      );
       break;
     default:
       statusComponent = null;

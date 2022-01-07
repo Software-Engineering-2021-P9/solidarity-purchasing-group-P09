@@ -12,14 +12,17 @@ import Divider from "../ui-components/Divider/Divider";
 import ErrorToast from "../ui-components/ErrorToast/ErrorToast";
 import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponent";
 
-import { addFundToWallet, getClientByID } from "../services/ApiClient";
+import {
+  addFundToWallet,
+  getClientByID,
+  getOrders,
+} from "../services/ApiClient";
 
 import { AuthContext } from "../contexts/AuthContextProvider";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../ui-components/Title.css";
 import UserRoles from "../services/models/UserRoles";
-import { getOrders } from "../services/ApiClient";
 
 const positiveFloatRegex = /^[+]?([0-9]+(?:[.][0-9]{0,2})?|\.[0-9]{1,2})$/;
 

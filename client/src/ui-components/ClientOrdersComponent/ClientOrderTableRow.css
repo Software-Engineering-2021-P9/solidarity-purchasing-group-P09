@@ -17,6 +17,7 @@
   color: rgb(211, 2, 2);
 }
 .change-status {
+  cursor: pointer;
   color: rgba(99, 95, 70, 1);
   font-weight: 400;
   font-style: italic;

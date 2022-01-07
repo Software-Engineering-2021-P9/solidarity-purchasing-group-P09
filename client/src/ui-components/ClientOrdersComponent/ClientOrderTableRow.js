@@ -58,17 +58,15 @@ function ClientOrderTableRow(props) {
         </Col>
         <Col md='3' lg='3' xl='3' className='mx-0 px-0'>
           <Row>
-            <Col className='d-flex align-items-center'>{statusComponent}</Col>
+            <Col className='d-flex align-items-start'>{statusComponent}</Col>
             {status === Order.OrderStatus.PREPARED &&
               props.loggedUser.role === UserRoles.EMPLOYEE && (
-                <Col md='auto' lg='auto' xl='auto'>
-                  <span className='d-flex justify-content-end'>
-                    <span
-                      className='px-1 change-status'
-                      onClick={() => setModalIsOpen(true)}
-                    >
-                      COMPLETE
-                    </span>
+                <Col className='d-flex justify-content-start'>
+                  <span
+                    className='px-0 mx-0 change-status'
+                    onClick={() => setModalIsOpen(true)}
+                  >
+                    COMPLETE
                   </span>
                 </Col>
               )}
@@ -121,9 +119,9 @@ function ClientOrderTableRow(props) {
             <Col className='d-flex align-items-center'>{statusComponent}</Col>
             {status === Order.OrderStatus.PREPARED &&
               props.loggedUser.role === UserRoles.EMPLOYEE && (
-                <Col className='d-flex justify-content-end'>
+                <Col className='d-flex justify-content-start'>
                   <span
-                    className='px-1 change-status'
+                    className='px-1 change-status mx-0'
                     onClick={() => setModalIsOpen(true)}
                   >
                     COMPLETE

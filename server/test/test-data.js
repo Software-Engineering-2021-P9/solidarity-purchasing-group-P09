@@ -1,6 +1,19 @@
 const { ObjectID } = require("bson");
 const dayjs = require("dayjs");
+
 const { getNextWeek, getCurrentWeek } = require("../services/time_service");
+
+exports.managersCollection = {
+  managers: [
+    {
+      _id: ObjectID("1187c957b288576ca26f8257"),
+      email: "manager1@test.com",
+      password: "$2a$10$AU6PIEG1tq1467LUurqOjuoKzdvdtZHTFnCh00YzNGm7zzf7wa0rq",
+      role: "manager",
+      fullName: "Mario Biondi",
+    },
+  ],
+};
 
 exports.employeesCollection = {
   employees: [

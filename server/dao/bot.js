@@ -12,7 +12,7 @@ exports.addTelegramUsers = (db, telegramUser) => {
 
 //Method used for testing
 exports.createUniqueTelegramUserIndex = (db) => {
-  //create text index
+  //create uniqe chatID index
   db.collection(telegramUserCollectionName).createIndex(
     { chatID: 1 },
     {

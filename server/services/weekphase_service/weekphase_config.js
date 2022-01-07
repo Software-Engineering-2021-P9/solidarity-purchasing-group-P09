@@ -90,9 +90,6 @@ NWC => Next Week for Clients
 //    - Can update pickup time (NWC)
 function weekphaseOneHandler() {
   console.log("weekphase-1", dayjs().toISOString());
-  //bot needs to write to every clients about the possibility to make new ordes
-  console.log("BOT devi scrivere");
-  bot.WriteList();
 }
 
 // Weekphase 2 (SUN 23:00 - MON 09:00):
@@ -197,4 +194,7 @@ function weekphaseEightHandler() {
 //    - Can update pickup time (NWC)
 function weekphaseNineHandler() {
   console.log("weekphase-9", dayjs().toISOString());
+
+  //bot needs to write to every clients about the possibility to make new ordes
+  bot.WriteList();
 }

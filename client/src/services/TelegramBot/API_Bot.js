@@ -34,7 +34,6 @@ exports.addTelegramUsers = async function (chatID) {
     case 400:
       throw new Error("Validation error occurred");
     case 200:
-      console.log(response.data);
       return response.data;
     default:
       throw new Error("An error occurred during telegram users post");

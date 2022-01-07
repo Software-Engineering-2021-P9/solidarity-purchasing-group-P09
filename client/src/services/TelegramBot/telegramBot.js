@@ -29,7 +29,7 @@ bot.on("message", async (ctx) => {
 
 writeProductList = async function (id) {
   const prods = await API.findProducts();
-  //console.log(prods);
+
   await bot.telegram.sendMessage(
     id,
     "‼ These are the available products for the next week 🛒\nGo see our website for more info\n<a href='https://spg-prod.herokuapp.com'>SPG</a>",

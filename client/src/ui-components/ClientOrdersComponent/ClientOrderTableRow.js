@@ -158,14 +158,15 @@ function PickUpSlot(props) {
   };
   return (
     <Row>
-      {props.small && (
-        <Col sm='auto' xs='auto'>
-          {pinMapSmallIcon}
-        </Col>
-      )}
-      <Col xs='auto'>{DayString()}</Col>
-      <Col>
-        {timeIcon} {hour}:{minute}{" "}
+      <Col sm='auto' xs='auto'>
+        {pinMapSmallIcon}
+      </Col>
+
+      <Col xs='4' sm='2' md='4'>
+        {DayString()}
+      </Col>
+      <Col className='d-flex align-items-center'>
+        {timeIcon} &nbsp; {hour}:{minute}{" "}
       </Col>
     </Row>
   );
@@ -174,11 +175,9 @@ function PickUpSlot(props) {
 function ShipmentSlot(props) {
   return (
     <Row>
-      {props.small && (
-        <Col sm='auto' xs='auto'>
-          {shipmentIcon}
-        </Col>
-      )}
+      <Col sm='auto' xs='auto'>
+        {shipmentIcon}
+      </Col>
 
       <Col xs='auto'>{props.address}</Col>
     </Row>

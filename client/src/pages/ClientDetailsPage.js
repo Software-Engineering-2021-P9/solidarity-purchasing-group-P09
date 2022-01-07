@@ -153,7 +153,7 @@ function ClientDetailsPage(props) {
       ) : (
         <>
           <Row>
-            <h1 className='title'>Client Details</h1>
+            <h1 className='title title-font'>Client Details</h1>
           </Row>
           <Row className='justify-content-between pt-2'>
             <Col className=''>

@@ -10,6 +10,8 @@ import {
   listIcon,
   pinMapSmallIcon,
   statusIcon,
+  shipmentIcon,
+  timeIcon,
 } from "../icons";
 import dayjs from "dayjs";
 import UserRoles from "../../services/models/UserRoles";
@@ -41,9 +43,15 @@ function ClientOrderTableRow(props) {
         </Col>
         <Col md='3' lg='3' xl='3' className='mx-0 px-0'>
           {props.order.shipmentInfo.type === "shipment" ? (
-            `S - ${props.order.shipmentInfo.address}`
+            <ShipmentSlot
+              address={props.order.shipmentInfo.address}
+              small={false}
+            />
           ) : (
-            <PickUpSlot pickUpSlot={props.order.shipmentInfo.pickUpSlot} />
+            <PickUpSlot
+              pickUpSlot={props.order.shipmentInfo.pickUpSlot}
+              small={false}
+            />
           )}
         </Col>
         <Col md='3' lg='3' xl='3' className='mx-0 px-0'>
@@ -99,15 +107,18 @@ function ClientOrderTableRow(props) {
             </Col>
           </Row>
           <Row>
-            <Col sm='auto' xs='auto'>
-              {pinMapSmallIcon}{" "}
-            </Col>
             <Col>
               {" "}
               {props.order.shipmentInfo.type === "shipment" ? (
-                `S - ${props.order.shipmentInfo.address}`
+                <ShipmentSlot
+                  address={props.order.shipmentInfo.address}
+                  small={true}
+                />
               ) : (
-                <PickUpSlot pickUpSlot={props.order.shipmentInfo.pickUpSlot} />
+                <PickUpSlot
+                  pickUpSlot={props.order.shipmentInfo.pickUpSlot}
+                  small={true}
+                />
               )}
             </Col>
           </Row>
@@ -131,7 +142,7 @@ function ClientOrderTableRow(props) {
                     className='px-1 change-status'
                     onClick={() => setModalIsOpen(true)}
                   >
-                    Change Status
+                    COMPLETE
                   </span>
                 </Col>
               )}
@@ -149,13 +160,13 @@ function PickUpSlot(props) {
   const DayString = () => {
     switch (day) {
       case "3":
-        return "WED";
+        return "Wednesday";
 
       case "4":
-        return "THU";
+        return "Thursday";
 
       case "5":
-        return "FRI";
+        return "Friday";
 
       default:
         break;
@@ -163,11 +174,29 @@ function PickUpSlot(props) {
   };
   return (
     <Row>
+      {props.small && (
+        <Col sm='auto' xs='auto'>
+          {pinMapSmallIcon}
+        </Col>
+      )}
       <Col xs='auto'>{DayString(day)}</Col>
       <Col>
-        {" "}
-        {hour}:{minute}{" "}
+        {/*props.small &&*/ timeIcon} {hour}:{minute}{" "}
       </Col>
+    </Row>
+  );
+}
+
+function ShipmentSlot(props) {
+  return (
+    <Row>
+      {props.small && (
+        <Col sm='auto' xs='auto'>
+          {shipmentIcon}
+        </Col>
+      )}
+
+      <Col xs='auto'>{props.address}</Col>
     </Row>
   );
 }

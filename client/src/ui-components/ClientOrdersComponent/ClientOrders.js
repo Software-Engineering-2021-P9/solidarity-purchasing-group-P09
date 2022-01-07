@@ -8,6 +8,7 @@ import {
   listIcon,
   pinMapSmallIcon,
   statusIcon,
+  shipmentIcon,
 } from "../icons";
 function ClientOrders(props) {
   return (
@@ -27,7 +28,7 @@ function ClientOrders(props) {
                 {calendarIcon} Date
               </Col>
               <Col md='3' lg='3' xl='3' className='mx-0 px-0'>
-                {pinMapSmallIcon} Pick up location
+                {pinMapSmallIcon} Pick up | {shipmentIcon} Shipment
               </Col>
               <Col md='3' lg='3' xl='3' className='mx-0 px-0'>
                 {statusIcon} Status

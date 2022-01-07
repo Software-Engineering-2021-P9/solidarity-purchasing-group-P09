@@ -51,3 +51,8 @@
   font-weight: 600;
   margin-left: 1px;
 }
+
+.form-size {
+  min-width: 150px !important;
+  max-width: 150px !important;
+}

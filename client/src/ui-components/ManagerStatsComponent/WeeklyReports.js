@@ -33,6 +33,7 @@ function WeeklyReports(props) {
     </>
   );
 }
+
 function UnretrievedWeeklyBar(props) {
   return <></>;
 }
@@ -43,7 +44,7 @@ function WeeklyForm(props) {
       <Row>
         <InputGroup className="my-3">
           <FormControl
-            className="ml-3"
+            className="ml-3 form-size"
             type="number"
             size="sm"
             step={1}
@@ -55,7 +56,7 @@ function WeeklyForm(props) {
             }}
           />
           <FormControl
-            className="mx-3"
+            className="mx-3 form-size"
             type="number"
             size="sm"
             step={1}

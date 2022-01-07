@@ -15,6 +15,7 @@ function ManagerOrdersStatsPage(props) {
 
   const [week, setWeek] = useState(1);
   const [year, setYear] = useState(2022);
+  const [month, setMonth] = useState(1);
   const [typeReports, setTypeReports] = useState(0); // 0 weekly, 1 monthly
 
   return (
@@ -46,7 +47,12 @@ function ManagerOrdersStatsPage(props) {
           </>
         ) : (
           <>
-            <MonthlyReports />
+            <MonthlyReports
+              month={month}
+              year={year}
+              setMonth={setMonth}
+              setYear={setYear}
+            />
           </>
         )}
       </Row>

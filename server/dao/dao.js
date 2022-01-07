@@ -7,6 +7,8 @@ const {
   getEmployeeByEmail,
 } = require("./employee");
 
+const { getManagerByID, getManagerByEmail } = require("./manager");
+
 const { getFarmerByID, getFarmerByEmail } = require("./farmer");
 
 const {
@@ -51,6 +53,7 @@ const {
 const { ClientInfo } = require("../models/client_info");
 const { EmployeeInfo } = require("../models/employee_info");
 const { FarmerInfo } = require("../models/farmer_info");
+const { ManagerInfo } = require("../models/manager_info");
 
 // DAO initialization
 // Only one instance can be open at a time. Subsequent calls has no effect.
@@ -114,9 +117,12 @@ exports.signupClient = (fullName, phoneNumber, email, password, address) =>
 exports.findClients = (searchString) => findClients(db, searchString);
 exports.addFundToWallet = (clientID, increaseBy) =>
   addFundToWallet(db, clientID, increaseBy);
-
 exports.createClientsTextSearchIndexes = () =>
   createClientsTextSearchIndexes(db);
+
+//Manager
+exports.getManagerByID = (managerID) => getManagerByID(db, managerID);
+exports.getManagerByEmail = (email) => getManagerByEmail(db, email);
 
 // Product
 exports.getProductByID = (productID) => getProductByID(db, productID);
@@ -176,17 +182,19 @@ exports.getOrdersByClientIDList = (clientIDList) =>
   getOrdersByClientIDList(db, clientIDList);
 exports.updateOrders = (orders) => updateOrders(db, orders);
 
-// User (Client, Farmer, Employee)
+// User (Client, Farmer, Employee, Manager)
 exports.getUserByEmail = async (email) => {
   let usersFound = await Promise.all([
     getClientByEmail(db, email),
     getFarmerByEmail(db, email),
     getEmployeeByEmail(db, email),
-  ]).then(([clientInfo, farmerInfo, employeeInfo]) => {
+    getManagerByEmail(db, email),
+  ]).then(([clientInfo, farmerInfo, employeeInfo, managerInfo]) => {
     let users = [];
     if (clientInfo) users.push(ClientInfo.fromMongoJSON(clientInfo));
     if (farmerInfo) users.push(FarmerInfo.fromMongoJSON(farmerInfo));
     if (employeeInfo) users.push(EmployeeInfo.fromMongoJSON(employeeInfo));
+    if (managerInfo) users.push(ManagerInfo.fromMongoJSON(managerInfo));
     return users;
   });
 

@@ -9,7 +9,7 @@ function WeeklyReports(props) {
       <Row className="my-5">
         <div className="title-reports">Weekly Reports</div>
       </Row>
-      <Row>
+      <Row className="mx-1">
         <Col className="container-this-week px-4 py-3" sm="auto" md="auto">
           <Row>
             <Col className="total-orders">15%</Col>
@@ -26,7 +26,9 @@ function WeeklyReports(props) {
           />
         </Col>
       </Row>
-      <Row>Number of unretrieved orders per week</Row>
+      <Row className="stats-subtitle my-5 mx-1">
+        Number of unretrieved orders per week
+      </Row>
       <Row>
         <UnretrievedWeeklyBar />
       </Row>

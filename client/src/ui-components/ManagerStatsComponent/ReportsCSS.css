@@ -44,6 +44,7 @@
   border: 1px solid #d8d8d8;
   box-sizing: border-box;
   border-radius: 15px;
+  min-width: 300px;
 }
 
 .comments-week-stats {
@@ -55,4 +56,13 @@
 .form-size {
   min-width: 150px !important;
   max-width: 150px !important;
+}
+
+.stats-subtitle {
+  font-family: Inter;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 18px;
+  line-height: 16px;
+  color: #635f46;
 }

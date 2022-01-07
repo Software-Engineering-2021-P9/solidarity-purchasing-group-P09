@@ -16,13 +16,13 @@ function MonthlyReports(props) {
       <Row className="my-5">
         <div className="title-reports">Monthly Reports</div>
       </Row>
-      <Row>
+      <Row className="mx-1">
         <Col className="container-this-week px-4 py-3" sm="auto" md="auto">
           <Row>
             <Col className="total-orders">15%</Col>
             <Col></Col>
           </Row>
-          <Row>of unretrieved orders this week</Row>
+          <Row>of unretrieved orders this month</Row>
         </Col>
         <Col className="mx-4" sm="auto" md="auto">
           <MonthlyForm
@@ -33,7 +33,9 @@ function MonthlyReports(props) {
           />
         </Col>
       </Row>
-      <Row>Number of unretrieved orders per month</Row>
+      <Row className="stats-subtitle my-5 mx-1">
+        Number of unretrieved orders per month
+      </Row>
     </>
   );
 }

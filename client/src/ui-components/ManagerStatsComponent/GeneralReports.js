@@ -10,7 +10,7 @@ function GeneralReports(props) {
       <Row className="my-3">
         <div className="title-reports">SPG Reports</div>
       </Row>
-      <Row className="my-3 d-flex align-items-center">
+      <Row className="my-3 mx-1 d-flex align-items-center">
         <Col md="auto" sm="auto">
           <Row>
             <Col className="icon-centre">{gridIcon}</Col>

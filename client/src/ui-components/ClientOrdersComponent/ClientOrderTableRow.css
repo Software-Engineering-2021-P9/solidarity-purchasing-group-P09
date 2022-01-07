@@ -11,6 +11,10 @@
   text-decoration-line: underline;
 }
 
+.smaller-font {
+  font-size: smaller;
+}
+
 @media only screen and (max-width: 1028px) {
   .container-sm {
     background: #fafafa;

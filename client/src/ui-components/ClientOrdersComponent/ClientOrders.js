@@ -17,7 +17,7 @@ function ClientOrders(props) {
         <h3 className='header-orders'>Client Previous Orders</h3>
       </Row>
       {props.orders.length > 0 ? (
-        <Row>
+        <Row className='bigger-font'>
           <Col className='table-orders table-container mx-0 px-3'>
             <Row className='table-header table-header-visibility mx-0 px-0'>
               <Col md='3' lg='3' xl='3' className='mx-0 px-0'>

@@ -83,7 +83,7 @@ function ClientOrderTableRow(props) {
           </Row>
         </Col>
       </Row>
-      <Row className='mx-0 px-0 container-sm table-cell-visibility-small'>
+      <Row className='mx-0 px-0 container-sm table-cell-visibility-small smaller-font'>
         <Col md='12'>
           <Row>
             <Col sm='auto' xs='auto'>

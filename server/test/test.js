@@ -7,7 +7,7 @@ const mongoUnit = require("mongo-unit");
 const testData = require("./test-data");
 
 const { OrderStatus } = require("../models/order");
-const passwordData = require("../password-settings.json");
+
 let dao = require("../dao/dao");
 
 // ----------------------------------
@@ -2017,7 +2017,7 @@ describe("User Login API tests:", () => {
           .post("/api/users/login")
           .send({
             username: "manager1@test.com",
-            password: passwordData.pass,
+            password: "123456789",
           })
           .end((err, res) => {
             expect(err).to.be.null;
@@ -2202,7 +2202,7 @@ describe("manager functions", function () {
     let managerInfo = new ManagerInfo(
       "2187c957b288576ca26f8257",
       "manager2@test.com",
-      passwordData.pass,
+      "123456789",
       "Manager 2"
     );
 
@@ -2231,7 +2231,7 @@ describe("manager functions", function () {
     let managerInfo = new ManagerInfo(
       "2187c957b288576ca26f8257",
       "manager2@test.com",
-      passwordData.pass,
+      "123456789",
       "Manager 2"
     );
 
@@ -2248,7 +2248,7 @@ describe("manager functions", function () {
     let obj = {
       id: "2187c957b288576ca26f8257",
       email: "manager2@test.com",
-      password: passwordData.pass,
+      password: "123456789",
       fullName: "Manager 2",
     };
 
@@ -2265,7 +2265,7 @@ describe("manager functions", function () {
     let obj = {
       id: "2187c957b288576ca26f8257",
       email: "manager2@test.com",
-      password: passwordData.pass,
+      password: "123456789",
       fullName: "Manager 2",
     };
 

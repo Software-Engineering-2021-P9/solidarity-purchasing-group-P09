@@ -2357,12 +2357,12 @@ describe("Telgeram BOT API tests:", () => {
     mongoUnit.load(testData.userTelegramCollection);
     dao.createUniqueTelegramUserIndex();
   });
-afterEach(() => {
-  mongoUnit.drop();
-  dao.close();
-});
+  afterEach(() => {
+    mongoUnit.drop();
+    dao.close();
+  });
 
-describe("POST /telegram/users", () => {
+  describe("POST /telegram/users", () => {
     it("it should write in the DB the new user", (done) => {
       chai
         .request(app)
@@ -2371,13 +2371,13 @@ describe("POST /telegram/users", () => {
         .end((err, res) => {
           expect(err).to.be.null;
           expect(res.status).to.be.equal(200);
-          expect(res.body).to.be.an("object");          
-expect(res.body.acknowledged).to.be.eql(true);
+          expect(res.body).to.be.an("object");
+          expect(res.body.acknowledged).to.be.eql(true);
           done();
         });
-    });    
+    });
 
-it("it should return an error if the chatID is not a integer", (done) => {
+    it("it should return an error if the chatID is not a integer", (done) => {
       chai
         .request(app)
         .post("/api/telegram/users")
@@ -2387,9 +2387,9 @@ it("it should return an error if the chatID is not a integer", (done) => {
           expect(res.status).to.be.equal(400);
           done();
         });
-    });    
+    });
 
-it("it should return an error if the chatID is already present in the DB", (done) => {
+    it("it should return an error if the chatID is already present in the DB", (done) => {
       chai
         .request(app)
         .post("/api/telegram/users")
@@ -2405,8 +2405,7 @@ it("it should return an error if the chatID is already present in the DB", (done
       dao.close();
       chai
         .request(app)
-
-.post("/api/telegram/users")
+        .post("/api/telegram/users")
         .send({ chatID: "100000000" })
         .end((err, res) => {
           expect(err).to.be.null;
@@ -2435,6 +2434,18 @@ it("it should return an error if the chatID is already present in the DB", (done
               chatID: 1322211351,
             },
           ]);
+          done();
+        });
+    });
+
+    it("it must fail when mongo fails", (done) => {
+      dao.close();
+      chai
+        .request(app)
+        .get("/api/telegram/users")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(500);
           done();
         });
     });

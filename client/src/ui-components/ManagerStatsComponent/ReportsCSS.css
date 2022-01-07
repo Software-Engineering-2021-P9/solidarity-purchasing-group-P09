@@ -1,0 +1,68 @@
+.title-reports {
+  font-family: Inter;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 30px;
+  line-height: 16px;
+  color: #635f46;
+}
+
+.total-orders {
+  font-family: Inter;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 26px;
+  margin-bottom: 5px;
+  color: #000000;
+}
+
+.comment-stats {
+  font-family: Inter;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 20px;
+  line-height: 16px;
+  color: #6a6764;
+}
+
+.icon-centre {
+  align-self: center;
+}
+
+.pie-chart {
+  width: 120px;
+  margin-right: 20px;
+  background-color: #d8d8d8;
+  border-radius: 50%;
+  padding: 3px;
+  height: fit-content;
+  margin-left: 12px;
+}
+
+.container-this-week {
+  background: #fafafa;
+  border: 1px solid #d8d8d8;
+  box-sizing: border-box;
+  border-radius: 15px;
+  min-width: 300px;
+}
+
+.comments-week-stats {
+  color: #6a6764;
+  font-weight: 600;
+  margin-left: 1px;
+}
+
+.form-size {
+  min-width: 150px !important;
+  max-width: 150px !important;
+}
+
+.stats-subtitle {
+  font-family: Inter;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 18px;
+  line-height: 16px;
+  color: #635f46;
+}

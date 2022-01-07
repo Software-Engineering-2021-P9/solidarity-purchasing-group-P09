@@ -2,6 +2,7 @@ const { ObjectID } = require("bson");
 const {
   getNextWeekClient,
   getCurrentWeekClient,
+  getCurrentWeekFarmer,
 } = require("../services/time_service");
 
 exports.employeesCollection = {
@@ -594,6 +595,101 @@ exports.productsAvailabilityCollection2 = {
       packaging: "1 units",
       quantity: 33,
       reservedQuantity: 0,
+    },
+  ],
+};
+
+let [currentWeekFarmer, currentYearFarmer] = getCurrentWeekFarmer();
+
+exports.confirmProductAvailabilityCollections = {
+  availabilities: [
+    {
+      _id: ObjectID("000000000000000000000001"),
+      farmerID: ObjectID("000000000000000000000001"),
+      productID: ObjectID("000000000000000000000001"),
+      week: currentWeekFarmer,
+      year: currentYearFarmer,
+      status: "waiting",
+      price: 3.5,
+      packaging: "100g",
+      quantity: 5,
+      reservedQuantity: 0,
+    },
+  ],
+  orders: [
+    {
+      _id: ObjectID("000000000000000000000001"),
+      clientID: ObjectID("000000000000000000000001"),
+      products: [
+        {
+          productID: ObjectID("000000000000000000000001"),
+          status: "waiting",
+          quantity: 3,
+          price: 3.5,
+          packaging: "100g",
+        },
+      ],
+      status: "waiting",
+      totalPrice: 15.5,
+      createdAt: "2022-01-06T16:47:07.829Z",
+      week: currentWeekFarmer,
+      year: currentYearFarmer,
+      shipmentInfo: {
+        type: "shipment",
+        address: "Asda",
+      },
+    },
+    {
+      _id: ObjectID("000000000000000000000002"),
+      clientID: ObjectID("000000000000000000000001"),
+      products: [
+        {
+          productID: ObjectID("000000000000000000000001"),
+          status: "waiting",
+          quantity: 3,
+          price: 3.5,
+          packaging: "100g",
+        },
+        {
+          productID: ObjectID("000000000000000000000002"),
+          status: "waiting",
+          quantity: 6,
+          price: 1,
+          packaging: "120g",
+        },
+      ],
+      status: "waiting",
+      totalPrice: 21.5,
+      createdAt: "2022-01-06T16:47:07.829Z",
+      week: currentWeekFarmer,
+      year: currentYearFarmer,
+      shipmentInfo: {
+        type: "pickup",
+        address: "Skylab, Via Washington 35, Pizzo Calabro (Store Address)",
+        pickUpSlot: "32312",
+      },
+    },
+    {
+      _id: ObjectID("000000000000000000000003"),
+      clientID: ObjectID("000000000000000000000001"),
+      products: [
+        {
+          productID: ObjectID("000000000000000000000001"),
+          status: "waiting",
+          quantity: 3,
+          price: 3.5,
+          packaging: "100g",
+        },
+      ],
+      status: "waiting",
+      totalPrice: 15.5,
+      createdAt: "2022-01-06T16:47:07.829Z",
+      week: currentWeekFarmer,
+      year: currentYearFarmer,
+      shipmentInfo: {
+        type: "shipment",
+        address: "Asda",
+      },
     },
   ],
 };

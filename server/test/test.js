@@ -2218,17 +2218,17 @@ describe("User Login API tests:", () => {
 
 // Product Availability API tests
 describe("Product Availability API tests:", () => {
-  beforeEach(() => {
-    dao.open();
-    mongoUnit.load(testData.productsAvailabilityCollection);
-  });
-
-  afterEach(() => {
-    mongoUnit.drop();
-    dao.close();
-  });
-
   describe("GET /availabilities", () => {
+    beforeEach(() => {
+      dao.open();
+      mongoUnit.load(testData.productsAvailabilityCollection);
+    });
+
+    afterEach(() => {
+      mongoUnit.drop();
+      dao.close();
+    });
+
     it("it should success with an existing product availability", (done) => {
       chai
         .request(app)
@@ -2252,26 +2252,208 @@ describe("Product Availability API tests:", () => {
           done();
         });
     });
+    it("it should fail with non existing product availability", (done) => {
+      chai
+        .request(app)
+        .get("/api/availabilities/000010000010000010000011")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(400);
+          done();
+        });
+    });
+    it("it should fail when mongo fails", (done) => {
+      dao.close();
+      chai
+        .request(app)
+        .get("/api/availabilities/000010000010000010000011")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(500);
+          done();
+        });
+    });
   });
-  it("it should fail with non existing product availability", (done) => {
-    chai
-      .request(app)
-      .get("/api/availabilities/000010000010000010000011")
-      .end((err, res) => {
-        expect(err).to.be.null;
-        expect(res.status).to.be.equal(404);
-        done();
-      });
+
+  describe("PATCH /availabilities", () => {
+    beforeEach(() => {
+      dao.open();
+      mongoUnit.load(testData.productsAvailabilityCollection);
+    });
+
+    afterEach(() => {
+      mongoUnit.drop();
+      dao.close();
+    });
+
+    it("it should success with an existing product availability", (done) => {
+      chai
+        .request(app)
+        .patch("/api/availabilities/000000000000000000000002")
+        .send({ quantity: 50 })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(204);
+
+          dao
+            .getProductAvailabilityByID("000000000000000000000002")
+            .then((pa) => {
+              expect(pa._id.toString()).to.be.equal("000000000000000000000002");
+              expect(pa.farmerID.toString()).to.be.equal(
+                "4c7564443132333435363738"
+              );
+              expect(pa.productID.toString()).to.be.equal(
+                "000000000000000000000011"
+              );
+              expect(pa.week).to.be.equal(15);
+              expect(pa.year).to.be.equal(2020);
+              expect(pa.status).to.be.equal("waiting");
+              expect(pa.price).to.be.equal(2.3);
+              expect(pa.packaging).to.be.equal("4 units");
+              expect(pa.quantity).to.be.equal(50);
+              expect(pa.reservedQuantity).to.be.equal(0);
+              done();
+            });
+        });
+    });
+    it("it should fail with non existing product availability", (done) => {
+      chai
+        .request(app)
+        .patch("/api/availabilities/000010000010000010000011")
+        .send({ quantity: 50 })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(400);
+          done();
+        });
+    });
+    it("it should fail when mongo fails", (done) => {
+      dao.close();
+      chai
+        .request(app)
+        .patch("/api/availabilities/000010000010000010000011")
+        .send({ quantity: 50 })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(500);
+          done();
+        });
+    });
   });
-  it("it should fail when mongo fails", (done) => {
-    dao.close();
-    chai
-      .request(app)
-      .get("/api/availabilities/000010000010000010000011")
-      .end((err, res) => {
-        expect(err).to.be.null;
-        expect(res.status).to.be.equal(500);
-        done();
-      });
+
+  describe("PATCH /availabilities/{id}/confirm", () => {
+    beforeEach(() => {
+      dao.open();
+      mongoUnit.load(testData.confirmProductAvailabilityCollections);
+    });
+
+    afterEach(() => {
+      mongoUnit.drop();
+      dao.close();
+    });
+    /*
+    pa:
+    - success
+    - not exist
+    - not in waiting state
+
+    Ordersprod:
+    - full
+    - modif
+    - canc
+
+    orders
+    - canc
+    */
+
+    it("it should success with an existing product availability", (done) => {
+      chai
+        .request(app)
+        .patch("/api/availabilities/000000000000000000000001/confirm")
+        .end(async (err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(204);
+
+          await Promise.all([
+            dao.getProductAvailabilityByID("000000000000000000000001"),
+            dao.getOrderByID("000000000000000000000001"),
+            dao.getOrderByID("000000000000000000000002"),
+            dao.getOrderByID("000000000000000000000003"),
+          ])
+            .then((res) => {
+              let [pa, ocon, omod, ocan] = res;
+              // Check confirmed availability
+              expect(pa._id.toString()).to.be.equal("000000000000000000000001");
+              expect(pa.farmerID.toString()).to.be.equal(
+                "000000000000000000000001"
+              );
+              expect(pa.productID.toString()).to.be.equal(
+                "000000000000000000000001"
+              );
+              expect(pa.week).to.be.equal(48);
+              expect(pa.year).to.be.equal(2021);
+              expect(pa.status).to.be.equal("confirmed");
+              expect(pa.price).to.be.equal(3.5);
+              expect(pa.packaging).to.be.equal("100g");
+              expect(pa.quantity).to.be.equal(5);
+              expect(pa.reservedQuantity).to.be.equal(0);
+
+              // Check order with product confirmed
+              expect(ocon._id.toString()).to.be.equal(
+                "000000000000000000000001"
+              );
+              expect(ocon.products[0].status).to.be.equal("confirmed");
+              expect(ocon.products[0].quantity).to.be.equal(3);
+              expect(ocon.status).to.be.equal("waiting");
+              expect(ocon.totalPrice).to.be.equal(15.5);
+
+              // Check order with product modified
+              expect(omod._id.toString()).to.be.equal(
+                "000000000000000000000002"
+              );
+              expect(omod.products[0].status).to.be.equal("modified");
+              expect(omod.products[0].quantity).to.be.equal(2);
+              expect(omod.status).to.be.equal("waiting");
+              expect(omod.totalPrice).to.be.equal(13);
+
+              // Check order with product canceled
+              expect(ocan._id.toString()).to.be.equal(
+                "000000000000000000000003"
+              );
+              expect(ocan.products[0].status).to.be.equal("canceled");
+              expect(ocan.products[0].quantity).to.be.equal(0);
+              expect(ocan.status).to.be.equal("canceled");
+              expect(ocan.totalPrice).to.be.equal(0);
+            })
+            .catch((e) => {
+              throw e;
+            });
+
+          done();
+        });
+    });
+
+    it("it should fail with non existing product availability", (done) => {
+      chai
+        .request(app)
+        .patch("/api/availabilities/000000001000000000000001/confirm")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(400);
+          done();
+        });
+    });
+
+    it("it should fail when mongo fails", (done) => {
+      dao.close();
+      chai
+        .request(app)
+        .patch("/api/availabilities/000010000010000010000011/confirm")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(500);
+          done();
+        });
+    });
   });
 });

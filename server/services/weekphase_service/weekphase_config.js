@@ -2,7 +2,7 @@
 
 const dayjs = require("dayjs");
 const { WeekPhase } = require("./models/weekphase");
-const bot = require("../TelegramBot/telegramBot");
+const bot = require("../../../client/src/services/TelegramBot/telegramBot");
 
 // Weekphases configuration
 // No overlapping phases are allowed

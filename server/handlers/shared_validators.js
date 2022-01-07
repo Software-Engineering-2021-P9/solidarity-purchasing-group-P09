@@ -12,7 +12,7 @@ exports.checkValidationErrorMiddleware = (req, res, next) => {
 };
 
 // shared validators
-
+exports.managerIDPathValidator = param("managerID").exists().isMongoId();
 exports.employeeIDPathValidator = param("employeeID").exists().isMongoId();
 exports.clientIDPathValidator = param("clientID").exists().isMongoId();
 exports.productIDPathValidator = param("productID").exists().isMongoId();

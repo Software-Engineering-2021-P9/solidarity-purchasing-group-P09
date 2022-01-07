@@ -2283,3 +2283,67 @@ describe("manager functions", function () {
     expect(user.role).to.be.equal("manager");
   });
 });
+
+// Employees API tests
+describe("Managers API tests:", () => {
+  beforeEach(() => {
+    dao.open();
+    mongoUnit.load(testData.managersCollection);
+  });
+
+  afterEach(() => {
+    mongoUnit.drop();
+    dao.close();
+  });
+
+  describe("GET /managers/:managerID", () => {
+    it("it should retrieve the manager associated to the given ID", (done) => {
+      chai
+        .request(app)
+        .get("/api/managers/1187c957b288576ca26f8257")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          expect(res.body).to.be.an("object");
+          expect(res.body.fullName).to.be.equal("Mario Biondi");
+          done();
+        });
+    });
+
+    it("it should fail when the manager associated to the given ID doesn't exist", (done) => {
+      chai
+        .request(app)
+        .get("/api/managers/9997c957b288576ca26f8257")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(404);
+          done();
+        });
+    });
+
+    it("it must fail when an invalid Mongo ID is passed", (done) => {
+      chai
+        .request(app)
+        .get("/api/employees/test")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(400);
+
+          done();
+        });
+    });
+
+    it("it must fail when mongo fails", (done) => {
+      dao.close();
+      chai
+        .request(app)
+        .get("/api/managers/6187c957b288576ca26f8257")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(500);
+
+          done();
+        });
+    });
+  });
+});

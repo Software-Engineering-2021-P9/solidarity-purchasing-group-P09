@@ -3,16 +3,13 @@ const API = require("./API_Bot");
 const { Telegraf } = require("telegraf");
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
-let users = [];
 //Client sends start and will receive a welcome message,
-//we can keep users ID to use them later with users.push(ctx.chat.id);
 bot.command("start", (ctx) => {
   console.log(ctx.from);
-  users.push(ctx.chat.id);
+  API.addTelegramUsers(ctx.chat.id);
   bot.telegram.sendMessage(
     ctx.chat.id,
-    "Hello there! Welcome to SPG telegram bot.",
-    {}
+    "Hello there! Welcome to SPG telegram bot."
   );
 });
 
@@ -63,12 +60,9 @@ writeProductList = async function (id) {
 };
 
 exports.WriteList = async function () {
-  console.log("ora scrivo a:");
-
-  users.map((id) => console.log(id));
-
+  const users = await API.getTelegramUsers();
   users.map((id) => {
-    writeProductList(id);
+    writeProductList(id.chatID);
   });
 };
 
@@ -100,53 +94,3 @@ const getLeftQuantity = (lq) => {
 };
 
 bot.launch();
-
-/*
-📊🛒🔢🎁⚖
-const TelegramBot = require("node-telegram-bot-api");
-const token = "5046161728:AAEWfW7N6FBKViW530nW2qCufa4tZKHF-OA";
-const bot = new TelegramBot(token, { polling: true });
-const API = require("./API_Bot");
-
-/*
-bot.on("message", async (ctx.message) => {
-  var hi = "hi";
-  if (ctx.message.text.toString().toLowerCase().indexOf(hi) === 0) {
-    ctx.reply( "Hello dear user");
-  }
-
-  var bye = "bye";
-  if (ctx.message.text.toString().toLowerCase().includes(bye)) {
-    ctx.reply( "Hope to see you around again , Bye");
-  }
-
-  var products = "products";
-  if (ctx.message.text.toString().toLowerCase().includes(products)) {
-    bot.sendMessage(
-      ctx.message.chat.id,
-      "These are the available products for the next week:"
-    );
-    const prods = await API.findProducts();
-    console.log(prods);
-    prods.map((element) => {
-      const text =
-        "🎁:*" +
-        element.name +
-        "*\n" +
-        "🔎:" +
-        element.description +
-        "\n" +
-        "💰" +
-        element.availability.price +
-        "€" +
-        "\n" +
-        "📊: " +
-        element.availability.quantity +
-        "\n" +
-        "📦: " +
-        element.availability.packaging;
-      ctx.reply( text, { parse_mode: "MarkdownV2" });
-    });
-  }
-});
-*/

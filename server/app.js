@@ -27,6 +27,8 @@ var farmerHandlers = require("./handlers/farmer");
 
 var weekphaseHandlers = require("./handlers/weekphase");
 
+var botHandlers = require("./handlers/bot");
+
 const {
   sessionSettings,
   passportStrategy,
@@ -231,6 +233,19 @@ app.patch(
   weekphaseHandlers.setWeekphaseOverrideValidatorChain,
   checkValidationErrorMiddleware,
   weekphaseHandlers.setWeekphaseOverrideHandler
+);
+
+app.get(
+  buildAPIPath("/telegram/users"),
+  checkValidationErrorMiddleware,
+  botHandlers.getTelegramUsersHandler
+);
+
+app.post(
+  buildAPIPath("/telegram/users"),
+  botHandlers.addTelegramUsersValidatorChain,
+  checkValidationErrorMiddleware,
+  botHandlers.addTelegramUsersHandler
 );
 
 // Serve client app

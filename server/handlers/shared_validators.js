@@ -245,3 +245,8 @@ exports.availabilityPackagingBodyValidator = body("packaging")
   .bail()
   .trim()
   .escape();
+
+exports.telegramChatIDValidator = body("chatID")
+  .notEmpty()
+  .bail()
+  .isInt({ min: 0 });

@@ -36,7 +36,7 @@ exports.getFarmerProductsHandler = async function (req, res, next) {
   try {
     productsAvailabilitiesResult = await dao.getProductsAvailability(
       productsResult.map((product) => product._id),
-      ...getNextWeekClient(dayjs())
+      ...getNextWeekClient()
     );
   } catch (err) {
     console.error(

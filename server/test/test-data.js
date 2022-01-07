@@ -122,7 +122,7 @@ exports.clientsCollection = {
       //role: "client",
       fullName: " Ehsan",
       phoneNumber: 3205758803,
-      //password: "$2a$10$AU6PIEG1tq1467LUurqOjuoKzdvdtZHTFnCh00YzNGm7zzf7wa0rq",
+      password: "$2a$10$AU6PIEG1tq1467LUurqOjuoKzdvdtZHTFnCh00YzNGm7zzf7wa0rq",
       address: "fsfsaf dsafsa fsafsa,26 Milano,12342",
       wallet: 55.5,
     },

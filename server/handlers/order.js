@@ -40,110 +40,115 @@ exports.createOrderValidatorChain = [
 ];
 
 exports.createOrderHandler = async function (req, res, next) {
-  await dao.runInTransaction(async (session) => {
-    // Get products availability for each of the order products
-    const orderProducts = req.body.products.map((op) =>
-      OrderProduct.fromMongoJSON(op)
-    );
-    let result;
-    try {
-      result = await dao.getProductsAvailability(
-        orderProducts.map((p) => new ObjectID(p.productID)),
-        ...getNextWeekClient()
+  try {
+    await dao.runInTransaction(async (session) => {
+      // Get products availability for each of the order products
+      const orderProducts = req.body.products.map((op) =>
+        OrderProduct.fromMongoJSON(op)
       );
-    } catch (err) {
-      console.error(
-        `CreateOrder() -> couldn't retrieve order products availabilities: ${err}`
-      );
-      await session.abortTransaction();
-      return res.status(500).end();
-    }
-
-    let productAvailabilities = result.map((r) =>
-      ProductAvailability.fromMongoJSON(r)
-    );
-
-    let totalPrice =
-      req.body.shipmentType === ShipmentType.SHIPMENT ? 5.0 : 0.0;
-
-    for (let orderProduct of orderProducts) {
-      let productAvailability = productAvailabilities.find(
-        (pa) => pa.productID.toString() === orderProduct.productID.toString()
-      );
-
-      // Check if product is still available
-      if (productAvailability.leftQuantity < orderProduct.quantity) {
+      let result;
+      try {
+        result = await dao.getProductsAvailability(
+          orderProducts.map((p) => new ObjectID(p.productID)),
+          ...getNextWeekClient()
+        );
+      } catch (err) {
         console.error(
-          `CreateOrder() -> product availability is lesser than required`
+          `CreateOrder() -> couldn't retrieve order products availabilities: ${err}`
         );
         await session.abortTransaction();
-        return res.status(400).end();
+        return res.status(500).end();
       }
 
-      // Update reservedQuantity
-      productAvailability.reservedQuantity += orderProduct.quantity;
-
-      // Update order products missing fields
-      orderProduct.status =
-        productAvailability.status === ProductAvailabilityStatus.CONFIRMED
-          ? OrderProductStatus.CONFIRMED
-          : OrderProductStatus.WAITING;
-      orderProduct.price = productAvailability.price;
-      orderProduct.packaging = productAvailability.packaging;
-
-      // Calculate new total
-      totalPrice += orderProduct.quantity * orderProduct.price;
-    }
-
-    // Update products availabilities
-    try {
-      result = await dao.updateProductAvailabilities(productAvailabilities);
-    } catch (err) {
-      console.error(
-        `CreateOrder() -> couldn't update product availabilities: ${err}`
+      let productAvailabilities = result.map((r) =>
+        ProductAvailability.fromMongoJSON(r)
       );
-      await session.abortTransaction();
-      return res.status(500).end();
-    }
 
-    // Build new order
-    const [week, year] = getNextWeekClient();
+      let totalPrice =
+        req.body.shipmentType === ShipmentType.SHIPMENT ? 5.0 : 0.0;
 
-    const order = {
-      clientID: ObjectID(req.body.clientID.toString()),
-      products: orderProducts?.map(
-        (op) =>
-          new OrderProduct(
-            ObjectID(op.productID.toString()),
-            op.status,
-            op.quantity,
-            op.price,
-            op.packaging
-          )
-      ),
-      status: OrderStatus.WAITING,
-      totalPrice: totalPrice,
-      createdAt: getNowDate().toISOString(),
-      week: week,
-      year: year,
-      shipmentInfo: new ShipmentInfo(
-        req.body.shipmentInfo.type.toString(),
-        req.body.shipmentInfo.pickUpSlot?.toString(),
-        req.body.shipmentInfo.address.toString()
-      ),
-    };
+      for (let orderProduct of orderProducts) {
+        let productAvailability = productAvailabilities.find(
+          (pa) => pa.productID.toString() === orderProduct.productID.toString()
+        );
 
-    // Insert the new order
-    try {
-      result = await dao.createOrder(order);
-    } catch (err) {
-      console.error(`CreateOrder() -> couldn't create order: ${err}`);
-      await session.abortTransaction();
-      return res.status(500).end();
-    }
+        // Check if product is still available
+        if (productAvailability.leftQuantity < orderProduct.quantity) {
+          console.error(
+            `CreateOrder() -> product availability is lesser than required`
+          );
+          await session.abortTransaction();
+          return res.status(400).end();
+        }
 
-    return res.json({ id: result.insertedId });
-  });
+        // Update reservedQuantity
+        productAvailability.reservedQuantity += orderProduct.quantity;
+
+        // Update order products missing fields
+        orderProduct.status =
+          productAvailability.status === ProductAvailabilityStatus.CONFIRMED
+            ? OrderProductStatus.CONFIRMED
+            : OrderProductStatus.WAITING;
+        orderProduct.price = productAvailability.price;
+        orderProduct.packaging = productAvailability.packaging;
+
+        // Calculate new total
+        totalPrice += orderProduct.quantity * orderProduct.price;
+      }
+
+      // Update products availabilities
+      try {
+        result = await dao.updateProductAvailabilities(productAvailabilities);
+      } catch (err) {
+        console.error(
+          `CreateOrder() -> couldn't update product availabilities: ${err}`
+        );
+        await session.abortTransaction();
+        return res.status(500).end();
+      }
+
+      // Build new order
+      const [week, year] = getNextWeekClient();
+
+      const order = {
+        clientID: ObjectID(req.body.clientID.toString()),
+        products: orderProducts?.map(
+          (op) =>
+            new OrderProduct(
+              ObjectID(op.productID.toString()),
+              op.status,
+              op.quantity,
+              op.price,
+              op.packaging
+            )
+        ),
+        status: OrderStatus.WAITING,
+        totalPrice: totalPrice,
+        createdAt: getNowDate().toISOString(),
+        week: week,
+        year: year,
+        shipmentInfo: new ShipmentInfo(
+          req.body.shipmentInfo.type.toString(),
+          req.body.shipmentInfo.pickUpSlot?.toString(),
+          req.body.shipmentInfo.address.toString()
+        ),
+      };
+
+      // Insert the new order
+      try {
+        result = await dao.createOrder(order);
+      } catch (err) {
+        console.error(`CreateOrder() -> couldn't create order: ${err}`);
+        await session.abortTransaction();
+        return res.status(500).end();
+      }
+
+      return res.json({ id: result.insertedId });
+    });
+  } catch (err) {
+    console.error(`CreateOrder() -> Error initializing transaction`);
+    return res.status(500).end();
+  }
 };
 
 // -------------------

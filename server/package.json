@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node app.js",
-    "test": "nyc --reporter lcov mocha ./test/**/* --exit"
+    "test": "nyc --reporter lcov mocha ./test/**/* --exit --timeout 10000"
   },
   "dependencies": {
     "bcrypt": "^5.0.1",

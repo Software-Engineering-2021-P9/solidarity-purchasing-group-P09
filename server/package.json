@@ -7,6 +7,7 @@
     "test": "nyc --reporter lcov mocha ./test/**/* --exit"
   },
   "dependencies": {
+    "axios": "^0.24.0",
     "bcrypt": "^5.0.1",
     "chai": "^4.3.4",
     "chai-http": "^4.3.0",
@@ -27,7 +28,8 @@
     "passport": "^0.5.0",
     "passport-local": "^1.0.0",
     "rewire": "^3.0.2",
-    "sinon": "^12.0.1"
+    "sinon": "^12.0.1",
+    "telegraf": "^4.5.2"
   },
   "devDependencies": {
     "mongo-unit": "^2.0.1"

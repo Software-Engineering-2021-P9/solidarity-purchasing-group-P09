@@ -1,5 +1,5 @@
 var dao = require("../dao/dao");
-const { ManagerInfo } = require("../models/manager_info");
+const { ManagerInfoResult } = require("../models/manager_info_result");
 
 const { managerIDPathValidator } = require("./shared_validators");
 exports.getManagerByIDValidatorChain = [managerIDPathValidator];
@@ -18,5 +18,5 @@ exports.getManagerByIDHandler = async function (req, res, next) {
     return res.status(404).end();
   }
 
-  return res.json(ManagerInfo.fromMongoJSON(result));
+  return res.json(ManagerInfoResult.fromMongoJSON(result));
 };

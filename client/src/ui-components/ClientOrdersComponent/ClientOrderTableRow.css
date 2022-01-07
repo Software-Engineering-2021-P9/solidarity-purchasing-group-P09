@@ -1,8 +1,20 @@
 .table-row-status-prepared {
-  color: #ff9e0a !important;
+  color: rgb(130, 156, 44);
+}
+.table-row-status-waiting {
+  color: #635f46;
+}
+.table-row-status-confirmed {
+  color: darkolivegreen;
 }
 .table-row-status-done {
-  color: green !important;
+  color: rgb(68, 146, 4);
+}
+.table-row-status-not-covered {
+  color: rgb(218, 104, 47);
+}
+.table-row-status-pending-cancelation {
+  color: rgb(211, 2, 2);
 }
 .change-status {
   color: rgba(99, 95, 70, 1);

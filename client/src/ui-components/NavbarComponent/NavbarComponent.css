@@ -32,3 +32,14 @@ a:not(.navbar-logo) {
 .navbar-toggler-icon {
   margin-left: 0;
 }
+
+#popover-positioned-left {
+  background-color: #635f46;
+  border: 2px solid #f6dec5;
+}
+.popover-body {
+  color: #f6dec5 !important;
+}
+.popover-arrow::after {
+  border-left-color: #f6dec5 !important;
+}

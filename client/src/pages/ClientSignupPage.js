@@ -134,8 +134,11 @@ function ClientForm(props) {
     ) {
       return false;
     }
-    if(props.authContext.currentUser===null && !validator.isLength(clientParams.password, { min: 6 })) {
-      return false; 
+    if (
+      props.authContext.currentUser === null &&
+      !validator.isLength(clientParams.password, { min: 6 })
+    ) {
+      return false;
     }
     return true;
   };
@@ -277,9 +280,9 @@ function ClientForm(props) {
 
   return (
     <>
-      {success ? <Redirect to='/' /> : ""}
+      {success ? <Redirect to="/" /> : ""}
       {error ? (
-        <Alert variant='danger' onClose={() => setError("")} dismissible>
+        <Alert variant="danger" onClose={() => setError("")} dismissible>
           {errorMessage}
           {errorMessage1}
           {errorMessage2}
@@ -296,80 +299,92 @@ function ClientForm(props) {
         " "
       )}
 
-      <Container className='content my-3'>
+      <Container
+        className="content my-3"
+        style={{ textAlign: "center", maxWidth: "350px" }}
+      >
         <Form noValidate onSubmit={handleSubmit}>
-          <h4 className='my-3'>User Information</h4>
-          <Row className='mb-3'>
-            <Form.Group as={Col} md='3' controlId='validationCustom01'>
-              <Row className='d-flex'>
+          <h3 className="title mb-5">User Information</h3>
+
+          <Row className="mb-3">
+            <Form.Group md="3" controlId="validationCustom01">
+              <Row>
                 <Col>
-                  <Form.Label>First Name:</Form.Label>
+                  <Form.Label className=" d-flex align-item-center">
+                    First Name:
+                  </Form.Label>
                 </Col>
                 <Col>
                   <Form.Control
                     value={client.firstName}
                     onChange={handleChange}
-                    name='firstName'
+                    name="firstName"
                     required
-                    type='text'
+                    type="text"
                   />
                 </Col>
               </Row>
             </Form.Group>
           </Row>
 
-          <Row className='mb-3'>
-            <Form.Group as={Col} md='3' controlId='validationCustom01'>
+          <Row className="mb-3">
+            <Form.Group md="3" controlId="validationCustom01">
               <Row>
                 <Col>
-                  <Form.Label>Last Name:</Form.Label>
+                  <Form.Label className=" d-flex align-item-center">
+                    Last Name:
+                  </Form.Label>
                 </Col>
                 <Col>
                   <Form.Control
                     value={client.lastName}
                     onChange={handleChange}
-                    name='lastName'
-                    className='col-xs-4'
+                    name="lastName"
+                    className="col-xs-4"
                     required
-                    type='text'
+                    type="text"
                   />
                 </Col>
               </Row>
             </Form.Group>
           </Row>
 
-          <Row className='mb-3'>
-            <Form.Group as={Col} md='3' controlId='validationCustom01'>
+          <Row className="mb-3">
+            <Form.Group md="3" controlId="validationCustom01">
               <Row>
                 <Col>
-                  <Form.Label>Phone Number:</Form.Label>
+                  <Form.Label className=" d-flex align-item-center">
+                    Phone Number:
+                  </Form.Label>
                 </Col>
                 <Col>
                   <Form.Control
                     value={client.phoneNumber}
                     onChange={handleChange}
-                    name='phoneNumber'
+                    name="phoneNumber"
                     required
-                    type='text'
+                    type="text"
                   />
                 </Col>
               </Row>
             </Form.Group>
           </Row>
 
-          <Row className='mb-3'>
-            <Form.Group as={Col} md='3' controlId='validationCustom02'>
+          <Row className="mb-3">
+            <Form.Group md="3" controlId="validationCustom02">
               <Row>
                 <Col>
-                  <Form.Label>Email:</Form.Label>
+                  <Form.Label className=" d-flex align-item-center">
+                    Email:
+                  </Form.Label>
                 </Col>
                 <Col>
                   <Form.Control
                     value={client.email}
                     onChange={handleChange}
-                    name='email'
+                    name="email"
                     required
-                    type='text'
+                    type="text"
                   />
                 </Col>
               </Row>
@@ -377,37 +392,41 @@ function ClientForm(props) {
           </Row>
           {props.authContext.currentUser === null ? (
             <>
-              <Row className='mb-3'>
-                <Form.Group as={Col} md='3' controlId='validationCustom02'>
+              <Row className="mb-3">
+                <Form.Group md="3" controlId="validationCustom02">
                   <Row>
                     <Col>
-                      <Form.Label>Password:</Form.Label>
+                      <Form.Label className=" d-flex align-item-center">
+                        Password:
+                      </Form.Label>
                     </Col>
                     <Col>
                       <Form.Control
                         value={client.password}
                         onChange={handleChange}
-                        name='password'
+                        name="password"
                         required
-                        type='password'
+                        type="password"
                       />
                     </Col>
                   </Row>
                 </Form.Group>
               </Row>
               <Row>
-                <Form.Group as={Col} md='3' controlId='validationCustom02'>
+                <Form.Group md="3" controlId="validationCustom02">
                   <Row>
                     <Col>
-                      <Form.Label>Password Confirmation:</Form.Label>
+                      <Form.Label className=" d-flex align-item-center">
+                        Password Confirm:
+                      </Form.Label>
                     </Col>
                     <Col>
                       <Form.Control
                         value={client.passwordConfirmation}
                         onChange={handleChange}
-                        name='passwordConfirmation'
+                        name="passwordConfirmation"
                         required
-                        type='password'
+                        type="password"
                       />
                     </Col>
                   </Row>
@@ -420,40 +439,50 @@ function ClientForm(props) {
 
           <Row></Row>
 
-          <h4 className='my-3'>Residential Address</h4>
+          <h3 className="title mb-5">Residential Address</h3>
 
-          <Row className='mb-3'>
-            <Row className='mb-3'>
-              <Form.Group as={Col} md='6' controlId='validationCustom03'>
+          <Row className="mb-3">
+            <Row className="mb-3">
+              <Form.Group md="6" controlId="validationCustom03">
                 <Row>
                   <Col>
-                    <Form.Label>Address:</Form.Label>
+                    <Form.Label className=" d-flex align-item-center">
+                      Address:
+                    </Form.Label>
                   </Col>
                   <Col>
                     <Form.Control
                       value={client.address}
                       onChange={handleChange}
-                      name='address'
-                      type='text'
+                      name="address"
+                      type="text"
                       required
                     />
-                    <Form.Control.Feedback type='invalid'>
+                    <Form.Control.Feedback type="invalid">
                       Please provide a valid address.
                     </Form.Control.Feedback>
                   </Col>
-
+                </Row>
+              </Form.Group>
+            </Row>
+            <Row className="mb-3">
+              <Form.Group md="6" controlId="validationCustom05">
+                <Row>
                   <Col>
-                    <Form.Label className='mx-3'> Number: </Form.Label>
+                    <Form.Label className=" d-flex align-item-center">
+                      {" "}
+                      Number:{" "}
+                    </Form.Label>
                   </Col>
                   <Col>
                     <Form.Control
                       value={client.number}
                       onChange={handleChange}
-                      name='number'
-                      type='text'
+                      name="number"
+                      type="text"
                       required
                     />
-                    <Form.Control.Feedback type='invalid'>
+                    <Form.Control.Feedback type="invalid">
                       Please provide a valid number.
                     </Form.Control.Feedback>
                   </Col>
@@ -461,41 +490,47 @@ function ClientForm(props) {
               </Form.Group>
             </Row>
 
-            <Row className='mb-3'>
-              <Form.Group as={Col} md='3' controlId='validationCustom04'>
+            <Row className="mb-3">
+              <Form.Group md="6" controlId="validationCustom04">
                 <Row>
                   <Col>
-                    <Form.Label>City:</Form.Label>
+                    <Form.Label className=" d-flex align-item-center">
+                      City:
+                    </Form.Label>
                   </Col>
                   <Col>
                     <Form.Control
                       value={client.city}
                       onChange={handleChange}
-                      name='city'
-                      type='text'
+                      name="city"
+                      type="text"
                       required
                     />
-                    <Form.Control.Feedback type='invalid'>
+                    <Form.Control.Feedback type="invalid">
                       Please provide a valid city.
                     </Form.Control.Feedback>
                   </Col>
                 </Row>
               </Form.Group>
-
-              <Form.Group as={Col} md='3' controlId='validationCustom05'>
+            </Row>
+            <Row className="mb-3">
+              <Form.Group md="6" controlId="validationCustom05">
                 <Row>
                   <Col>
-                    <Form.Label className='mx-3'> Post code: </Form.Label>
+                    <Form.Label className=" d-flex align-item-center">
+                      {" "}
+                      Postal code:{" "}
+                    </Form.Label>
                   </Col>
                   <Col>
                     <Form.Control
                       value={client.postCode}
                       onChange={handleChange}
-                      name='postCode'
-                      type='text'
+                      name="postCode"
+                      type="text"
                       required
                     />
-                    <Form.Control.Feedback type='invalid'>
+                    <Form.Control.Feedback type="invalid">
                       Please provide a valid post code.
                     </Form.Control.Feedback>
                   </Col>
@@ -504,17 +539,19 @@ function ClientForm(props) {
             </Row>
           </Row>
 
-          <Button type='submit' onClick={handleSubmit}>
+          <Button type="submit" onClick={handleSubmit}>
             Submit
           </Button>
 
           <Button
-            variant='light'
-            className='mx-3'
-            type='cancel'
-            onClick={handleCancel}>
-            reset
+            variant="light"
+            className="mx-3"
+            type="cancel"
+            onClick={handleCancel}
+          >
+            Reset
           </Button>
+
           <br />
         </Form>
       </Container>

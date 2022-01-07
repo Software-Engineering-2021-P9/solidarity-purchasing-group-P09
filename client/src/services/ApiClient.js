@@ -5,6 +5,7 @@ import Product from "./models/Product";
 import ProductAvailability from "./models/ProductAvailability";
 import Order from "./models/Order";
 import UserRoles from "./models/UserRoles";
+import ManagerInfoResult from "./models/ManagerInfoResult";
 
 // Builds the query parameters for an URL from the passed object
 function buildQueryParametersString(queryParams) {
@@ -42,6 +43,8 @@ export async function loginUser(email, password) {
           return ClientInfoResult.fromJSON(responseBody);
         case UserRoles.EMPLOYEE:
           return EmployeeInfoResult.fromJSON(responseBody);
+        case UserRoles.MANAGER:
+          return ManagerInfoResult.fromJSON(responseBody);
         case UserRoles.FARMER:
         default:
           return FarmerInfoResult.fromJSON(responseBody);
@@ -69,6 +72,8 @@ export async function getCurrentUser() {
           return ClientInfoResult.fromJSON(responseBody);
         case UserRoles.EMPLOYEE:
           return EmployeeInfoResult.fromJSON(responseBody);
+        case UserRoles.MANAGER:
+          return ManagerInfoResult.fromJSON(responseBody);
         case UserRoles.FARMER:
         default:
           return FarmerInfoResult.fromJSON(responseBody);

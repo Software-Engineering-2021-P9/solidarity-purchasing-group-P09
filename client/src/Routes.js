@@ -160,12 +160,10 @@ function getAvailableNavbarLinks(loggedUser) {
       ];
     case UserRoles.FARMER:
       return [farmerProductManagementRouteName, userLogoutRouteName];
+    case UserRoles.MANAGER:
+      return [managerOrdersStatsRouteName, userLogoutRouteName];
     default:
-      return [
-        userLoginRouteName,
-        clientSignupRouteName,
-        managerOrdersStatsRouteName, // temporary
-      ];
+      return [userLoginRouteName, clientSignupRouteName];
   }
 }
 

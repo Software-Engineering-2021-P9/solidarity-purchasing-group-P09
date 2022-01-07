@@ -18,6 +18,7 @@ import {
   Tooltip,
   Bar,
 } from "recharts";
+import { arrowUpIcon } from "../icons";
 
 function MonthlyReports(props) {
   return (
@@ -29,7 +30,7 @@ function MonthlyReports(props) {
         <Col className="container-this-week px-4 py-3" sm="auto" md="auto">
           <Row>
             <Col className="total-orders">15%</Col>
-            <Col></Col>
+            <Col className="red-text">{arrowUpIcon}+ 1.27%</Col>
           </Row>
           <Row>of unretrieved orders this month</Row>
         </Col>
@@ -61,52 +62,44 @@ function MonthlyReports(props) {
 function PercentageUnretrievedMonthlyBar(props) {
   const data = [
     {
-      month: "FEB",
-      percentage: Math.random().toFixed(2),
-    },
-    {
-      month: "MAR",
-      percentage: Math.random().toFixed(2),
-    },
-    {
       month: "APR",
-      percentage: Math.random().toFixed(2),
+      percentage: 0.18,
     },
     {
       month: "MAY",
-      percentage: Math.random().toFixed(2),
+      percentage: 0.23,
     },
     {
       month: "JUN",
-      percentage: Math.random().toFixed(2),
+      percentage: 0.21,
     },
     {
       month: "JUL",
-      percentage: Math.random().toFixed(2),
+      percentage: 0.03,
     },
     {
       month: "AUG",
-      percentage: Math.random().toFixed(2),
+      percentage: 0.04,
     },
     {
       month: "SEP",
-      percentage: Math.random().toFixed(2),
+      percentage: 0.18,
     },
     {
       month: "OCT",
-      percentage: Math.random().toFixed(2),
+      percentage: 0.19,
     },
     {
       month: "NOV",
-      percentage: Math.random().toFixed(2),
+      percentage: 0.13,
     },
     {
       month: "DEC",
-      percentage: Math.random().toFixed(2),
+      percentage: 0.27,
     },
     {
       month: "JAN",
-      percentage: Math.random().toFixed(2),
+      percentage: 0.01,
     },
   ];
   return (
@@ -133,52 +126,44 @@ function PercentageUnretrievedMonthlyBar(props) {
 function UnretrievedMonthlyBar(props) {
   const data = [
     {
-      month: "FEB",
-      unretrieved: Math.floor(Math.random() * 101),
-    },
-    {
-      month: "MAR",
-      unretrieved: Math.floor(Math.random() * 101),
-    },
-    {
       month: "APR",
-      unretrieved: Math.floor(Math.random() * 101),
+      unretrieved: 58,
     },
     {
       month: "MAY",
-      unretrieved: Math.floor(Math.random() * 101),
+      unretrieved: 37,
     },
     {
       month: "JUN",
-      unretrieved: Math.floor(Math.random() * 101),
+      unretrieved: 42,
     },
     {
       month: "JUL",
-      unretrieved: Math.floor(Math.random() * 101),
+      unretrieved: 16,
     },
     {
       month: "AUG",
-      unretrieved: Math.floor(Math.random() * 101),
+      unretrieved: 20,
     },
     {
       month: "SEP",
-      unretrieved: Math.floor(Math.random() * 101),
+      unretrieved: 19,
     },
     {
       month: "OCT",
-      unretrieved: Math.floor(Math.random() * 101),
+      unretrieved: 33,
     },
     {
       month: "NOV",
-      unretrieved: Math.floor(Math.random() * 101),
+      unretrieved: 17,
     },
     {
       month: "DEC",
-      unretrieved: Math.floor(Math.random() * 101),
+      unretrieved: 14,
     },
     {
       month: "JAN",
-      unretrieved: Math.floor(Math.random() * 101),
+      unretrieved: 3,
     },
   ];
   return (

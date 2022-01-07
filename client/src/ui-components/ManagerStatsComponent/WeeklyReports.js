@@ -11,6 +11,7 @@ import {
   Tooltip,
   Bar,
 } from "recharts";
+import { arrowDownIcon } from "../icons";
 
 function WeeklyReports(props) {
   return (
@@ -22,7 +23,7 @@ function WeeklyReports(props) {
         <Col className="container-this-week px-4 py-3" sm="auto" md="auto">
           <Row>
             <Col className="total-orders">15%</Col>
-            <Col></Col>
+            <Col className="green-text">{arrowDownIcon}- 0.80%</Col>
           </Row>
           <Row>of unretrieved orders this week</Row>
         </Col>
@@ -54,52 +55,44 @@ function WeeklyReports(props) {
 function PercentageUnretrievedWeeklyBar(props) {
   const data = [
     {
-      week: "43",
-      percentage: Math.random().toFixed(2),
-    },
-    {
-      week: "44",
-      percentage: Math.random().toFixed(2),
-    },
-    {
       week: "45",
-      percentage: Math.random().toFixed(2),
+      percentage: 0.15,
     },
     {
       week: "46",
-      percentage: Math.random().toFixed(2),
+      percentage: 0.13,
     },
     {
       week: "47",
-      percentage: Math.random().toFixed(2),
+      percentage: 0.24,
     },
     {
       week: "48",
-      percentage: Math.random().toFixed(2),
+      percentage: 0.19,
     },
     {
       week: "49",
-      percentage: Math.random().toFixed(2),
+      percentage: 0.07,
     },
     {
       week: "50",
-      percentage: Math.random().toFixed(2),
+      percentage: 0.25,
     },
     {
       week: "51",
-      percentage: Math.random().toFixed(2),
+      percentage: 0.1,
     },
     {
       week: "52",
-      percentage: Math.random().toFixed(2),
+      percentage: 0.27,
     },
     {
       week: "1",
-      percentage: Math.random().toFixed(2),
+      percentage: 0.18,
     },
     {
       week: "2",
-      percentage: Math.random().toFixed(2),
+      percentage: 0.03,
     },
   ];
   return (
@@ -126,52 +119,44 @@ function PercentageUnretrievedWeeklyBar(props) {
 function UnretrievedWeeklyBar(props) {
   const data = [
     {
-      week: "43",
-      unretrieved: Math.floor(Math.random() * 21),
-    },
-    {
-      week: "44",
-      unretrieved: Math.floor(Math.random() * 21),
-    },
-    {
       week: "45",
-      unretrieved: Math.floor(Math.random() * 21),
+      unretrieved: 2,
     },
     {
       week: "46",
-      unretrieved: Math.floor(Math.random() * 21),
+      unretrieved: 7,
     },
     {
       week: "47",
-      unretrieved: Math.floor(Math.random() * 21),
+      unretrieved: 5,
     },
     {
       week: "48",
-      unretrieved: Math.floor(Math.random() * 21),
+      unretrieved: 12,
     },
     {
       week: "49",
-      unretrieved: Math.floor(Math.random() * 21),
+      unretrieved: 1,
     },
     {
       week: "50",
-      unretrieved: Math.floor(Math.random() * 21),
+      unretrieved: 5,
     },
     {
       week: "51",
-      unretrieved: Math.floor(Math.random() * 21),
+      unretrieved: 10,
     },
     {
       week: "52",
-      unretrieved: Math.floor(Math.random() * 21),
+      unretrieved: 7,
     },
     {
       week: "1",
-      unretrieved: Math.floor(Math.random() * 21),
+      unretrieved: 5,
     },
     {
       week: "2",
-      unretrieved: Math.floor(Math.random() * 21),
+      unretrieved: 2,
     },
   ];
   return (

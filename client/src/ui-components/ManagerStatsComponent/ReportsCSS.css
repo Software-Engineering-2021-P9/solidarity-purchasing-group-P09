@@ -1,5 +1,4 @@
 .title-reports {
-  font-family: Inter;
   font-style: normal;
   font-weight: bold;
   font-size: 30px;
@@ -8,7 +7,6 @@
 }
 
 .total-orders {
-  font-family: Inter;
   font-style: normal;
   font-weight: bold;
   font-size: 26px;
@@ -17,7 +15,6 @@
 }
 
 .comment-stats {
-  font-family: Inter;
   font-style: normal;
   font-weight: normal;
   font-size: 20px;
@@ -59,10 +56,15 @@
 }
 
 .stats-subtitle {
-  font-family: Inter;
   font-style: normal;
   font-weight: bold;
   font-size: 18px;
   line-height: 16px;
   color: #635f46;
+}
+.green-text {
+  color: green;
+}
+.red-text {
+  color: red;
 }

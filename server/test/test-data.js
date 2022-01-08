@@ -75,7 +75,7 @@ exports.ordersCollection = {
 exports.ordersCollection2 = {
   orders: [
     {
-      _id: ObjectID("6187c957b288576ca26f8251"),
+      _id: ObjectID("000000000000000000000001"),
       clientID: ObjectID("6187c957b288576ca26f8257"),
       products: [
         { productID: "000000000000000000000001", quantity: 1 },
@@ -95,7 +95,7 @@ exports.ordersCollection2 = {
       createdAt: "2021-12-16T13:00:07.616Z",
     },
     {
-      _id: ObjectID("6187c957b288576ca26f8990"),
+      _id: ObjectID("000000000000000000000004"),
       clientID: ObjectID("6187c957b288576ca26f8257"),
       products: [
         { productID: "000000000000000000000004", quantity: 1 },
@@ -371,7 +371,7 @@ exports.productsAvailabilityCollection = {
       _id: ObjectID("000000000000000000000001"),
       farmerID: ObjectID("67696f76616a6a6a31a23334"),
       productID: ObjectID("000000000000000000000001"),
-      week: nextWeek,
+      week: 50,
       year: currentYear,
       price: 3.5,
       packaging: "100g",
@@ -401,7 +401,7 @@ exports.productsAvailabilityCollection = {
       _id: ObjectID("000000000000000000000003"),
       farmerID: ObjectID("67696f76616a6a6a31a23334"),
       productID: ObjectID("000000000000000000000004"),
-      week: nextWeek,
+      week: 51,
       year: currentYear,
       price: 2.3,
       packaging: "4 units",
@@ -411,7 +411,7 @@ exports.productsAvailabilityCollection = {
       _id: ObjectID("000000000000000000000004"),
       farmerID: ObjectID("67696f76616a6a6a31a23334"),
       productID: ObjectID("000000000000000000000006"),
-      week: nextWeek,
+      week: 51,
       year: currentYear,
       price: 4.5,
       packaging: "1 units",

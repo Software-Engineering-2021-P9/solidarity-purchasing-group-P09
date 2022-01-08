@@ -88,6 +88,7 @@ exports.createOrderHandler = async function (req, res, next) {
   var totalPrice = 0.0;
 
   for (const p of req.body.products) {
+    try{
     var productPrice = await dao.getProductPrice(
       p.productID,
       ...getNextWeek(dayjs())
@@ -96,6 +97,14 @@ exports.createOrderHandler = async function (req, res, next) {
 
     totalPrice += p.quantity * productPrice;
   }
+  catch (err) {
+
+    console.error(`CreateOrder() -> couldn't create order: ${err}`);
+
+    return res.status(500).end();
+  }
+}
+
 
   const order = {
     clientID: ObjectID(req.body.clientID.toString()),

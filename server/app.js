@@ -29,6 +29,8 @@ var managerHandlers = require("./handlers/manager");
 
 var weekphaseHandlers = require("./handlers/weekphase");
 
+var statsHandlers = require("./handlers/stats");
+
 const {
   sessionSettings,
   passportStrategy,
@@ -244,6 +246,24 @@ app.patch(
   weekphaseHandlers.setWeekphaseOverrideValidatorChain,
   checkValidationErrorMiddleware,
   weekphaseHandlers.setWeekphaseOverrideHandler
+);
+
+// ------
+// /stats
+// ------
+
+app.get(
+  buildAPIPath("/stats/orders/unretrieved/weekly"),
+  statsHandlers.weeklyUnretrievedOrdersStatsValidatorChain,
+  checkValidationErrorMiddleware,
+  statsHandlers.weeklyUnretrievedOrdersStatsHandler
+);
+
+app.get(
+  buildAPIPath("/stats/orders/unretrieved/timeInterval"),
+  statsHandlers.timeIntervalUnretrievedOrdersStatsValidatorChain,
+  checkValidationErrorMiddleware,
+  statsHandlers.timeIntervalUnretrievedOrdersStatsValidatorChain
 );
 
 // Serve client app

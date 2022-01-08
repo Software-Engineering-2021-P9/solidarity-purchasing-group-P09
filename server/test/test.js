@@ -27,7 +27,7 @@ before(async () => {
   app = require("../app");
 
   // Import test files
-  require("./test_weekphase").tests(app);
+  require("./test_weekphase").tests(app, mongoUnit, testData);
 });
 
 after(() => {
@@ -1948,217 +1948,217 @@ describe("User Login API tests:", () => {
       ...testData.employeesCollection,
       ...testData.managersCollection,
     });
+  });
 
-    afterEach(() => {
-      mongoUnit.drop();
-      dao.close();
+  afterEach(() => {
+    mongoUnit.drop();
+    dao.close();
+  });
+
+  describe("POST /users/login", () => {
+    it("it should success with a client", (done) => {
+      chai
+        .request(app)
+        .post("/api/users/login")
+        .send({ username: "ehsanansari@gmail.com", password: "123456789" })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          expect(res.body).to.be.an("object");
+          expect(res.body.email).to.be.equal("ehsanansari@gmail.com");
+          expect(res.body.password).not.to.exist;
+          expect(res.body.role).to.be.equal("client");
+          expect(res.body.id).to.be.equal("618d4ad3736f2caf2d3b3ca5");
+          expect(res.body.wallet).to.be.equal(55.5);
+          expect(res.body.address).to.be.equal(
+            "fsfsaf dsafsa fsafsa,26 Milano,12342"
+          );
+
+          done();
+        });
+    });
+    it("it should success with a employee", (done) => {
+      chai
+        .request(app)
+        .post("/api/users/login")
+        .send({ username: "employee1@test.com", password: "123456789" })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          expect(res.body).to.be.an("object");
+          expect(res.body.email).to.be.equal("employee1@test.com");
+          expect(res.body.password).not.to.exist;
+          expect(res.body.role).to.be.equal("employee");
+          expect(res.body.id).to.be.equal("6187c957b288576ca26f8257");
+
+          done();
+        });
+    });
+    it("it should success with a farmer", (done) => {
+      chai
+        .request(app)
+        .post("/api/users/login")
+        .send({ username: "farmer1@test.com", password: "123456789" })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          expect(res.body).to.be.an("object");
+          expect(res.body.email).to.be.equal("farmer1@test.com");
+          expect(res.body.password).not.to.exist;
+          expect(res.body.role).to.be.equal("farmer");
+          expect(res.body.id).to.be.equal("6187c957b288576ca24f8257");
+
+          done();
+        });
     });
 
-    describe("POST /users/login", () => {
-      it("it should success with a client", (done) => {
-        chai
-          .request(app)
-          .post("/api/users/login")
-          .send({ username: "ehsanansari@gmail.com", password: "123456789" })
-          .end((err, res) => {
-            expect(err).to.be.null;
-            expect(res.status).to.be.equal(200);
-            expect(res.body).to.be.an("object");
-            expect(res.body.email).to.be.equal("ehsanansari@gmail.com");
-            expect(res.body.password).not.to.exist;
-            expect(res.body.role).to.be.equal("client");
-            expect(res.body.id).to.be.equal("618d4ad3736f2caf2d3b3ca5");
-            expect(res.body.wallet).to.be.equal(55.5);
-            expect(res.body.address).to.be.equal(
-              "fsfsaf dsafsa fsafsa,26 Milano,12342"
-            );
+    it("it should success with a manager", (done) => {
+      chai
+        .request(app)
+        .post("/api/users/login")
+        .send({
+          username: "manager1@test.com",
+          password: "123456789",
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          expect(res.body).to.be.an("object");
+          expect(res.body.email).to.be.equal("manager1@test.com");
+          expect(res.body.password).not.to.exist;
+          expect(res.body.role).to.be.equal("manager");
+          expect(res.body.id).to.be.equal("1187c957b288576ca26f8257");
 
-            done();
-          });
-      });
-      it("it should success with a employee", (done) => {
-        chai
-          .request(app)
-          .post("/api/users/login")
-          .send({ username: "employee1@test.com", password: "123456789" })
-          .end((err, res) => {
-            expect(err).to.be.null;
-            expect(res.status).to.be.equal(200);
-            expect(res.body).to.be.an("object");
-            expect(res.body.email).to.be.equal("employee1@test.com");
-            expect(res.body.password).not.to.exist;
-            expect(res.body.role).to.be.equal("employee");
-            expect(res.body.id).to.be.equal("6187c957b288576ca26f8257");
-
-            done();
-          });
-      });
-      it("it should success with a farmer", (done) => {
-        chai
-          .request(app)
-          .post("/api/users/login")
-          .send({ username: "farmer1@test.com", password: "123456789" })
-          .end((err, res) => {
-            expect(err).to.be.null;
-            expect(res.status).to.be.equal(200);
-            expect(res.body).to.be.an("object");
-            expect(res.body.email).to.be.equal("farmer1@test.com");
-            expect(res.body.password).not.to.exist;
-            expect(res.body.role).to.be.equal("farmer");
-            expect(res.body.id).to.be.equal("6187c957b288576ca24f8257");
-
-            done();
-          });
-      });
-
-      it("it should success with a manager", (done) => {
-        chai
-          .request(app)
-          .post("/api/users/login")
-          .send({
-            username: "manager1@test.com",
-            password: "123456789",
-          })
-          .end((err, res) => {
-            expect(err).to.be.null;
-            expect(res.status).to.be.equal(200);
-            expect(res.body).to.be.an("object");
-            expect(res.body.email).to.be.equal("manager1@test.com");
-            expect(res.body.password).not.to.exist;
-            expect(res.body.role).to.be.equal("manager");
-            expect(res.body.id).to.be.equal("1187c957b288576ca26f8257");
-
-            done();
-          });
-      });
-
-      it("it must fail when an invalid email is passed", (done) => {
-        chai
-          .request(app)
-          .post("/api/users/login")
-          .send({
-            username: "nomail",
-            password: "123456789",
-          })
-          .end((err, res) => {
-            expect(err).to.be.null;
-            expect(res.status).to.be.equal(401);
-
-            done();
-          });
-      });
-      it("it must fail when a not recorded email is entered ", (done) => {
-        chai
-          .request(app)
-          .post("/api/users/login")
-          .send({
-            username: "notrecorded@gmail.com",
-            password: "123456789",
-          })
-          .end((err, res) => {
-            expect(err).to.be.null;
-            expect(res.status).to.be.equal(401);
-
-            done();
-          });
-      });
-      it("it must fail when password is entered wrong", (done) => {
-        chai
-          .request(app)
-          .post("/api/users/login")
-          .send({
-            username: "ehsanansari@gmail.com",
-            password: "wrongpassword",
-          })
-          .end((err, res) => {
-            expect(err).to.be.null;
-            expect(res.status).to.be.equal(401);
-
-            done();
-          });
-      });
-      it("it must fail when email and  password is entered wrong", (done) => {
-        chai
-          .request(app)
-          .post("/api/users/login")
-          .send({
-            username: "blabla@gmail.com",
-            password: "wrongpassword",
-          })
-          .end((err, res) => {
-            expect(err).to.be.null;
-            expect(res.statusCode).to.be.equal(401);
-
-            done();
-          });
-      });
+          done();
+        });
     });
 
-    describe("GET /users/current", () => {
-      before((done) => {
-        chai
-          .request(app)
-          .post("/api/users/login")
-          .send({ username: "farmer1@test.com", password: "123456789" })
-          .then(() => done());
-      });
+    it("it must fail when an invalid email is passed", (done) => {
+      chai
+        .request(app)
+        .post("/api/users/login")
+        .send({
+          username: "nomail",
+          password: "123456789",
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(401);
 
-      it("it must success with no currently logged user", (done) => {
-        chai
-          .request(app)
-          .get("/api/users/current")
-          .end((err, res) => {
-            expect(err).to.be.null;
-            expect(res.status).to.be.equal(204);
+          done();
+        });
+    });
+    it("it must fail when a not recorded email is entered ", (done) => {
+      chai
+        .request(app)
+        .post("/api/users/login")
+        .send({
+          username: "notrecorded@gmail.com",
+          password: "123456789",
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(401);
 
-            done();
-          });
-      });
+          done();
+        });
+    });
+    it("it must fail when password is entered wrong", (done) => {
+      chai
+        .request(app)
+        .post("/api/users/login")
+        .send({
+          username: "ehsanansari@gmail.com",
+          password: "wrongpassword",
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(401);
 
-      it("it must success with a currently logged user", (done) => {
-        chai
-          .request(app)
-          .get("/api/users/current")
-          .end((err, res) => {
-            expect(err).to.be.null;
-            expect(res.status).to.be.equal(204);
+          done();
+        });
+    });
+    it("it must fail when email and  password is entered wrong", (done) => {
+      chai
+        .request(app)
+        .post("/api/users/login")
+        .send({
+          username: "blabla@gmail.com",
+          password: "wrongpassword",
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.statusCode).to.be.equal(401);
 
-            done();
-          });
-      });
+          done();
+        });
+    });
+  });
+
+  describe("GET /users/current", () => {
+    before((done) => {
+      chai
+        .request(app)
+        .post("/api/users/login")
+        .send({ username: "farmer1@test.com", password: "123456789" })
+        .then(() => done());
     });
 
-    describe("DELETE /users/current", () => {
-      before((done) => {
-        chai
-          .request(app)
-          .post("/api/users/login")
-          .send({ username: "farmer1@test.com", password: "123456789" })
-          .then(() => done());
-      });
+    it("it must success with no currently logged user", (done) => {
+      chai
+        .request(app)
+        .get("/api/users/current")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(204);
 
-      it("it must success with a currently logged user", (done) => {
-        chai
-          .request(app)
-          .delete("/api/users/current")
-          .end((err, res) => {
-            expect(err).to.be.null;
-            expect(res.status).to.be.equal(204);
-            done();
-          });
-      });
+          done();
+        });
+    });
 
-      it("it must success with a currently logged user", (done) => {
-        chai
-          .request(app)
-          .delete("/api/users/current")
-          .end((err, res) => {
-            expect(err).to.be.null;
-            expect(res.status).to.be.equal(204);
+    it("it must success with a currently logged user", (done) => {
+      chai
+        .request(app)
+        .get("/api/users/current")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(204);
 
-            done();
-          });
-      });
+          done();
+        });
+    });
+  });
+
+  describe("DELETE /users/current", () => {
+    before((done) => {
+      chai
+        .request(app)
+        .post("/api/users/login")
+        .send({ username: "farmer1@test.com", password: "123456789" })
+        .then(() => done());
+    });
+
+    it("it must success with a currently logged user", (done) => {
+      chai
+        .request(app)
+        .delete("/api/users/current")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(204);
+          done();
+        });
+    });
+
+    it("it must success with a currently logged user", (done) => {
+      chai
+        .request(app)
+        .delete("/api/users/current")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(204);
+
+          done();
+        });
     });
   });
 });

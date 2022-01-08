@@ -152,6 +152,8 @@ exports.getOrdersByClientIDList = (clientIDList) =>
   getOrdersByClientIDList(db, clientIDList);
 exports.createClientsTextSearchIndexes = () =>
   createClientsTextSearchIndexes(db);
+exports.setPreparedOrdersToUnretrieved = (week, year) =>
+  setPreparedOrdersToUnretrieved(db, week, year);
 
 // User (Client, Farmer, Employee, Manager)
 exports.getUserByEmail = async (email) => {

@@ -17,6 +17,7 @@ exports.getOrdersByClientID = async (db, clientID) => {
   return db
     .collection(orderCollectionName)
     .find({ clientID: ObjectID(clientID) })
+    .sort({ createdAt: -1 })
     .toArray();
 };
 // ------------

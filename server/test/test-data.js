@@ -1,6 +1,19 @@
 const { ObjectID } = require("bson");
 const dayjs = require("dayjs");
+
 const { getNextWeek, getCurrentWeek } = require("../services/time_service");
+
+exports.managersCollection = {
+  managers: [
+    {
+      _id: ObjectID("1187c957b288576ca26f8257"),
+      email: "manager1@test.com",
+      password: "$2a$10$AU6PIEG1tq1467LUurqOjuoKzdvdtZHTFnCh00YzNGm7zzf7wa0rq",
+      role: "manager",
+      fullName: "Mario Biondi",
+    },
+  ],
+};
 
 exports.employeesCollection = {
   employees: [
@@ -46,8 +59,10 @@ exports.ordersCollection = {
         
       ],
       status: "done",
-      totalPrice: "2.3",
-      createdAt: "2021-12-16T13:00:07.616Z",
+
+      totalPrice: "12",
+      createdAt: "2021-12-17T13:00:07.616Z",
+
       shipmentInfo: {
         type: "pickup",
         pickUpSlot: "42200",
@@ -91,8 +106,10 @@ exports.ordersCollection2 = {
         { productID: "000000000000000000000004", quantity: 1 },
       ],
       status: "done",
-      totalPrice: "2.3",
-      createdAt: "2021-12-16T13:00:07.616Z",
+
+      totalPrice: "12",
+      createdAt: "2021-12-17T13:00:07.616Z",
+
     },
     {
       _id: ObjectID("000000000000000000000004"),

@@ -8,30 +8,30 @@ import "./RedDropdown.css";
 function RedDropdown(props) {
   return (
     <Row>
-      <Dropdown className='d-flex' as={ButtonGroup}>
-        <Dropdown.Toggle id='dropdown-custom-1' className='dropdown'>
+      <Dropdown className="d-flex" as={ButtonGroup}>
+        <Dropdown.Toggle id="dropdown-custom-1" className="dropdown">
           {props.title}
         </Dropdown.Toggle>
 
         <Row>
-          <Dropdown.Menu className='dropdown-menu'>
-            {props.items.map((name, index) => (
-              <Dropdown.Item
-                className='dropdown-content'
-                key={index}
-                onClick={() => props.updateSelectedItem(name)}
-                active={props.activeElement === name}
-              >
-                {name}
-              </Dropdown.Item>
-            ))}
+          <Dropdown.Menu className="dropdown-menu">
             <Dropdown.Item
-              className='dropdown-content'
+              className="dropdown-content"
               onClick={() => props.updateSelectedItem()}
               active={props.title === "Categories"}
             >
               All
             </Dropdown.Item>
+            {props.items.map((name, index) => (
+              <Dropdown.Item
+                className="dropdown-content"
+                key={index}
+                onClick={() => props.updateSelectedItem(name)}
+                active={props.activeElement === name}
+              >
+                {name.charAt(0).toUpperCase() + name.slice(1)}
+              </Dropdown.Item>
+            ))}
           </Dropdown.Menu>
         </Row>
       </Dropdown>

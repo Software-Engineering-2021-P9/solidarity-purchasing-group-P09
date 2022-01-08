@@ -33,7 +33,8 @@ function ClientManagementPage(props) {
   const [clientInfoList, setClientInfoList] = useState(null);
   const [isClientInfoListLoading, setIsClientInfoListLoading] = useState(false);
   const [requestError, setRequestError] = useState("");
-  const [hasPendingCancelationFilter, setHasPendingCancelationFilter] = useState("All");
+  const [hasPendingCancelationFilter, setHasPendingCancelationFilter] =
+    useState("All");
 
   function onPendingCancelationFilter(newVal) {
     setHasPendingCancelationFilter(newVal);
@@ -43,13 +44,13 @@ function ClientManagementPage(props) {
     setIsClientInfoListLoading(true);
 
     let hasPendingCancelation;
-    switch(hasPendingCancelationFilter){
-      case("Has Pending"):
-        hasPendingCancelation=true;
+    switch (hasPendingCancelationFilter) {
+      case "Has Pending":
+        hasPendingCancelation = true;
         break;
 
-      case("Without Pending"):
-        hasPendingCancelation=false;
+      case "Without Pending":
+        hasPendingCancelation = false;
         break;
 
       default:
@@ -57,7 +58,7 @@ function ClientManagementPage(props) {
         break;
     }
 
-    findClients(searchString,hasPendingCancelation)
+    findClients(searchString, hasPendingCancelation)
       .then(setClientInfoList)
       .catch((err) => {
         setRequestError(err.message);
@@ -119,13 +120,20 @@ function ClientManagementPage(props) {
             <Button onClick={onSearchClientButtonClick}>Search</Button>
           </InputGroup>
         </Col>
-        <Col className='dropdown-margin' xs='4' sm='3' md='2' lg='1'>
+
+       
+
+        
+        <Col  className="dropdown-margin margin-top-35" xs="4" sm="3" md="2" lg="1">
+
           <RedDropdown
-              items={["Has Pending","Without Pending"]}
-              title={hasPendingCancelationFilter ? hasPendingCancelationFilter : "All"}
-              updateSelectedItem={onPendingCancelationFilter}
-              activeElement={hasPendingCancelationFilter}
-            />
+            items={["Has Pending", "Without Pending"]}
+            title={
+              hasPendingCancelationFilter ? hasPendingCancelationFilter : "All"
+            }
+            updateSelectedItem={onPendingCancelationFilter}
+            activeElement={hasPendingCancelationFilter}
+          />
         </Col>
       </Row>
       <Container>

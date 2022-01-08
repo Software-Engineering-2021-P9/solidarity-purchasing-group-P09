@@ -1,0 +1,1 @@
+GET http://localhost:3001/api/managers/61d7235ab30fdfcac18fcbfb HTTP/1.1

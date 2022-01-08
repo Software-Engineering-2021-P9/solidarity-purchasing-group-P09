@@ -65,9 +65,11 @@ function ClientDetailsPage(props) {
 
           //fetch orders:
           getOrders(result.id).then((newO) => {
-            setOrders(
-              newO.sort((newer, older) => newer.createdAt < older.createdAt)
+            const sortedOrders = newO.sort(
+              (newer, older) => newer.createdAt < older.createdAt
             );
+
+            setOrders(sortedOrders);
           });
         })
         .catch((err) =>

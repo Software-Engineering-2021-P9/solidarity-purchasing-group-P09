@@ -12,7 +12,7 @@ function GeneralReports(props) {
         <div className="title-reports">SPG Reports</div>
       </Row>
       <Row className="my-3 mx-1 d-flex align-items-center">
-        <Col>
+        <Col className=" w-auto" md="auto">
           <Row>
             <Col className="icon-centre w-auto" md="auto" sm="auto">
               {gridIcon}
@@ -25,7 +25,7 @@ function GeneralReports(props) {
         </Col>
         <Col className="px-0 mx-md-5 my-sm-4 my-xs-5 my-md-0" sm="12" md="6">
           <Row className="d-flex align-items-center">
-            <Col className="w-auto" md="auto" sm="auto">
+            <Col className="w-auto add-space" md="auto" sm="auto">
               <PieChart
                 className="pie-chart"
                 data={[

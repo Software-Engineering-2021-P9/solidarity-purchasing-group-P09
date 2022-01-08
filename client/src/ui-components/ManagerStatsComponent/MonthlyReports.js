@@ -37,7 +37,7 @@ function MonthlyReports(props) {
           <Row>of unretrieved orders this month</Row>
         </Col>
         <Col
-          className="mx-xs-0 mx-md-4 mx-lg-4 px-sm-0 px-xs-0 px-md-0 px-lg-4"
+          className="mx-xs-0 mx-md-4 mx-lg-4 px-sm-0 px-xs-0 px-md-0 px-lg-4 media-margin"
           sm="12"
           md="auto"
         >

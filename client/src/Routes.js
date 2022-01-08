@@ -2,7 +2,7 @@ import { ShoppingCartPage } from "./pages/ShoppingCartPage";
 import { ClientDetailsPage } from "./pages/ClientDetailsPage";
 import { ClientManagementPage } from "./pages/ClientManagementPage/ClientManagementPage";
 import { ClientSignupPage } from "./pages/ClientSignupPage";
-import { ProductListPage } from "./pages/ProductListPage/ProductListPage";
+import { ProductListPage } from "./pages/ProductListPage";
 import { ProductManagementPage } from "./pages/ProductManagementPage/ProductManagementPage";
 import { UserLoginPage } from "./pages/UserLoginPage";
 import { UserLogoutRedirect } from "./pages/UserLogoutRedirect";

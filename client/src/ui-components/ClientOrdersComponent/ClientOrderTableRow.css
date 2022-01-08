@@ -1,31 +1,14 @@
 .table-row-status-prepared {
-  color: rgb(130, 156, 44);
-}
-.table-row-status-waiting {
-  color: #635f46;
-}
-.table-row-status-confirmed {
-  color: darkolivegreen;
+  color: #ff9e0a !important;
 }
 .table-row-status-done {
-  color: rgb(68, 146, 4);
-}
-.table-row-status-not-covered {
-  color: rgb(218, 104, 47);
-}
-.table-row-status-pending-cancelation {
-  color: rgb(211, 2, 2);
+  color: green !important;
 }
 .change-status {
-  cursor: pointer;
   color: rgba(99, 95, 70, 1);
   font-weight: 400;
   font-style: italic;
   text-decoration-line: underline;
-}
-
-.smaller-font {
-  font-size: smaller;
 }
 
 @media only screen and (max-width: 1028px) {

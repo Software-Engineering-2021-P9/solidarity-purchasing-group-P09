@@ -1,5 +1,8 @@
 .createProductForm {
   text-align: center;
-  max-width: 400px;
+  width: 400px;
   margin-top: 50px;
+}
+.title-product-form {
+  text-align: center;
 }

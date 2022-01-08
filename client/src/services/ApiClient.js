@@ -130,6 +130,8 @@ export async function findClients(searchString, hasPendingCancelation) {
     path = path.substring(0, path.length - 1); //delete the last character, that is &
   }
 
+  console.log(path, hasPendingCancelation);
+
   let response = await fetch(path);
 
   switch (response.status) {
@@ -378,6 +380,7 @@ export async function getNextWeekProductAvailability(productID) {
   switch (response.status) {
     case 200:
       let responseBody = await response.json();
+      console.log(responseBody);
       return ProductAvailability.fromJSON(responseBody);
     case 400:
       throw new Error("Validation error occurred");

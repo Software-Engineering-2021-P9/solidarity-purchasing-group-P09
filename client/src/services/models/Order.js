@@ -27,7 +27,6 @@ class Order {
     CONFIRMED: "confirmed",
     PREPARED: "prepared",
     DONE: "done",
-    PENDINGCANCELATION: "pending-cancelation",
   };
 }
 

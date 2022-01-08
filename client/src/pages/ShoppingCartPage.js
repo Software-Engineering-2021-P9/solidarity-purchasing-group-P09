@@ -23,12 +23,20 @@ import UserRoles from "../services/models/UserRoles";
 function ShoppingCartPage(props) {
   const location = useLocation();
   const authContext = useContext(AuthContext);
+  // as props, ShoppingCartPage receives
+  //      - a Map <ItemID, Qty>
+  //      - the clientID
+  // it mantains as main states
+  //      - a cart (Map <ItemID, Qty>)
+  //      - the total amount of the current cart
+  // it uses function getProductsByIDs(id) -> product object
+  // it uses function getClientByID(id) -> client object
+  // it uses function createOrder(clientID, cart) -> POST /api/orders
 
   const [cart, setCart] = useState(location.state.shoppingCart);
-  const feeValue = 5; // backend should validate the hardcoded fee value
-
+  
   const [deliveryAddress, setDeliveryAddress] = useState("");
-  const [deliveryDate, setDeliveryDate] = useState("3"); // 3 or 4 or 5th day of week
+  const [deliveryDate, setDeliveryDate] = useState("3");// 3 or 4 or 5th day of week
   const [deliveryTime, setDeliveryTime] = useState("");
   const [deliveryType, setDeliveryType] = useState("");
   const [deliveryFee, setDeliveryFee] = useState(0);
@@ -91,18 +99,27 @@ function ShoppingCartPage(props) {
     if (quantity > 0) {
       setCart(new Map(cart.set(productID, parseInt(quantity))));
     }
+    var new_sum = 0.0;
+    Array.from(cart.entries()).map((entry) => {
+      new_sum += 1.0 * entry[1]; // mock price
+      return entry;
+    });
+    setAmount(new_sum);
   };
 
   const deleteItem = (productID) => {
     let new_cart = new Map();
+    var new_sum = 0.0;
     if (cart.size > 1) {
       Array.from(cart.entries()).map((entry) => {
         const [key, val] = entry;
         if (key === productID) return null;
         new_cart.set(key, val);
+        new_sum += 1.0 * entry[1];
         return entry;
       });
     }
+    setAmount(new_sum);
     setCart(new_cart);
   };
 
@@ -120,10 +137,9 @@ function ShoppingCartPage(props) {
       address: deliveryAddress,
     };
 
-    if (deliveryType === "pickup")
-      shipmentInfo["pickUpSlot"] =
-        deliveryDate + "" + deliveryTime.replace(":", "");
-
+    if(deliveryType==="pickup") 
+      shipmentInfo["pickUpSlot"]=deliveryDate+""+(deliveryTime.replace(":",""));
+      
     //call create order
     createOrder(client.id, orderProducts, shipmentInfo);
     handleClose();
@@ -159,26 +175,29 @@ function ShoppingCartPage(props) {
           </Row>
         </Col>
         <Col md="4" sm="12">
-          <ShoppingCartOrderSummary
-            products={products}
-            cart={cart}
-            feeValue={feeValue}
-            setAmount={setAmount}
-            setDeliveryAddress={setDeliveryAddress}
-            setDeliveryDate={setDeliveryDate}
-            setDeliveryType={setDeliveryType}
-            setDeliveryFee={setDeliveryFee}
-            setDeliveryTime={setDeliveryTime}
-            amount={amount}
-            deliveryAddress={deliveryAddress}
-            deliveryDate={deliveryDate}
-            deliveryType={deliveryType}
-            deliveryFee={deliveryFee}
-            deliveryTime={deliveryTime}
-            handleShow={handleShow}
-          />
+        <ShoppingCartOrderSummary 
+                products={products}
+                cart={cart}
+
+                setAmount={setAmount}
+                setDeliveryAddress={setDeliveryAddress}
+                setDeliveryDate={setDeliveryDate}
+                setDeliveryType={setDeliveryType}
+                setDeliveryFee={setDeliveryFee}
+                setDeliveryTime={setDeliveryTime}
+
+                amount={amount}
+                deliveryAddress={deliveryAddress}
+                deliveryDate={deliveryDate}
+                deliveryType={deliveryType}
+                deliveryFee={deliveryFee}
+                deliveryTime={deliveryTime}
+
+                handleShow={handleShow}
+              />
         </Col>
       </Row>
+    
 
       <ModalOrderConfirmation
         show={show}
@@ -188,7 +207,6 @@ function ShoppingCartPage(props) {
         tot={amount}
         handleSubmit={handleSubmit}
         deliveryType={deliveryType}
-        feeValue={feeValue}
       />
       <ErrorToast
         errorMessage={requestError}

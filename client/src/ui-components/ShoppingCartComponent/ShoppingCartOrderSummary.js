@@ -14,7 +14,7 @@ import Button from "../Button/Button";
 import { OrderRecapRow } from "./OrderRecapRow";
 import { useLocation, useHistory } from "react-router-dom";
 
-function checkboxShipmentComponent(props) {
+function checkboxShipmentComponent(props, feeValue) {
   return (
     <div className="form-check">
       <input
@@ -23,8 +23,8 @@ function checkboxShipmentComponent(props) {
             //i.e. if from "pickup" to "shipment", then clear the address field
             props.setDeliveryAddress("");
             props.setDeliveryFee((prev) => {
-              props.setAmount(props.amount + props.feeValue);
-              return props.feeValue;
+              props.setAmount(props.amount + feeValue);
+              return feeValue;
             });
           }
           props.setDeliveryType("shipment");
@@ -41,7 +41,7 @@ function checkboxShipmentComponent(props) {
   );
 }
 
-function checkboxPickupComponent(props) {
+function checkboxPickupComponent(props, feeValue) {
   return (
     <div className="form-check">
       <input
@@ -49,7 +49,7 @@ function checkboxPickupComponent(props) {
           if (props.deliveryType === "shipment") {
             //i.e. if from "shipment" to "pickup", then remove fee
             props.setDeliveryFee((prev) => {
-              props.setAmount(props.amount - props.feeValue);
+              props.setAmount(props.amount - feeValue);
               props.setDeliveryDate("3"); //when switching to pickup, Wednesday is selected in the form. So we update the state
               props.setDeliveryTime("");
               return 0;
@@ -153,11 +153,12 @@ function dateComponent(props) {
 }
 
 function ShoppingCartOrderSummary(props) {
+  const feeValue = 5; //TODO: backend should validate the hardcoded value fee
   const history = useHistory();
   const location = useLocation();
 
-  let checkboxShipment = checkboxShipmentComponent(props);
-  let checkboxPickup = checkboxPickupComponent(props);
+  let checkboxShipment = checkboxShipmentComponent(props, feeValue);
+  let checkboxPickup = checkboxPickupComponent(props, feeValue);
   let address = addressComponent(props);
   let date = dateComponent(props);
   let orderSummary = props.products.map((item) => {
@@ -192,7 +193,7 @@ function ShoppingCartOrderSummary(props) {
           </Col>
         </Row>
         <Divider />
-        <Form onSubmit={e=>{e.preventDefault();}}>
+        <Form>
           <Form.Group className="mb-3">
             <Row>
               <Col>{checkboxShipment}</Col>

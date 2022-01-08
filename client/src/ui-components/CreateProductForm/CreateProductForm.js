@@ -3,7 +3,6 @@ import { Form, Container } from "react-bootstrap";
 import "./CreateProductForm.css";
 import Product from "../../services/models/Product";
 import Button from "../Button/Button";
-import "../../ui-components/Title.css";
 function CreateProductForm(props) {
   const handleChange = (e) => {
     let value = e.target.value;
@@ -18,9 +17,7 @@ function CreateProductForm(props) {
 
   return (
     <Container>
-      <h1 className="title" style={{ textAlign: "center" }}>
-        Create Product
-      </h1>
+      <h1 className="title-product-form">Create Product</h1>
       <Container className="createProductForm">
         <Form onSubmit={props.handleSubmit}>
           <Form.Group className="mb-3">

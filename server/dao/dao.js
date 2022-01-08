@@ -7,8 +7,6 @@ const {
   getEmployeeByEmail,
 } = require("./employee");
 
-const { getManagerByID, getManagerByEmail } = require("./manager");
-
 const { getFarmerByID, getFarmerByEmail } = require("./farmer");
 
 const {
@@ -50,7 +48,6 @@ const {
 const { ClientInfo } = require("../models/client_info");
 const { EmployeeInfo } = require("../models/employee_info");
 const { FarmerInfo } = require("../models/farmer_info");
-const { ManagerInfo } = require("../models/manager_info");
 
 // DAO initialization
 // Only one instance can be open at a time. Subsequent calls has no effect.
@@ -101,10 +98,6 @@ exports.findClients = (searchString) => findClients(db, searchString);
 exports.addFundToWallet = (clientID, increaseBy) =>
   addFundToWallet(db, clientID, increaseBy);
 
-//Manager
-exports.getManagerByID = (managerID) => getManagerByID(db, managerID);
-exports.getManagerByEmail = (email) => getManagerByEmail(db, email);
-
 // Product
 exports.getProductsByIDs = (ids) => getProductsByIDs(db, ids);
 exports.findProducts = (searchString, category) =>
@@ -153,19 +146,17 @@ exports.getOrdersByClientIDList = (clientIDList) =>
 exports.createClientsTextSearchIndexes = () =>
   createClientsTextSearchIndexes(db);
 
-// User (Client, Farmer, Employee, Manager)
+// User (Client, Farmer, Employee)
 exports.getUserByEmail = async (email) => {
   let usersFound = await Promise.all([
     getClientByEmail(db, email),
     getFarmerByEmail(db, email),
     getEmployeeByEmail(db, email),
-    getManagerByEmail(db, email),
-  ]).then(([clientInfo, farmerInfo, employeeInfo, managerInfo]) => {
+  ]).then(([clientInfo, farmerInfo, employeeInfo]) => {
     let users = [];
     if (clientInfo) users.push(ClientInfo.fromMongoJSON(clientInfo));
     if (farmerInfo) users.push(FarmerInfo.fromMongoJSON(farmerInfo));
     if (employeeInfo) users.push(EmployeeInfo.fromMongoJSON(employeeInfo));
-    if (managerInfo) users.push(ManagerInfo.fromMongoJSON(managerInfo));
     return users;
   });
 

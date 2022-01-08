@@ -1279,22 +1279,6 @@ describe("Orders API tests:", () => {
 
           expect(res.body).to.be.eql([
             {
-              id: "6187c957b288576ca26f8999",
-              clientID: "6187c957b288576ca26f8257",
-              products: [
-                { productID: "6187c957b288576ca26f8258", quantity: 10 },
-                { productID: "6187c957b288576ca26f8259", quantity: 2 },
-              ],
-              status: "done",
-              totalPrice: "12",
-              createdAt: "2021-12-17T13:00:07.616Z",
-              shipmentInfo: {
-                type: "pickup",
-                pickUpSlot: "42200",
-                address: "Via of the market ",
-              },
-            },
-            {
               id: "6187c957b288576ca26f8251",
               clientID: "6187c957b288576ca26f8257",
               products: [
@@ -1309,7 +1293,6 @@ describe("Orders API tests:", () => {
                 address: "Via Prapappo Ravanello 54",
               },
             },
-
             {
               id: "6187c957b288576ca26f8999",
               clientID: "6187c957b288576ca26f8257",
@@ -1325,7 +1308,6 @@ describe("Orders API tests:", () => {
                 address: "Via of the market ",
               },
             },
-
           ]);
 
           done();
@@ -1921,7 +1903,6 @@ describe("User Login API tests:", () => {
       ...testData.clientsCollection,
       ...testData.farmersCollection,
       ...testData.employeesCollection,
-      ...testData.managersCollection,
     });
 
     afterEach(() => {
@@ -1981,27 +1962,6 @@ describe("User Login API tests:", () => {
             expect(res.body.password).not.to.exist;
             expect(res.body.role).to.be.equal("farmer");
             expect(res.body.id).to.be.equal("6187c957b288576ca24f8257");
-
-            done();
-          });
-      });
-
-      it("it should success with a manager", (done) => {
-        chai
-          .request(app)
-          .post("/api/users/login")
-          .send({
-            username: "manager1@test.com",
-            password: "123456789",
-          })
-          .end((err, res) => {
-            expect(err).to.be.null;
-            expect(res.status).to.be.equal(200);
-            expect(res.body).to.be.an("object");
-            expect(res.body.email).to.be.equal("manager1@test.com");
-            expect(res.body.password).not.to.exist;
-            expect(res.body.role).to.be.equal("manager");
-            expect(res.body.id).to.be.equal("1187c957b288576ca26f8257");
 
             done();
           });
@@ -2134,191 +2094,6 @@ describe("User Login API tests:", () => {
             done();
           });
       });
-    });
-  });
-});
-
-describe("manager functions", function () {
-  // add a test hook
-  beforeEach(function () {
-    dao.open();
-    mongoUnit.load({
-      ...testData.managersCollection,
-    });
-  });
-
-  afterEach(() => {
-    mongoUnit.drop();
-    dao.close();
-  });
-
-  // test a functionality
-  it("getManagerByID works", async () => {
-    // add an assertion
-
-    let user = await dao.getManagerByID("1187c957b288576ca26f8257");
-
-    expect(user.email).to.be.equal("manager1@test.com");
-    expect(user.fullName).to.be.equal("Mario Biondi");
-    expect(user.role).to.be.equal("manager");
-  });
-  it("getManagerByEmail works", async () => {
-    // add an assertion
-
-    let user = await dao.getManagerByEmail("manager1@test.com");
-
-    expect(user.email).to.be.equal("manager1@test.com");
-    expect(user.fullName).to.be.equal("Mario Biondi");
-    expect(user.role).to.be.equal("manager");
-  });
-
-  it("ManagerInfo constructor works", async () => {
-    const { ManagerInfo } = require("../models/manager_info");
-    let managerInfo = new ManagerInfo(
-      "2187c957b288576ca26f8257",
-      "manager2@test.com",
-      "123456789",
-      "Manager 2"
-    );
-
-    expect(managerInfo.email).to.be.equal("manager2@test.com");
-    expect(managerInfo.fullName).to.be.equal("Manager 2");
-    expect(managerInfo.role).to.be.equal("manager");
-  });
-
-  it("ManagerInfoResult constructor works", async () => {
-    const { ManagerInfoResult } = require("../models/manager_info_result");
-    let managerInfo = new ManagerInfoResult(
-      "2187c957b288576ca26f8257",
-      "manager2@test.com",
-
-      "Manager 2"
-    );
-    expect(managerInfo.email).to.be.equal("manager2@test.com");
-    expect(managerInfo.fullName).to.be.equal("Manager 2");
-    expect(managerInfo.role).to.be.equal("manager");
-  });
-
-  it("fromManagerInfo function works", async () => {
-    const { ManagerInfoResult } = require("../models/manager_info_result");
-    const { ManagerInfo } = require("../models/manager_info");
-
-    let managerInfo = new ManagerInfo(
-      "2187c957b288576ca26f8257",
-      "manager2@test.com",
-      "123456789",
-      "Manager 2"
-    );
-
-    let managerInfoResult = ManagerInfoResult.fromManagerInfo(managerInfo);
-
-    expect(managerInfoResult.email).to.be.equal("manager2@test.com");
-    expect(managerInfoResult.fullName).to.be.equal("Manager 2");
-    expect(managerInfoResult.role).to.be.equal("manager");
-  });
-
-  it("fromMongoJSON ManagerInfoResult function works", async () => {
-    const { ManagerInfoResult } = require("../models/manager_info_result");
-
-    let obj = {
-      id: "2187c957b288576ca26f8257",
-      email: "manager2@test.com",
-      password: "123456789",
-      fullName: "Manager 2",
-    };
-
-    let managerInfoResult = ManagerInfoResult.fromMongoJSON(obj);
-
-    expect(managerInfoResult.email).to.be.equal("manager2@test.com");
-    expect(managerInfoResult.fullName).to.be.equal("Manager 2");
-    expect(managerInfoResult.role).to.be.equal("manager");
-  });
-
-  it("fromMongoJSON ManagerInfo function works", async () => {
-    const { ManagerInfo } = require("../models/manager_info");
-
-    let obj = {
-      id: "2187c957b288576ca26f8257",
-      email: "manager2@test.com",
-      password: "123456789",
-      fullName: "Manager 2",
-    };
-
-    let managerInfoResult = ManagerInfo.fromMongoJSON(obj);
-
-    expect(managerInfoResult.email).to.be.equal("manager2@test.com");
-    expect(managerInfoResult.fullName).to.be.equal("Manager 2");
-    expect(managerInfoResult.role).to.be.equal("manager");
-  });
-
-  it("getUserByEmail works", async () => {
-    let user = await dao.getUserByEmail("manager1@test.com");
-    expect(user.email).to.be.equal("manager1@test.com");
-    expect(user.fullName).to.be.equal("Mario Biondi");
-    expect(user.role).to.be.equal("manager");
-  });
-});
-
-// Employees API tests
-describe("Managers API tests:", () => {
-  beforeEach(() => {
-    dao.open();
-    mongoUnit.load(testData.managersCollection);
-  });
-
-  afterEach(() => {
-    mongoUnit.drop();
-    dao.close();
-  });
-
-  describe("GET /managers/:managerID", () => {
-    it("it should retrieve the manager associated to the given ID", (done) => {
-      chai
-        .request(app)
-        .get("/api/managers/1187c957b288576ca26f8257")
-        .end((err, res) => {
-          expect(err).to.be.null;
-          expect(res.status).to.be.equal(200);
-          expect(res.body).to.be.an("object");
-          expect(res.body.fullName).to.be.equal("Mario Biondi");
-          done();
-        });
-    });
-
-    it("it should fail when the manager associated to the given ID doesn't exist", (done) => {
-      chai
-        .request(app)
-        .get("/api/managers/9997c957b288576ca26f8257")
-        .end((err, res) => {
-          expect(err).to.be.null;
-          expect(res.status).to.be.equal(404);
-          done();
-        });
-    });
-
-    it("it must fail when an invalid Mongo ID is passed", (done) => {
-      chai
-        .request(app)
-        .get("/api/employees/test")
-        .end((err, res) => {
-          expect(err).to.be.null;
-          expect(res.status).to.be.equal(400);
-
-          done();
-        });
-    });
-
-    it("it must fail when mongo fails", (done) => {
-      dao.close();
-      chai
-        .request(app)
-        .get("/api/managers/6187c957b288576ca26f8257")
-        .end((err, res) => {
-          expect(err).to.be.null;
-          expect(res.status).to.be.equal(500);
-
-          done();
-        });
     });
   });
 });

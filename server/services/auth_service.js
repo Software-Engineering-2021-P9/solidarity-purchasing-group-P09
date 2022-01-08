@@ -9,7 +9,6 @@ const { UserRoles } = require("../models/user_roles");
 const { ClientInfoResult } = require("../models/client_info_result");
 const { EmployeeInfoResult } = require("../models/employee_info_result");
 const { FarmerInfoResult } = require("../models/farmer_info_result");
-const { ManagerInfoResult } = require("../models/manager_info_result");
 
 function checkMatchingPasswords(inputPassword, userPassword) {
   return bcrypt.compare(inputPassword, userPassword);
@@ -50,9 +49,6 @@ exports.passportStrategy = new LocalStrategy(async function (
     case UserRoles.EMPLOYEE:
       userResult = EmployeeInfoResult.fromEmployeeInfo(user);
       break;
-    case UserRoles.MANAGER:
-      userResult = ManagerInfoResult.fromManagerInfo(user);
-      break;
     case UserRoles.FARMER:
     default:
       userResult = FarmerInfoResult.fromFarmerInfo(user);
@@ -73,9 +69,6 @@ exports.deserializeUser = async (id, done) => {
   switch (userRole) {
     case UserRoles.CLIENT:
       user = ClientInfoResult.fromMongoJSON(await dao.getClientByID(userID));
-      break;
-    case UserRoles.MANAGER:
-      user = ManagerInfoResult.fromMongoJSON(await dao.getManagerByID(userID));
       break;
     case UserRoles.EMPLOYEE:
       user = EmployeeInfoResult.fromMongoJSON(

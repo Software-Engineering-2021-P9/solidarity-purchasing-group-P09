@@ -70,7 +70,7 @@ function UserLoginPage(props) {
           </Alert>
         </Row>
       ) : (
-        <Container style={{ textAlign: "center", maxWidth: "400px" }}>
+        <Container style={{ textAlign: "center", width: "500px" }}>
           <LoginForm
             handleSubmit={handleSubmit}
             username={username}

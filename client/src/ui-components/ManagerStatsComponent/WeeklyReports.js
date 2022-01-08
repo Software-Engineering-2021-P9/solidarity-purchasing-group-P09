@@ -1,7 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./ReportsCSS.css";
 import React from "react";
-import { Col, Row, FormControl, Button, InputGroup } from "react-bootstrap";
+import { Col, Row, FormControl, InputGroup } from "react-bootstrap";
 import {
   BarChart,
   CartesianGrid,
@@ -22,7 +22,12 @@ function WeeklyReports(props) {
       <Row className="mx-1">
         <Col className="container-this-week px-4 py-3" sm="auto" md="auto">
           <Row>
-            <Col className="total-orders">15%</Col>
+            <Col className="total-orders">
+              {(
+                (props.thisWeekReports[0] / props.thisWeekReports[1]) *
+                100
+              ).toFixed(2)}
+            </Col>
             <Col className="green-text">{arrowDownIcon}- 0.80%</Col>
           </Row>
           <Row>of unretrieved orders this week</Row>
@@ -33,6 +38,7 @@ function WeeklyReports(props) {
             year={props.year}
             setWeek={props.setWeek}
             setYear={props.setYear}
+            formReports={props.formReports}
           />
         </Col>
       </Row>
@@ -40,61 +46,30 @@ function WeeklyReports(props) {
         Number of unretrieved orders per week
       </Row>
       <Row>
-        <UnretrievedWeeklyBar />
+        <UnretrievedWeeklyBar barReports={props.barReports} />
       </Row>
       <Row className="stats-subtitle my-5 mx-1">
         Number of unretrieved orders Vs total orders per week
       </Row>
       <Row>
-        <PercentageUnretrievedWeeklyBar />
+        <PercentageUnretrievedWeeklyBar barReports={props.barReports} />
       </Row>
     </>
   );
 }
 
 function PercentageUnretrievedWeeklyBar(props) {
-  const data = [
-    {
-      week: "45",
-      percentage: 0.15,
-    },
-    {
-      week: "46",
-      percentage: 0.13,
-    },
-    {
-      week: "47",
-      percentage: 0.24,
-    },
-    {
-      week: "48",
-      percentage: 0.19,
-    },
-    {
-      week: "49",
-      percentage: 0.07,
-    },
-    {
-      week: "50",
-      percentage: 0.25,
-    },
-    {
-      week: "51",
-      percentage: 0.1,
-    },
-    {
-      week: "52",
-      percentage: 0.27,
-    },
-    {
-      week: "1",
-      percentage: 0.18,
-    },
-    {
-      week: "2",
-      percentage: 0.03,
-    },
-  ];
+  const data = [];
+  Array.from(props.barReports.entries()).map((entry) => {
+    const [key, val] = entry;
+    let value = {
+      week: key,
+      percentage: ((val[0] / val[1]) * 100).toFixed(2),
+    };
+    data.push(value);
+    return entry;
+  });
+
   return (
     <>
       <BarChart width={800} height={250} data={data} barSize={40}>
@@ -117,48 +92,14 @@ function PercentageUnretrievedWeeklyBar(props) {
 }
 
 function UnretrievedWeeklyBar(props) {
-  const data = [
-    {
-      week: "45",
-      unretrieved: 2,
-    },
-    {
-      week: "46",
-      unretrieved: 7,
-    },
-    {
-      week: "47",
-      unretrieved: 5,
-    },
-    {
-      week: "48",
-      unretrieved: 12,
-    },
-    {
-      week: "49",
-      unretrieved: 1,
-    },
-    {
-      week: "50",
-      unretrieved: 5,
-    },
-    {
-      week: "51",
-      unretrieved: 10,
-    },
-    {
-      week: "52",
-      unretrieved: 7,
-    },
-    {
-      week: "1",
-      unretrieved: 5,
-    },
-    {
-      week: "2",
-      unretrieved: 2,
-    },
-  ];
+  const data = [];
+  Array.from(props.barReports.entries()).map((entry) => {
+    const [key, val] = entry;
+    let value = { week: key, unretrieved: val[0] };
+    data.push(value);
+    return entry;
+  });
+
   return (
     <>
       <BarChart width={800} height={250} data={data} barSize={40}>
@@ -209,11 +150,12 @@ function WeeklyForm(props) {
               props.setYear(e.target.value);
             }}
           />
-          <Button>Search</Button>
         </InputGroup>
       </Row>
       <Row className="comments-week-stats">
-        Unretrieved orders in week {props.week} of {props.year} were 560, 7% of
+        Unretrieved orders in week {props.week} of {props.year} were{" "}
+        {props.formReports[0]},{" "}
+        {((props.formReports[0] / props.formReports[1]) * 100).toFixed(2)}% of
         total orders
       </Row>
     </>

@@ -1,14 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./ReportsCSS.css";
 import React from "react";
-import {
-  Col,
-  Row,
-  FormControl,
-  Button,
-  InputGroup,
-  Form,
-} from "react-bootstrap";
+import { Col, Row, FormControl, InputGroup, Form } from "react-bootstrap";
 import {
   BarChart,
   CartesianGrid,
@@ -29,7 +22,12 @@ function MonthlyReports(props) {
       <Row className="mx-1">
         <Col className="container-this-week px-4 py-3" sm="auto" md="auto">
           <Row>
-            <Col className="total-orders">15%</Col>
+            <Col className="total-orders">
+              {(
+                (props.thisMonthReports[0] / props.thisMonthReports[1]) *
+                100
+              ).toFixed(2)}
+            </Col>
             <Col className="red-text">{arrowUpIcon}+ 1.27%</Col>
           </Row>
           <Row>of unretrieved orders this month</Row>
@@ -40,6 +38,7 @@ function MonthlyReports(props) {
             year={props.year}
             setMonth={props.setMonth}
             setYear={props.setYear}
+            formReports={props.formReports}
           />
         </Col>
       </Row>
@@ -234,12 +233,13 @@ function MonthlyForm(props) {
               props.setYear(e.target.value);
             }}
           />
-          <Button>Search</Button>
         </InputGroup>
       </Row>
       <Row className="comments-week-stats">
-        Unretrieved orders in {monthsDropdown[props.month]} of {props.year} were
-        560, 7% of total orders
+        Unretrieved orders in {monthsDropdown[props.month]} of {props.year} were{" "}
+        {props.formReports[0]},{" "}
+        {((props.formReports[0] / props.formReports[1]) * 100).toFixed(2)}% of
+        total orders
       </Row>
     </>
   );

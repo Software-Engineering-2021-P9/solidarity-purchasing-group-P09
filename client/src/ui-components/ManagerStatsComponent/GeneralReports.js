@@ -16,7 +16,7 @@ function GeneralReports(props) {
           <Row>
             <Col className="icon-centre">{gridIcon}</Col>
             <Col md="auto" sm="auto">
-              <Row className="total-orders">{props.totalUnretrievedOrders}</Row>
+              <Row className="total-orders">{props.generalReports[0]}</Row>
               <Row className="comment-stats">unretrieved orders</Row>
             </Col>
           </Row>
@@ -27,7 +27,12 @@ function GeneralReports(props) {
               <PieChart
                 className="pie-chart"
                 data={[
-                  { title: "Unretrieved", value: 15, color: "#DB9471" },
+                  {
+                    title: "Unretrieved",
+                    value:
+                      (props.generalReports[0] / props.generalReports[1]) * 100,
+                    color: "#DB9471",
+                  },
                   { title: "Retrieved", value: 85, color: "#FFFFFF" },
                 ]}
                 startAngle={270}
@@ -35,7 +40,7 @@ function GeneralReports(props) {
             </Col>
             <Col md="auto" sm="auto">
               <Row className="total-orders">
-                {(props.totalUnretrievedOrders / props.totalOrders) * 100} %
+                {(props.generalReports[0] / props.generalReports[1]) * 100} %
               </Row>
               <Row className="comment-stats">of the total orders</Row>
             </Col>

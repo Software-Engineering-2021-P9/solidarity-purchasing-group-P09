@@ -537,3 +537,56 @@ export async function setWeekphaseOverride(weekphaseID) {
       throw new Error("An error occurred during weekphase override");
   }
 }
+
+// ----------
+// Reports
+// ----------
+
+export async function getWeeklyOrdersStat(week, year) {
+  // Returns mock data right now
+  if (!week && !year) {
+    return [150, 10000];
+  } else {
+    return [week, year];
+  }
+  //let response = await fetch("/api/orders?clientID=" + clientID);
+
+  /*switch (response.status) {
+    case 200:
+      let responseBody = await response.json();
+      return responseBody.map((order) => Order.fromJSON(order));
+    case 400:
+      throw new Error(
+        "Bad request: the request contained invalid parameter " + clientID
+      );
+    case 401:
+      throw new Error("Unauthorized");
+    case 500:
+      throw new Error("Internal Server Error");
+    default:
+      throw new Error("An error occurred during orders search");
+  }*/
+}
+
+export async function getWeekIntervalOrdersStat(week1, week2, year1, year2) {
+  // Returns mock data right now
+  return [week1 + week2, year1];
+
+  //let response = await fetch("/api/orders?clientID=" + clientID);
+
+  /*switch (response.status) {
+    case 200:
+      let responseBody = await response.json();
+      return responseBody.map((order) => Order.fromJSON(order));
+    case 400:
+      throw new Error(
+        "Bad request: the request contained invalid parameter " + clientID
+      );
+    case 401:
+      throw new Error("Unauthorized");
+    case 500:
+      throw new Error("Internal Server Error");
+    default:
+      throw new Error("An error occurred during orders search");
+  }*/
+}

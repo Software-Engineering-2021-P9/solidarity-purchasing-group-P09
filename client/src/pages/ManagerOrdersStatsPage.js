@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useReducer } from "react";
+import React, { useState, useEffect } from "react";
 import { Container, Row, Spinner } from "react-bootstrap";
 import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponent";
 
@@ -62,13 +62,13 @@ function ManagerOrdersStatsPage(props) {
 
   useEffect(() => {
     const getBarReports = async () => {
-      if (typeReports == 0) {
+      if (typeReports === 0) {
         let map = new Map();
         let year = 2021;
         const weeks = [45, 46, 47, 48, 49, 50, 51, 52, 1, 2];
 
         for (const w of weeks) {
-          if (w == 1 || w == 2) {
+          if (w === 1 || w === 2) {
             year = 2022;
           }
           var res = await getWeeklyOrdersStat(w, year);
@@ -94,11 +94,11 @@ function ManagerOrdersStatsPage(props) {
         const weeks = [17, 21, 25, 29, 33, 37, 41, 45, 49, 1];
         let cont = 0;
         for (const w of weeks) {
-          if (w == 1) {
+          if (w === 1) {
             year = 2022;
           }
-          var res = await getWeekIntervalOrdersStat(w, w + 3, year, year);
-          map.set(months[cont], res);
+          var res2 = await getWeekIntervalOrdersStat(w, w + 3, year, year);
+          map.set(months[cont], res2);
           cont++;
         }
 
@@ -110,7 +110,7 @@ function ManagerOrdersStatsPage(props) {
 
   useEffect(() => {
     const getFormReports = () => {
-      if (typeReports == 0) {
+      if (typeReports === 0) {
         getWeeklyOrdersStat(week, year)
           .then((result) => {
             setFormReports(result);
@@ -133,7 +133,7 @@ function ManagerOrdersStatsPage(props) {
       }
     };
     getFormReports();
-  }, [week, year, month]);
+  }, [week, year, month, typeReports]);
 
   return (
     <Container>

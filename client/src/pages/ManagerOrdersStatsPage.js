@@ -77,16 +77,32 @@ function ManagerOrdersStatsPage(props) {
 
         setBarReports(map);
       } else {
-        let week1 = (month + 1) * 4 - 3;
-        let week2 = (month + 1) * 4;
-        getWeekIntervalOrdersStat(week1, week2, year, year)
-          .then((result) => {
-            setFormReports(result);
-            setInitialized(true);
-          })
-          .catch((err) =>
-            setRequestError("Failed to fetch form reports: " + err.message)
-          );
+        let map = new Map();
+        let year = 2021;
+        let months = [
+          "APR",
+          "MAY",
+          "JUN",
+          "JUL",
+          "AUG",
+          "SEP",
+          "OCT",
+          "NOV",
+          "DEC",
+          "JAN",
+        ];
+        const weeks = [17, 21, 25, 29, 33, 37, 41, 45, 49, 1];
+        let cont = 0;
+        for (const w of weeks) {
+          if (w == 1) {
+            year = 2022;
+          }
+          var res = await getWeekIntervalOrdersStat(w, w + 3, year, year);
+          map.set(months[cont], res);
+          cont++;
+        }
+
+        setBarReports(map);
       }
     };
     getBarReports();
@@ -157,6 +173,7 @@ function ManagerOrdersStatsPage(props) {
                   thisMonthReports={thisMonthReports}
                   setMonth={setMonth}
                   setYear={setYear}
+                  barReports={barReports}
                 />
               </>
             )}

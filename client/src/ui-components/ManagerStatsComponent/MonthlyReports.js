@@ -46,61 +46,30 @@ function MonthlyReports(props) {
         Number of unretrieved orders per month
       </Row>
       <Row>
-        <UnretrievedMonthlyBar />
+        <UnretrievedMonthlyBar barReports={props.barReports} />
       </Row>
       <Row className="stats-subtitle my-5 mx-1">
         Number of unretrieved orders Vs total orders per month
       </Row>
       <Row>
-        <PercentageUnretrievedMonthlyBar />
+        <PercentageUnretrievedMonthlyBar barReports={props.barReports} />
       </Row>
     </>
   );
 }
 
 function PercentageUnretrievedMonthlyBar(props) {
-  const data = [
-    {
-      month: "APR",
-      percentage: 0.18,
-    },
-    {
-      month: "MAY",
-      percentage: 0.23,
-    },
-    {
-      month: "JUN",
-      percentage: 0.21,
-    },
-    {
-      month: "JUL",
-      percentage: 0.03,
-    },
-    {
-      month: "AUG",
-      percentage: 0.04,
-    },
-    {
-      month: "SEP",
-      percentage: 0.18,
-    },
-    {
-      month: "OCT",
-      percentage: 0.19,
-    },
-    {
-      month: "NOV",
-      percentage: 0.13,
-    },
-    {
-      month: "DEC",
-      percentage: 0.27,
-    },
-    {
-      month: "JAN",
-      percentage: 0.01,
-    },
-  ];
+  const data = [];
+  Array.from(props.barReports.entries()).map((entry) => {
+    const [key, val] = entry;
+    let value = {
+      month: key,
+      percentage: ((val[0] / val[1]) * 100).toFixed(2),
+    };
+    data.push(value);
+    return entry;
+  });
+
   return (
     <>
       <BarChart width={800} height={250} data={data} barSize={40}>
@@ -123,48 +92,14 @@ function PercentageUnretrievedMonthlyBar(props) {
 }
 
 function UnretrievedMonthlyBar(props) {
-  const data = [
-    {
-      month: "APR",
-      unretrieved: 58,
-    },
-    {
-      month: "MAY",
-      unretrieved: 37,
-    },
-    {
-      month: "JUN",
-      unretrieved: 42,
-    },
-    {
-      month: "JUL",
-      unretrieved: 16,
-    },
-    {
-      month: "AUG",
-      unretrieved: 20,
-    },
-    {
-      month: "SEP",
-      unretrieved: 19,
-    },
-    {
-      month: "OCT",
-      unretrieved: 33,
-    },
-    {
-      month: "NOV",
-      unretrieved: 17,
-    },
-    {
-      month: "DEC",
-      unretrieved: 14,
-    },
-    {
-      month: "JAN",
-      unretrieved: 3,
-    },
-  ];
+  const data = [];
+  Array.from(props.barReports.entries()).map((entry) => {
+    const [key, val] = entry;
+    let value = { week: key, unretrieved: val[0] };
+    data.push(value);
+    return entry;
+  });
+
   return (
     <>
       <BarChart width={800} height={250} data={data} barSize={40}>

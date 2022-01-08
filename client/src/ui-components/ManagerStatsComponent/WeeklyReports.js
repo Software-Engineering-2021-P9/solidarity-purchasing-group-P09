@@ -20,7 +20,11 @@ function WeeklyReports(props) {
         <div className="title-reports">Weekly Reports</div>
       </Row>
       <Row className="mx-1">
-        <Col className="container-this-week px-4 py-3" sm="auto" md="auto">
+        <Col
+          className="container-this-week px-4 py-3 w-auto"
+          sm="auto"
+          md="auto"
+        >
           <Row>
             <Col className="total-orders">
               {(
@@ -32,7 +36,11 @@ function WeeklyReports(props) {
           </Row>
           <Row>of unretrieved orders this week</Row>
         </Col>
-        <Col className="mx-4" sm="auto" md="auto">
+        <Col
+          className="mx-xs-0 mx-md-4 mx-lg-4 px-sm-0 px-xs-0 px-md-0 px-lg-4"
+          sm="12"
+          md="auto"
+        >
           <WeeklyForm
             week={props.week}
             year={props.year}
@@ -129,7 +137,6 @@ function WeeklyForm(props) {
           <FormControl
             className="ml-3 form-size"
             type="number"
-            size="sm"
             step={1}
             max={52}
             min={1}
@@ -141,7 +148,6 @@ function WeeklyForm(props) {
           <FormControl
             className="mx-3 form-size"
             type="number"
-            size="sm"
             step={1}
             max={2022}
             min={2010}

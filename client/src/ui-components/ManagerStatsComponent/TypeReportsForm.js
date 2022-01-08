@@ -9,16 +9,16 @@ function TypeReportsForm(props) {
       <Row className="bottom-border-form mx-0 my-0">
         {props.typeReports === 0 ? (
           <>
-            <Col md="auto" sm="auto">
+            <Col md="auto" sm="auto" className="w-auto">
               <span className="type-reports type-reports-selected">Weekly</span>
             </Col>
-            <Col md="auto" sm="auto" className="type-reports">
-              <span onClick={() => props.setTypeReports(1)}>Montly</span>
+            <Col className="type-reports">
+              <span onClick={() => props.setTypeReports(1)}>Monthly</span>
             </Col>
           </>
         ) : (
           <>
-            <Col md="auto" sm="auto">
+            <Col md="auto" sm="auto" className="w-auto">
               <span
                 className="type-reports"
                 onClick={() => props.setTypeReports(0)}
@@ -26,11 +26,7 @@ function TypeReportsForm(props) {
                 Weekly
               </span>
             </Col>
-            <Col
-              md="auto"
-              sm="auto"
-              className="type-reports type-reports-selected"
-            >
+            <Col className="type-reports type-reports-selected">
               <span>Monthly</span>
             </Col>
           </>

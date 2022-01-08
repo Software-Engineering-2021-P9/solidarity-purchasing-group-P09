@@ -552,5 +552,17 @@ exports.productsAvailabilityCollection2 = {
       packaging: "1 units",
       quantity: 33,
     },
+
+
+    {
+      _id: ObjectID("000000000000000000000010"),
+      farmerID: ObjectID("67696f76616a6a6a31a23334"),
+      productID: ObjectID("000000000000000000000010"),
+      week: nextWeek,
+      year: currentYear,
+      price: 10,
+      packaging: "1 units",
+      quantity: 33,
+    },
   ],
 };

@@ -18,20 +18,21 @@ let dao = require("../dao/dao");
 let app;
 
 const mongoTestDBName = "spg-test";
+setTimeout(() => {
+  before(async () => {
+    // Init mock MongoDB
+    let dbURL = await mongoUnit.start({ dbName: mongoTestDBName });
+    process.env.MONGO_CONN_STR = dbURL;
+    process.env.MONGO_DB_NAME = mongoTestDBName;
+    app = require("../app");
 
-before(async () => {
-  // Init mock MongoDB
-  let dbURL = await mongoUnit.start({ dbName: mongoTestDBName });
-  process.env.MONGO_CONN_STR = dbURL;
-  process.env.MONGO_DB_NAME = mongoTestDBName;
-  app = require("../app");
+    // Import test files
+    require("./test_weekphase").tests(app);
+  });
 
-  // Import test files
-  require("./test_weekphase").tests(app);
-});
-
-after(() => {
-  return mongoUnit.stop();
+  after(async () => {
+    return mongoUnit.stop();
+  });
 });
 
 // -----
@@ -969,21 +970,35 @@ describe("Orders API tests:", () => {
   });
 
   describe("POST /orders", () => {
-    it("it should create a new order of type shipment", (done) => {
+    beforeEach(() => {
+      dao.open();
+      mongoUnit.load(testData.productsCollection);
+      mongoUnit.load(testData.productsAvailabilityCollection);
+      dao.createProductsTextSearchIndexes();
+    });
+
+    afterEach(() => {
+      mongoUnit.drop();
+      dao.close();
+    });
+
+    it("it should create a new order of type shipment ", (done) => {
       chai
         .request(app)
         .post("/api/orders")
         .send({
-          clientID: "6187c957b288576ca26f8257",
-          products: [
-            { productID: "000000000000000000000001", quantity: 1 },
-          ],
+          clientID: "618d4ad3736f2caf2d3b3ca5",
+          products: [{ productID: "000000000000000000000001", quantity: 1 }],
+
           shipmentInfo: {
             type: "shipment",
             address: "Via its real trust me 54",
           },
         })
         .end((err, res) => {
+          console.log(
+            "HELLOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO"
+          );
           expect(err).to.be.null;
           expect(res.status).to.be.equal(200);
           const id = res.body.id;
@@ -996,7 +1011,7 @@ describe("Orders API tests:", () => {
               expect(res.status).to.be.equal(200);
               expect(res.body).to.be.an("object");
 
-              expect(res.body.clientID).to.be.equal("6187c957b288576ca26f8257");
+              expect(res.body.clientID).to.be.equal("618d4ad3736f2caf2d3b3ca5");
               expect(res.body.id).to.be.equal(id);
               expect(res.body.products).to.be.eql([
                 { productID: "000000000000000000000001", quantity: 1 },
@@ -1017,9 +1032,7 @@ describe("Orders API tests:", () => {
         .post("/api/orders")
         .send({
           clientID: "6187c957b288576ca26f8257",
-          products: [
-            { productID: "000000000000000000000004", quantity: 1 },
-          ],
+          products: [{ productID: "000000000000000000000004", quantity: 1 }],
           shipmentInfo: {
             type: "pickup",
             pickUpSlot: "41111",
@@ -1061,9 +1074,7 @@ describe("Orders API tests:", () => {
         .post("/api/orders")
         .send({
           clientID: "6187c957b288576ca26f8257",
-          products: [
-            { productID: "000000000000000000000004", quantity: 1 },
-          ],
+          products: [{ productID: "000000000000000000000004", quantity: 1 }],
           shipmentInfo: {
             type: "shipment",
             pickUpSlot: "41111",
@@ -1181,9 +1192,7 @@ describe("Orders API tests:", () => {
         .post("/api/orders")
         .send({
           clientID: "1",
-          products: [
-            { productID: "000000000000000000000004", quantity: 1 },
-          ],
+          products: [{ productID: "000000000000000000000004", quantity: 1 }],
         })
         .end((err, res) => {
           expect(err).to.be.null;
@@ -1233,9 +1242,7 @@ describe("Orders API tests:", () => {
         .post("/api/orders")
         .send({
           clientID: "6187c957b288576ca26f8257",
-          products: [
-            { productID: "000000000000000000000004", quantity: 1 },
-          ],
+          products: [{ productID: "000000000000000000000004", quantity: 1 }],
         })
         .end((err, res) => {
           expect(err).to.be.null;
@@ -1248,27 +1255,9 @@ describe("Orders API tests:", () => {
 
     it("it must fail when mongo fails", (done) => {
       dao.close();
-      var day = new Date();
-      //shipment dateis valid only if it is for next week and is between wednesday & friday
-      //7 days a week, tjursday is day number 4
-      var daysToReachNextThursday = 7 - day.getDay() + 4;
-      var nextThursday = new Date(
-        day.setDate(day.getDate() + daysToReachNextThursday)
-      );
       chai
         .request(app)
-        .post("/api/orders")
-        .send({
-          clientID: "6187c957b288576ca26f8257",
-          products: [
-            { productID: "000000000000000000000004", quantity: 1 },
-          ],
-          shipmentInfo: {
-            type: "pickup",
-            pickUpSlot: "32200",
-            address: "Via Prapappo Ravanello 54",
-          },
-        })
+        .get("/api/orders?clientID=6187c957b288576ca26f8257")
         .end((err, res) => {
           expect(err).to.be.null;
           expect(res.status).to.be.equal(500);
@@ -1382,9 +1371,7 @@ describe("Orders API tests:", () => {
           expect(res.body).to.be.eql({
             id: "6187c957b288576ca26f8251",
             clientID: "6187c957b288576ca26f8257",
-            products: [
-              { productID: "000000000000000000000001", quantity: 1 },
-            ],
+            products: [{ productID: "000000000000000000000001", quantity: 1 }],
             status: "done",
             totalPrice: "3.5",
             createdAt: "2021-11-16T13:00:07.616Z",
@@ -1415,9 +1402,7 @@ describe("Orders API tests:", () => {
           expect(res.body).to.be.eql({
             id: "6187c957b288576ca26f8990",
             clientID: "6187c957b288576ca26f8251",
-            products: [
-              { productID: "000000000000000000000004", quantity: 1 },
-            ],
+            products: [{ productID: "000000000000000000000004", quantity: 1 }],
             status: "waiting",
             totalPrice: "2.3",
             createdAt: "2021-12-16T13:00:07.616Z",
@@ -1489,9 +1474,7 @@ describe("Orders API tests:", () => {
           expect(res.body).to.be.eql({
             id: "6187c957b288576ca26f8251",
             clientID: "6187c957b288576ca26f8257",
-            products: [
-              { productID: "000000000000000000000001", quantity: 1 },
-            ],
+            products: [{ productID: "000000000000000000000001", quantity: 1 }],
             status: "prepared",
             totalPrice: "3.5",
             createdAt: "2021-11-16T13:00:07.616Z",

@@ -1,7 +1,7 @@
 const axios = require("axios");
 
-exports.findProducts = async function () {
-  let urlRequest = "http://localhost:3001/api/products";
+exports.findProducts = async function (base_url) {
+  let urlRequest = base_url + "api/products";
 
   const response = await axios.get(urlRequest);
   switch (response.status) {
@@ -14,8 +14,8 @@ exports.findProducts = async function () {
   }
 };
 
-exports.getTelegramUsers = async function () {
-  const urlRequest = "http://localhost:3001/api/telegram/users";
+exports.getTelegramUsers = async function (base_url) {
+  const urlRequest = base_url + "api/telegram/users";
   const response = await axios.get(urlRequest);
   switch (response.status) {
     case 400:
@@ -27,8 +27,8 @@ exports.getTelegramUsers = async function () {
   }
 };
 
-exports.addTelegramUsers = async function (chatID) {
-  const urlRequest = "http://localhost:3001/api/telegram/users";
+exports.addTelegramUsers = async function (base_url, chatID) {
+  const urlRequest = base_url + "api/telegram/users";
   const response = await axios.post(urlRequest, { chatID: chatID });
   switch (response.status) {
     case 400:

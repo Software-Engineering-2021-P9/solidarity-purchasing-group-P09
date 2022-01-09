@@ -165,7 +165,7 @@ exports.confirmProductAvailabilityHandler = async function (req, res, next) {
           }
 
           // If the order product quantity can be fullfilled by the availability, set it as confirmed.
-          if (remainingQuantity - orderProduct.quantity > 0) {
+          if (remainingQuantity - orderProduct.quantity >= 0) {
             orderProduct.status = OrderProductStatus.CONFIRMED;
             remainingQuantity -= orderProduct.quantity;
             // Else, if the order product quantity can be only partially fullfilled,
@@ -206,14 +206,16 @@ exports.confirmProductAvailabilityHandler = async function (req, res, next) {
       }
 
       // Update all the modified orders
-      try {
-        result = await dao.updateOrders(orders);
-      } catch (err) {
-        console.error(
-          `confirmProductAvailability() -> couldn't update orders: ${err}`
-        );
-        await session.abortTransaction();
-        return res.status(500).end();
+      if (orders.length > 0) {
+        try {
+          result = await dao.updateOrders(orders);
+        } catch (err) {
+          console.error(
+            `confirmProductAvailability() -> couldn't update orders: ${err}`
+          );
+          await session.abortTransaction();
+          return res.status(500).end();
+        }
       }
 
       return res.status(204).end();

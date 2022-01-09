@@ -138,7 +138,9 @@ exports.getProductByIDHandler = async function (req, res, next) {
   try {
     result = Product.fromMongoJSON({
       ...productMongoJSON,
-      availability: result,
+      availability: result
+        ? ProductAvailabilityResult.fromMongoJSON(result)
+        : null,
     });
   } catch (err) {
     console.error(
@@ -259,7 +261,7 @@ exports.getNextWeekProductAvailability = async function (req, res, next) {
     return res.status(404).end();
   }
 
-  return res.json(ProductAvailability.fromMongoJSON(result));
+  return res.json(ProductAvailabilityResult.fromMongoJSON(result));
 };
 
 exports.createProductValidatorChain = [

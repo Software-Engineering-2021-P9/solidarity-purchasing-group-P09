@@ -27,6 +27,21 @@ class ProductAvailabilityResult {
     this.leftQuantity = leftQuantity;
   }
 
+  static fromMongoJSON(json) {
+    return new ProductAvailabilityResult(
+      json._id,
+      json.farmerID,
+      json.productID,
+      json.week,
+      json.year,
+      json.status,
+      json.packaging,
+      json.quantity,
+      json.price,
+      json.quantity - json.reservedQuantity
+    );
+  }
+
   static fromProductAvailability(obj) {
     return new ProductAvailabilityResult(
       obj.id,

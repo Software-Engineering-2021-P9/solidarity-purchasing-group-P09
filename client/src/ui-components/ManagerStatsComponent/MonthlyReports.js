@@ -31,7 +31,7 @@ function MonthlyReports(props) {
       props.previousMonthReports.totalCount) *
     100
   ).toFixed(2);
-  const diff = this_month_perc - prev_month_perc;
+  const diff = (this_month_perc - prev_month_perc).toFixed(2);
 
   return (
     <>
@@ -47,7 +47,7 @@ function MonthlyReports(props) {
           <Row>
             <Col className="total-orders">{this_month_perc} %</Col>
             {diff > 0 ? (
-              <Col className="red-texts">
+              <Col className="red-text">
                 {arrowUpIcon}+ {diff}%
               </Col>
             ) : (
@@ -74,14 +74,14 @@ function MonthlyReports(props) {
         </Col>
       </Row>
       <Row className="stats-subtitle my-5 mx-1">
-        Number of unretrieved orders per month
+        Number of unretrieved orders Vs Number of total orders per month
       </Row>
       {props.initializedBar ? (
         <Row>
           <UnretrievedMonthlyBar barReports={props.barReports} />
         </Row>
       ) : (
-        <Row className="vh-100 justify-content-center align-content-center">
+        <Row className="h-auto justify-content-center align-content-center">
           <Spinner animation="border" />
         </Row>
       )}

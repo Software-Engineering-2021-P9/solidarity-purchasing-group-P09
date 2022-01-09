@@ -24,7 +24,7 @@ function WeeklyReports(props) {
       props.previousWeekReports.totalCount) *
     100
   ).toFixed(2);
-  const diff = this_week_perc - prev_week_perc;
+  const diff = (this_week_perc - prev_week_perc).toFixed(2);
 
   return (
     <>
@@ -67,14 +67,14 @@ function WeeklyReports(props) {
         </Col>
       </Row>
       <Row className="stats-subtitle my-5 mx-1">
-        Number of unretrieved orders per week
+        Number of unretrieved orders Vs Number of total orders per week
       </Row>
       {props.initializedBar ? (
         <Row>
           <UnretrievedWeeklyBar barReports={props.barReports} />
         </Row>
       ) : (
-        <Row className="vh-100 justify-content-center align-content-center">
+        <Row className="h-auto justify-content-center align-content-center">
           <Spinner animation="border" />
         </Row>
       )}

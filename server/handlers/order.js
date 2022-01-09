@@ -5,13 +5,8 @@ const {
   OrderStatus,
   ShipmentInfo,
   Order,
-  OrderProductStatus,
-  ShipmentType,
 } = require("../models/order");
-const {
-  ProductAvailability,
-  ProductAvailabilityStatus,
-} = require("../models/product_availability");
+const { ProductAvailability } = require("../models/product_availability");
 const {
   clientIDBodyValidator,
   orderProductIDsBodyValidator,
@@ -24,6 +19,10 @@ const {
   orderPickUpSlotBodyValidator,
 } = require("./shared_validators");
 const { getNextWeekClient, getNowDate } = require("../services/time_service");
+const {
+  getOrderProductStatusForProductAvailabilityStatus,
+  getPriceForShipmentType,
+} = require("../services/order_service");
 
 // -----------
 // CreateOrder
@@ -49,7 +48,7 @@ exports.createOrderHandler = async function (req, res, next) {
       let result;
       try {
         result = await dao.getProductsAvailability(
-          orderProducts.map((p) => new ObjectID(p.productID)),
+          orderProducts.map((p) => ObjectID(p.productID)),
           ...getNextWeekClient()
         );
       } catch (err) {
@@ -64,8 +63,7 @@ exports.createOrderHandler = async function (req, res, next) {
         ProductAvailability.fromMongoJSON(r)
       );
 
-      let totalPrice =
-        req.body.shipmentType === ShipmentType.SHIPMENT ? 5.0 : 0.0;
+      let totalPrice = getPriceForShipmentType(req.body.shipmentType);
 
       for (let orderProduct of orderProducts) {
         let productAvailability = productAvailabilities.find(
@@ -85,10 +83,9 @@ exports.createOrderHandler = async function (req, res, next) {
         productAvailability.reservedQuantity += orderProduct.quantity;
 
         // Update order products missing fields
-        orderProduct.status =
-          productAvailability.status === ProductAvailabilityStatus.CONFIRMED
-            ? OrderProductStatus.CONFIRMED
-            : OrderProductStatus.WAITING;
+        orderProduct.status = getOrderProductStatusForProductAvailabilityStatus(
+          productAvailability.status
+        );
         orderProduct.price = productAvailability.price;
         orderProduct.packaging = productAvailability.packaging;
 
@@ -98,7 +95,7 @@ exports.createOrderHandler = async function (req, res, next) {
 
       // Update products availabilities
       try {
-        result = await dao.updateProductAvailabilities(productAvailabilities);
+        await dao.updateProductAvailabilities(productAvailabilities);
       } catch (err) {
         console.error(
           `CreateOrder() -> couldn't update product availabilities: ${err}`
@@ -146,7 +143,7 @@ exports.createOrderHandler = async function (req, res, next) {
       return res.json({ id: result.insertedId });
     });
   } catch (err) {
-    console.error(`CreateOrder() -> Error initializing transaction`);
+    console.error(`CreateOrder() -> Error initializing transaction: ${err}`);
     return res.status(500).end();
   }
 };

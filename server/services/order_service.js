@@ -5,6 +5,17 @@ const {
   ShipmentType,
   OrderStatus,
 } = require("../models/order");
+const { ProductAvailabilityStatus } = require("../models/product_availability");
+
+exports.getPriceForShipmentType = (shipmentType) =>
+  shipmentType === ShipmentType.SHIPMENT ? 5.0 : 0.0;
+
+exports.getOrderProductStatusForProductAvailabilityStatus = (
+  productAvailabilityStatus
+) =>
+  productAvailabilityStatus === ProductAvailabilityStatus.CONFIRMED
+    ? OrderProductStatus.CONFIRMED
+    : OrderProductStatus.WAITING;
 
 exports.updateOrdersAfterProductAvailabilityConfirm = (
   productAvailability,
@@ -47,9 +58,10 @@ exports.updateOrdersAfterProductAvailabilityConfirm = (
       .reduce((a, b) => a + b);
 
     // Add shipment fee
-    if (order.totalPrice !== 0)
-      order.totalPrice +=
-        order.shipmentInfo.type === ShipmentType.SHIPMENT ? 5 : 0;
+    order.totalPrice = this.addShipmentPriceToOrderTotalPrice(
+      order.totalPrice,
+      order.shipmentInfo.type
+    );
 
     // If all products are canceled, set the order as canceled
     if (
@@ -61,4 +73,12 @@ exports.updateOrdersAfterProductAvailabilityConfirm = (
   }
 
   return orders;
+};
+
+exports.addShipmentPriceToOrderTotalPrice = (orderPrice, shipmentType) => {
+  if (orderPrice !== 0)
+    orderPrice += shipmentType === ShipmentType.SHIPMENT ? 5 : 0;
+
+  console.log("aaaa", orderPrice);
+  return orderPrice;
 };

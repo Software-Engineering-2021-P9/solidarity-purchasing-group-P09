@@ -83,7 +83,7 @@ exports.updateProductAvailabilityHandler = async function (req, res, next) {
     });
   } catch (err) {
     console.error(
-      `UpdateProductAvailability() -> Error initializing transaction`
+      `UpdateProductAvailability() -> Error initializing transaction: ${err}`
     );
     return res.status(500).end();
   }
@@ -180,7 +180,7 @@ exports.confirmProductAvailabilityHandler = async function (req, res, next) {
     });
   } catch (err) {
     console.error(
-      `UpdateProductAvailability() -> Error initializing transaction`
+      `UpdateProductAvailability() -> Error initializing transaction: ${err}`
     );
     return res.status(500).end();
   }

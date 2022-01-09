@@ -253,15 +253,15 @@ function ProductListPage(props) {
           <div className="margin-auto center-text">
             <Modal.Title className="margin-auto">
               {" "}
-              {alertIcon} We received 3 missed pickups
+              {alertIcon} We received missed pickups
             </Modal.Title>
           </div>
         </Modal.Header>
 
         <Modal.Body>
-          <p className="center-text">You already missed 3 pickups.</p>
+          <p className="center-text">You already missed at least 3 pickups.</p>
           <p className="center-text">
-            You will be suspended if you miss 2 more pickups.
+            You will be suspended if you miss totally 5 pickups.
           </p>
         </Modal.Body>
 

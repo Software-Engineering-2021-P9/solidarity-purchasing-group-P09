@@ -17,10 +17,15 @@
   color: rgb(211, 2, 2);
 }
 .change-status {
+  cursor: pointer;
   color: rgba(99, 95, 70, 1);
   font-weight: 400;
   font-style: italic;
   text-decoration-line: underline;
+}
+
+.smaller-font {
+  font-size: smaller;
 }
 
 @media only screen and (max-width: 1028px) {

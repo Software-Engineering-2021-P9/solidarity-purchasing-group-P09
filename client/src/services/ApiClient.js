@@ -1,6 +1,7 @@
 import EmployeeInfoResult from "./models/EmployeeInfoResult";
 import ClientInfoResult from "./models/ClientInfoResult";
 import FarmerInfoResult from "./models/FarmerInfoResult";
+import ManagerInfoResult from "./models/ManagerInfoResult";
 import Product from "./models/Product";
 import ProductAvailability from "./models/ProductAvailability";
 import Order from "./models/Order";
@@ -42,6 +43,8 @@ export async function loginUser(email, password) {
           return ClientInfoResult.fromJSON(responseBody);
         case UserRoles.EMPLOYEE:
           return EmployeeInfoResult.fromJSON(responseBody);
+        case UserRoles.MANAGER:
+          return ManagerInfoResult.fromJSON(responseBody);
         case UserRoles.FARMER:
         default:
           return FarmerInfoResult.fromJSON(responseBody);
@@ -69,6 +72,8 @@ export async function getCurrentUser() {
           return ClientInfoResult.fromJSON(responseBody);
         case UserRoles.EMPLOYEE:
           return EmployeeInfoResult.fromJSON(responseBody);
+        case UserRoles.MANAGER:
+          return ManagerInfoResult.fromJSON(responseBody);
         case UserRoles.FARMER:
         default:
           return FarmerInfoResult.fromJSON(responseBody);

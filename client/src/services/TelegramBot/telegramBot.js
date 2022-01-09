@@ -17,13 +17,14 @@ bot.on("message", async (ctx) => {
   var hi = "hi";
   var bye = "bye";
   var products = "products";
-
-  if (ctx.message.text.toString().toLowerCase().indexOf(hi) === 0) {
-    ctx.reply("Hello dear user");
-  } else if (ctx.message.text.toString().toLowerCase().includes(bye)) {
-    ctx.reply("Hope to see you around again , Bye");
-  } else if (ctx.message.text.toString().toLowerCase().includes(products)) {
-    writeProductList(ctx.message.chat.id);
+  if (ctx.message.text) {
+    if (ctx.message.text.toString().toLowerCase().indexOf(hi) === 0) {
+      ctx.reply("Hello dear user");
+    } else if (ctx.message.text.toString().toLowerCase().includes(bye)) {
+      ctx.reply("Hope to see you around again , Bye");
+    } else if (ctx.message.text.toString().toLowerCase().includes(products)) {
+      writeProductList(ctx.message.chat.id);
+    }
   }
 });
 

@@ -10,6 +10,8 @@ const { OrderStatus } = require("../models/order");
 
 let dao = require("../dao/dao");
 
+const { getCurrentWeek } = require("../services/time_service");
+const [currentWeek, currentYear] = getCurrentWeek();
 // ----------------------------------
 // FAKE DATABASE AND TEST SERVER INIT
 // ----------------------------------
@@ -2338,6 +2340,176 @@ describe("Managers API tests:", () => {
       chai
         .request(app)
         .get("/api/managers/6187c957b288576ca26f8257")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(500);
+
+          done();
+        });
+    });
+  });
+});
+
+// Stats API tests
+describe("Stats API tests", () => {
+  beforeEach(() => {
+    dao.open();
+    mongoUnit.load(testData.ordersCollection3);
+  });
+
+  afterEach(() => {
+    mongoUnit.drop();
+    dao.close();
+  });
+
+  describe("GET /stats/orders/unretrieved/weekly", () => {
+    it("it should retrieve weekly unretrieved stats correctly", (done) => {
+      chai
+        .request(app)
+        .get(
+          `/api/stats/orders/unretrieved/weekly?week=${currentWeek}&year=${currentYear}`
+        )
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          expect(res.body).to.be.an("object");
+          expect(res.body.totalCount).to.be.equal(3);
+          expect(res.body.unretrievedCount).to.be.equal(1);
+
+          done();
+        });
+    });
+
+    it("it should return all time unretrieved orders stats, no query in the request", (done) => {
+      chai
+        .request(app)
+        .get(`/api/stats/orders/unretrieved/weekly`)
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          expect(res.body).to.be.an("object");
+          expect(res.body.totalCount).to.be.equal(6);
+          expect(res.body.unretrievedCount).to.be.equal(3);
+
+          done();
+        });
+    });
+
+    it("it should return bad request due to wrong query params type", (done) => {
+      chai
+        .request(app)
+        .get(
+          `/api/stats/orders/unretrieved/weekly?week=lololol&year=${currentYear}`
+        )
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(400);
+
+          done();
+        });
+    });
+
+    it("it should return bad request due to missing query param week", (done) => {
+      chai
+        .request(app)
+        .get(`/api/stats/orders/unretrieved/weekly?year=${currentYear}`)
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(400);
+
+          done();
+        });
+    });
+
+    it("it should fail when mongo fails", (done) => {
+      dao.close();
+      chai
+        .request(app)
+        .get(`/api/stats/orders/unretrieved/weekly`)
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(500);
+
+          done();
+        });
+    });
+  });
+
+  describe("GET /stats/orders/unretrieved/timeInterval", () => {
+    it("it should retrieve time interval unretrieved stats correctly", (done) => {
+      chai
+        .request(app)
+        .get(
+          `/api/stats/orders/unretrieved/timeInterval?startWeek=${
+            currentWeek - 2
+          }&startYear=${currentYear}&endWeek=${
+            currentWeek + 1
+          }&endYear=${currentYear}`
+        )
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          expect(res.body).to.be.an("object");
+          expect(res.body.totalCount).to.be.equal(5);
+          expect(res.body.unretrievedCount).to.be.equal(3);
+
+          done();
+        });
+    });
+
+    it("it should return bad request due to wrong query params type", (done) => {
+      chai
+        .request(app)
+        .get(
+          `/api/stats/orders/unretrieved/timeInterval?startWeek=${
+            currentWeek - 2
+          }&startYear=ok&endWeek=${currentWeek + 1}&endYear=true`
+        )
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(400);
+
+          done();
+        });
+    });
+
+    it("it should return bad request due to missing query params endWeek and endYear", (done) => {
+      chai
+        .request(app)
+        .get(
+          `/api/stats/orders/unretrieved/timeInterval?startWeek=${currentWeek}&startYear=${currentYear}`
+        )
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(400);
+
+          done();
+        });
+    });
+
+    it("it should return bad request due to missing query params", (done) => {
+      chai
+        .request(app)
+        .get(`/api/stats/orders/unretrieved/timeInterval`)
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(400);
+
+          done();
+        });
+    });
+
+    it("it should fail when mongo fails", (done) => {
+      dao.close();
+      chai
+        .request(app)
+        .get(
+          `/api/stats/orders/unretrieved/timeInterval?startWeek=${
+            currentWeek - 2
+          }&startYear=${currentYear}&endWeek=${
+            currentWeek + 1
+          }&endYear=${currentYear}`
+        )
         .end((err, res) => {
           expect(err).to.be.null;
           expect(res.status).to.be.equal(500);

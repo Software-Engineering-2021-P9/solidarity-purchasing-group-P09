@@ -20,6 +20,13 @@ exports.weeklyUnretrievedOrdersStatsValidatorChain = [
 ];
 
 exports.weeklyUnretrievedOrdersStatsHandler = async function (req, res, next) {
+  if (
+    !(req.query.week && req.query.year) &&
+    (req.query.week || req.query.year)
+  ) {
+    return res.status(400).end();
+  }
+
   let unretrievedOrdersCount;
   try {
     unretrievedOrdersCount = await dao.countWeekUnretrievedOrders(

@@ -11,9 +11,19 @@ import {
   Bar,
   Legend,
 } from "recharts";
-import { arrowDownIcon } from "../icons";
+import { arrowDownIcon, arrowUpIcon } from "../icons";
 
 function WeeklyReports(props) {
+  const this_week_perc = (
+    (props.thisWeekReports[0] / props.thisWeekReports[1]) *
+    100
+  ).toFixed(2);
+  const prev_week_perc = (
+    (props.previousWeekReports[0] / props.previousWeekReports[1]) *
+    100
+  ).toFixed(2);
+  const diff = this_week_perc - prev_week_perc;
+
   return (
     <>
       <Row className="my-5">
@@ -26,13 +36,17 @@ function WeeklyReports(props) {
           md="auto"
         >
           <Row>
-            <Col className="total-orders">
-              {(
-                (props.thisWeekReports[0] / props.thisWeekReports[1]) *
-                100
-              ).toFixed(2)}
-            </Col>
-            <Col className="green-text">{arrowDownIcon}- 0.80%</Col>
+            <Col className="total-orders">{this_week_perc} %</Col>
+            {diff > 0 ? (
+              <Col className="red-text">
+                {arrowUpIcon}+ {diff}%
+              </Col>
+            ) : (
+              <Col className="green-text">
+                {arrowDownIcon}
+                {diff}%
+              </Col>
+            )}
           </Row>
           <Row>of unretrieved orders this week</Row>
         </Col>
@@ -71,9 +85,11 @@ function UnretrievedWeeklyBar(props) {
 
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
+      let year_info = 2021;
+      if (label === 1 || label === 2) year_info = 2022;
       return (
         <div className="custom-tooltip">
-          <p className="label-tooltip">{`week : ${label}`}</p>
+          <p className="label-tooltip">{`week : ${label}/${year_info}`}</p>
           <p className="unretrieved-info">{`unretrieved orders : ${payload[0].value}`}</p>
           <p className="total-info">{`total orders : ${payload[1].value}`}</p>
           <p>{`% of unretrieved orders : ${(
@@ -92,7 +108,7 @@ function UnretrievedWeeklyBar(props) {
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="week" />
         <YAxis />
-        <Legend />
+        <Legend verticalAlign="top" height={36} />
         <Tooltip content={<CustomTooltip />} />
         <Bar dataKey="unretrieved" fill="#DB9471" />
         <Bar dataKey="total" fill="#B2B6BD" />
@@ -115,7 +131,7 @@ function WeeklyForm(props) {
             value={props.week}
             onChange={(e) => {
               if (e.target.value >= 1 && e.target.value <= 52) {
-                props.setWeek(e.target.value);
+                props.setWeek(parseInt(e.target.value));
               }
             }}
           />
@@ -128,7 +144,7 @@ function WeeklyForm(props) {
             value={props.year}
             onChange={(e) => {
               if (e.target.value >= 2010 && e.target.value <= 2022) {
-                props.setYear(e.target.value);
+                props.setYear(parseInt(e.target.value));
               }
             }}
           />

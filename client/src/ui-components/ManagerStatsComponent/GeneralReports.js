@@ -40,7 +40,7 @@ function GeneralReports(props) {
                     value:
                       (1 - props.generalReports[0] / props.generalReports[1]) *
                       100,
-                    color: "#635f4691",
+                    color: "#91885267",
                   },
                 ]}
                 startAngle={270}

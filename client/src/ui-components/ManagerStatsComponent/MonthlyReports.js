@@ -11,9 +11,19 @@ import {
   Bar,
   Legend,
 } from "recharts";
-import { arrowUpIcon } from "../icons";
+import { arrowDownIcon, arrowUpIcon } from "../icons";
 
 function MonthlyReports(props) {
+  const this_month_perc = (
+    (props.thisMonthReports[0] / props.thisMonthReports[1]) *
+    100
+  ).toFixed(2);
+  const prev_month_perc = (
+    (props.previousMonthReports[0] / props.previousMonthReports[1]) *
+    100
+  ).toFixed(2);
+  const diff = this_month_perc - prev_month_perc;
+
   return (
     <>
       <Row className="my-5">
@@ -26,13 +36,17 @@ function MonthlyReports(props) {
           md="auto"
         >
           <Row>
-            <Col className="total-orders">
-              {(
-                (props.thisMonthReports[0] / props.thisMonthReports[1]) *
-                100
-              ).toFixed(2)}
-            </Col>
-            <Col className="red-text">{arrowUpIcon}+ 1.27%</Col>
+            <Col className="total-orders">{this_month_perc} %</Col>
+            {diff > 0 ? (
+              <Col className="red-texts">
+                {arrowUpIcon}+ {diff}%
+              </Col>
+            ) : (
+              <Col className="green-text">
+                {arrowDownIcon}
+                {diff}%
+              </Col>
+            )}
           </Row>
           <Row>of unretrieved orders this month</Row>
         </Col>
@@ -74,9 +88,11 @@ function UnretrievedMonthlyBar(props) {
   });
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
+      let year_info = 2021;
+      if (label === "JAN") year_info = 2022;
       return (
         <div className="custom-tooltip">
-          <h6>{`month : ${label}`}</h6>
+          <h6>{`month : ${label}-${year_info}`}</h6>
           <p>{`unretrieved orders : ${payload[0].value}`}</p>
           <p>{`total orders : ${payload[1].value}`}</p>
           <p>{`% of unretrieved orders : ${(
@@ -97,7 +113,7 @@ function UnretrievedMonthlyBar(props) {
         <XAxis dataKey="month" />
         <YAxis />
         <Tooltip content={<CustomTooltip />} />
-        <Legend />
+        <Legend verticalAlign="top" height={36} />
         <Bar dataKey="unretrieved" fill="#DB9471" />
         <Bar dataKey="total" fill="#B2B6BD" />
       </BarChart>
@@ -149,7 +165,7 @@ function MonthlyForm(props) {
             value={props.year}
             onChange={(e) => {
               if (e.target.value >= 2010 && e.target.value <= 2022) {
-                props.setYear(e.target.value);
+                props.setYear(parseInt(e.target.value));
               }
             }}
           />

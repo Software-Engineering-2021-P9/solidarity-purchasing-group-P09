@@ -24,9 +24,11 @@ function ManagerOrdersStatsPage(props) {
   const [generalReports, setGeneralReports] = useState([]); // get # total orders and # total unretrieved
   const [thisWeekReports, setThisWeekReports] = useState([]);
   const [thisMonthReports, setThisMonthReports] = useState([]);
+  const [previousWeekReports, setPreviousWeekReports] = useState([]);
+  const [previousMonthReports, setPreviousMonthReports] = useState([]);
   const [formReports, setFormReports] = useState([]);
   const [barReports, setBarReports] = useState(new Map());
-  const [week, setWeek] = useState(1);
+  const [week, setWeek] = useState(2);
   const [year, setYear] = useState(2022);
   const [month, setMonth] = useState(1);
 
@@ -43,10 +45,9 @@ function ManagerOrdersStatsPage(props) {
           setRequestError("Failed to fetch general reports: " + err.message)
         );
       // this week
-      getWeeklyOrdersStat(1, 2022)
+      getWeeklyOrdersStat(2, 2022)
         .then((result) => {
           setThisWeekReports(result);
-          setInitialized(true);
         })
         .catch((err) =>
           setRequestError("Failed to fetch this week reports: " + err.message)
@@ -55,10 +56,29 @@ function ManagerOrdersStatsPage(props) {
       getWeekIntervalOrdersStat(1, 4, 2022, 2022)
         .then((result) => {
           setThisMonthReports(result);
-          setInitialized(true);
         })
         .catch((err) =>
-          setRequestError("Failed to fetch form reports: " + err.message)
+          setRequestError("Failed to fetch this month reports: " + err.message)
+        );
+      // previous week
+      getWeeklyOrdersStat(1, 2022)
+        .then((result) => {
+          setPreviousWeekReports(result);
+        })
+        .catch((err) =>
+          setRequestError(
+            "Failed to fetch previous week reports: " + err.message
+          )
+        );
+      // previous month
+      getWeekIntervalOrdersStat(49, 52, 2021, 2021)
+        .then((result) => {
+          setPreviousMonthReports(result);
+        })
+        .catch((err) =>
+          setRequestError(
+            "Failed to fetch previous month reports: " + err.message
+          )
         );
     };
     getGeneralReports();
@@ -67,23 +87,22 @@ function ManagerOrdersStatsPage(props) {
   useEffect(() => {
     const getBarReports = async () => {
       if (typeReports === 0) {
-        let map = new Map();
-        let year = 2021;
-        const weeks = [45, 46, 47, 48, 49, 50, 51, 52, 1, 2];
+        let map_week_bar = new Map();
+        let year_week_bar = 2021;
+        const weeks_week_bar = [45, 46, 47, 48, 49, 50, 51, 52, 1, 2];
 
-        for (const w of weeks) {
+        for (const w of weeks_week_bar) {
           if (w === 1 || w === 2) {
-            year = 2022;
+            year_week_bar = 2022;
           }
-          var res = await getWeeklyOrdersStat(w, year);
-          map.set(w, res);
+          var res_week_bar = await getWeeklyOrdersStat(w, year_week_bar);
+          map_week_bar.set(w, res_week_bar);
         }
-
-        setBarReports(map);
+        setBarReports(map_week_bar);
       } else {
-        let map = new Map();
-        let year = 2021;
-        let months = [
+        let map_month_bar = new Map();
+        let year_month_bar = 2021;
+        let months_month_bar = [
           "APR",
           "MAY",
           "JUN",
@@ -95,18 +114,22 @@ function ManagerOrdersStatsPage(props) {
           "DEC",
           "JAN",
         ];
-        const weeks = [17, 21, 25, 29, 33, 37, 41, 45, 49, 1];
+        const weeks_month_bar = [17, 21, 25, 29, 33, 37, 41, 45, 49, 1];
         let cont = 0;
-        for (const w of weeks) {
+        for (const w of weeks_month_bar) {
           if (w === 1) {
-            year = 2022;
+            year_month_bar = 2022;
           }
-          var res2 = await getWeekIntervalOrdersStat(w, w + 3, year, year);
-          map.set(months[cont], res2);
+          var res2 = await getWeekIntervalOrdersStat(
+            w,
+            w + 3,
+            year_month_bar,
+            year_month_bar
+          );
+          map_month_bar.set(months_month_bar[cont], res2);
           cont++;
         }
-
-        setBarReports(map);
+        setBarReports(map_month_bar);
       }
     };
     getBarReports();
@@ -136,10 +159,9 @@ function ManagerOrdersStatsPage(props) {
           );
       }
     };
-    if (
-      year === 2022 &&
-      ((typeReports === 1 && month > 0) || (typeReports === 0 && week > 2))
-    ) {
+    if (typeReports === 1 && year === 2022 && month > 0) {
+      setFormReports([]);
+    } else if (typeReports === 0 && year === 2022 && week > 2) {
       setFormReports([]);
     } else {
       getFormReports();
@@ -174,6 +196,7 @@ function ManagerOrdersStatsPage(props) {
                   year={year}
                   formReports={formReports}
                   thisWeekReports={thisWeekReports}
+                  previousWeekReports={previousWeekReports}
                   setWeek={setWeek}
                   setYear={setYear}
                   barReports={barReports}
@@ -186,6 +209,7 @@ function ManagerOrdersStatsPage(props) {
                   year={year}
                   formReports={formReports}
                   thisMonthReports={thisMonthReports}
+                  previousMonthReports={previousMonthReports}
                   setMonth={setMonth}
                   setYear={setYear}
                   barReports={barReports}

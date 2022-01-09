@@ -1,5 +1,13 @@
 class Order {
-  constructor(id, clientID, products, status, totalPrice, createdAt, shipmentInfo) {
+  constructor(
+    id,
+    clientID,
+    products,
+    status,
+    totalPrice,
+    createdAt,
+    shipmentInfo
+  ) {
     this.id = id;
     this.clientID = clientID;
     this.products = products;
@@ -17,12 +25,13 @@ class Order {
       json.status,
       json.totalPrice,
       json.createdAt,
-      json.shipmentInfo,
+      json.shipmentInfo
     );
   }
 
   static OrderStatus = {
     NOT_COVERED: "not covered",
+    UNRETRIEVED: "unretrieved",
     WAITING: "waiting",
     CONFIRMED: "confirmed",
     PREPARED: "prepared",

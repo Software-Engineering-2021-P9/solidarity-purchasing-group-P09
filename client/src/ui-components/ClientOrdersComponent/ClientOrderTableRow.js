@@ -202,12 +202,6 @@ function createStatusComponent(status) {
       );
       break;
 
-    case Order.OrderStatus.UNRETRIEVED:
-      statusComponent = (
-        <span className="table-row-status-not-covered mx-0 px-0">{status}</span>
-      );
-      break;
-
     case Order.OrderStatus.DONE:
       statusComponent = (
         <span className="table-row-status-done mx-0 px-0">{status}</span>

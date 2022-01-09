@@ -11,6 +11,7 @@ import { ClientOrders } from "../ui-components/ClientOrdersComponent/ClientOrder
 import Divider from "../ui-components/Divider/Divider";
 import ErrorToast from "../ui-components/ErrorToast/ErrorToast";
 import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponent";
+
 import {
   addFundToWallet,
   getClientByID,
@@ -50,7 +51,6 @@ function ClientDetailsPage(props) {
   const [isActionLoading, setIsActionLoading] = useState(false);
 
   const [orders, setOrders] = useState([]);
-
   useEffect(() => {
     if (!clientID) {
       history.push("/");
@@ -65,8 +65,6 @@ function ClientDetailsPage(props) {
 
           //fetch orders:
           getOrders(result.id).then((newO) => {
-            newO.forEach((order) => {});
-
             setOrders(newO);
           });
         })
@@ -121,7 +119,6 @@ function ClientDetailsPage(props) {
         loggedUser={authContext.currentUser}
         userIconLink={authContext.getUserIconLink()}
       />
-
       {location.state != null && show ? (
         <Row>
           <Alert

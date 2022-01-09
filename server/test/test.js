@@ -2401,8 +2401,8 @@ describe("Product Availability API tests:", () => {
             dao.getOrderByID("000000000000000000000002"),
             dao.getOrderByID("000000000000000000000003"),
           ])
-            .then((res) => {
-              let [pa, ocon, omod, ocan] = res;
+            .then((results) => {
+              let [pa, ocon, omod, ocan] = results;
               // Check confirmed availability
               expect(pa._id.toString()).to.be.equal("000000000000000000000001");
               expect(pa.farmerID.toString()).to.be.equal(

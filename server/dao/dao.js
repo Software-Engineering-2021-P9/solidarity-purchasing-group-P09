@@ -47,6 +47,12 @@ const {
   createProduct,
 } = require("./product");
 
+const {
+  getTelegramUsers,
+  addTelegramUsers,
+  createUniqueTelegramUserIndex,
+} = require("./bot");
+
 const { ClientInfo } = require("../models/client_info");
 const { EmployeeInfo } = require("../models/employee_info");
 const { FarmerInfo } = require("../models/farmer_info");
@@ -174,3 +180,8 @@ exports.getUserByEmail = async (email) => {
   }
   return usersFound[0];
 };
+
+//Telegram BOT
+exports.addTelegramUsers = (telegramUser) => addTelegramUsers(db, telegramUser);
+exports.getTelegramUsers = () => getTelegramUsers(db);
+exports.createUniqueTelegramUserIndex = () => createUniqueTelegramUserIndex(db);

@@ -6,23 +6,23 @@ import { gridIcon } from "../icons";
 import { Pie, PieChart, Cell } from "recharts";
 
 function GeneralReports(props) {
+  const unretrieved_perc = (
+    props.generalReports.unretrievedCount / props.generalReports.totalCount
+  ).toFixed(2);
+
+  const total_perc = (1 - unretrieved_perc).toFixed(2);
+
   const data = [
     {
       name: "Unretrieved orders",
-      value:
-        (props.generalReports.unretrievedCount /
-          props.generalReports.totalCount) *
-        100,
+      value: unretrieved_perc * 100,
     },
     {
       name: "Total orders",
-      value:
-        1 -
-        (props.generalReports.unretrievedCount /
-          props.generalReports.totalCount) *
-          100,
+      value: total_perc * 100,
     },
   ];
+
   const RADIAN = Math.PI / 180;
   const renderCustomizedLabel = ({
     cx,
@@ -83,14 +83,12 @@ function GeneralReports(props) {
                   cx="50%"
                   cy="50%"
                   outerRadius={80}
-                  fill="#91885267"
                 >
                   {data.map((entry, index) => {
-                    console.log(entry);
                     if (entry.name === "Unretrieved orders") {
                       return <Cell key={`cell-${index}`} fill="#DB9471" />;
                     } else {
-                      return <Cell key={`cell-${index}`} />;
+                      return <Cell key={`cell-${index}`} fill="#91885267" />;
                     }
                   })}
                 </Pie>

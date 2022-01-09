@@ -1,7 +1,7 @@
 "use strict";
 
-const { ObjectId } = require("bson");
-const { OrderProduct, OrderStatus } = require("../models/order");
+const { ObjectID } = require("bson");
+const { OrderStatus } = require("../models/order");
 
 const orderCollectionName = "orders";
 
@@ -9,33 +9,15 @@ const orderCollectionName = "orders";
 // Create Order
 // ------------
 
-exports.createOrder = async (
-  db,
-  clientID,
-  products,
-  status,
-  totalPrice,
-  createdAt
-) => {
-  const mongoProducts = products?.map(
-    (p) => new OrderProduct(ObjectId(p.productID), p.quantity)
-  );
-
-  const newOrder = {
-    clientID: ObjectId(clientID),
-    products: mongoProducts,
-    status: status,
-    totalPrice: totalPrice,
-    createdAt: createdAt,
-  };
-
-  return db.collection(orderCollectionName).insertOne(newOrder);
+exports.createOrder = async (db, order) => {
+  return db.collection(orderCollectionName).insertOne(order);
 };
 
 exports.getOrdersByClientID = async (db, clientID) => {
   return db
     .collection(orderCollectionName)
-    .find({ clientID: ObjectId(clientID) })
+    .find({ clientID: ObjectID(clientID) })
+    .sort({ createdAt: -1 })
     .toArray();
 };
 // ------------
@@ -43,15 +25,7 @@ exports.getOrdersByClientID = async (db, clientID) => {
 // ------------
 
 exports.getOrderByID = async (db, orderID) => {
-  return db.collection(orderCollectionName).findOne(ObjectId(orderID));
-};
-
-// -----------
-// DeleteOrder
-// -----------
-
-exports.deleteOrder = async (db, orderID) => {
-  return db.collection(orderCollectionName).deleteOne(ObjectId(orderID));
+  return db.collection(orderCollectionName).findOne(ObjectID(orderID));
 };
 
 // -------------
@@ -59,7 +33,13 @@ exports.deleteOrder = async (db, orderID) => {
 // -------------
 
 exports.completeOrder = async (db, orderID) => {
-  const query = { _id: ObjectId(orderID), status: OrderStatus.PREPARED };
+  const query = { _id: ObjectID(orderID), status: OrderStatus.PREPARED };
   const update = { $set: { status: OrderStatus.DONE } };
   return db.collection(orderCollectionName).updateOne(query, update);
+};
+
+exports.getOrdersByClientIDList = async (db, clientIDList) => {
+  const query = { clientID: { $in: clientIDList } };
+
+  return db.collection(orderCollectionName).find(query).toArray();
 };

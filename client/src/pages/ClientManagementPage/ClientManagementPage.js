@@ -23,6 +23,7 @@ import "../../ui-components/Title.css";
 import { findClients } from "../../services/ApiClient";
 
 import { AuthContext } from "../../contexts/AuthContextProvider";
+import { RedDropdown } from "../../ui-components/RedDropdownComponent/RedDropdown";
 
 function ClientManagementPage(props) {
   const history = useHistory();
@@ -32,10 +33,32 @@ function ClientManagementPage(props) {
   const [clientInfoList, setClientInfoList] = useState(null);
   const [isClientInfoListLoading, setIsClientInfoListLoading] = useState(false);
   const [requestError, setRequestError] = useState("");
+  const [hasPendingCancelationFilter, setHasPendingCancelationFilter] =
+    useState("All");
+
+  function onPendingCancelationFilter(newVal) {
+    setHasPendingCancelationFilter(newVal);
+  }
 
   function onSearchClientButtonClick() {
     setIsClientInfoListLoading(true);
-    findClients(searchString)
+
+    let hasPendingCancelation;
+    switch (hasPendingCancelationFilter) {
+      case "Has Pending":
+        hasPendingCancelation = true;
+        break;
+
+      case "Without Pending":
+        hasPendingCancelation = false;
+        break;
+
+      default:
+        hasPendingCancelation = null;
+        break;
+    }
+
+    findClients(searchString, hasPendingCancelation)
       .then(setClientInfoList)
       .catch((err) => {
         setRequestError(err.message);
@@ -96,6 +119,21 @@ function ClientManagementPage(props) {
             />
             <Button onClick={onSearchClientButtonClick}>Search</Button>
           </InputGroup>
+        </Col>
+
+       
+
+        
+        <Col  className="dropdown-margin margin-top-35" xs="4" sm="3" md="2" lg="1">
+
+          <RedDropdown
+            items={["Has Pending", "Without Pending"]}
+            title={
+              hasPendingCancelationFilter ? hasPendingCancelationFilter : "All"
+            }
+            updateSelectedItem={onPendingCancelationFilter}
+            activeElement={hasPendingCancelationFilter}
+          />
         </Col>
       </Row>
       <Container>

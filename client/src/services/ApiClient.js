@@ -1,6 +1,7 @@
 import EmployeeInfoResult from "./models/EmployeeInfoResult";
 import ClientInfoResult from "./models/ClientInfoResult";
 import FarmerInfoResult from "./models/FarmerInfoResult";
+import ManagerInfoResult from "./models/ManagerInfoResult";
 import Product from "./models/Product";
 import ProductAvailability from "./models/ProductAvailability";
 import Order from "./models/Order";
@@ -42,6 +43,8 @@ export async function loginUser(email, password) {
           return ClientInfoResult.fromJSON(responseBody);
         case UserRoles.EMPLOYEE:
           return EmployeeInfoResult.fromJSON(responseBody);
+        case UserRoles.MANAGER:
+          return ManagerInfoResult.fromJSON(responseBody);
         case UserRoles.FARMER:
         default:
           return FarmerInfoResult.fromJSON(responseBody);
@@ -69,6 +72,8 @@ export async function getCurrentUser() {
           return ClientInfoResult.fromJSON(responseBody);
         case UserRoles.EMPLOYEE:
           return EmployeeInfoResult.fromJSON(responseBody);
+        case UserRoles.MANAGER:
+          return ManagerInfoResult.fromJSON(responseBody);
         case UserRoles.FARMER:
         default:
           return FarmerInfoResult.fromJSON(responseBody);
@@ -116,9 +121,19 @@ export async function getEmployeeByID(employeeID) {
 // Client
 // ------
 
-export async function findClients(searchString) {
+export async function findClients(searchString, hasPendingCancelation) {
   let path = "/api/clients";
-  if (searchString) path += `?searchString=${searchString}`;
+
+  if (searchString || hasPendingCancelation !== null) {
+    path += "?";
+    if (searchString) {
+      path += `searchString=${searchString}&`;
+    }
+    if (hasPendingCancelation !== null) {
+      path += `hasPendingCancelation=${hasPendingCancelation}&`;
+    }
+    path = path.substring(0, path.length - 1); //delete the last character, that is &
+  }
 
   let response = await fetch(path);
 
@@ -225,6 +240,30 @@ export async function signupClient(client) {
 // -------
 // Product
 // -------
+
+export async function createProduct(product) {
+  const response = await fetch("http://localhost:3000/api/products", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+
+    body: JSON.stringify({ ...product }),
+  });
+
+  switch (response.status) {
+    case 200:
+      let responseBody;
+      responseBody = await response.json();
+      return Product.fromJSON(responseBody);
+    case 400:
+      throw new Error("Validation error occurred");
+    case 401:
+      throw new Error("Unauthorized");
+    case 500:
+      throw new Error("Internal Server Error");
+    default:
+      throw new Error("An error occurred during post createProduct request");
+  }
+}
 
 export async function findProducts(category, searchString) {
   let urlRequest = "/api/products?";
@@ -489,8 +528,12 @@ export async function updateStatus(status, orderID) {
   }
 }
 
-export async function createOrder(clientID, products) {
-  var obj = { clientID: clientID, products: products };
+export async function createOrder(clientID, products, shipmentInfo) {
+  var obj = {
+    clientID: clientID,
+    products: products,
+    shipmentInfo: shipmentInfo,
+  };
 
   const response = await fetch("/api/orders", {
     method: "POST",
@@ -505,6 +548,14 @@ export async function createOrder(clientID, products) {
       let responseBody;
       responseBody = await response.json();
       return Order.fromJSON(responseBody);
+    case 401:
+      throw new Error(
+        "Unauthorized - The user is not logged or is not allowed to make this action"
+      );
+    case 403:
+      throw new Error(
+        "Forbidden - The action cannot be executed in the current week phase"
+      );
     default:
       throw new Error("An error occurred during order fetch");
   }

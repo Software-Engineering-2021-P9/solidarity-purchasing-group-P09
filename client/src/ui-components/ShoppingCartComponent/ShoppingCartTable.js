@@ -1,6 +1,6 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./ShoppingCartTableCSS.css";
-import React from "react";
+import React, { useState } from "react";
 import { Container, Col, Row, Form, FormControl } from "react-bootstrap";
 import ImageService from "../../services/ImageService/ImageService";
 import { iconDelete } from "../icons";
@@ -9,7 +9,7 @@ function ShoppingCartTable(props) {
   return (
     <Container>
       <Col>
-        {props.products.map((item) => {
+        {props.products?.map((item) => {
           return (
             <CartRow
               product={item}
@@ -26,7 +26,8 @@ function ShoppingCartTable(props) {
 }
 
 function CartRow(props) {
-  let left_availability = 14; //mock left_availability
+  let left_availability = props.product.availability.leftQuantity;
+  const [input, setInput] = useState(false);
   let dropdown_items = [];
   for (let i = 1; i < 11; i++) {
     if (i <= left_availability) {
@@ -46,16 +47,16 @@ function CartRow(props) {
       <Col md="7" className="px-4">
         <Row className="item-cart-name">{props.product.name}</Row>
         <Row>{props.product.description}</Row>
-        <Row className="my-1">{props.product.packaging}</Row>
+        <Row className="my-2">{props.product.availability?.packaging}</Row>
         <Row className="justify-content-md-start mt-3">
-          {left_availability <= 10 ||
-          props.shoppingCart.get(props.product.id) < 10 ? (
+          {!input ? (
             <Form.Select
               className="form-input-gt10"
               size="sm"
               value={props.shoppingCart.get(props.product.id)}
               onChange={(e) => {
                 props.updateQuantity(props.product.id, e.target.value);
+                if (parseInt(e.target.value) === 10) setInput(true);
               }}
             >
               {dropdown_items.map((i) => {
@@ -94,7 +95,7 @@ function CartRow(props) {
         </Row>
       </Col>
       <Col className="item-cart-name text-right">
-        {props.product.price}
+        {props.product.availability?.price}
         {" €"}
       </Col>
     </Row>

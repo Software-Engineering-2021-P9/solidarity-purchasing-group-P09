@@ -1,5 +1,11 @@
 import React from "react";
-import { Navbar, Nav, Container } from "react-bootstrap";
+import {
+  Navbar,
+  Nav,
+  Container,
+  Popover,
+  OverlayTrigger,
+} from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { routes, shoppingCartRouteName } from "../../Routes";
 import { iconCartFill, iconLogo, iconCartEmpty, iconUser } from "../icons";
@@ -46,10 +52,32 @@ function NavbarComponent(props) {
                       clientID: props.clientID,
                     },
                   }}>
-                  {iconCartFill}
+                  <OverlayTrigger
+                    show={props.cartUpdated}
+                    placement='left'
+                    overlay={
+                      <Popover id={`popover-positioned-left`}>
+                        <Popover.Body>
+                          <strong>Cart updated</strong>.
+                        </Popover.Body>
+                      </Popover>
+                    }>
+                    {iconCartFill}
+                  </OverlayTrigger>
                 </Link>
               ) : (
-                <>{iconCartEmpty}</>
+                <OverlayTrigger
+                  show={props.cartEmpty}
+                  placement='left'
+                  overlay={
+                    <Popover id={`popover-positioned-left`}>
+                      <Popover.Body>
+                        <strong>Cart empty</strong>.
+                      </Popover.Body>
+                    </Popover>
+                  }>
+                  {iconCartEmpty}
+                </OverlayTrigger>
               )}
             </div>
           )}

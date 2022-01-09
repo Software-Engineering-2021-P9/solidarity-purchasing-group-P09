@@ -14,8 +14,6 @@ class ClientInfo {
     this.wallet = wallet;
   }
 
-  
-
   static fromMongoJSON(json) {
     return new ClientInfo(
       json._id,
@@ -28,8 +26,5 @@ class ClientInfo {
     );
   }
 }
-
-
-
 
 module.exports = { ClientInfo };

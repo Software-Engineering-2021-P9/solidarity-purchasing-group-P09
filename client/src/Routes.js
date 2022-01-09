@@ -2,10 +2,11 @@ import { ShoppingCartPage } from "./pages/ShoppingCartPage";
 import { ClientDetailsPage } from "./pages/ClientDetailsPage";
 import { ClientManagementPage } from "./pages/ClientManagementPage/ClientManagementPage";
 import { ClientSignupPage } from "./pages/ClientSignupPage";
-import { ProductListPage } from "./pages/ProductListPage";
+import { ProductListPage } from "./pages/ProductListPage/ProductListPage";
 import { ProductManagementPage } from "./pages/ProductManagementPage/ProductManagementPage";
 import { UserLoginPage } from "./pages/UserLoginPage";
 import { UserLogoutRedirect } from "./pages/UserLogoutRedirect";
+import { ManagerOrdersStatsPage } from "./pages/ManagerOrdersStatsPage";
 
 import ProtectedRoute from "./contexts/ProtectedRoute";
 import UserRoles from "./services/models/UserRoles";
@@ -25,6 +26,7 @@ const userLoginRouteName = "user-login-page";
 const userLogoutRouteName = "user-logout-page";
 const clientSignupRouteName = "client-signup-page";
 const clientDetailsRouteName = "client-details-page";
+const managerOrdersStatsRouteName = "manager-order-stats-page";
 const testPanelRouteName = "test-panel";
 
 const routes = {
@@ -132,6 +134,12 @@ const routes = {
     exact: false,
     linkTitle: "Logout",
   },
+  [managerOrdersStatsRouteName]: {
+    path: "/manager/ordersStats",
+    component: () => <ManagerOrdersStatsPage />,
+    exact: true,
+    linkTitle: "Orders Stats",
+  },
   [testPanelRouteName]: {
     path: "/testing",
     component: () => <TestPanelPage />,
@@ -150,6 +158,8 @@ function getAvailableNavbarLinks(loggedUser) {
         employeeClientSignupRouteName,
         userLogoutRouteName,
       ];
+    case UserRoles.MANAGER:
+      return [managerOrdersStatsRouteName, userLogoutRouteName];
     case UserRoles.FARMER:
       return [farmerProductManagementRouteName, userLogoutRouteName];
     default:
@@ -167,6 +177,7 @@ export {
   farmerProductDetailsRouteName,
   farmerProductCreateRouteName,
   clientDetailsRouteName,
+  managerOrdersStatsRouteName,
   routes,
   getAvailableNavbarLinks,
   clientSignupRouteName,

@@ -25,6 +25,8 @@ var productHandlers = require("./handlers/product");
 
 var farmerHandlers = require("./handlers/farmer");
 
+var managerHandlers = require("./handlers/manager");
+
 var weekphaseHandlers = require("./handlers/weekphase");
 
 const {
@@ -87,6 +89,17 @@ app.post(
   employeeHandlers.createEmployeeHandlerValidatorChain,
   checkValidationErrorMiddleware,
   employeeHandlers.createEmployeeHandler
+);
+
+// --------
+// managers
+// --------
+
+app.get(
+  buildAPIPath("/managers/:managerID"),
+  managerHandlers.getManagerByIDValidatorChain,
+  checkValidationErrorMiddleware,
+  managerHandlers.getManagerByIDHandler
 );
 
 // --------
@@ -159,6 +172,13 @@ app.patch(
   orderHandlers.completeOrderValidatorChain,
   checkValidationErrorMiddleware,
   orderHandlers.completeOrderHandler
+);
+
+app.get(
+  buildAPIPath("/orders/:orderID"),
+  orderHandlers.getOrderByIDValidatorChain,
+  checkValidationErrorMiddleware,
+  orderHandlers.getOrderByID
 );
 
 // ---------

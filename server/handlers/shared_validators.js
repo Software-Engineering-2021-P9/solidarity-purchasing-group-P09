@@ -12,7 +12,7 @@ exports.checkValidationErrorMiddleware = (req, res, next) => {
 };
 
 // shared validators
-
+exports.managerIDPathValidator = param("managerID").exists().isMongoId();
 exports.employeeIDPathValidator = param("employeeID").exists().isMongoId();
 exports.clientIDPathValidator = param("clientID").exists().isMongoId();
 exports.productIDPathValidator = param("productID").exists().isMongoId();
@@ -89,7 +89,6 @@ exports.idsValidator = query("ids")
   .bail()
   .isString()
   .bail()
-  .isLength({ max: 100 })
   .trim()
   .custom((value) => {
     const splittedIDs = value.split(",");
@@ -149,6 +148,40 @@ exports.orderClientIDQueryValidator = query("clientID").isMongoId();
 
 exports.orderIDParamValidator = param("orderID").isMongoId();
 
+exports.orderPickUpSlotBodyValidator = body("shipmentInfo.pickUpSlot")
+  .optional()
+  .notEmpty()
+  .bail()
+  .isString()
+  .custom((value) => {
+    const possiblePickUpSlots = [
+      { /*"WED 09:00-23:59": */ from: "30900", to: "32359 " },
+      { /*"THU 00:00-23:59": */ from: "40000", to: "42359" },
+      { /*"FRI 00:00-22:00": */ from: "50000", to: "52200" },
+    ];
+
+    return possiblePickUpSlots.some(
+      (slot) => value >= slot.from && value <= slot.to
+    );
+  });
+
+exports.orderShipmentTypeBodyValidator = body("shipmentInfo.type")
+  .notEmpty()
+  .bail()
+  .isString()
+  .custom((value) => {
+    return value === "pickup" || value === "shipment";
+  });
+
+exports.orderAddressBodyValidator = body("shipmentInfo.address")
+  .notEmpty()
+  .bail()
+  .isString()
+  .bail()
+  .isLength({ max: 150 })
+  .trim()
+  .escape();
+
 //Clients
 
 exports.clientIDPathValidator = param("clientID").isMongoId();
@@ -186,6 +219,12 @@ exports.walletBodyValidator = body("wallet")
   .notEmpty()
   .bail()
   .isLength({ min: 0 });
+
+exports.hasPendingCancelationValidator = query("hasPendingCancelation")
+  .optional()
+  .notEmpty()
+  .bail()
+  .isBoolean();
 
 // availability validators
 

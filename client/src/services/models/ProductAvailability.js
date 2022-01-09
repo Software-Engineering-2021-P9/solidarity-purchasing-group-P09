@@ -25,6 +25,7 @@ class ProductAvailability {
     this.price = price;
     this.packaging = packaging;
     this.quantity = quantity;
+    this.leftQuantity = leftQuantity;
   }
 
   static fromJSON(json) {
@@ -37,7 +38,8 @@ class ProductAvailability {
       json.status,
       json.price,
       json.packaging,
-      json.quantity
+      json.quantity,
+      json.leftQuantity
     );
   }
 }

@@ -7,6 +7,8 @@ const {
   getEmployeeByEmail,
 } = require("./employee");
 
+const { getManagerByID, getManagerByEmail } = require("./manager");
+
 const { getFarmerByID, getFarmerByEmail } = require("./farmer");
 
 const {
@@ -33,6 +35,7 @@ const {
   deleteOrder,
   getOrdersByClientID,
   completeOrder,
+  getOrdersByClientIDList,
 } = require("./order");
 
 const {
@@ -47,6 +50,7 @@ const {
 const { ClientInfo } = require("../models/client_info");
 const { EmployeeInfo } = require("../models/employee_info");
 const { FarmerInfo } = require("../models/farmer_info");
+const { ManagerInfo } = require("../models/manager_info");
 
 // DAO initialization
 // Only one instance can be open at a time. Subsequent calls has no effect.
@@ -87,21 +91,19 @@ exports.getFarmerByEmail = (email) => getFarmerByEmail(db, email);
 // Client
 exports.getClientByID = (clientID) => getClientByID(db, clientID);
 
-exports.createClient = (fullName, phoneNumber, email, address, wallet) =>
-  createClient(db, fullName, phoneNumber, email, address, wallet);
+exports.createClient = (fullName, phoneNumber, email, address) =>
+  createClient(db, fullName, phoneNumber, email, address);
 
-exports.signupClient = (
-  fullName,
-  phoneNumber,
-  email,
-  password,
-  address,
-  wallet
-) => signupClient(db, fullName, phoneNumber, email, password, address, wallet);
+exports.signupClient = (fullName, phoneNumber, email, password, address) =>
+  signupClient(db, fullName, phoneNumber, email, password, address);
 
 exports.findClients = (searchString) => findClients(db, searchString);
 exports.addFundToWallet = (clientID, increaseBy) =>
   addFundToWallet(db, clientID, increaseBy);
+
+//Manager
+exports.getManagerByID = (managerID) => getManagerByID(db, managerID);
+exports.getManagerByEmail = (email) => getManagerByEmail(db, email);
 
 // Product
 exports.getProductsByIDs = (ids) => getProductsByIDs(db, ids);
@@ -142,27 +144,28 @@ exports.createProduct = (farmerID, name, description, category) =>
   createProduct(db, farmerID, name, description, category);
 
 // Order
-exports.createOrder = (clientID, products, status, totalPrice, createdAt) =>
-  createOrder(db, clientID, products, status, totalPrice, createdAt);
+exports.createOrder = (order) => createOrder(db, order);
 exports.getOrderByID = (orderID) => getOrderByID(db, orderID);
-exports.deleteOrder = (orderID) => deleteOrder(db, orderID);
 exports.getOrdersByClientID = (clientID) => getOrdersByClientID(db, clientID);
 exports.completeOrder = (orderID) => completeOrder(db, orderID);
-
+exports.getOrdersByClientIDList = (clientIDList) =>
+  getOrdersByClientIDList(db, clientIDList);
 exports.createClientsTextSearchIndexes = () =>
   createClientsTextSearchIndexes(db);
 
-// User (Client, Farmer, Employee)
+// User (Client, Farmer, Employee, Manager)
 exports.getUserByEmail = async (email) => {
   let usersFound = await Promise.all([
     getClientByEmail(db, email),
     getFarmerByEmail(db, email),
     getEmployeeByEmail(db, email),
-  ]).then(([clientInfo, farmerInfo, employeeInfo]) => {
+    getManagerByEmail(db, email),
+  ]).then(([clientInfo, farmerInfo, employeeInfo, managerInfo]) => {
     let users = [];
     if (clientInfo) users.push(ClientInfo.fromMongoJSON(clientInfo));
     if (farmerInfo) users.push(FarmerInfo.fromMongoJSON(farmerInfo));
     if (employeeInfo) users.push(EmployeeInfo.fromMongoJSON(employeeInfo));
+    if (managerInfo) users.push(ManagerInfo.fromMongoJSON(managerInfo));
     return users;
   });
 

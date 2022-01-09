@@ -61,6 +61,12 @@
   background-color: #db9471 !important;
   border-radius: 20px;
 }
+.bg-progressbar-5 {
+  padding-left: 0 !important;
+  margin: 0;
+  background-color: #db4a3f !important;
+  border-radius: 20px;
+}
 .progressbar-row {
   margin-left: 0px;
   margin-right: 0px;

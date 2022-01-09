@@ -12,9 +12,11 @@ import ErrorToast from "../ui-components/ErrorToast/ErrorToast";
 import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponent";
 
 import {
+  confirmProductAvailability,
   getNextWeekProductAvailability,
   getProductByID,
   setNextWeekProductAvailability,
+  updateProductAvailability,
 } from "../services/ApiClient";
 
 import { AuthContext } from "../contexts/AuthContextProvider";
@@ -25,6 +27,8 @@ import ProductDetails from "../ui-components/ProductDetails/ProductDetails";
 import ImageService from "../services/ImageService/ImageService";
 import ProductAvailabilityDetails from "../ui-components/ProductAvailabilityDetails/ProductAvailabilityDetails";
 import ProductAvailabilityForm from "../ui-components/ProductAvailabilityForm/ProductAvailabilityForm";
+import { ProductAvailabilityStatus } from "../services/models/ProductAvailability";
+import ProductAvailabilityUpdateForm from "../ui-components/ProductAvailabilityUpdateForm/ProductAvailabilityUpdateForm";
 
 function ProductDetailsPage(props) {
   const params = useParams();
@@ -39,6 +43,8 @@ function ProductDetailsPage(props) {
 
   const [product, setProduct] = useState(null);
   const [nextWeekAvailability, setNextWeekAvailability] = useState(null);
+
+  const [availabilityToUpdate, setAvailabilityToUpdate] = useState(null);
 
   const [actionConfirmationModalMessage, setActionConfirmationModalMessage] =
     useState("");
@@ -94,9 +100,50 @@ function ProductDetailsPage(props) {
     });
   }
 
+  function onConfirmCurrentWeekProductAvailabilitySubmit(data) {
+    setActionConfirmationModalMessage(
+      `Are you sure you want confirm the availability for the current week?`
+    );
+    setActionConfirmationModalCallback(() => () => {
+      setIsActionLoading(true);
+      confirmProductAvailability(product?.availability.id)
+        .catch((err) =>
+          setRequestError(
+            "Failed to confirm current week availability: " + err.message
+          )
+        )
+        .finally(() => {
+          setMustReload(true);
+          setIsActionLoading(false);
+          onActionConfirmationModalHide();
+        });
+    });
+  }
+
   function onActionConfirmationModalHide() {
     setActionConfirmationModalMessage("");
     setActionConfirmationModalCallback(null);
+  }
+
+  function onUpdateAvailabilityClick(availability) {
+    setAvailabilityToUpdate(availability);
+  }
+
+  function onAvailabilityUpdateModalFormSubmit(data) {
+    setIsActionLoading(true);
+    updateProductAvailability(availabilityToUpdate.id, data.quantity)
+      .catch((err) =>
+        setRequestError("Failed to update product availability: " + err.message)
+      )
+      .finally(() => {
+        setMustReload(true);
+        setIsActionLoading(false);
+        onAvailabilityUpdateModalFormCancel();
+      });
+  }
+
+  function onAvailabilityUpdateModalFormCancel() {
+    setAvailabilityToUpdate(null);
   }
 
   function buildCurrentWeekAvailabilitySection() {
@@ -118,14 +165,21 @@ function ProductDetailsPage(props) {
             )}
           </Card.Body>
           <Card.Footer className='text-center'>
-            {product?.availability && (
+            {product?.availability?.status ===
+              ProductAvailabilityStatus.WAITING && (
               <>
-                <Button>Confirm</Button>
-                <Button className='ms-3' variant='light'>
-                  Update
+                <Button
+                  onClick={() =>
+                    onConfirmCurrentWeekProductAvailabilitySubmit()
+                  }>
+                  Confirm
                 </Button>
-                <Button className='ms-3' variant='secondary'>
-                  Remove
+                <Button
+                  className='ms-3'
+                  onClick={() =>
+                    onUpdateAvailabilityClick(product.availability)
+                  }>
+                  Update
                 </Button>
               </>
             )}
@@ -161,11 +215,15 @@ function ProductDetailsPage(props) {
             )}
           </Card.Body>
           <Card.Footer className='text-center'>
-            {nextWeekAvailability && (
+            {nextWeekAvailability?.status ===
+              ProductAvailabilityStatus.WAITING && (
               <>
-                <Button className='ms-3'>Update</Button>
-                <Button className='ms-3' variant='secondary'>
-                  Remove
+                <Button
+                  className='ms-3'
+                  onClick={() =>
+                    onUpdateAvailabilityClick(nextWeekAvailability)
+                  }>
+                  Update
                 </Button>
               </>
             )}
@@ -240,6 +298,15 @@ function ProductDetailsPage(props) {
         onCancel={onActionConfirmationModalHide}
         isLoading={isActionLoading}
       />
+      {availabilityToUpdate && (
+        <ProductAvailabilityUpdateForm
+          show={availabilityToUpdate}
+          onHide={onAvailabilityUpdateModalFormCancel}
+          availability={availabilityToUpdate}
+          onSubmit={onAvailabilityUpdateModalFormSubmit}
+          isLoading={isActionLoading}
+        />
+      )}
     </>
   );
 }

@@ -1,11 +1,15 @@
 import { Col, Container, Row, ProgressBar } from "react-bootstrap";
+import { ProductAvailabilityStatus } from "../../services/models/ProductAvailability";
 import Divider from "../Divider/Divider";
 
 function ProductAvailabilityDetails(props) {
   function buildAvailabilityIndicator() {
     let color = "#2EAE0F";
     let text = "Available";
-    if (props.availability?.quantity === 0) {
+    if (props.availability?.status === ProductAvailabilityStatus.WAITING) {
+      color = "#FFDA00";
+      text = "Not confirmed";
+    } else if (props.availability?.leftQuantity === 0) {
       color = "#D70D0D";
       text = "Not Available";
     }
@@ -38,13 +42,15 @@ function ProductAvailabilityDetails(props) {
           {buildAvailabilityIndicator()}
         </Container>
         <ProgressBar
-          now={props.availability?.quantity - 10}
+          now={props.availability?.leftQuantity}
           max={props.availability?.quantity}
+          min={0}
           variant='progressbar'
           className='px-0 mx-2'
         />
         <Container className='text-center'>
-          <b>10 left</b> of {props.availability?.quantity} available
+          <b>{props.availability?.leftQuantity} left</b> of{" "}
+          {props.availability?.quantity} available
         </Container>
       </Container>
     );

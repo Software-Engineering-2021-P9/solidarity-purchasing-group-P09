@@ -10,6 +10,8 @@ import {
   Cell,
   Tooltip,
   Bar,
+  Legend,
+  Label,
 } from "recharts";
 import { arrowUpIcon } from "../icons";
 
@@ -56,45 +58,6 @@ function MonthlyReports(props) {
       <Row>
         <UnretrievedMonthlyBar barReports={props.barReports} />
       </Row>
-      <Row className="stats-subtitle my-5 mx-1">
-        Number of unretrieved orders Vs total orders per month
-      </Row>
-      <Row>
-        <PercentageUnretrievedMonthlyBar barReports={props.barReports} />
-      </Row>
-    </>
-  );
-}
-
-function PercentageUnretrievedMonthlyBar(props) {
-  const data = [];
-  Array.from(props.barReports.entries()).map((entry) => {
-    const [key, val] = entry;
-    let value = {
-      month: key,
-      percentage: ((val[0] / val[1]) * 100).toFixed(2),
-    };
-    data.push(value);
-    return entry;
-  });
-
-  return (
-    <>
-      <BarChart width={800} height={250} data={data} barSize={40}>
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="month" />
-        <YAxis />
-        <Tooltip />
-        <Bar dataKey="percentage" fill="#B2B6BD">
-          {data.map((entry, index) => {
-            if (index === data.length - 1) {
-              return <Cell key={`cell-${index}`} fill="#DB9471" />;
-            } else {
-              return <Cell key={`cell-${index}`} />;
-            }
-          })}
-        </Bar>
-      </BarChart>
     </>
   );
 }
@@ -103,10 +66,31 @@ function UnretrievedMonthlyBar(props) {
   const data = [];
   Array.from(props.barReports.entries()).map((entry) => {
     const [key, val] = entry;
-    let value = { week: key, unretrieved: val[0] };
+    let value = {
+      month: key,
+      unretrieved: val[0],
+      total: val[1],
+    };
     data.push(value);
     return entry;
   });
+  const CustomTooltip = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="custom-tooltip">
+          <h6>{`month : ${label}`}</h6>
+          <p>{`unretrieved orders : ${payload[0].value}`}</p>
+          <p>{`total orders : ${payload[1].value}`}</p>
+          <p>{`% of unretrieved orders : ${(
+            (payload[0].value / payload[1].value) *
+            100
+          ).toFixed(2)}`}</p>
+        </div>
+      );
+    }
+
+    return null;
+  };
 
   return (
     <>
@@ -114,16 +98,10 @@ function UnretrievedMonthlyBar(props) {
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="month" />
         <YAxis />
-        <Tooltip />
-        <Bar dataKey="unretrieved" fill="#B2B6BD">
-          {data.map((entry, index) => {
-            if (index === data.length - 1) {
-              return <Cell key={`cell-${index}`} fill="#DB9471" />;
-            } else {
-              return <Cell key={`cell-${index}`} />;
-            }
-          })}
-        </Bar>
+        <Tooltip content={<CustomTooltip />} />
+        <Legend />
+        <Bar dataKey="unretrieved" fill="#DB9471" />
+        <Bar dataKey="total" fill="#B2B6BD" />
       </BarChart>
     </>
   );

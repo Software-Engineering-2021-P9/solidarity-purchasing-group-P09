@@ -35,7 +35,13 @@ function GeneralReports(props) {
                       (props.generalReports[0] / props.generalReports[1]) * 100,
                     color: "#DB9471",
                   },
-                  { title: "Retrieved", value: 85, color: "#FFFFFF" },
+                  {
+                    title: "Retrieved",
+                    value:
+                      (1 - props.generalReports[0] / props.generalReports[1]) *
+                      100,
+                    color: "#635f4691",
+                  },
                 ]}
                 startAngle={270}
               />

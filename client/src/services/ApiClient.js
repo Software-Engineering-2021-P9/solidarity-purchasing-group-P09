@@ -6,7 +6,6 @@ import Product from "./models/Product";
 import ProductAvailability from "./models/ProductAvailability";
 import Order from "./models/Order";
 import UserRoles from "./models/UserRoles";
-import ManagerInfoResult from "./models/ManagerInfoResult";
 
 // Builds the query parameters for an URL from the passed object
 function buildQueryParametersString(queryParams) {

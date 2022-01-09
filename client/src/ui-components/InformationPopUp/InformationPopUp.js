@@ -1,6 +1,8 @@
 import React from "react";
 import { Modal } from "react-bootstrap";
 import Button from "../Button/Button";
+import { alertIcon } from "../icons";
+import { Row, Col } from "react-bootstrap";
 function InformationPopUp(props) {
   return (
     <>
@@ -8,7 +10,17 @@ function InformationPopUp(props) {
         <Modal.Header closeButton>
           <Modal.Title>{props.title}</Modal.Title>
         </Modal.Header>
-        <Modal.Body>{props.body}</Modal.Body>
+        {props.isWarning ? (
+          <Modal.Body>
+            <Row>
+              <Col xs={2}> {alertIcon}</Col>
+              <Col xs={10}> {props.body}</Col>
+            </Row>{" "}
+          </Modal.Body>
+        ) : (
+          <Modal.Body>{props.body}</Modal.Body>
+        )}
+
         <Modal.Footer>
           <Button variant="primary" onClick={props.handleClose}>
             {props.buttonMessage}

@@ -11,7 +11,7 @@ import { ClientOrders } from "../ui-components/ClientOrdersComponent/ClientOrder
 import Divider from "../ui-components/Divider/Divider";
 import ErrorToast from "../ui-components/ErrorToast/ErrorToast";
 import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponent";
-
+import InformationPopUp from "../ui-components/InformationPopUp/InformationPopUp";
 import {
   addFundToWallet,
   getClientByID,
@@ -51,6 +51,11 @@ function ClientDetailsPage(props) {
   const [isActionLoading, setIsActionLoading] = useState(false);
 
   const [orders, setOrders] = useState([]);
+
+  const [showAlert, setShowAlert] = useState(false);
+
+  const handleAlertClose = () => setShowAlert(false);
+
   useEffect(() => {
     if (!clientID) {
       history.push("/");
@@ -65,6 +70,15 @@ function ClientDetailsPage(props) {
 
           //fetch orders:
           getOrders(result.id).then((newO) => {
+            let missedPickUpCounter = 0;
+            newO.forEach((order) => {
+              if (order.status === "not covered") {
+                missedPickUpCounter += 1;
+              }
+            });
+
+            missedPickUpCounter > 2 ? setShowAlert(true) : setShowAlert(false);
+
             setOrders(newO);
           });
         })
@@ -119,10 +133,11 @@ function ClientDetailsPage(props) {
         loggedUser={authContext.currentUser}
         userIconLink={authContext.getUserIconLink()}
       />
+
       {location.state != null && show ? (
         <Row>
           <Alert
-            variant='success'
+            variant="success"
             style={{
               color: "#635F46",
               fontWeight: "bold",
@@ -145,16 +160,16 @@ function ClientDetailsPage(props) {
       )}
 
       {!isInitialized ? (
-        <Container className='pt-5 d-flex justify-content-center'>
-          <Spinner variant='dark' animation='border' />
+        <Container className="pt-5 d-flex justify-content-center">
+          <Spinner variant="dark" animation="border" />
         </Container>
       ) : (
         <>
           <Row>
-            <h1 className='title title-font'>Client Details</h1>
+            <h1 className="title title-font">Client Details</h1>
           </Row>
-          <Row className='justify-content-between pt-2'>
-            <Col className=''>
+          <Row className="justify-content-between pt-2">
+            <Col className="">
               <ClientDetails
                 clientInfo={clientInfo}
                 loggedUser={authContext.currentUser}
@@ -189,6 +204,16 @@ function ClientDetailsPage(props) {
         onConfirm={actionConfirmationModalCallback}
         onCancel={onActionConfirmationModalHide}
         isLoading={isActionLoading}
+      />
+
+      <InformationPopUp
+        show={showAlert}
+        buttonMessage="Close"
+        title="We received 3 missing pickups"
+        body="You already missed 3 pickups. You will be suspended, if you miss 2 more pickups!"
+        handleClose={handleAlertClose}
+        onCancel={handleAlertClose}
+        isWarning={true}
       />
     </>
   );

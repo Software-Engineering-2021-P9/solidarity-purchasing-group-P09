@@ -40,7 +40,7 @@ function ProductListPage(props) {
 
   const [cartUpdated, setCartUpdated] = useState(false);
   const [cartEmpty, setCartEmpty] = useState(false);
-
+  const [clientHasMissingPickups, setClientHasMissingPickups] = useState(false);
   const currentUser = authContext.currentUser;
   const [firstTimeNotify, setFirstTimeNotify] = useState(true);
   const [clientHasNotCoveredOrders, setClientHasNotCoveredOrders] =
@@ -59,7 +59,15 @@ function ProductListPage(props) {
           ).length > 0
         )
           setClientHasNotCoveredOrders(true);
+
+        if (
+          orders.filter(
+            (order) => order.status === Order.OrderStatus.UNRETRIEVED
+          ).length > 2
+        )
+          setClientHasMissingPickups(true);
       })
+
       .catch((err) => {
         throw err;
       });
@@ -203,6 +211,57 @@ function ProductListPage(props) {
           </p>
           <p className="center-text">
             Not covered orders will be deleted at the defined deadline.
+          </p>
+        </Modal.Body>
+
+        <Modal.Footer>
+          <div className="margin-auto">
+            <Button
+              className="product-list-page-popup-buttons"
+              variant="primary"
+              onClick={() => {
+                setFirstTimeNotify(false);
+              }}
+            >
+              Close
+            </Button>
+          </div>
+          <div className="margin-auto">
+            <Button
+              className="product-list-page-popup-buttons"
+              variant="primary"
+              onClick={() => {
+                history.push("/client");
+              }}
+            >
+              Check Orders
+            </Button>
+          </div>
+        </Modal.Footer>
+      </Modal>
+
+      <Modal
+        centered
+        show={
+          currentUser !== null &&
+          currentUser.role === "client" &&
+          clientHasMissingPickups &&
+          firstTimeNotify
+        }
+      >
+        <Modal.Header>
+          <div className="margin-auto center-text">
+            <Modal.Title className="margin-auto">
+              {" "}
+              {alertIcon} We received 3 missed pickups
+            </Modal.Title>
+          </div>
+        </Modal.Header>
+
+        <Modal.Body>
+          <p className="center-text">You already missed 3 pickups.</p>
+          <p className="center-text">
+            You will be suspended if you miss 2 more pickups.
           </p>
         </Modal.Body>
 

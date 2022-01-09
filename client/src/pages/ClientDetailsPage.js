@@ -11,7 +11,6 @@ import { ClientOrders } from "../ui-components/ClientOrdersComponent/ClientOrder
 import Divider from "../ui-components/Divider/Divider";
 import ErrorToast from "../ui-components/ErrorToast/ErrorToast";
 import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponent";
-import InformationPopUp from "../ui-components/InformationPopUp/InformationPopUp";
 import {
   addFundToWallet,
   getClientByID,
@@ -52,10 +51,6 @@ function ClientDetailsPage(props) {
 
   const [orders, setOrders] = useState([]);
 
-  const [showAlert, setShowAlert] = useState(false);
-
-  const handleAlertClose = () => setShowAlert(false);
-
   useEffect(() => {
     if (!clientID) {
       history.push("/");
@@ -70,14 +65,7 @@ function ClientDetailsPage(props) {
 
           //fetch orders:
           getOrders(result.id).then((newO) => {
-            let missedPickUpCounter = 0;
-            newO.forEach((order) => {
-              if (order.status === "not covered") {
-                missedPickUpCounter += 1;
-              }
-            });
-
-            missedPickUpCounter > 2 ? setShowAlert(true) : setShowAlert(false);
+            newO.forEach((order) => {});
 
             setOrders(newO);
           });
@@ -204,16 +192,6 @@ function ClientDetailsPage(props) {
         onConfirm={actionConfirmationModalCallback}
         onCancel={onActionConfirmationModalHide}
         isLoading={isActionLoading}
-      />
-
-      <InformationPopUp
-        show={showAlert}
-        buttonMessage="Close"
-        title="We received 3 missing pickups"
-        body="You already missed 3 pickups. You will be suspended, if you miss 2 more pickups!"
-        handleClose={handleAlertClose}
-        onCancel={handleAlertClose}
-        isWarning={true}
       />
     </>
   );

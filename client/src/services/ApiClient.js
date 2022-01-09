@@ -394,6 +394,60 @@ export async function getNextWeekProductAvailability(productID) {
   }
 }
 
+export async function updateProductAvailability(
+  productAvailabilityID,
+  quantity
+) {
+  var obj = {
+    quantity: parseInt(quantity),
+  };
+
+  const response = await fetch(`/api/availabilities/${productAvailabilityID}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ ...obj }),
+  });
+
+  switch (response.status) {
+    case 204:
+      return;
+    case 400:
+      throw new Error("Validation error occurred");
+    case 401:
+      throw new Error("Unauthorized");
+    case 404:
+      throw new Error("Not Found");
+    case 500:
+      throw new Error("Internal Server Error");
+    default:
+      throw new Error("An error occurred updating product availability");
+  }
+}
+
+export async function confirmProductAvailability(productAvailabilityID) {
+  const response = await fetch(
+    `/api/availabilities/${productAvailabilityID}/confirm`,
+    {
+      method: "PATCH",
+    }
+  );
+
+  switch (response.status) {
+    case 204:
+      return;
+    case 400:
+      throw new Error("Validation error occurred");
+    case 401:
+      throw new Error("Unauthorized");
+    case 404:
+      throw new Error("Not Found");
+    case 500:
+      throw new Error("Internal Server Error");
+    default:
+      throw new Error("An error occurred confirming product availability");
+  }
+}
+
 export async function getProductByID(productID) {
   let response = await fetch("/api/products/" + productID);
 

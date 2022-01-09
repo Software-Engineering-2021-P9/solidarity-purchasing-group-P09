@@ -10,6 +10,7 @@ import {
   Tooltip,
   Bar,
   Legend,
+  Label,
 } from "recharts";
 import { arrowDownIcon, arrowUpIcon } from "../icons";
 
@@ -118,8 +119,17 @@ function UnretrievedWeeklyBar(props) {
     <>
       <BarChart width={800} height={250} data={data} barSize={40}>
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="week" />
-        <YAxis />
+        <XAxis dataKey="week">
+          <Label value="week" position="bottom" offset={-10} />
+        </XAxis>
+        <YAxis
+          label={{
+            value: "# orders",
+            angle: -90,
+            position: "left",
+            offset: -10,
+          }}
+        />
         <Legend verticalAlign="top" height={36} />
         <Tooltip content={<CustomTooltip />} />
         <Bar dataKey="unretrieved" fill="#DB9471" />

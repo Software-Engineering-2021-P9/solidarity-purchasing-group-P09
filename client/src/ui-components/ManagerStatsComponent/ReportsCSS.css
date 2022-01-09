@@ -35,6 +35,9 @@
   height: fit-content;
   margin-left: 12px;
 }
+.pie-text {
+  font-weight: bold;
+}
 
 .container-this-week {
   background: #fafafa;

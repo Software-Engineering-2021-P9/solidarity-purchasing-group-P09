@@ -3,13 +3,58 @@ import "./ReportsCSS.css";
 import React from "react";
 import { Col, Row } from "react-bootstrap";
 import { gridIcon } from "../icons";
-import { PieChart } from "react-minimal-pie-chart";
+import { Pie, PieChart, Cell } from "recharts";
 
 function GeneralReports(props) {
+  const data = [
+    {
+      name: "Unretrieved orders",
+      value:
+        (props.generalReports.unretrievedCount /
+          props.generalReports.totalCount) *
+        100,
+    },
+    {
+      name: "Total orders",
+      value:
+        1 -
+        (props.generalReports.unretrievedCount /
+          props.generalReports.totalCount) *
+          100,
+    },
+  ];
+  const RADIAN = Math.PI / 180;
+  const renderCustomizedLabel = ({
+    cx,
+    cy,
+    midAngle,
+    innerRadius,
+    outerRadius,
+    percent,
+    index,
+  }) => {
+    const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+    const x = cx + radius * Math.cos(-midAngle * RADIAN);
+    const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+    return (
+      <text
+        x={x}
+        y={y}
+        fill="black"
+        className="pie-text"
+        textAnchor={x > cx ? "start" : "end"}
+        dominantBaseline="central"
+      >
+        {`${(percent * 100).toFixed(1)}%`}
+      </text>
+    );
+  };
+
   return (
     <>
       <Row className="my-3">
-        <div className="title-reports">SPG Reports</div>
+        <div className="title-reports">Overall SPG Reports</div>
       </Row>
       <Row className="my-3 mx-1 d-flex align-items-center">
         <Col className=" w-auto" md="auto">
@@ -28,29 +73,28 @@ function GeneralReports(props) {
         <Col className="px-0 mx-md-5 my-sm-4 my-xs-5 my-md-0" sm="12" md="6">
           <Row className="d-flex align-items-center">
             <Col className="w-auto add-space" md="auto" sm="auto">
-              <PieChart
-                className="pie-chart"
-                data={[
-                  {
-                    title: "Unretrieved",
-                    value:
-                      (props.generalReports.unretrievedCount /
-                        props.generalReports.totalCount) *
-                      100,
-                    color: "#DB9471",
-                  },
-                  {
-                    title: "Retrieved",
-                    value:
-                      (1 -
-                        props.generalReports.unretrievedCount /
-                          props.generalReports.totalCount) *
-                      100,
-                    color: "#91885267",
-                  },
-                ]}
-                startAngle={270}
-              />
+              <PieChart width={200} height={170}>
+                <Pie
+                  label={renderCustomizedLabel}
+                  labelLine={false}
+                  data={data}
+                  dataKey="value"
+                  nameKey="name"
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={80}
+                  fill="#91885267"
+                >
+                  {data.map((entry, index) => {
+                    console.log(entry);
+                    if (entry.name === "Unretrieved orders") {
+                      return <Cell key={`cell-${index}`} fill="#DB9471" />;
+                    } else {
+                      return <Cell key={`cell-${index}`} />;
+                    }
+                  })}
+                </Pie>
+              </PieChart>
             </Col>
             <Col>
               <Row className="total-orders">

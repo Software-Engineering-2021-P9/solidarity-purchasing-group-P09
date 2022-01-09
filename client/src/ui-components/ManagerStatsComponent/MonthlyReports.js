@@ -17,6 +17,7 @@ import {
   Tooltip,
   Bar,
   Legend,
+  Label,
 } from "recharts";
 import { arrowDownIcon, arrowUpIcon } from "../icons";
 
@@ -125,8 +126,17 @@ function UnretrievedMonthlyBar(props) {
     <>
       <BarChart width={800} height={250} data={data} barSize={40}>
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="month" />
-        <YAxis />
+        <XAxis dataKey="month">
+          <Label value="month" position="bottom" offset={-10} />
+        </XAxis>
+        <YAxis
+          label={{
+            value: "# orders",
+            angle: -90,
+            position: "left",
+            offset: -10,
+          }}
+        />
         <Tooltip content={<CustomTooltip />} />
         <Legend verticalAlign="top" height={36} />
         <Bar dataKey="unretrieved" fill="#DB9471" />

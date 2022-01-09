@@ -211,7 +211,7 @@ function ProductListPage(props) {
           currentUser !== null &&
           currentUser.role === "client" &&
           clientHasNotCoveredOrders &&
-          !currentlyMissingPickupAlertIsShown &&
+          (!currentlyMissingPickupAlertIsShown || !clientHasMissingPickups) &&
           !hasNotCoveredHasShown
         }
         title="Insufficient Wallet Balance"

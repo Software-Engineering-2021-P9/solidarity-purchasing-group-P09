@@ -1,4 +1,4 @@
-import { Modal, Button } from "react-bootstrap";
+import { Modal, Button, Row, Col } from "react-bootstrap";
 import { alertIcon } from "../../ui-components/icons";
 import { useHistory } from "react-router";
 function AlertPopUp(props) {
@@ -8,8 +8,13 @@ function AlertPopUp(props) {
       <Modal.Header>
         <div className="margin-auto center-text">
           <Modal.Title className="margin-auto">
-            {" "}
-            {alertIcon} {props.title}
+            <Row>
+              <Col xs={2}> {alertIcon}</Col>
+              <Col xs={10} className="d-flex align-items-center">
+                {" "}
+                {props.title}
+              </Col>
+            </Row>{" "}
           </Modal.Title>
         </div>
       </Modal.Header>

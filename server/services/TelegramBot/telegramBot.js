@@ -7,8 +7,7 @@ if (token === undefined) {
 }
 
 const PORT = process.env.PORT_BOT || 3002;
-const URL =
-  process.env.URL || "https://spg-deploy-feat-telegra-lmixoy.herokuapp.com/";
+const URL = process.env.URL || "https://spg-testing.herokuapp.com/"; //"https://spg-deploy-feat-telegra-lmixoy.herokuapp.com/";
 
 const bot = new Telegraf(token);
 bot.telegram.setWebhook(`${URL}/bot${token}`);

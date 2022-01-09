@@ -14,7 +14,6 @@ function ProductAvailabilityUpdateForm(props) {
 
     if (newVal === "" || newVal.match(positiveFloatRegex)) {
       setQuantity(newVal);
-      return;
     }
   }
 

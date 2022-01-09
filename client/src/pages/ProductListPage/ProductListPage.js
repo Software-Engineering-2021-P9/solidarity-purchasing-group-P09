@@ -136,7 +136,9 @@ function ProductListPage(props) {
       <NavbarComponent
         links={getAvailableNavbarLinks(authContext.currentUser)}
         loggedUser={authContext.currentUser}
-        showShoppingCart
+        showShoppingCart={
+          authContext?.currentUser?.role === UserRoles.CLIENT || location.state
+        }
         shoppingCartItems={cart.size}
         shoppingCart={cart}
         clientID={location.state ? location.state.clientID : ""}

@@ -47,6 +47,13 @@ const {
   createProduct,
 } = require("./product");
 
+const {
+  countWeekUnretrievedOrders,
+  countWeekOrders,
+  countTimeIntervalUnretrievedOrders,
+  countTimeIntervalOrders,
+} = require("./stats");
+
 const { ClientInfo } = require("../models/client_info");
 const { EmployeeInfo } = require("../models/employee_info");
 const { FarmerInfo } = require("../models/farmer_info");
@@ -174,3 +181,27 @@ exports.getUserByEmail = async (email) => {
   }
   return usersFound[0];
 };
+
+// Stats
+
+exports.countWeekUnretrievedOrders = (week, year) =>
+  countWeekUnretrievedOrders(db, week, year);
+
+exports.countWeekOrders = (week, year) => countWeekOrders(db, week, year);
+
+exports.countTimeIntervalUnretrievedOrders = (
+  startWeek,
+  endWeek,
+  startYear,
+  endYear
+) =>
+  countTimeIntervalUnretrievedOrders(
+    db,
+    startWeek,
+    endWeek,
+    startYear,
+    endYear
+  );
+
+exports.countTimeIntervalOrders = (startWeek, endWeek, startYear, endYear) =>
+  countTimeIntervalOrders(db, startWeek, endWeek, startYear, endYear);

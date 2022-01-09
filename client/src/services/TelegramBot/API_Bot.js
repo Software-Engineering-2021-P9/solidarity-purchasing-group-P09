@@ -1,6 +1,6 @@
 const axios = require("axios");
 
-exports.findProducts = async function (category, searchString) {
+exports.findProducts = async function () {
   let urlRequest = "http://localhost:3001/api/products";
 
   const response = await axios.get(urlRequest);

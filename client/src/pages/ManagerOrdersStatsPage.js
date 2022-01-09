@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Container, Row, Spinner } from "react-bootstrap";
 import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponent";
 
@@ -12,8 +12,12 @@ import {
   getWeeklyOrdersStat,
 } from "../services/ApiClient";
 import ErrorToast from "../ui-components/ErrorToast/ErrorToast";
+import { getAvailableNavbarLinks } from "../Routes";
+import { AuthContext } from "../contexts/AuthContextProvider";
 
 function ManagerOrdersStatsPage(props) {
+  const authContext = useContext(AuthContext);
+
   const [requestError, setRequestError] = useState("");
   const [initialized, setInitialized] = useState(false);
 
@@ -138,7 +142,11 @@ function ManagerOrdersStatsPage(props) {
   return (
     <Container>
       <Row>
-        <NavbarComponent links={[]} />
+        <NavbarComponent
+          links={getAvailableNavbarLinks(authContext.currentUser)}
+          loggedUser={authContext.currentUser}
+          userIconLink={authContext.getUserIconLink()}
+        />
       </Row>
       {initialized ? (
         <>

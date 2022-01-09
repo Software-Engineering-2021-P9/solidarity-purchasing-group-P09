@@ -18,7 +18,9 @@ function GeneralReports(props) {
               {gridIcon}
             </Col>
             <Col>
-              <Row className="total-orders">{props.generalReports[0]}</Row>
+              <Row className="total-orders">
+                {props.generalReports.unretrievedCount}
+              </Row>
               <Row className="comment-stats">unretrieved orders</Row>
             </Col>
           </Row>
@@ -32,13 +34,17 @@ function GeneralReports(props) {
                   {
                     title: "Unretrieved",
                     value:
-                      (props.generalReports[0] / props.generalReports[1]) * 100,
+                      (props.generalReports.unretrievedCount /
+                        props.generalReports.totalCount) *
+                      100,
                     color: "#DB9471",
                   },
                   {
                     title: "Retrieved",
                     value:
-                      (1 - props.generalReports[0] / props.generalReports[1]) *
+                      (1 -
+                        props.generalReports.unretrievedCount /
+                          props.generalReports.totalCount) *
                       100,
                     color: "#91885267",
                   },
@@ -48,7 +54,12 @@ function GeneralReports(props) {
             </Col>
             <Col>
               <Row className="total-orders">
-                {(props.generalReports[0] / props.generalReports[1]) * 100} %
+                {(
+                  (props.generalReports.unretrievedCount /
+                    props.generalReports.totalCount) *
+                  100
+                ).toFixed(2)}{" "}
+                %
               </Row>
               <Row className="comment-stats">of the total orders</Row>
             </Col>

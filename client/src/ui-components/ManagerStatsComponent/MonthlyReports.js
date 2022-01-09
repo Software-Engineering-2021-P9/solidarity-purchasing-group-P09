@@ -15,11 +15,13 @@ import { arrowDownIcon, arrowUpIcon } from "../icons";
 
 function MonthlyReports(props) {
   const this_month_perc = (
-    (props.thisMonthReports[0] / props.thisMonthReports[1]) *
+    (props.thisMonthReports.unretrievedCount /
+      props.thisMonthReports.totalCount) *
     100
   ).toFixed(2);
   const prev_month_perc = (
-    (props.previousMonthReports[0] / props.previousMonthReports[1]) *
+    (props.previousMonthReports.unretrievedCount /
+      props.previousMonthReports.totalCount) *
     100
   ).toFixed(2);
   const diff = this_month_perc - prev_month_perc;
@@ -80,8 +82,8 @@ function UnretrievedMonthlyBar(props) {
     const [key, val] = entry;
     let value = {
       month: key,
-      unretrieved: val[0],
-      total: val[1],
+      unretrieved: val.unretrievedCount,
+      total: val.totalCount,
     };
     data.push(value);
     return entry;
@@ -171,12 +173,16 @@ function MonthlyForm(props) {
           />
         </InputGroup>
       </Row>
-      {props.formReports[0] ? (
+      {props.formReports.unretrievedCount ? (
         <Row className="comments-week-stats">
           Unretrieved orders in {monthsDropdown[props.month]} of {props.year}{" "}
-          were {props.formReports[0]},{" "}
-          {((props.formReports[0] / props.formReports[1]) * 100).toFixed(2)}% of
-          total orders
+          were {props.formReports.unretrievedCount},{" "}
+          {(
+            (props.formReports.unretrievedCount /
+              props.formReports.totalCount) *
+            100
+          ).toFixed(2)}
+          % of total orders
         </Row>
       ) : (
         <Row className="comments-week-stats">

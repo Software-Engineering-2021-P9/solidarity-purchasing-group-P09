@@ -6,6 +6,7 @@ import Product from "./models/Product";
 import ProductAvailability from "./models/ProductAvailability";
 import Order from "./models/Order";
 import UserRoles from "./models/UserRoles";
+import OrdersStats from "./models/OrdersStats";
 
 // Builds the query parameters for an URL from the passed object
 function buildQueryParametersString(queryParams) {
@@ -544,49 +545,63 @@ export async function setWeekphaseOverride(weekphaseID) {
 
 export async function getWeeklyOrdersStat(week, year) {
   // Returns mock data right now
-  if (!week && !year) {
-    return [150, 10000];
-  } else {
-    return [week, year];
-  }
-  //let response = await fetch("/api/orders?clientID=" + clientID);
+  let response;
 
-  /*switch (response.status) {
+  if (!week && !year) {
+    response = await fetch("/api/stats/orders/unretrieved/weekly?");
+  } else {
+    response = await fetch(
+      "/api/stats/orders/unretrieved/weekly?week=" + week + "&year=" + year
+    );
+  }
+
+  switch (response.status) {
     case 200:
       let responseBody = await response.json();
-      return responseBody.map((order) => Order.fromJSON(order));
+      return OrdersStats.fromJSON(responseBody);
     case 400:
-      throw new Error(
-        "Bad request: the request contained invalid parameter " + clientID
-      );
+      throw new Error("Validation error occurred");
     case 401:
       throw new Error("Unauthorized");
+    case 404:
+      throw new Error("Not Found");
     case 500:
       throw new Error("Internal Server Error");
     default:
-      throw new Error("An error occurred during orders search");
-  }*/
+      throw new Error("An error occurred retrieving the product");
+  }
 }
 
-export async function getWeekIntervalOrdersStat(week1, week2, year1, year2) {
-  // Returns mock data right now
-  return [week1 + week2, year1];
+export async function getWeekIntervalOrdersStat(
+  startWeek,
+  endWeek,
+  startYear,
+  endYear
+) {
+  let response = await fetch(
+    "/api/stats/orders/unretrieved/timeInterval?startWeek=" +
+      startWeek +
+      "&endWeek=" +
+      endWeek +
+      "&startYear=" +
+      startYear +
+      "&endYear=" +
+      endYear
+  );
 
-  //let response = await fetch("/api/orders?clientID=" + clientID);
-
-  /*switch (response.status) {
+  switch (response.status) {
     case 200:
       let responseBody = await response.json();
-      return responseBody.map((order) => Order.fromJSON(order));
+      return OrdersStats.fromJSON(responseBody);
     case 400:
-      throw new Error(
-        "Bad request: the request contained invalid parameter " + clientID
-      );
+      throw new Error("Validation error occurred");
     case 401:
       throw new Error("Unauthorized");
+    case 404:
+      throw new Error("Not Found");
     case 500:
       throw new Error("Internal Server Error");
     default:
-      throw new Error("An error occurred during orders search");
-  }*/
+      throw new Error("An error occurred retrieving the product");
+  }
 }

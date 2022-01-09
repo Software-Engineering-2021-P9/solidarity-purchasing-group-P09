@@ -21,17 +21,17 @@ function ManagerOrdersStatsPage(props) {
   const [requestError, setRequestError] = useState("");
   const [initialized, setInitialized] = useState(false);
 
-  const [generalReports, setGeneralReports] = useState([]); // get # total orders and # total unretrieved
-  const [thisWeekReports, setThisWeekReports] = useState([]);
-  const [thisMonthReports, setThisMonthReports] = useState([]);
-  const [previousWeekReports, setPreviousWeekReports] = useState([]);
-  const [previousMonthReports, setPreviousMonthReports] = useState([]);
-  const [formReports, setFormReports] = useState([]);
+  const [generalReports, setGeneralReports] = useState({}); // get # total orders and # total unretrieved
+  const [thisWeekReports, setThisWeekReports] = useState({});
+  const [thisMonthReports, setThisMonthReports] = useState({});
+  const [previousWeekReports, setPreviousWeekReports] = useState({});
+  const [previousMonthReports, setPreviousMonthReports] = useState({});
+  const [formReports, setFormReports] = useState({});
   const [barReports, setBarReports] = useState(new Map());
+
   const [week, setWeek] = useState(2);
   const [year, setYear] = useState(2022);
   const [month, setMonth] = useState(1);
-
   const [typeReports, setTypeReports] = useState(0); // 0 weekly, 1 monthly
 
   useEffect(() => {
@@ -160,9 +160,9 @@ function ManagerOrdersStatsPage(props) {
       }
     };
     if (typeReports === 1 && year === 2022 && month > 0) {
-      setFormReports([]);
+      setFormReports({});
     } else if (typeReports === 0 && year === 2022 && week > 2) {
-      setFormReports([]);
+      setFormReports({});
     } else {
       getFormReports();
     }

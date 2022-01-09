@@ -15,11 +15,13 @@ import { arrowDownIcon, arrowUpIcon } from "../icons";
 
 function WeeklyReports(props) {
   const this_week_perc = (
-    (props.thisWeekReports[0] / props.thisWeekReports[1]) *
+    (props.thisWeekReports.unretrievedCount /
+      props.thisWeekReports.totalCount) *
     100
   ).toFixed(2);
   const prev_week_perc = (
-    (props.previousWeekReports[0] / props.previousWeekReports[1]) *
+    (props.previousWeekReports.unretrievedCount /
+      props.previousWeekReports.totalCount) *
     100
   ).toFixed(2);
   const diff = this_week_perc - prev_week_perc;
@@ -78,7 +80,11 @@ function UnretrievedWeeklyBar(props) {
   const data = [];
   Array.from(props.barReports.entries()).map((entry) => {
     const [key, val] = entry;
-    let value = { week: key, unretrieved: val[0], total: val[1] };
+    let value = {
+      week: key,
+      unretrieved: val.unretrievedCount,
+      total: val.totalCount,
+    };
     data.push(value);
     return entry;
   });
@@ -150,12 +156,16 @@ function WeeklyForm(props) {
           />
         </InputGroup>
       </Row>
-      {props.formReports[0] ? (
+      {props.formReports.unretrievedCount ? (
         <Row className="comments-week-stats">
           Unretrieved orders in week {props.week} of {props.year} were{" "}
-          {props.formReports[0]},{" "}
-          {((props.formReports[0] / props.formReports[1]) * 100).toFixed(2)}% of
-          total orders
+          {props.formReports.unretrievedCount},{" "}
+          {(
+            (props.formReports.unretrievedCount /
+              props.formReports.totalCount) *
+            100
+          ).toFixed(2)}
+          % of total orders
         </Row>
       ) : (
         <Row className="comments-week-stats">

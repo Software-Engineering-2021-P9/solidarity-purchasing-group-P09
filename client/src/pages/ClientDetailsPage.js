@@ -122,7 +122,7 @@ function ClientDetailsPage(props) {
       {location.state != null && show ? (
         <Row>
           <Alert
-            variant='success'
+            variant="success"
             style={{
               color: "#635F46",
               fontWeight: "bold",
@@ -145,16 +145,16 @@ function ClientDetailsPage(props) {
       )}
 
       {!isInitialized ? (
-        <Container className='pt-5 d-flex justify-content-center'>
-          <Spinner variant='dark' animation='border' />
+        <Container className="pt-5 d-flex justify-content-center">
+          <Spinner variant="dark" animation="border" />
         </Container>
       ) : (
         <>
           <Row>
-            <h1 className='title title-font'>Client Details</h1>
+            <h1 className="title title-font">Client Details</h1>
           </Row>
-          <Row className='justify-content-between pt-2'>
-            <Col className=''>
+          <Row className="justify-content-between pt-2">
+            <Col className="">
               <ClientDetails
                 clientInfo={clientInfo}
                 loggedUser={authContext.currentUser}

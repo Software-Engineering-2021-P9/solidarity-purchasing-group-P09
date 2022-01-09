@@ -1,6 +1,7 @@
 import EmployeeInfoResult from "./models/EmployeeInfoResult";
 import ClientInfoResult from "./models/ClientInfoResult";
 import FarmerInfoResult from "./models/FarmerInfoResult";
+import ManagerInfoResult from "./models/ManagerInfoResult";
 import Product from "./models/Product";
 import ProductAvailability from "./models/ProductAvailability";
 import Order from "./models/Order";

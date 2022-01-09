@@ -158,6 +158,8 @@ function getAvailableNavbarLinks(loggedUser) {
         employeeClientSignupRouteName,
         userLogoutRouteName,
       ];
+    case UserRoles.MANAGER:
+      return [managerOrdersStatsRouteName, userLogoutRouteName];
     case UserRoles.FARMER:
       return [farmerProductManagementRouteName, userLogoutRouteName];
     case UserRoles.MANAGER:

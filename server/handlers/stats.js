@@ -23,8 +23,8 @@ exports.weeklyUnretrievedOrdersStatsHandler = async function (req, res, next) {
   let unretrievedOrdersCount;
   try {
     unretrievedOrdersCount = await dao.countWeekUnretrievedOrders(
-      req.query.week,
-      req.query.year
+      parseInt(req.query.week),
+      parseInt(req.query.year)
     );
   } catch (err) {
     console.error(
@@ -35,7 +35,10 @@ exports.weeklyUnretrievedOrdersStatsHandler = async function (req, res, next) {
 
   let ordersCount;
   try {
-    ordersCount = await dao.countWeekOrders(req.query.week, req.query.year);
+    ordersCount = await dao.countWeekOrders(
+      parseInt(req.query.week),
+      parseInt(req.query.year)
+    );
   } catch (err) {
     console.error(
       `WeeklyUnretrievedOrdersStatsHandler() -> couldn't retrieve the count of orders: ${err}`
@@ -61,10 +64,10 @@ exports.timeIntervalUnretrievedOrdersStatsHandler = async function (
   let unretrievedOrdersCount;
   try {
     unretrievedOrdersCount = await dao.countTimeIntervalUnretrievedOrders(
-      req.query.startWeek,
-      req.query.endWeek,
-      req.query.startYear,
-      req.query.endYear
+      parseInt(req.query.startWeek),
+      parseInt(req.query.endWeek),
+      parseInt(req.query.startYear),
+      parseInt(req.query.endYear)
     );
   } catch (err) {
     console.error(
@@ -76,10 +79,10 @@ exports.timeIntervalUnretrievedOrdersStatsHandler = async function (
   let ordersCount;
   try {
     ordersCount = await dao.countTimeIntervalOrders(
-      req.query.startWeek,
-      req.query.endWeek,
-      req.query.startYear,
-      req.query.endYear
+      parseInt(req.query.startWeek),
+      parseInt(req.query.endWeek),
+      parseInt(req.query.startYear),
+      parseInt(req.query.endYear)
     );
   } catch (err) {
     console.error(

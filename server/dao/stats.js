@@ -1,6 +1,5 @@
 "use strict";
 
-const { ObjectID } = require("bson");
 const { OrderStatus } = require("../models/order");
 
 const orderCollectionName = "orders";
@@ -13,11 +12,11 @@ exports.countWeekUnretrievedOrders = async (db, week, year) => {
       $and: [
         { week: week },
         { year: year },
-        { status: OrderStatus.UNRETRIEVED },
+        { status: OrderStatus.UNRETRIEVED.toString() },
       ],
     };
   } else {
-    query = { status: OrderStatus.UNRETRIEVED };
+    query = { status: OrderStatus.UNRETRIEVED.toString() };
   }
 
   return db.collection(orderCollectionName).countDocuments(query);

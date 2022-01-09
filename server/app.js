@@ -263,7 +263,7 @@ app.get(
   buildAPIPath("/stats/orders/unretrieved/timeInterval"),
   statsHandlers.timeIntervalUnretrievedOrdersStatsValidatorChain,
   checkValidationErrorMiddleware,
-  statsHandlers.timeIntervalUnretrievedOrdersStatsValidatorChain
+  statsHandlers.timeIntervalUnretrievedOrdersStatsHandler
 );
 
 // Serve client app

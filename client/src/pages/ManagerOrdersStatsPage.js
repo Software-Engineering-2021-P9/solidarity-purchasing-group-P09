@@ -20,6 +20,7 @@ function ManagerOrdersStatsPage(props) {
 
   const [requestError, setRequestError] = useState("");
   const [initialized, setInitialized] = useState(false);
+  const [initializedBar, setInitializedBar] = useState(false);
 
   const [generalReports, setGeneralReports] = useState({}); // get # total orders and # total unretrieved
   const [thisWeekReports, setThisWeekReports] = useState({});
@@ -99,6 +100,7 @@ function ManagerOrdersStatsPage(props) {
           map_week_bar.set(w, res_week_bar);
         }
         setBarReports(map_week_bar);
+        setInitializedBar(true);
       } else {
         let map_month_bar = new Map();
         let year_month_bar = 2021;
@@ -130,8 +132,10 @@ function ManagerOrdersStatsPage(props) {
           cont++;
         }
         setBarReports(map_month_bar);
+        setInitializedBar(true);
       }
     };
+    setInitializedBar(false);
     getBarReports();
   }, [typeReports]);
 
@@ -200,6 +204,7 @@ function ManagerOrdersStatsPage(props) {
                   setWeek={setWeek}
                   setYear={setYear}
                   barReports={barReports}
+                  initializedBar={initializedBar}
                 />
               </>
             ) : (
@@ -213,6 +218,7 @@ function ManagerOrdersStatsPage(props) {
                   setMonth={setMonth}
                   setYear={setYear}
                   barReports={barReports}
+                  initializedBar={initializedBar}
                 />
               </>
             )}

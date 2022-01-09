@@ -1,7 +1,14 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./ReportsCSS.css";
 import React from "react";
-import { Col, Row, FormControl, InputGroup, Form } from "react-bootstrap";
+import {
+  Col,
+  Row,
+  FormControl,
+  InputGroup,
+  Form,
+  Spinner,
+} from "react-bootstrap";
 import {
   BarChart,
   CartesianGrid,
@@ -69,9 +76,15 @@ function MonthlyReports(props) {
       <Row className="stats-subtitle my-5 mx-1">
         Number of unretrieved orders per month
       </Row>
-      <Row>
-        <UnretrievedMonthlyBar barReports={props.barReports} />
-      </Row>
+      {props.initializedBar ? (
+        <Row>
+          <UnretrievedMonthlyBar barReports={props.barReports} />
+        </Row>
+      ) : (
+        <Row className="vh-100 justify-content-center align-content-center">
+          <Spinner animation="border" />
+        </Row>
+      )}
     </>
   );
 }

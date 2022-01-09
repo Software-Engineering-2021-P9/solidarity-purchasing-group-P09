@@ -1,7 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./ReportsCSS.css";
 import React from "react";
-import { Col, Row, FormControl, InputGroup } from "react-bootstrap";
+import { Col, Row, FormControl, InputGroup, Spinner } from "react-bootstrap";
 import {
   BarChart,
   CartesianGrid,
@@ -69,9 +69,15 @@ function WeeklyReports(props) {
       <Row className="stats-subtitle my-5 mx-1">
         Number of unretrieved orders per week
       </Row>
-      <Row>
-        <UnretrievedWeeklyBar barReports={props.barReports} />
-      </Row>
+      {props.initializedBar ? (
+        <Row>
+          <UnretrievedWeeklyBar barReports={props.barReports} />
+        </Row>
+      ) : (
+        <Row className="vh-100 justify-content-center align-content-center">
+          <Spinner animation="border" />
+        </Row>
+      )}
     </>
   );
 }

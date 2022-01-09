@@ -136,7 +136,14 @@ function ManagerOrdersStatsPage(props) {
           );
       }
     };
-    getFormReports();
+    if (
+      year === 2022 &&
+      ((typeReports === 1 && month > 0) || (typeReports === 0 && week > 2))
+    ) {
+      setFormReports([]);
+    } else {
+      getFormReports();
+    }
   }, [week, year, month, typeReports]);
 
   return (

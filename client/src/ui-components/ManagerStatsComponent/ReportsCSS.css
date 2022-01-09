@@ -75,6 +75,16 @@
   padding: 10px;
 }
 
+.unretrieved-info {
+  color: #db9471;
+}
+.total-info {
+  color: #b2b6bd;
+}
+.label-tooltip {
+  font-weight: bold;
+}
+
 @media only screen and (max-width: 577px) {
   .add-space {
     margin-top: 20px;

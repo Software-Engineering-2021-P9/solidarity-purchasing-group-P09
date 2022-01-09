@@ -7,7 +7,6 @@ import {
   CartesianGrid,
   XAxis,
   YAxis,
-  Cell,
   Tooltip,
   Bar,
   Legend,
@@ -74,9 +73,9 @@ function UnretrievedWeeklyBar(props) {
     if (active && payload && payload.length) {
       return (
         <div className="custom-tooltip">
-          <h6>{`week : ${label}`}</h6>
-          <p>{`unretrieved orders : ${payload[0].value}`}</p>
-          <p>{`total orders : ${payload[1].value}`}</p>
+          <p className="label-tooltip">{`week : ${label}`}</p>
+          <p className="unretrieved-info">{`unretrieved orders : ${payload[0].value}`}</p>
+          <p className="total-info">{`total orders : ${payload[1].value}`}</p>
           <p>{`% of unretrieved orders : ${(
             (payload[0].value / payload[1].value) *
             100
@@ -84,6 +83,7 @@ function UnretrievedWeeklyBar(props) {
         </div>
       );
     }
+    return null;
   };
 
   return (
@@ -114,7 +114,9 @@ function WeeklyForm(props) {
             min={1}
             value={props.week}
             onChange={(e) => {
-              props.setWeek(e.target.value);
+              if (e.target.value >= 1 && e.target.value <= 52) {
+                props.setWeek(e.target.value);
+              }
             }}
           />
           <FormControl
@@ -125,17 +127,25 @@ function WeeklyForm(props) {
             min={2010}
             value={props.year}
             onChange={(e) => {
-              props.setYear(e.target.value);
+              if (e.target.value >= 2010 && e.target.value <= 2022) {
+                props.setYear(e.target.value);
+              }
             }}
           />
         </InputGroup>
       </Row>
-      <Row className="comments-week-stats">
-        Unretrieved orders in week {props.week} of {props.year} were{" "}
-        {props.formReports[0]},{" "}
-        {((props.formReports[0] / props.formReports[1]) * 100).toFixed(2)}% of
-        total orders
-      </Row>
+      {props.formReports[0] ? (
+        <Row className="comments-week-stats">
+          Unretrieved orders in week {props.week} of {props.year} were{" "}
+          {props.formReports[0]},{" "}
+          {((props.formReports[0] / props.formReports[1]) * 100).toFixed(2)}% of
+          total orders
+        </Row>
+      ) : (
+        <Row className="comments-week-stats">
+          Sorry, data you are looking for is not available
+        </Row>
+      )}
     </>
   );
 }

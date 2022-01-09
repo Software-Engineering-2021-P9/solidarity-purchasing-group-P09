@@ -7,11 +7,9 @@ import {
   CartesianGrid,
   XAxis,
   YAxis,
-  Cell,
   Tooltip,
   Bar,
   Legend,
-  Label,
 } from "recharts";
 import { arrowUpIcon } from "../icons";
 
@@ -150,17 +148,25 @@ function MonthlyForm(props) {
             min={2010}
             value={props.year}
             onChange={(e) => {
-              props.setYear(e.target.value);
+              if (e.target.value >= 2010 && e.target.value <= 2022) {
+                props.setYear(e.target.value);
+              }
             }}
           />
         </InputGroup>
       </Row>
-      <Row className="comments-week-stats">
-        Unretrieved orders in {monthsDropdown[props.month]} of {props.year} were{" "}
-        {props.formReports[0]},{" "}
-        {((props.formReports[0] / props.formReports[1]) * 100).toFixed(2)}% of
-        total orders
-      </Row>
+      {props.formReports[0] ? (
+        <Row className="comments-week-stats">
+          Unretrieved orders in {monthsDropdown[props.month]} of {props.year}{" "}
+          were {props.formReports[0]},{" "}
+          {((props.formReports[0] / props.formReports[1]) * 100).toFixed(2)}% of
+          total orders
+        </Row>
+      ) : (
+        <Row className="comments-week-stats">
+          Sorry, data you are looking for is not available
+        </Row>
+      )}
     </>
   );
 }

@@ -16,7 +16,9 @@ bot.startWebhook(`/bot${token}`, null, PORT);
 bot.launch();
 
 exports.WriteList = async function () {
-  const users = await getTelegramUsers();
+  let users = [];
+  users = await API.getTelegramUsers(URL);
+  console.log("Utenti: " + users);
   users.map((id) => {
     writeProductList(id.chatID);
   });
@@ -52,7 +54,7 @@ const getLeftQuantity = (lq) => {
 //Client sends start and will receive a welcome message,
 bot.command("start", (ctx) => {
   console.log(ctx.from);
-  addTelegramUsers(ctx.chat.id);
+  API.addTelegramUsers(URL, ctx.chat.id);
   bot.telegram.sendMessage(
     ctx.chat.id,
     "Hello there! Welcome to SPG telegram bot."

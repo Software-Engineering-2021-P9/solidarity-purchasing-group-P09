@@ -63,7 +63,7 @@ exports.createOrderHandler = async function (req, res, next) {
         ProductAvailability.fromMongoJSON(r)
       );
 
-      let totalPrice = getPriceForShipmentType(req.body.shipmentType);
+      let totalPrice = getPriceForShipmentType(req.body.shipmentInfo.type);
 
       for (let orderProduct of orderProducts) {
         let productAvailability = productAvailabilities.find(

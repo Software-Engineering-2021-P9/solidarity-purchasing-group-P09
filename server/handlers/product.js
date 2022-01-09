@@ -1,65 +1,29 @@
 var dao = require("../dao/dao");
-const dayjs = require("dayjs");
 const { Product } = require("../models/product");
 const { ProductAvailability } = require("../models/product_availability");
-const {
-  getNextWeekClient,
-  getCurrentWeekClient,
-} = require("../services/time_service");
+const { getNextWeekClient } = require("../services/time_service");
 const {
   searchStringValidator,
   productCategoryValidator,
   idsValidator,
   productIDPathValidator,
-  availabilityPriceBodyValidator,
-  availabilityQuantityBodyValidator,
-  availabilityPackagingBodyValidator,
   productCategoryBodyValidator,
   productDescriptionBodyValidator,
   productNameBodyValidator,
   farmerIDBodyValidator,
 } = require("./shared_validators");
-const { ObjectID } = require("bson");
 const {
   ProductAvailabilityResult,
 } = require("../models/product_availability_result");
 
-exports.getProductsByIDValidatorChain = [
+exports.findAvailableProductsValidatorChain = [
   searchStringValidator,
   productCategoryValidator,
-  idsValidator,
 ];
 
-exports.getProductsByIDHandler = async function (req, res, next) {
-  // If the ids query parameter is set, retrieve the products associated to the ids in the list
+exports.findAvailableProductsHandler = async function (req, res, next) {
   let productsMongo;
-  let products = [];
-
-  if (req.query.ids) {
-    try {
-      productsMongo = await dao.getProductsByIDs(req.query.ids);
-    } catch (err) {
-      console.error(`getProductsByIDs() -> couldn't retrieve products: ${err}`);
-      return res.status(500).end();
-    }
-
-    try {
-      products = productsMongo.map((product) =>
-        Product.fromMongoJSON({ ...product })
-      );
-    } catch (err) {
-      console.error(
-        `fromMongoJSON() -> couldn't convert Mongo result to Product: ${err}`
-      );
-
-      return res.status(500).end();
-    }
-
-    return res.json(products);
-  }
-
-  // Else, find the available products by the given searchString and category
-
+  // Find the available products by the given searchString and category
   try {
     productsMongo = await dao.findProducts(
       req.query.searchString,
@@ -74,7 +38,7 @@ exports.getProductsByIDHandler = async function (req, res, next) {
   try {
     productsAvailabilitiesMongo = await dao.getProductsAvailability(
       productsMongo.map((product) => product._id),
-      ...getNextWeekClient(dayjs())
+      ...getNextWeekClient()
     );
   } catch (err) {
     console.error(
@@ -82,6 +46,8 @@ exports.getProductsByIDHandler = async function (req, res, next) {
     );
     return res.status(500).end();
   }
+
+  let products = [];
   for (let productAvailabilityMongo of productsAvailabilitiesMongo) {
     let productAvailability = ProductAvailability.fromMongoJSON(
       productAvailabilityMongo
@@ -97,6 +63,62 @@ exports.getProductsByIDHandler = async function (req, res, next) {
 
     product.availability =
       ProductAvailabilityResult.fromProductAvailability(productAvailability);
+
+    products.push(product);
+  }
+
+  return res.json(products);
+};
+
+exports.getProductsByIDValidatorChain = [idsValidator];
+
+exports.getProductsByIDHandler = async function (req, res, next) {
+  let productsMongo;
+
+  // Retrieve the products associated to the ids in the list
+  try {
+    productsMongo = await dao.getProductsByIDs(req.query.ids);
+  } catch (err) {
+    console.error(`getProductsByIDs() -> couldn't retrieve products: ${err}`);
+    return res.status(500).end();
+  }
+
+  let productsAvailabilitiesMongo;
+  try {
+    productsAvailabilitiesMongo = await dao.getProductsAvailability(
+      productsMongo.map((product) => product._id),
+      ...getNextWeekClient()
+    );
+  } catch (err) {
+    console.error(
+      `getProductsByIDs() -> couldn't retrieve products availabilities: ${err}`
+    );
+    return res.status(500).end();
+  }
+
+  let products = [];
+  for (let productMongo of productsMongo) {
+    let product;
+    try {
+      product = Product.fromMongoJSON(productMongo);
+    } catch (err) {
+      console.error(
+        `fromMongoJSON() -> couldn't convert Mongo result to Product: ${err}`
+      );
+      return res.status(500).end();
+    }
+
+    let productAvailabilityMongo = productsAvailabilitiesMongo.find((pa) => {
+      return pa.productID.toString() === product.id.toString();
+    });
+
+    if (productAvailabilityMongo) {
+      let productAvailability = ProductAvailabilityResult.fromMongoJSON(
+        productAvailabilityMongo
+      );
+
+      product.availability = productAvailability;
+    }
 
     products.push(product);
   }
@@ -126,7 +148,7 @@ exports.getProductByIDHandler = async function (req, res, next) {
   try {
     result = await dao.getProductAvailability(
       req.params.productID,
-      ...getCurrentWeekClient()
+      ...getNextWeekClient()
     );
   } catch (err) {
     console.error(
@@ -150,118 +172,6 @@ exports.getProductByIDHandler = async function (req, res, next) {
   }
 
   return res.json(result);
-};
-
-exports.setNextWeekProductAvailabilityValidatorChain = [
-  productIDPathValidator,
-  availabilityPriceBodyValidator,
-  availabilityQuantityBodyValidator,
-  availabilityPackagingBodyValidator,
-];
-
-exports.setNextWeekProductAvailabilityHandler = async function (
-  req,
-  res,
-  next
-) {
-  let result;
-
-  try {
-    result = await dao.getProductByID(req.params.productID);
-  } catch (err) {
-    console.error(
-      `SetNextWeekProductAvailability() -> couldn't retrieve the product: ${err}`
-    );
-    return res.status(500).end();
-  }
-
-  if (!result) {
-    console.error(
-      `SetNextWeekProductAvailability() -> couldn't retrieve the product: Not found`
-    );
-    return res.status(400).end();
-  }
-
-  const farmerID = result.farmerID;
-  const [week, year] = getNextWeekClient();
-
-  try {
-    result = await dao.getProductAvailability(req.params.productID, week, year);
-  } catch (err) {
-    console.error(
-      `SetNextWeekProductAvailability() -> couldn't retrieve the newly created product availability: ${err}`
-    );
-    return res.status(500).end();
-  }
-
-  if (result) {
-    console.error(
-      `SetNextWeekProductAvailability() -> The product availability for the next week is already set`
-    );
-    return res.status(400).end();
-  }
-
-  try {
-    await dao.setProductAvailability(
-      farmerID,
-      req.params.productID,
-      week,
-      year,
-      parseFloat(req.body.price),
-      req.body.packaging.toString(),
-      parseInt(req.body.quantity)
-    );
-  } catch (err) {
-    console.error(
-      `SetNextWeekProductAvailability() -> couldn't set the next week product availability: ${err}`
-    );
-    return res.status(500).end();
-  }
-
-  try {
-    result = await dao.getProductAvailability(req.params.productID, week, year);
-  } catch (err) {
-    console.error(
-      `SetNextWeekProductAvailability() -> couldn't retrieve the newly created product availability: ${err}`
-    );
-    return res.status(500).end();
-  }
-
-  if (!result) {
-    console.error(
-      `SetNextWeekProductAvailability() -> couldn't retrieve the newly created product availability: Not found`
-    );
-    return res.status(404).end();
-  }
-
-  return res.json(ProductAvailability.fromMongoJSON(result));
-};
-
-exports.getNextWeekProductAvailabilityValidatorChain = [productIDPathValidator];
-
-exports.getNextWeekProductAvailability = async function (req, res, next) {
-  let result;
-
-  try {
-    result = await dao.getProductAvailability(
-      req.params.productID,
-      ...getNextWeekClient()
-    );
-  } catch (err) {
-    console.error(
-      `GetNextWeekProductAvailability() --> Couldn't retrieve the next week availability: ${err}`
-    );
-    return res.status(500).end();
-  }
-
-  if (!result) {
-    console.error(
-      `GetNextWeekProductAvailability() --> Couldn't retrieve the next week availability: Not found`
-    );
-    return res.status(404).end();
-  }
-
-  return res.json(ProductAvailabilityResult.fromMongoJSON(result));
 };
 
 exports.createProductValidatorChain = [

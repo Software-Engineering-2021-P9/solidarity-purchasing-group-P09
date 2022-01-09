@@ -3,6 +3,7 @@ const {
   getNextWeekClient,
   getCurrentWeekClient,
   getCurrentWeekFarmer,
+  getNextWeekFarmer,
 } = require("../services/time_service");
 
 exports.managersCollection = {
@@ -385,6 +386,12 @@ let currentYear;
 [nextWeek, currentYear] = getNextWeekClient();
 [currentWeek, currentYear] = getCurrentWeekClient();
 
+let nextWeekFarmer;
+let currentWeekFarmer;
+let currentYearFarmer;
+[nextWeekFarmer, currentYearFarmer] = getNextWeekFarmer();
+[currentWeekFarmer, currentYearFarmer] = getCurrentWeekFarmer();
+
 exports.productsAvailabilityCollection = {
   availabilities: [
     {
@@ -439,8 +446,8 @@ exports.productsAvailabilityCollection = {
       _id: ObjectID("000000000000000000000004"),
       farmerID: ObjectID("67696f76616a6a6a31a23334"),
       productID: ObjectID("000000000000000000000006"),
-      week: nextWeek,
-      year: currentYear,
+      week: nextWeekFarmer,
+      year: currentYearFarmer,
       status: "waiting",
       price: 4.5,
       packaging: "1 units",
@@ -451,16 +458,28 @@ exports.productsAvailabilityCollection = {
       _id: ObjectID("000000000000000000000014"),
       farmerID: ObjectID("67696f76616a6a6a31a23334"),
       productID: ObjectID("000000000000000000000006"),
-      week: currentWeek,
+      week: nextWeek,
       year: currentYear,
       status: "waiting",
       price: 4.5,
       packaging: "1 units",
-      quantity: 27,
+      quantity: 52,
       reservedQuantity: 0,
     },
     {
       _id: ObjectID("000000000000000000000005"),
+      farmerID: ObjectID("4c7564443132333435363738"),
+      productID: ObjectID("000000000000000000000012"),
+      week: nextWeekFarmer,
+      year: currentYearFarmer,
+      status: "waiting",
+      price: 6,
+      packaging: "1 units",
+      quantity: 30,
+      reservedQuantity: 0,
+    },
+    {
+      _id: ObjectID("000000000000000000000015"),
       farmerID: ObjectID("4c7564443132333435363738"),
       productID: ObjectID("000000000000000000000012"),
       week: nextWeek,
@@ -472,7 +491,7 @@ exports.productsAvailabilityCollection = {
       reservedQuantity: 0,
     },
     {
-      _id: ObjectID("000000000000000000000015"),
+      _id: ObjectID("000000000000000000000025"),
       farmerID: ObjectID("4c7564443132333435363738"),
       productID: ObjectID("000000000000000000000012"),
       week: currentWeek,
@@ -499,6 +518,119 @@ exports.productsAvailabilityCollection = {
 };
 
 exports.productsAvailabilityCollection2 = {
+  availabilities: [
+    {
+      _id: ObjectID("000000000000000000000001"),
+      farmerID: ObjectID("67696f76616a6a6a31a23334"),
+      productID: ObjectID("000000000000000000000001"),
+      week: nextWeekFarmer,
+      year: currentYearFarmer,
+      status: "waiting",
+      price: 3.5,
+      packaging: "100g",
+      quantity: 5,
+      reservedQuantity: 0,
+    },
+    {
+      _id: ObjectID("000000000000000000000002"),
+      farmerID: ObjectID("4c7564443132333435363738"),
+      productID: ObjectID("000000000000000000000010"),
+      week: 15,
+      year: 2020,
+      status: "waiting",
+      price: 2.3,
+      packaging: "4 units",
+      quantity: 25,
+      reservedQuantity: 0,
+    },
+    {
+      _id: ObjectID("000000000000000000000003"),
+      farmerID: ObjectID("67696f76616a6a6a31a23334"),
+      productID: ObjectID("000000000000000000000004"),
+      week: nextWeekFarmer,
+      year: currentYearFarmer,
+      status: "waiting",
+      price: 2.3,
+      packaging: "4 units",
+      quantity: 25,
+      reservedQuantity: 0,
+    },
+    {
+      _id: ObjectID("000000000000000000000004"),
+      farmerID: ObjectID("67696f76616a6a6a31a23334"),
+      productID: ObjectID("000000000000000000000006"),
+      week: nextWeekFarmer,
+      year: currentYearFarmer,
+      status: "waiting",
+      price: 4.5,
+      packaging: "1 units",
+      quantity: 27,
+      reservedQuantity: 0,
+    },
+    {
+      _id: ObjectID("000000000000000000000005"),
+      farmerID: ObjectID("4c7564443132333435363738"),
+      productID: ObjectID("000000000000000000000012"),
+      week: nextWeekFarmer,
+      year: currentYearFarmer,
+      status: "waiting",
+      price: 6,
+      packaging: "1 units",
+      quantity: 30,
+      reservedQuantity: 0,
+    },
+    {
+      _id: ObjectID("000000000000000000000006"),
+      farmerID: ObjectID("67696f76616a6a6a31a23334"),
+      productID: ObjectID("111111111111111111111111"),
+      week: nextWeekFarmer,
+      year: currentYearFarmer,
+      status: "waiting",
+      price: 3.5,
+      packaging: "6 units",
+      quantity: 90,
+      reservedQuantity: 0,
+    },
+    {
+      _id: ObjectID("000000000000000000000007"),
+      farmerID: ObjectID("67696f76616a6a6a31a23334"),
+      productID: ObjectID("222222222222222222222222"),
+      week: nextWeekFarmer,
+      year: currentYearFarmer,
+      status: "waiting",
+      price: 2,
+      packaging: "3 units",
+      quantity: 30,
+      reservedQuantity: 0,
+    },
+    {
+      _id: ObjectID("000000000000000000000008"),
+      farmerID: ObjectID("67696f76616a6a6a31a23334"),
+      productID: ObjectID("333333333333333333333333"),
+      week: 12,
+      year: 2020,
+      status: "waiting",
+      price: 6,
+      packaging: "6 units",
+      quantity: 99,
+      reservedQuantity: 0,
+    },
+    {
+      _id: ObjectID("000000000000000000000009"),
+      farmerID: ObjectID("67696f76616a6a6a31a23334"),
+      productID: ObjectID("444444444444444444444444"),
+      week: nextWeekFarmer,
+      year: currentYearFarmer,
+      status: "waiting",
+      price: 4.5,
+      packaging: "1 units",
+      quantity: 33,
+      reservedQuantity: 0,
+    },
+  ],
+};
+
+exports.productsAvailabilityCollection3 = {
   availabilities: [
     {
       _id: ObjectID("000000000000000000000001"),
@@ -610,8 +742,6 @@ exports.productsAvailabilityCollection2 = {
     },
   ],
 };
-
-let [currentWeekFarmer, currentYearFarmer] = getCurrentWeekFarmer();
 
 exports.confirmProductAvailabilityCollections = {
   availabilities: [

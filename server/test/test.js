@@ -208,39 +208,6 @@ describe("Products API tests: ", () => {
   });
 
   describe("GET /products", () => {
-    it("it should retrieve the list of available products based on the filters sent: CATEGORY", (done) => {
-      chai
-        .request(app)
-        .get("/api/products?category=spreadable creams")
-        .end((err, res) => {
-          expect(err).to.be.null;
-          expect(res.status).to.be.equal(200);
-          expect(res.body).to.be.an("array");
-          expect(res.body.length).to.be.equal(2);
-          expect(
-            res.body.map((product) => product.availability.productID)
-          ).to.be.eql(["000000000000000000000006", "000000000000000000000012"]);
-          done();
-        });
-    });
-
-    it("it should retrieve the list of available products based on the filters sent: SEARCHSTRING", (done) => {
-      chai
-        .request(app)
-        .get("/api/products?searchString=Nutella")
-        .end((err, res) => {
-          expect(err).to.be.null;
-          expect(res.status).to.be.equal(200);
-          expect(res.body).to.be.an("array");
-          expect(res.body.length).to.be.equal(2);
-          expect(res.body.map((product) => product.id)).to.include.members([
-            "000000000000000000000012",
-            "000000000000000000000006",
-          ]);
-          done();
-        });
-    });
-
     it("it should retrieve the list of all (available and not available) products based on the filters sent: ids", (done) => {
       chai
         .request(app)
@@ -261,65 +228,12 @@ describe("Products API tests: ", () => {
         });
     });
 
-    it("it should retrieve the list of available products based on the filters sent: CATEGORY, SEARCHSTRING", (done) => {
-      chai
-        .request(app)
-        .get("/api/products?category=fruit&searchString=Italy")
-        .end((err, res) => {
-          expect(err).to.be.null;
-          expect(res.status).to.be.equal(200);
-          expect(res.body).to.be.an("array");
-          expect(res.body.length).to.be.equal(1);
-          expect(res.body.map((product) => product.id)).to.include.members([
-            "000000000000000000000001",
-          ]);
-          done();
-        });
-    });
-
-    it("If no filter are passed then all the available products should be retrieved", (done) => {
-      chai
-        .request(app)
-        .get("/api/products")
-        .end((err, res) => {
-          expect(err).to.be.null;
-          expect(res.status).to.be.equal(200);
-          expect(res.body).to.be.an("array");
-          expect(res.body.length).to.be.equal(4);
-          done();
-        });
-    });
-
-    it("If there are no available products with applied filters then it should return an empty array", (done) => {
-      chai
-        .request(app)
-        .get("/api/products?category=meat&searchString=Do not find")
-        .end((err, res) => {
-          expect(err).to.be.null;
-          expect(res.status).to.be.equal(200);
-          expect(res.body).to.be.an("array");
-          expect(res.body.length).to.be.equal(0);
-          done();
-        });
-    });
-
     it("It should return an error if the ids passed are not valid: ", (done) => {
       chai
         .request(app)
         .get(
           "/api/products?ids=000000000000000000000001,000000000000000000000003,08"
         )
-        .end((err, res) => {
-          expect(err).to.be.null;
-          expect(res.status).to.be.equal(400);
-          done();
-        });
-    });
-
-    it("It should return an error if the category passed is not valid: ", (done) => {
-      chai
-        .request(app)
-        .get("/api/products?category=pizza")
         .end((err, res) => {
           expect(err).to.be.null;
           expect(res.status).to.be.equal(400);
@@ -569,6 +483,94 @@ describe("Products API tests: ", () => {
         .end((err, res) => {
           expect(err).to.be.null;
           expect(res.status).to.be.equal(404);
+          done();
+        });
+    });
+  });
+
+  describe("GET /products/available", () => {
+    it("it should retrieve the list of available products based on the filters sent: CATEGORY", (done) => {
+      chai
+        .request(app)
+        .get("/api/products/available?category=spreadable creams")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          expect(res.body).to.be.an("array");
+          expect(res.body.length).to.be.equal(2);
+          expect(
+            res.body.map((product) => product.availability.productID)
+          ).to.be.eql(["000000000000000000000006", "000000000000000000000012"]);
+          done();
+        });
+    });
+
+    it("it should retrieve the list of available products based on the filters sent: SEARCHSTRING", (done) => {
+      chai
+        .request(app)
+        .get("/api/products/available?searchString=Nutella")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          expect(res.body).to.be.an("array");
+          expect(res.body.length).to.be.equal(2);
+          expect(res.body.map((product) => product.id)).to.include.members([
+            "000000000000000000000012",
+            "000000000000000000000006",
+          ]);
+          done();
+        });
+    });
+
+    it("it should retrieve the list of available products based on the filters sent: CATEGORY, SEARCHSTRING", (done) => {
+      chai
+        .request(app)
+        .get("/api/products/available?category=fruit&searchString=Italy")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          expect(res.body).to.be.an("array");
+          expect(res.body.length).to.be.equal(1);
+          expect(res.body.map((product) => product.id)).to.include.members([
+            "000000000000000000000001",
+          ]);
+          done();
+        });
+    });
+
+    it("If no filter are passed then all the available products should be retrieved", (done) => {
+      chai
+        .request(app)
+        .get("/api/products/available")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          expect(res.body).to.be.an("array");
+          expect(res.body.length).to.be.equal(4);
+          done();
+        });
+    });
+
+    it("If there are no available products with applied filters then it should return an empty array", (done) => {
+      chai
+        .request(app)
+        .get("/api/products/available?category=meat&searchString=Do not find")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          expect(res.body).to.be.an("array");
+          expect(res.body.length).to.be.equal(0);
+          done();
+        });
+    });
+
+    it("It should return an error if the category passed is not valid: ", (done) => {
+      chai
+        .request(app)
+        .get("/api/products/available?category=pizza")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(400);
           done();
         });
     });
@@ -961,7 +963,7 @@ describe("Orders API tests:", () => {
   beforeEach(() => {
     dao.open();
     mongoUnit.load(testData.ordersCollection);
-    mongoUnit.load(testData.productsAvailabilityCollection2);
+    mongoUnit.load(testData.productsAvailabilityCollection3);
   });
 
   afterEach(() => {
@@ -2411,7 +2413,7 @@ describe("Product Availability API tests:", () => {
               expect(pa.productID.toString()).to.be.equal(
                 "000000000000000000000001"
               );
-              expect(pa.week).to.be.equal(48);
+              expect(pa.week).to.be.equal(49);
               expect(pa.year).to.be.equal(2021);
               expect(pa.status).to.be.equal("confirmed");
               expect(pa.price).to.be.equal(3.5);

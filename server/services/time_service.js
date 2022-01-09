@@ -5,6 +5,8 @@ const isoWeek = require("dayjs/plugin/isoWeek");
 const isoWeeksInYear = require("dayjs/plugin/isoWeeksInYear");
 const isLeapYear = require("dayjs/plugin/isLeapYear");
 const utc = require("dayjs/plugin/utc");
+const timezone = require("dayjs/plugin/timezone");
+dayjs.extend(timezone);
 dayjs.extend(utc);
 dayjs.extend(isoWeek);
 dayjs.extend(isoWeeksInYear);
@@ -47,7 +49,10 @@ exports.getCurrentWeekClient = () => {
 };
 
 const normalizeClientWeek = (now, currentWeek, currentYear) => {
-  if (now.isoWeekday() === 7 && now.hour() >= 23) {
+  if (
+    now.tz("Europe/Rome").isoWeekday() === 7 &&
+    now.tz("Europe/Rome").hour() >= 23
+  ) {
     currentWeek++;
   }
 
@@ -97,7 +102,11 @@ exports.getCurrentWeekFarmer = () => {
 };
 
 const normalizeFarmerWeek = (now, currentWeek, currentYear) => {
-  if (now.isoWeekday() === 5 && now.hour() >= 9) {
+  if (
+    (now.tz("Europe/Rome").isoWeekday() === 6 &&
+      now.tz("Europe/Rome").hour() >= 9) ||
+    now.tz("Europe/Rome").isoWeekday() > 6
+  ) {
     currentWeek++;
   }
 

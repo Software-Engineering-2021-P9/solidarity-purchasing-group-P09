@@ -188,6 +188,13 @@ app.get(
 // ---------
 
 app.get(
+  buildAPIPath("/products/available"),
+  productHandlers.findAvailableProductsValidatorChain,
+  checkValidationErrorMiddleware,
+  productHandlers.findAvailableProductsHandler
+);
+
+app.get(
   buildAPIPath("/products"),
   productHandlers.getProductsByIDValidatorChain,
   checkValidationErrorMiddleware,
@@ -220,16 +227,23 @@ app.get(
 
 app.post(
   buildAPIPath("/products/:productID/availability"),
-  productHandlers.setNextWeekProductAvailabilityValidatorChain,
+  productAvailabilityHandlers.setNextWeekProductAvailabilityValidatorChain,
   checkValidationErrorMiddleware,
-  productHandlers.setNextWeekProductAvailabilityHandler
+  productAvailabilityHandlers.setNextWeekProductAvailabilityHandler
 );
 
 app.get(
   buildAPIPath("/products/:productID/availability/nextWeek"),
-  productHandlers.getNextWeekProductAvailabilityValidatorChain,
+  productAvailabilityHandlers.getNextWeekProductAvailabilityValidatorChain,
   checkValidationErrorMiddleware,
-  productHandlers.getNextWeekProductAvailability
+  productAvailabilityHandlers.getNextWeekProductAvailability
+);
+
+app.get(
+  buildAPIPath("/products/:productID/availability/currentWeek"),
+  productAvailabilityHandlers.getCurrentWeekProductAvailabilityValidatorChain,
+  checkValidationErrorMiddleware,
+  productAvailabilityHandlers.getCurrentWeekProductAvailability
 );
 
 app.patch(

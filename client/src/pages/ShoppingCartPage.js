@@ -16,7 +16,6 @@ import {
   getClientByID,
   getProductsByIDs,
   createOrder,
-  getNextWeekProductAvailability,
 } from "../services/ApiClient";
 import UserRoles from "../services/models/UserRoles";
 
@@ -73,7 +72,6 @@ function ShoppingCartPage(props) {
           let sum = 0;
           let temp_products = [];
           for (let p of serverProducts) {
-            p.availability = await getNextWeekProductAvailability(p.id);
             temp_products.push(p);
             sum = sum + p.availability.price * cart.get(p.id);
           }
@@ -131,7 +129,7 @@ function ShoppingCartPage(props) {
   };
 
   return (
-    <Container className="px-5 py-3" fluid>
+    <Container className='px-5 py-3' fluid>
       <Row>
         <NavbarComponent
           userIconLink={authContext.getUserIconLink()}
@@ -148,7 +146,7 @@ function ShoppingCartPage(props) {
         />
       </Row>
       <Row>
-        <Col md="8">
+        <Col md='8'>
           <Row>
             <ShoppingCartTable
               shoppingCart={cart}
@@ -158,7 +156,7 @@ function ShoppingCartPage(props) {
             />
           </Row>
         </Col>
-        <Col md="4" sm="12">
+        <Col md='4' sm='12'>
           <ShoppingCartOrderSummary
             products={products}
             cart={cart}

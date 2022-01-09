@@ -79,6 +79,5 @@ exports.addShipmentPriceToOrderTotalPrice = (orderPrice, shipmentType) => {
   if (orderPrice !== 0)
     orderPrice += shipmentType === ShipmentType.SHIPMENT ? 5 : 0;
 
-  console.log("aaaa", orderPrice);
   return orderPrice;
 };

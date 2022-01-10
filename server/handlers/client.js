@@ -67,18 +67,24 @@ exports.addFundToWalletHandler = async function (req, res, next) {
       return res.status(500).end(); 
     }
 
-    orders = orders.filter(order => order.status == OrderStatus.NOTCOVERED).sort((a, b)=>{
+    let waitingOrders = orders.filter(order => order.status == OrderStatus.WAITING);
+    let waitingOrdersCost = 0;
+    for(let order of waitingOrders){
+      waitingOrdersCost += order.totalPrice;
+    }
+
+    let notCoveredOrders = orders.filter(order => order.status == OrderStatus.NOTCOVERED).sort((a, b)=>{
         if(a.createdAt <= b.createdAt)
           return -1;
         return 1;
       });
     
-    let finalWalletValue = result.value.wallet;
+    let moneyToCoverOrdersNotCovered = result.value.wallet - waitingOrdersCost;
 
-    for(let order of orders){
-      if(finalWalletValue < order.totalPrice)
+    for(let order of notCoveredOrders){
+      if(moneyToCoverOrdersNotCovered < order.totalPrice)
         break;
-      finalWalletValue -= order.totalPrice;
+        moneyToCoverOrdersNotCovered -= order.totalPrice;
       try{
         await dao.updateOrderStatusToWaiting(order._id);
       }catch(err){
@@ -86,17 +92,7 @@ exports.addFundToWalletHandler = async function (req, res, next) {
       }
     }
 
-    if(finalWalletValue != result.value.wallet){
-      try {
-        await dao.setFundToWallet(clientID, parseFloat(finalWalletValue));
-      }
-      catch (err) {
-        console.error(`SetFundToWalletHandler() -> couldn't top up wallet: ${err}`);
-        return res.status(500).end();
-      }
-    }
-
-    return res.json({ newWalletValue: finalWalletValue});
+    return res.json({ newWalletValue: result.value.wallet});
 };
 
 exports.findClientValidatorChain = [

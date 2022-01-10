@@ -31,6 +31,8 @@ var weekphaseHandlers = require("./handlers/weekphase");
 
 var statsHandlers = require("./handlers/stats");
 
+var botHandlers = require("./handlers/bot");
+
 const {
   sessionSettings,
   passportStrategy,
@@ -263,7 +265,19 @@ app.get(
   buildAPIPath("/stats/orders/unretrieved/timeInterval"),
   statsHandlers.timeIntervalUnretrievedOrdersStatsValidatorChain,
   checkValidationErrorMiddleware,
-  statsHandlers.timeIntervalUnretrievedOrdersStatsHandler
+  statsHandlers.timeIntervalUnretrievedOrdersStatsHandler); 
+
+  app.get(
+  buildAPIPath("/telegram/users"),
+  checkValidationErrorMiddleware,
+  botHandlers.getTelegramUsersHandler
+);
+
+app.post(
+  buildAPIPath("/telegram/users"),
+  botHandlers.addTelegramUsersValidatorChain,
+  checkValidationErrorMiddleware,
+  botHandlers.addTelegramUsersHandler
 );
 
 // Serve client app

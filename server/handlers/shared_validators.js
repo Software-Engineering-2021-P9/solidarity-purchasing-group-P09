@@ -258,3 +258,8 @@ exports.endWeekQueryValidator = query("endWeek").notEmpty().bail().isInt();
 exports.startYearQueryValidator = query("startYear").notEmpty().bail().isInt();
 
 exports.endYearQueryValidator = query("endYear").notEmpty().bail().isInt();
+
+exports.telegramChatIDValidator = body("chatID")
+  .notEmpty()
+  .bail()
+  .isInt({ min: 0 });

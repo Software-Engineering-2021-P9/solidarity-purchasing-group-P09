@@ -54,6 +54,12 @@ const {
   countTimeIntervalOrders,
 } = require("./stats");
 
+const {
+  getTelegramUsers,
+  addTelegramUsers,
+  createUniqueTelegramUserIndex,
+} = require("./bot");
+
 const { ClientInfo } = require("../models/client_info");
 const { EmployeeInfo } = require("../models/employee_info");
 const { FarmerInfo } = require("../models/farmer_info");
@@ -205,3 +211,8 @@ exports.countTimeIntervalUnretrievedOrders = (
 
 exports.countTimeIntervalOrders = (startWeek, endWeek, startYear, endYear) =>
   countTimeIntervalOrders(db, startWeek, endWeek, startYear, endYear);
+
+  //Telegram BOT
+exports.addTelegramUsers = (telegramUser) => addTelegramUsers(db, telegramUser);
+exports.getTelegramUsers = () => getTelegramUsers(db);
+exports.createUniqueTelegramUserIndex = () => createUniqueTelegramUserIndex(db);

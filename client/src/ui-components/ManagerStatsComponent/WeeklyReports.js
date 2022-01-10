@@ -145,7 +145,7 @@ function WeeklyForm(props) {
       <Row>
         <InputGroup className="my-3">
           <FormControl
-            className="ml-3 form-size"
+            className="mx-3 form-size"
             type="number"
             step={1}
             max={52}
@@ -158,7 +158,7 @@ function WeeklyForm(props) {
             }}
           />
           <FormControl
-            className="mx-3 form-size"
+            className="ml-3 form-size"
             type="number"
             step={1}
             max={2022}

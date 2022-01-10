@@ -167,7 +167,7 @@ function MonthlyForm(props) {
       <Row>
         <InputGroup className="my-3">
           <Form.Select
-            className="form-size"
+            className="mx-3 form-size"
             value={props.month}
             onChange={(e) => {
               props.setMonth(e.target.value);
@@ -182,7 +182,7 @@ function MonthlyForm(props) {
             })}
           </Form.Select>
           <FormControl
-            className="mx-3 form-size"
+            className="ml-3 form-size"
             type="number"
             step={1}
             max={2022}

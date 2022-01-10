@@ -47,13 +47,15 @@
 .form-size {
   min-width: 130px !important;
   max-width: 130px !important;
+  margin-left: 0px !important;
+  margin-top: 10px;
 }
 
 .stats-subtitle {
   font-style: normal;
   font-weight: bold;
   font-size: 18px;
-  line-height: 16px;
+  line-height: 22px;
   color: #635f46;
 }
 .green-text {
@@ -85,9 +87,10 @@
     margin-top: 20px;
   }
 }
-@media only screen and (max-width: 905px) and (min-width: 768px) {
+@media only screen and (max-width: 755px) {
   .media-margin {
     margin-left: 0px !important;
+    padding-left: 0px !important;
   }
 }
 @media only screen and (max-width: 368px) {

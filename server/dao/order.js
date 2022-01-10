@@ -1,7 +1,7 @@
 "use strict";
 
-const { ObjectID } = require("bson");
 const { OrderStatus } = require("../models/order");
+const { ObjectID } = require("bson");
 
 const orderCollectionName = "orders";
 
@@ -37,6 +37,29 @@ exports.updateOrderStatusToWaiting = (db, orderID) => {
   var update = { $set: {status: OrderStatus.WAITING} };
   return db.collection(orderCollectionName).updateOne(query, update, { returnDocument: 'after' });
 }
+// --------------------------
+// GetOrdersContainingProduct
+// --------------------------
+
+exports.getOrdersContainingProducts = (
+  db,
+  productID,
+  week,
+  year,
+  sortByCreation
+) => {
+  return db
+    .collection(orderCollectionName)
+    .find({
+      status: OrderStatus.WAITING,
+      week: week,
+      year: year,
+      "products.productID": productID,
+    })
+    .sort({ createdAt: sortByCreation })
+    .toArray();
+};
+
 // -------------
 // CompleteOrder
 // -------------
@@ -46,6 +69,33 @@ exports.completeOrder = async (db, orderID) => {
   const update = { $set: { status: OrderStatus.DONE } };
   return db.collection(orderCollectionName).updateOne(query, update);
 };
+
+// ------------
+// UpdateOrders
+// ------------
+
+exports.updateOrders = async (db, orders) => {
+  const bulkData = orders.map((order) => {
+    if (!order._id) {
+      order._id = order.id;
+      delete order.id;
+    }
+    return {
+      replaceOne: {
+        upsert: false,
+        filter: {
+          _id: order._id,
+        },
+        replacement: order,
+      },
+    };
+  });
+  return db.collection(orderCollectionName).bulkWrite(bulkData);
+};
+
+// -----------------------
+// GetOrdersByClientIDList
+// -----------------------
 
 exports.getOrdersByClientIDList = async (db, clientIDList) => {
   const query = { clientID: { $in: clientIDList } };

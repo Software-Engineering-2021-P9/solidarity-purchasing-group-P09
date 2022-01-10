@@ -13,6 +13,7 @@ import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponen
 
 import {
   confirmProductAvailability,
+  getCurrentWeekProductAvailability,
   getNextWeekProductAvailability,
   getProductByID,
   setNextWeekProductAvailability,
@@ -42,6 +43,7 @@ function ProductDetailsPage(props) {
   const [requestError, setRequestError] = useState("");
 
   const [product, setProduct] = useState(null);
+  const [currentWeekAvailability, setCurrentWeekAvailability] = useState(null);
   const [nextWeekAvailability, setNextWeekAvailability] = useState(null);
 
   const [availabilityToUpdate, setAvailabilityToUpdate] = useState(null);
@@ -60,14 +62,22 @@ function ProductDetailsPage(props) {
     const loadData = () =>
       Promise.all([
         getProductByID(productID),
+        getCurrentWeekProductAvailability(productID),
         getNextWeekProductAvailability(productID),
       ])
-        .then(([product, nextWeekProductAvailability]) => {
-          setProduct(product);
-          setNextWeekAvailability(nextWeekProductAvailability);
-          setIsInitialized(true);
-          setMustReload(false);
-        })
+        .then(
+          ([
+            productResult,
+            currentWeekAvailabilityResult,
+            nextWeekProductAvailabilityResult,
+          ]) => {
+            setProduct(productResult);
+            setCurrentWeekAvailability(currentWeekAvailabilityResult);
+            setNextWeekAvailability(nextWeekProductAvailabilityResult);
+            setIsInitialized(true);
+            setMustReload(false);
+          }
+        )
         .catch((err) =>
           setRequestError("Failed to fetch data: " + err.message)
         );
@@ -106,7 +116,7 @@ function ProductDetailsPage(props) {
     );
     setActionConfirmationModalCallback(() => () => {
       setIsActionLoading(true);
-      confirmProductAvailability(product?.availability.id)
+      confirmProductAvailability(currentWeekAvailability.id)
         .catch((err) =>
           setRequestError(
             "Failed to confirm current week availability: " + err.message
@@ -154,10 +164,10 @@ function ProductDetailsPage(props) {
             <h2 className='subtitle ps-3 pt-1'>Current Week Availability</h2>
           </Card.Title>
           <Card.Body className='pt-0'>
-            {product?.availability ? (
+            {currentWeekAvailability ? (
               <Row>
                 <ProductAvailabilityDetails
-                  availability={product?.availability}
+                  availability={currentWeekAvailability}
                 />
               </Row>
             ) : (
@@ -165,7 +175,7 @@ function ProductDetailsPage(props) {
             )}
           </Card.Body>
           <Card.Footer className='text-center'>
-            {product?.availability?.status ===
+            {currentWeekAvailability?.status ===
               ProductAvailabilityStatus.WAITING && (
               <>
                 <Button
@@ -177,7 +187,7 @@ function ProductDetailsPage(props) {
                 <Button
                   className='ms-3'
                   onClick={() =>
-                    onUpdateAvailabilityClick(product.availability)
+                    onUpdateAvailabilityClick(currentWeekAvailability)
                   }>
                   Update
                 </Button>

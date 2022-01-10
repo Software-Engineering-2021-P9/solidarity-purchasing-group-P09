@@ -1,5 +1,32 @@
 "use strict";
 
+const OrderProductStatus = {
+  WAITING: "waiting",
+  CONFIRMED: "confirmed",
+  MODIFIED: "modified",
+  CANCELED: "canceled",
+};
+
+class OrderProduct {
+  constructor(productID, status, quantity, price, packaging) {
+    this.productID = productID;
+    this.status = status;
+    this.quantity = quantity;
+    this.price = price;
+    this.packaging = packaging;
+  }
+
+  static fromMongoJSON(json) {
+    return new OrderProduct(
+      json.productID,
+      json.status,
+      json.quantity,
+      json.price,
+      json.packaging
+    );
+  }
+}
+
 const OrderStatus = {
   WAITING: "waiting",
   NOTCOVERED: "not-covered",
@@ -7,24 +34,19 @@ const OrderStatus = {
   CONFIRMED: "confirmed",
   PREPARED: "prepared",
   DONE: "done",
+  CANCELED: "canceled",
 };
 
-class OrderProduct {
-  constructor(productID, quantity) {
-    this.productID = productID;
-    this.quantity = quantity;
-  }
-
-  static fromMongoJSON(json) {
-    return new OrderProduct(json.productID, json.quantity);
-  }
-}
+const ShipmentType = {
+  PICKUP: "pickup",
+  SHIPMENT: "shipment",
+};
 
 class ShipmentInfo {
   constructor(type, pickUpSlot, address) {
     this.type = type;
     this.address = address;
-    if (type === "pickup") this.pickUpSlot = pickUpSlot;
+    if (type === ShipmentType.PICKUP) this.pickUpSlot = pickUpSlot;
   }
 
   static fromMongoJSON(json) {
@@ -40,6 +62,8 @@ class Order {
     status,
     totalPrice,
     createdAt,
+    week,
+    year,
     shipmentInfo
   ) {
     this.id = id;
@@ -48,6 +72,8 @@ class Order {
     this.status = status;
     this.totalPrice = totalPrice;
     this.createdAt = createdAt;
+    this.week = week;
+    this.year = year;
     this.shipmentInfo = shipmentInfo;
   }
 
@@ -56,7 +82,9 @@ class Order {
     json.products?.forEach((orderProductJson) =>
       orderProducts.push(OrderProduct.fromMongoJSON(orderProductJson))
     );
+
     const shipmentInfo = ShipmentInfo.fromMongoJSON(json.shipmentInfo);
+
     return new Order(
       json._id,
       json.clientID,
@@ -64,9 +92,18 @@ class Order {
       json.status,
       json.totalPrice,
       json.createdAt,
+      json.week,
+      json.year,
       shipmentInfo
     );
   }
 }
 
-module.exports = { Order, OrderProduct, OrderStatus, ShipmentInfo };
+module.exports = {
+  Order,
+  OrderProduct,
+  OrderStatus,
+  ShipmentType,
+  ShipmentInfo,
+  OrderProductStatus,
+};

@@ -1,11 +1,8 @@
 "use strict";
 
-const ProductAvailabilityStatus = {
-  WAITING: "waiting",
-  CONFIRMED: "confirmed",
-};
+const { ProductAvailability } = require("./product_availability");
 
-class ProductAvailability {
+class ProductAvailabilityResult {
   constructor(
     id,
     farmerID,
@@ -16,7 +13,7 @@ class ProductAvailability {
     packaging,
     quantity,
     price,
-    reservedQuantity
+    leftQuantity
   ) {
     this.id = id;
     this.farmerID = farmerID;
@@ -27,16 +24,11 @@ class ProductAvailability {
     this.packaging = packaging;
     this.quantity = quantity;
     this.price = price;
-    this.reservedQuantity = reservedQuantity;
-  }
-
-  get leftQuantity() {
-    let leftQuantity = this.quantity - this.reservedQuantity;
-    return leftQuantity > 0 ? leftQuantity : 0;
+    this.leftQuantity = leftQuantity;
   }
 
   static fromMongoJSON(json) {
-    return new ProductAvailability(
+    return new ProductAvailabilityResult(
       json._id,
       json.farmerID,
       json.productID,
@@ -46,9 +38,24 @@ class ProductAvailability {
       json.packaging,
       json.quantity,
       json.price,
-      json.reservedQuantity
+      json.quantity - json.reservedQuantity
+    );
+  }
+
+  static fromProductAvailability(obj) {
+    return new ProductAvailabilityResult(
+      obj.id,
+      obj.farmerID,
+      obj.productID,
+      obj.week,
+      obj.year,
+      obj.status,
+      obj.packaging,
+      obj.quantity,
+      obj.price,
+      obj.leftQuantity
     );
   }
 }
 
-module.exports = { ProductAvailability, ProductAvailabilityStatus };
+module.exports = { ProductAvailabilityResult };

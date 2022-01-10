@@ -1,0 +1,6 @@
+PATCH http://localhost:3001/api/availabilities/619f788b150b1182c60558ae HTTP/1.1
+Content-Type: application/json
+
+{
+    "quantity":10
+}

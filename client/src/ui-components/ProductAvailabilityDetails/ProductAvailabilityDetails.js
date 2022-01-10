@@ -9,7 +9,7 @@ function ProductAvailabilityDetails(props) {
     if (props.availability?.status === ProductAvailabilityStatus.WAITING) {
       color = "#FFDA00";
       text = "Not confirmed";
-    } else if (props.availability?.leftQuantity === 0) {
+    } else if (props.availability?.leftQuantity <= 0) {
       color = "#D70D0D";
       text = "Not Available";
     }

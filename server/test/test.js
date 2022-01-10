@@ -208,39 +208,6 @@ describe("Products API tests: ", () => {
   });
 
   describe("GET /products", () => {
-    it("it should retrieve the list of available products based on the filters sent: CATEGORY", (done) => {
-      chai
-        .request(app)
-        .get("/api/products?category=spreadable creams")
-        .end((err, res) => {
-          expect(err).to.be.null;
-          expect(res.status).to.be.equal(200);
-          expect(res.body).to.be.an("array");
-          expect(res.body.length).to.be.equal(2);
-          expect(
-            res.body.map((product) => product.availability.productID)
-          ).to.be.eql(["000000000000000000000006", "000000000000000000000012"]);
-          done();
-        });
-    });
-
-    it("it should retrieve the list of available products based on the filters sent: SEARCHSTRING", (done) => {
-      chai
-        .request(app)
-        .get("/api/products?searchString=Nutella")
-        .end((err, res) => {
-          expect(err).to.be.null;
-          expect(res.status).to.be.equal(200);
-          expect(res.body).to.be.an("array");
-          expect(res.body.length).to.be.equal(2);
-          expect(res.body.map((product) => product.id)).to.include.members([
-            "000000000000000000000012",
-            "000000000000000000000006",
-          ]);
-          done();
-        });
-    });
-
     it("it should retrieve the list of all (available and not available) products based on the filters sent: ids", (done) => {
       chai
         .request(app)
@@ -261,65 +228,12 @@ describe("Products API tests: ", () => {
         });
     });
 
-    it("it should retrieve the list of available products based on the filters sent: CATEGORY, SEARCHSTRING", (done) => {
-      chai
-        .request(app)
-        .get("/api/products?category=fruit&searchString=Italy")
-        .end((err, res) => {
-          expect(err).to.be.null;
-          expect(res.status).to.be.equal(200);
-          expect(res.body).to.be.an("array");
-          expect(res.body.length).to.be.equal(1);
-          expect(res.body.map((product) => product.id)).to.include.members([
-            "000000000000000000000001",
-          ]);
-          done();
-        });
-    });
-
-    it("If no filter are passed then all the available products should be retrieved", (done) => {
-      chai
-        .request(app)
-        .get("/api/products")
-        .end((err, res) => {
-          expect(err).to.be.null;
-          expect(res.status).to.be.equal(200);
-          expect(res.body).to.be.an("array");
-          expect(res.body.length).to.be.equal(4);
-          done();
-        });
-    });
-
-    it("If there are no available products with applied filters then it should return an empty array", (done) => {
-      chai
-        .request(app)
-        .get("/api/products?category=meat&searchString=Do not find")
-        .end((err, res) => {
-          expect(err).to.be.null;
-          expect(res.status).to.be.equal(200);
-          expect(res.body).to.be.an("array");
-          expect(res.body.length).to.be.equal(0);
-          done();
-        });
-    });
-
     it("It should return an error if the ids passed are not valid: ", (done) => {
       chai
         .request(app)
         .get(
           "/api/products?ids=000000000000000000000001,000000000000000000000003,08"
         )
-        .end((err, res) => {
-          expect(err).to.be.null;
-          expect(res.status).to.be.equal(400);
-          done();
-        });
-    });
-
-    it("It should return an error if the category passed is not valid: ", (done) => {
-      chai
-        .request(app)
-        .get("/api/products?category=pizza")
         .end((err, res) => {
           expect(err).to.be.null;
           expect(res.status).to.be.equal(400);
@@ -569,6 +483,129 @@ describe("Products API tests: ", () => {
         .end((err, res) => {
           expect(err).to.be.null;
           expect(res.status).to.be.equal(404);
+          done();
+        });
+    });
+
+    it("it must return the current week availability of the product ", (done) => {
+      chai
+        .request(app)
+        .get("/api/products/000000000000000000000006/availability/currentWeek")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          expect(res.body.productID).to.be.equal("000000000000000000000006");
+          expect(res.body.quantity).to.be.equal(52);
+          done();
+        });
+    });
+
+    it("it must return bad request if the productID is not a mongoID", (done) => {
+      chai
+        .request(app)
+        .get("/api/products/000000000111100000006/availability/currentWeek")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(400);
+          done();
+        });
+    });
+
+    it("it must return not found if the product hasn't current week availability set", (done) => {
+      chai
+        .request(app)
+        .get("/api/products/000000000000000000000011/availability/currentWeek")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(404);
+          done();
+        });
+    });
+  });
+
+  describe("GET /products/available", () => {
+    it("it should retrieve the list of available products based on the filters sent: CATEGORY", (done) => {
+      chai
+        .request(app)
+        .get("/api/products/available?category=spreadable creams")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          expect(res.body).to.be.an("array");
+          expect(res.body.length).to.be.equal(2);
+          expect(
+            res.body.map((product) => product.availability.productID)
+          ).to.be.eql(["000000000000000000000006", "000000000000000000000012"]);
+          done();
+        });
+    });
+
+    it("it should retrieve the list of available products based on the filters sent: SEARCHSTRING", (done) => {
+      chai
+        .request(app)
+        .get("/api/products/available?searchString=Nutella")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          expect(res.body).to.be.an("array");
+          expect(res.body.length).to.be.equal(2);
+          expect(res.body.map((product) => product.id)).to.include.members([
+            "000000000000000000000012",
+            "000000000000000000000006",
+          ]);
+          done();
+        });
+    });
+
+    it("it should retrieve the list of available products based on the filters sent: CATEGORY, SEARCHSTRING", (done) => {
+      chai
+        .request(app)
+        .get("/api/products/available?category=fruit&searchString=Italy")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          expect(res.body).to.be.an("array");
+          expect(res.body.length).to.be.equal(1);
+          expect(res.body.map((product) => product.id)).to.include.members([
+            "000000000000000000000001",
+          ]);
+          done();
+        });
+    });
+
+    it("If no filter are passed then all the available products should be retrieved", (done) => {
+      chai
+        .request(app)
+        .get("/api/products/available")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          expect(res.body).to.be.an("array");
+          expect(res.body.length).to.be.equal(4);
+          done();
+        });
+    });
+
+    it("If there are no available products with applied filters then it should return an empty array", (done) => {
+      chai
+        .request(app)
+        .get("/api/products/available?category=meat&searchString=Do not find")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          expect(res.body).to.be.an("array");
+          expect(res.body.length).to.be.equal(0);
+          done();
+        });
+    });
+
+    it("It should return an error if the category passed is not valid: ", (done) => {
+      chai
+        .request(app)
+        .get("/api/products/available?category=pizza")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(400);
           done();
         });
     });
@@ -961,6 +998,7 @@ describe("Orders API tests:", () => {
   beforeEach(() => {
     dao.open();
     mongoUnit.load(testData.ordersCollection);
+    mongoUnit.load(testData.productsAvailabilityCollection3);
   });
 
   afterEach(() => {
@@ -976,9 +1014,9 @@ describe("Orders API tests:", () => {
         .send({
           clientID: "6187c957b288576ca26f8257",
           products: [
-            { productID: "6187c957b288576ca26f8258", quantity: 3 },
-            { productID: "6187c957b288576ca26f8259", quantity: 1 },
-            { productID: "6187c957b288576ca26f8250", quantity: 2 },
+            { productID: "000000000000000000000001", quantity: 3 },
+            { productID: "000000000000000000000004", quantity: 1 },
+            { productID: "000000000000000000000006", quantity: 2 },
           ],
           shipmentInfo: {
             type: "shipment",
@@ -1001,9 +1039,27 @@ describe("Orders API tests:", () => {
               expect(res.body.clientID).to.be.equal("6187c957b288576ca26f8257");
               expect(res.body.id).to.be.equal(id);
               expect(res.body.products).to.be.eql([
-                { productID: "6187c957b288576ca26f8258", quantity: 3 },
-                { productID: "6187c957b288576ca26f8259", quantity: 1 },
-                { productID: "6187c957b288576ca26f8250", quantity: 2 },
+                {
+                  productID: "000000000000000000000001",
+                  quantity: 3,
+                  packaging: "100g",
+                  price: 3.5,
+                  status: "waiting",
+                },
+                {
+                  productID: "000000000000000000000004",
+                  quantity: 1,
+                  packaging: "4 units",
+                  price: 2.3,
+                  status: "waiting",
+                },
+                {
+                  productID: "000000000000000000000006",
+                  quantity: 2,
+                  packaging: "1 units",
+                  price: 4.5,
+                  status: "waiting",
+                },
               ]);
               expect(res.body.shipmentInfo).to.be.eql({
                 type: "shipment",
@@ -1022,9 +1078,9 @@ describe("Orders API tests:", () => {
         .send({
           clientID: "6187c957b288576ca26f8257",
           products: [
-            { productID: "6187c957b288576ca26f8258", quantity: 3 },
-            { productID: "6187c957b288576ca26f8259", quantity: 1 },
-            { productID: "6187c957b288576ca26f8250", quantity: 2 },
+            { productID: "000000000000000000000001", quantity: 3 },
+            { productID: "000000000000000000000004", quantity: 1 },
+            { productID: "000000000000000000000006", quantity: 2 },
           ],
           shipmentInfo: {
             type: "pickup",
@@ -1048,9 +1104,27 @@ describe("Orders API tests:", () => {
               expect(res.body.clientID).to.be.equal("6187c957b288576ca26f8257");
               expect(res.body.id).to.be.equal(id);
               expect(res.body.products).to.be.eql([
-                { productID: "6187c957b288576ca26f8258", quantity: 3 },
-                { productID: "6187c957b288576ca26f8259", quantity: 1 },
-                { productID: "6187c957b288576ca26f8250", quantity: 2 },
+                {
+                  productID: "000000000000000000000001",
+                  quantity: 3,
+                  packaging: "100g",
+                  price: 3.5,
+                  status: "waiting",
+                },
+                {
+                  productID: "000000000000000000000004",
+                  quantity: 1,
+                  packaging: "4 units",
+                  price: 2.3,
+                  status: "waiting",
+                },
+                {
+                  productID: "000000000000000000000006",
+                  quantity: 2,
+                  packaging: "1 units",
+                  price: 4.5,
+                  status: "waiting",
+                },
               ]);
               expect(res.body.shipmentInfo).to.be.eql({
                 type: "pickup",
@@ -1063,6 +1137,26 @@ describe("Orders API tests:", () => {
         });
     });
 
+    it("it should fail with quantity bigger than availability", (done) => {
+      chai
+        .request(app)
+        .post("/api/orders")
+        .send({
+          clientID: "6187c957b288576ca26f8257",
+          products: [{ productID: "000000000000000000000012", quantity: 32 }],
+          shipmentInfo: {
+            type: "pickup",
+            pickUpSlot: "41111",
+            address: "Via its real trust me 54",
+          },
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(400);
+          done();
+        });
+    });
+
     it("it should create a new order of type shipment and return it without pickUpSlot since it's not pickUp type", (done) => {
       chai
         .request(app)
@@ -1070,9 +1164,9 @@ describe("Orders API tests:", () => {
         .send({
           clientID: "6187c957b288576ca26f8257",
           products: [
-            { productID: "6187c957b288576ca26f8258", quantity: 3 },
-            { productID: "6187c957b288576ca26f8259", quantity: 1 },
-            { productID: "6187c957b288576ca26f8250", quantity: 2 },
+            { productID: "000000000000000000000001", quantity: 3 },
+            { productID: "000000000000000000000004", quantity: 1 },
+            { productID: "000000000000000000000006", quantity: 2 },
           ],
           shipmentInfo: {
             type: "shipment",
@@ -1096,9 +1190,27 @@ describe("Orders API tests:", () => {
               expect(res.body.clientID).to.be.equal("6187c957b288576ca26f8257");
               expect(res.body.id).to.be.equal(id);
               expect(res.body.products).to.be.eql([
-                { productID: "6187c957b288576ca26f8258", quantity: 3 },
-                { productID: "6187c957b288576ca26f8259", quantity: 1 },
-                { productID: "6187c957b288576ca26f8250", quantity: 2 },
+                {
+                  productID: "000000000000000000000001",
+                  quantity: 3,
+                  packaging: "100g",
+                  price: 3.5,
+                  status: "waiting",
+                },
+                {
+                  productID: "000000000000000000000004",
+                  quantity: 1,
+                  packaging: "4 units",
+                  price: 2.3,
+                  status: "waiting",
+                },
+                {
+                  productID: "000000000000000000000006",
+                  quantity: 2,
+                  packaging: "1 units",
+                  price: 4.5,
+                  status: "waiting",
+                },
               ]);
               expect(res.body.shipmentInfo).to.be.eql({
                 type: "shipment",
@@ -1277,9 +1389,9 @@ describe("Orders API tests:", () => {
         .send({
           clientID: "6187c957b288576ca26f8257",
           products: [
-            { productID: "6187c957b288576ca26f8258", quantity: 3 },
-            { productID: "6187c957b288576ca26f8259", quantity: 1 },
-            { productID: "6187c957b288576ca26f8250", quantity: 2 },
+            { productID: "000000000000000000000001", quantity: 3 },
+            { productID: "000000000000000000000004", quantity: 1 },
+            { productID: "000000000000000000000006", quantity: 2 },
           ],
           shipmentInfo: {
             type: "pickup",
@@ -1948,217 +2060,493 @@ describe("User Login API tests:", () => {
       ...testData.employeesCollection,
       ...testData.managersCollection,
     });
+  });
+
+  afterEach(() => {
+    mongoUnit.drop();
+    dao.close();
+  });
+
+  describe("POST /users/login", () => {
+    it("it should success with a client", (done) => {
+      chai
+        .request(app)
+        .post("/api/users/login")
+        .send({ username: "ehsanansari@gmail.com", password: "123456789" })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          expect(res.body).to.be.an("object");
+          expect(res.body.email).to.be.equal("ehsanansari@gmail.com");
+          expect(res.body.password).not.to.exist;
+          expect(res.body.role).to.be.equal("client");
+          expect(res.body.id).to.be.equal("618d4ad3736f2caf2d3b3ca5");
+          expect(res.body.wallet).to.be.equal(55.5);
+          expect(res.body.address).to.be.equal(
+            "fsfsaf dsafsa fsafsa,26 Milano,12342"
+          );
+
+          done();
+        });
+    });
+    it("it should success with a employee", (done) => {
+      chai
+        .request(app)
+        .post("/api/users/login")
+        .send({ username: "employee1@test.com", password: "123456789" })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          expect(res.body).to.be.an("object");
+          expect(res.body.email).to.be.equal("employee1@test.com");
+          expect(res.body.password).not.to.exist;
+          expect(res.body.role).to.be.equal("employee");
+          expect(res.body.id).to.be.equal("6187c957b288576ca26f8257");
+
+          done();
+        });
+    });
+    it("it should success with a farmer", (done) => {
+      chai
+        .request(app)
+        .post("/api/users/login")
+        .send({ username: "farmer1@test.com", password: "123456789" })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          expect(res.body).to.be.an("object");
+          expect(res.body.email).to.be.equal("farmer1@test.com");
+          expect(res.body.password).not.to.exist;
+          expect(res.body.role).to.be.equal("farmer");
+          expect(res.body.id).to.be.equal("6187c957b288576ca24f8257");
+
+          done();
+        });
+    });
+
+    it("it must fail when an invalid email is passed", (done) => {
+      chai
+        .request(app)
+        .post("/api/users/login")
+        .send({
+          username: "nomail",
+          password: "123456789",
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(401);
+
+          done();
+        });
+    });
+    it("it must fail when a not recorded email is entered ", (done) => {
+      chai
+        .request(app)
+        .post("/api/users/login")
+        .send({
+          username: "notrecorded@gmail.com",
+          password: "123456789",
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(401);
+
+          done();
+        });
+    });
+    it("it must fail when password is entered wrong", (done) => {
+      chai
+        .request(app)
+        .post("/api/users/login")
+        .send({
+          username: "ehsanansari@gmail.com",
+          password: "wrongpassword",
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(401);
+
+          done();
+        });
+    });
+    it("it must fail when email and  password is entered wrong", (done) => {
+      chai
+        .request(app)
+        .post("/api/users/login")
+        .send({
+          username: "blabla@gmail.com",
+          password: "wrongpassword",
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.statusCode).to.be.equal(401);
+
+          done();
+        });
+    });
+
+    it("it should success with a manager", (done) => {
+      chai
+        .request(app)
+        .post("/api/users/login")
+        .send({
+          username: "manager1@test.com",
+          password: "123456789",
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          expect(res.body).to.be.an("object");
+          expect(res.body.email).to.be.equal("manager1@test.com");
+          expect(res.body.password).not.to.exist;
+          expect(res.body.role).to.be.equal("manager");
+          expect(res.body.id).to.be.equal("1187c957b288576ca26f8257");
+
+          done();
+        });
+    });
+  });
+
+  describe("GET /users/current", () => {
+    before((done) => {
+      chai
+        .request(app)
+        .post("/api/users/login")
+        .send({ username: "farmer1@test.com", password: "123456789" })
+        .then(() => done());
+    });
+
+    it("it must success with no currently logged user", (done) => {
+      chai
+        .request(app)
+        .get("/api/users/current")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(204);
+
+          done();
+        });
+    });
+
+    it("it must success with a currently logged user", (done) => {
+      chai
+        .request(app)
+        .get("/api/users/current")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(204);
+
+          done();
+        });
+    });
+  });
+
+  describe("DELETE /users/current", () => {
+    before((done) => {
+      chai
+        .request(app)
+        .post("/api/users/login")
+        .send({ username: "farmer1@test.com", password: "123456789" })
+        .then(() => done());
+    });
+
+    it("it must success with a currently logged user", (done) => {
+      chai
+        .request(app)
+        .delete("/api/users/current")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(204);
+          done();
+        });
+    });
+
+    it("it must success with a currently logged user", (done) => {
+      chai
+        .request(app)
+        .delete("/api/users/current")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(204);
+
+          done();
+        });
+    });
+  });
+});
+
+// Product Availability API tests
+describe("Product Availability API tests:", () => {
+  describe("GET /availabilities", () => {
+    beforeEach(() => {
+      dao.open();
+      mongoUnit.load(testData.productsAvailabilityCollection);
+    });
 
     afterEach(() => {
       mongoUnit.drop();
       dao.close();
     });
 
-    describe("POST /users/login", () => {
-      it("it should success with a client", (done) => {
-        chai
-          .request(app)
-          .post("/api/users/login")
-          .send({ username: "ehsanansari@gmail.com", password: "123456789" })
-          .end((err, res) => {
-            expect(err).to.be.null;
-            expect(res.status).to.be.equal(200);
-            expect(res.body).to.be.an("object");
-            expect(res.body.email).to.be.equal("ehsanansari@gmail.com");
-            expect(res.body.password).not.to.exist;
-            expect(res.body.role).to.be.equal("client");
-            expect(res.body.id).to.be.equal("618d4ad3736f2caf2d3b3ca5");
-            expect(res.body.wallet).to.be.equal(55.5);
-            expect(res.body.address).to.be.equal(
-              "fsfsaf dsafsa fsafsa,26 Milano,12342"
-            );
+    it("it should success with an existing product availability", (done) => {
+      chai
+        .request(app)
+        .get("/api/availabilities/000000000000000000000002")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          expect(res.body).to.be.an("object");
+          expect(res.body.id).to.be.equal("000000000000000000000002");
+          expect(res.body.farmerID).to.be.equal("4c7564443132333435363738");
+          expect(res.body.productID).to.be.equal("000000000000000000000011");
+          expect(res.body.week).to.be.equal(15);
+          expect(res.body.year).to.be.equal(2020);
+          expect(res.body.status).to.be.equal("waiting");
+          expect(res.body.price).to.be.equal(2.3);
+          expect(res.body.packaging).to.be.equal("4 units");
+          expect(res.body.quantity).to.be.equal(25);
+          expect(res.body.reservedQuantity).to.be.equal(0);
 
-            done();
-          });
-      });
-      it("it should success with a employee", (done) => {
-        chai
-          .request(app)
-          .post("/api/users/login")
-          .send({ username: "employee1@test.com", password: "123456789" })
-          .end((err, res) => {
-            expect(err).to.be.null;
-            expect(res.status).to.be.equal(200);
-            expect(res.body).to.be.an("object");
-            expect(res.body.email).to.be.equal("employee1@test.com");
-            expect(res.body.password).not.to.exist;
-            expect(res.body.role).to.be.equal("employee");
-            expect(res.body.id).to.be.equal("6187c957b288576ca26f8257");
+          done();
+        });
+    });
+    it("it should fail with non existing product availability", (done) => {
+      chai
+        .request(app)
+        .get("/api/availabilities/000010000010000010000011")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(400);
+          done();
+        });
+    });
+    it("it should fail when mongo fails", (done) => {
+      dao.close();
+      chai
+        .request(app)
+        .get("/api/availabilities/000010000010000010000011")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(500);
+          done();
+        });
+    });
+  });
 
-            done();
-          });
-      });
-      it("it should success with a farmer", (done) => {
-        chai
-          .request(app)
-          .post("/api/users/login")
-          .send({ username: "farmer1@test.com", password: "123456789" })
-          .end((err, res) => {
-            expect(err).to.be.null;
-            expect(res.status).to.be.equal(200);
-            expect(res.body).to.be.an("object");
-            expect(res.body.email).to.be.equal("farmer1@test.com");
-            expect(res.body.password).not.to.exist;
-            expect(res.body.role).to.be.equal("farmer");
-            expect(res.body.id).to.be.equal("6187c957b288576ca24f8257");
-
-            done();
-          });
-      });
-
-      it("it should success with a manager", (done) => {
-        chai
-          .request(app)
-          .post("/api/users/login")
-          .send({
-            username: "manager1@test.com",
-            password: "123456789",
-          })
-          .end((err, res) => {
-            expect(err).to.be.null;
-            expect(res.status).to.be.equal(200);
-            expect(res.body).to.be.an("object");
-            expect(res.body.email).to.be.equal("manager1@test.com");
-            expect(res.body.password).not.to.exist;
-            expect(res.body.role).to.be.equal("manager");
-            expect(res.body.id).to.be.equal("1187c957b288576ca26f8257");
-
-            done();
-          });
-      });
-
-      it("it must fail when an invalid email is passed", (done) => {
-        chai
-          .request(app)
-          .post("/api/users/login")
-          .send({
-            username: "nomail",
-            password: "123456789",
-          })
-          .end((err, res) => {
-            expect(err).to.be.null;
-            expect(res.status).to.be.equal(401);
-
-            done();
-          });
-      });
-      it("it must fail when a not recorded email is entered ", (done) => {
-        chai
-          .request(app)
-          .post("/api/users/login")
-          .send({
-            username: "notrecorded@gmail.com",
-            password: "123456789",
-          })
-          .end((err, res) => {
-            expect(err).to.be.null;
-            expect(res.status).to.be.equal(401);
-
-            done();
-          });
-      });
-      it("it must fail when password is entered wrong", (done) => {
-        chai
-          .request(app)
-          .post("/api/users/login")
-          .send({
-            username: "ehsanansari@gmail.com",
-            password: "wrongpassword",
-          })
-          .end((err, res) => {
-            expect(err).to.be.null;
-            expect(res.status).to.be.equal(401);
-
-            done();
-          });
-      });
-      it("it must fail when email and  password is entered wrong", (done) => {
-        chai
-          .request(app)
-          .post("/api/users/login")
-          .send({
-            username: "blabla@gmail.com",
-            password: "wrongpassword",
-          })
-          .end((err, res) => {
-            expect(err).to.be.null;
-            expect(res.statusCode).to.be.equal(401);
-
-            done();
-          });
-      });
+  describe("PATCH /availabilities", () => {
+    beforeEach(() => {
+      dao.open();
+      mongoUnit.load(testData.productsAvailabilityCollection);
     });
 
-    describe("GET /users/current", () => {
-      before((done) => {
-        chai
-          .request(app)
-          .post("/api/users/login")
-          .send({ username: "farmer1@test.com", password: "123456789" })
-          .then(() => done());
-      });
-
-      it("it must success with no currently logged user", (done) => {
-        chai
-          .request(app)
-          .get("/api/users/current")
-          .end((err, res) => {
-            expect(err).to.be.null;
-            expect(res.status).to.be.equal(204);
-
-            done();
-          });
-      });
-
-      it("it must success with a currently logged user", (done) => {
-        chai
-          .request(app)
-          .get("/api/users/current")
-          .end((err, res) => {
-            expect(err).to.be.null;
-            expect(res.status).to.be.equal(204);
-
-            done();
-          });
-      });
+    afterEach(() => {
+      mongoUnit.drop();
+      dao.close();
     });
 
-    describe("DELETE /users/current", () => {
-      before((done) => {
-        chai
-          .request(app)
-          .post("/api/users/login")
-          .send({ username: "farmer1@test.com", password: "123456789" })
-          .then(() => done());
-      });
+    it("it should success with an existing product availability", (done) => {
+      chai
+        .request(app)
+        .patch("/api/availabilities/000000000000000000000002")
+        .send({ quantity: 50 })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(204);
 
-      it("it must success with a currently logged user", (done) => {
-        chai
-          .request(app)
-          .delete("/api/users/current")
-          .end((err, res) => {
-            expect(err).to.be.null;
-            expect(res.status).to.be.equal(204);
-            done();
-          });
-      });
+          dao
+            .getProductAvailabilityByID("000000000000000000000002")
+            .then((pa) => {
+              expect(pa._id.toString()).to.be.equal("000000000000000000000002");
+              expect(pa.farmerID.toString()).to.be.equal(
+                "4c7564443132333435363738"
+              );
+              expect(pa.productID.toString()).to.be.equal(
+                "000000000000000000000011"
+              );
+              expect(pa.week).to.be.equal(15);
+              expect(pa.year).to.be.equal(2020);
+              expect(pa.status).to.be.equal("waiting");
+              expect(pa.price).to.be.equal(2.3);
+              expect(pa.packaging).to.be.equal("4 units");
+              expect(pa.quantity).to.be.equal(50);
+              expect(pa.reservedQuantity).to.be.equal(0);
+              done();
+            });
+        });
+    });
+    it("it should fail with non existing product availability", (done) => {
+      chai
+        .request(app)
+        .patch("/api/availabilities/000010000010000010000011")
+        .send({ quantity: 50 })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(400);
+          done();
+        });
+    });
+    it("it should fail when mongo fails", (done) => {
+      dao.close();
+      chai
+        .request(app)
+        .patch("/api/availabilities/000010000010000010000011")
+        .send({ quantity: 50 })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(500);
+          done();
+        });
+    });
+  });
 
-      it("it must success with a currently logged user", (done) => {
-        chai
-          .request(app)
-          .delete("/api/users/current")
-          .end((err, res) => {
-            expect(err).to.be.null;
-            expect(res.status).to.be.equal(204);
+  describe("PATCH /availabilities/{id}/confirm", () => {
+    beforeEach(() => {
+      dao.open();
+      mongoUnit.load(testData.confirmProductAvailabilityCollections);
+    });
 
-            done();
-          });
-      });
+    afterEach(() => {
+      mongoUnit.drop();
+      dao.close();
+    });
+    /*
+    pa:
+    - success
+    - not exist
+    - not in waiting state
+
+    Ordersprod:
+    - full
+    - modif
+    - canc
+
+    orders
+    - canc
+    */
+
+    it("it should success with an existing product availability with associated orders", (done) => {
+      chai
+        .request(app)
+        .patch("/api/availabilities/000000000000000000000001/confirm")
+        .end(async (err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(204);
+
+          await Promise.all([
+            dao.getProductAvailabilityByID("000000000000000000000001"),
+            dao.getOrderByID("000000000000000000000001"),
+            dao.getOrderByID("000000000000000000000002"),
+            dao.getOrderByID("000000000000000000000003"),
+          ])
+            .then((results) => {
+              let [pa, ocon, omod, ocan] = results;
+              // Check confirmed availability
+              expect(pa._id.toString()).to.be.equal("000000000000000000000001");
+              expect(pa.farmerID.toString()).to.be.equal(
+                "000000000000000000000001"
+              );
+              expect(pa.productID.toString()).to.be.equal(
+                "000000000000000000000001"
+              );
+              expect(pa.week).to.be.equal(49);
+              expect(pa.year).to.be.equal(2021);
+              expect(pa.status).to.be.equal("confirmed");
+              expect(pa.price).to.be.equal(3.5);
+              expect(pa.packaging).to.be.equal("100g");
+              expect(pa.quantity).to.be.equal(5);
+              expect(pa.reservedQuantity).to.be.equal(0);
+
+              // Check order with product confirmed
+              expect(ocon._id.toString()).to.be.equal(
+                "000000000000000000000001"
+              );
+              expect(ocon.products[0].status).to.be.equal("confirmed");
+              expect(ocon.products[0].quantity).to.be.equal(3);
+              expect(ocon.status).to.be.equal("waiting");
+              expect(ocon.totalPrice).to.be.equal(15.5);
+
+              // Check order with product modified
+              expect(omod._id.toString()).to.be.equal(
+                "000000000000000000000002"
+              );
+              expect(omod.products[0].status).to.be.equal("modified");
+              expect(omod.products[0].quantity).to.be.equal(2);
+              expect(omod.status).to.be.equal("waiting");
+              expect(omod.totalPrice).to.be.equal(13);
+
+              // Check order with product canceled
+              expect(ocan._id.toString()).to.be.equal(
+                "000000000000000000000003"
+              );
+              expect(ocan.products[0].status).to.be.equal("canceled");
+              expect(ocan.products[0].quantity).to.be.equal(0);
+              expect(ocan.status).to.be.equal("canceled");
+              expect(ocan.totalPrice).to.be.equal(0);
+            })
+            .catch((e) => {
+              throw e;
+            });
+
+          done();
+        });
+    });
+
+    it("it should success with an existing product availability without associated orders", (done) => {
+      chai
+        .request(app)
+        .patch("/api/availabilities/000000000000000000000002/confirm")
+        .end(async (err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(204);
+
+          await dao
+            .getProductAvailabilityByID("000000000000000000000002")
+            .then((pa) => {
+              // Check confirmed availability
+              expect(pa._id.toString()).to.be.equal("000000000000000000000002");
+              expect(pa.farmerID.toString()).to.be.equal(
+                "000000000000000000000002"
+              );
+              expect(pa.productID.toString()).to.be.equal(
+                "000000000000000000000002"
+              );
+              expect(pa.week).to.be.equal(49);
+              expect(pa.year).to.be.equal(2021);
+              expect(pa.status).to.be.equal("confirmed");
+              expect(pa.price).to.be.equal(3.5);
+              expect(pa.packaging).to.be.equal("100g");
+              expect(pa.quantity).to.be.equal(5);
+              expect(pa.reservedQuantity).to.be.equal(0);
+            })
+            .catch((e) => {
+              throw e;
+            });
+
+          done();
+        });
+    });
+
+    it("it should fail with non existing product availability", (done) => {
+      chai
+        .request(app)
+        .patch("/api/availabilities/000000001000000000000001/confirm")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(400);
+          done();
+        });
+    });
+
+    it("it should fail when mongo fails", (done) => {
+      dao.close();
+      chai
+        .request(app)
+        .patch("/api/availabilities/000010000010000010000011/confirm")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(500);
+          done();
+        });
     });
   });
 });

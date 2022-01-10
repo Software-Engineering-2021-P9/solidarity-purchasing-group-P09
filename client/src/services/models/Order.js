@@ -30,13 +30,14 @@ class Order {
   }
 
   static OrderStatus = {
-    NOT_COVERED: "not covered",
+    NOT_COVERED: "not-covered",
     UNRETRIEVED: "unretrieved",
     WAITING: "waiting",
     CONFIRMED: "confirmed",
     PREPARED: "prepared",
     DONE: "done",
     PENDINGCANCELATION: "pending-cancelation",
+    CANCELED: "canceled",
   };
 }
 

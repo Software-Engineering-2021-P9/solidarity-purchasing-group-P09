@@ -7,6 +7,9 @@
 .table-row-status-confirmed {
   color: darkolivegreen;
 }
+.table-row-status-canceled {
+  color: red;
+}
 .table-row-status-done {
   color: rgb(68, 146, 4);
 }
@@ -15,6 +18,9 @@
 }
 .table-row-status-pending-cancelation {
   color: rgb(211, 2, 2);
+}
+.table-row-status-unretrieved {
+  color: rgb(0, 0, 0);
 }
 .change-status {
   cursor: pointer;

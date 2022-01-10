@@ -1,7 +1,7 @@
 "use strict";
 
-const { OrderStatus } = require("../models/order");
 const { ObjectID } = require("bson");
+const { OrderStatus } = require("../models/order");
 
 const orderCollectionName = "orders";
 
@@ -101,4 +101,13 @@ exports.getOrdersByClientIDList = async (db, clientIDList) => {
   const query = { clientID: { $in: clientIDList } };
 
   return db.collection(orderCollectionName).find(query).toArray();
+};
+
+exports.setPreparedOrdersToUnretrieved = async (db, week, year) => {
+  const query = {
+    $and: [{ week: week }, { year: year }, { status: OrderStatus.PREPARED }],
+  };
+  const data = { $set: { status: OrderStatus.UNRETRIEVED } };
+
+  return db.collection(orderCollectionName).updateMany(query, data);
 };

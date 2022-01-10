@@ -52,6 +52,13 @@ const {
 } = require("./product");
 
 const {
+  countWeekUnretrievedOrders,
+  countWeekOrders,
+  countTimeIntervalUnretrievedOrders,
+  countTimeIntervalOrders,
+} = require("./stats");
+
+const {
   getTelegramUsers,
   addTelegramUsers,
   createUniqueTelegramUserIndex,
@@ -211,6 +218,29 @@ exports.getUserByEmail = async (email) => {
   }
   return usersFound[0];
 };
+
+// Stats
+exports.countWeekUnretrievedOrders = (week, year) =>
+  countWeekUnretrievedOrders(db, week, year);
+
+exports.countWeekOrders = (week, year) => countWeekOrders(db, week, year);
+
+exports.countTimeIntervalUnretrievedOrders = (
+  startWeek,
+  endWeek,
+  startYear,
+  endYear
+) =>
+  countTimeIntervalUnretrievedOrders(
+    db,
+    startWeek,
+    endWeek,
+    startYear,
+    endYear
+  );
+
+exports.countTimeIntervalOrders = (startWeek, endWeek, startYear, endYear) =>
+  countTimeIntervalOrders(db, startWeek, endWeek, startYear, endYear);
 
 //Telegram BOT
 exports.addTelegramUsers = (telegramUser) => addTelegramUsers(db, telegramUser);

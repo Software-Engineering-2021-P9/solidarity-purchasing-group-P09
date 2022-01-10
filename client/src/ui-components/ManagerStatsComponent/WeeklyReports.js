@@ -29,7 +29,7 @@ function WeeklyReports(props) {
 
   return (
     <>
-      <Row className="my-5">
+      <Row className="my-4 mb-5">
         <div className="title-reports">Weekly Reports</div>
       </Row>
       <Row className="mx-1">

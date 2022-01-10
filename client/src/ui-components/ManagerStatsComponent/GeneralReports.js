@@ -94,7 +94,7 @@ function GeneralReports(props) {
                 </Pie>
               </PieChart>
             </Col>
-            <Col>
+            <Col className="media-margin-left">
               <Row className="total-orders">
                 {(
                   (props.generalReports.unretrievedCount /

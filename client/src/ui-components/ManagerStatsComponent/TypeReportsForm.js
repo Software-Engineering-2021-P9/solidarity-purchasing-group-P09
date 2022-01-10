@@ -6,7 +6,7 @@ import { Col, Row } from "react-bootstrap";
 function TypeReportsForm(props) {
   return (
     <>
-      <Row className="bottom-border-form mx-0 my-0">
+      <Row className="bottom-border-form mx-0 my-0 w-100">
         {props.typeReports === 0 ? (
           <>
             <Col md="auto" sm="auto" className="w-auto">

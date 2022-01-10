@@ -186,13 +186,13 @@ function ManagerOrdersStatsPage(props) {
           <Row className="my-4 mx-3">
             <GeneralReports generalReports={generalReports} />
           </Row>
-          <Row className="my-4 mx-3">
+          <Row className="my-4 mx-3 w-100">
             <TypeReportsForm
               typeReports={typeReports}
               setTypeReports={setTypeReports}
             />
           </Row>
-          <Row className="my-4 mx-3">
+          <Row className="my-3 mx-3">
             {typeReports === 0 ? (
               <>
                 <WeeklyReports

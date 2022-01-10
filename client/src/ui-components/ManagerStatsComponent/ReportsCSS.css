@@ -26,15 +26,6 @@
   align-self: center;
 }
 
-.pie-chart {
-  width: 120px;
-  margin-right: 20px;
-  background-color: #d8d8d8;
-  border-radius: 50%;
-  padding: 3px;
-  height: fit-content;
-  margin-left: 12px;
-}
 .pie-text {
   font-weight: bold;
 }
@@ -97,5 +88,11 @@
 @media only screen and (max-width: 905px) and (min-width: 768px) {
   .media-margin {
     margin-left: 0px !important;
+  }
+}
+@media only screen and (max-width: 368px) {
+  .media-margin-left {
+    margin-left: 20px !important;
+    margin-top: 5px !important;
   }
 }

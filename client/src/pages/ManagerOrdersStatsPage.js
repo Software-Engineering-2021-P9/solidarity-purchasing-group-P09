@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useCallback } from "react";
 import { Container, Row, Spinner } from "react-bootstrap";
 import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponent";
 
@@ -35,29 +35,34 @@ function ManagerOrdersStatsPage(props) {
   const [month, setMonth] = useState(1);
   const [typeReports, setTypeReports] = useState(0); // 0 weekly, 1 monthly
 
-  function getWeekNumbers(month_number) {
-    var start_date = new Date(year, month_number, 1);
-    var num_days = new Date(year, month_number + 1, 0).getDate();
-    var end_date = new Date(
-      start_date.getFullYear(),
-      start_date.getMonth(),
-      start_date.getDate() + num_days - 1
-    );
-    var oneJan = new Date(start_date.getFullYear(), 0, 1);
-    var numberOfDays_start = Math.floor(
-      (start_date - oneJan) / (24 * 60 * 60 * 1000)
-    );
-    var numberOfDays_end = Math.floor(
-      (end_date - oneJan) / (24 * 60 * 60 * 1000)
-    );
-    const week_start = Math.ceil(
-      (start_date.getDay() + 1 + numberOfDays_start) / 7
-    );
-    const week_end = Math.ceil((end_date.getDay() + 1 + numberOfDays_end) / 7);
-    console.log(month_number);
-    console.log([week_start, week_end]);
-    return [week_start, week_end];
-  }
+  const getWeekNumbers = useCallback(
+    (month_number) => {
+      var start_date = new Date(year, month_number, 1);
+      var num_days = new Date(year, month_number + 1, 0).getDate();
+      var end_date = new Date(
+        start_date.getFullYear(),
+        start_date.getMonth(),
+        start_date.getDate() + num_days - 1
+      );
+      var oneJan = new Date(start_date.getFullYear(), 0, 1);
+      var numberOfDays_start = Math.floor(
+        (start_date - oneJan) / (24 * 60 * 60 * 1000)
+      );
+      var numberOfDays_end = Math.floor(
+        (end_date - oneJan) / (24 * 60 * 60 * 1000)
+      );
+      const week_start = Math.ceil(
+        (start_date.getDay() + 1 + numberOfDays_start) / 7
+      );
+      const week_end = Math.ceil(
+        (end_date.getDay() + 1 + numberOfDays_end) / 7
+      );
+      console.log(month_number);
+      console.log([week_start, week_end]);
+      return [week_start, week_end];
+    },
+    [year]
+  );
 
   useEffect(() => {
     const getGeneralReports = () => {
@@ -149,7 +154,7 @@ function ManagerOrdersStatsPage(props) {
     };
 
     getGeneralReports();
-  }, []);
+  }, [getWeekNumbers]);
 
   useEffect(() => {
     const getBarReports = async () => {
@@ -235,7 +240,7 @@ function ManagerOrdersStatsPage(props) {
     } else {
       getFormReports();
     }
-  }, [week, year, month, typeReports]);
+  }, [week, year, month, typeReports, getWeekNumbers]);
 
   return (
     <Container>

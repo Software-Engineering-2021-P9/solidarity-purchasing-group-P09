@@ -186,15 +186,17 @@ function ManagerOrdersStatsPage(props) {
           "DEC",
           "JAN",
         ];
-        const weeks_month_bar = [17, 21, 25, 29, 33, 37, 41, 45, 49, 1];
+        const months_i_month_bar = [3, 4, 5, 6, 7, 8, 9, 10, 11, 0];
+
         let cont = 0;
-        for (const w of weeks_month_bar) {
-          if (w === 1) {
+        for (const m of months_i_month_bar) {
+          if (m === 0) {
             year_month_bar = 2022;
           }
+          const weeks = getWeekNumbers(m);
           var res2 = await getWeekIntervalOrdersStat(
-            w,
-            w + 3,
+            weeks[0],
+            weeks[1],
             year_month_bar,
             year_month_bar
           );

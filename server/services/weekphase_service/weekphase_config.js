@@ -195,6 +195,11 @@ function weekphaseEightHandler() {
 function weekphaseNineHandler() {
   console.log("weekphase-9", dayjs().toISOString());
 
-  //bot needs to write to every clients about the possibility to make new ordes
-  bot.WriteList();
+  try {
+    //bot needs to write to every clients about the possibility to make new ordes
+    bot.WriteList();
+  } catch (error) {
+    //if the bot was already deployed it will not work
+    console.error("Couldn't call the bot: " + error);
+  }
 }

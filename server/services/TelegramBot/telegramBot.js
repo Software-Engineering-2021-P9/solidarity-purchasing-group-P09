@@ -1,15 +1,15 @@
 const { Telegraf } = require("telegraf");
 const API = require("./API_Bot");
 
-const token = process.env.BOT_TOKEN || "";
-if (token === undefined) {
-  throw new Error("BOT_TOKEN must be provided!");
-}
+const token = process.env.BOT_TOKEN || undefined;
 
 const PORT = process.env.PORT_BOT || 3002;
 const URL = process.env.URL || "https://spg-testing.herokuapp.com/"; //"https://spg-deploy-feat-telegra-lmixoy.herokuapp.com/";
 
 try {
+  if (token === undefined) {
+    throw new Error("BOT_TOKEN must be provided!");
+  }
   const bot = new Telegraf(token);
 
   bot.telegram.setWebhook(`${URL}/bot${token}`);
@@ -45,7 +45,7 @@ try {
     }
   });
 
-  const writeProductList = async function (id) {
+  writeProductList = async function (id) {
     const prods = await API.findProducts(URL);
 
     await bot.telegram.sendMessage(
@@ -76,19 +76,19 @@ try {
       bot.telegram.sendMessage(id, text, { parse_mode: "HTML" });
     });
   };
+
+  exports.WriteList = async function () {
+    let users = [];
+    users = await API.getTelegramUsers(URL);
+    console.log("Utenti: " + users);
+    users.map((id) => {
+      writeProductList(id.chatID);
+    });
+  };
 } catch (error) {
   //No bot token was passee
   console.error("There was some error with the bot: " + error);
 }
-
-exports.WriteList = async function () {
-  let users = [];
-  users = await API.getTelegramUsers(URL);
-  console.log("Utenti: " + users);
-  users.map((id) => {
-    writeProductList(id.chatID);
-  });
-};
 
 const getEmoji = (category) => {
   switch (category) {

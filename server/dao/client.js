@@ -14,6 +14,17 @@ exports.addFundToWallet = (db, clientID, increaseBy) => {
     .collection(clientCollectionName)
     .findOneAndUpdate(query, update, { returnDocument: "after" });
 };
+// ---------------
+// SetFundToWallet
+// ---------------
+
+exports.setFundToWallet = (db, clientID, value) => {
+  var query = { _id: ObjectID(clientID) };
+  var update = { $set: { wallet: value } };
+  return db
+    .collection(clientCollectionName)
+    .findOneAndUpdate(query, update, { returnDocument: "after" });
+};
 
 // -------------
 // getClientByID

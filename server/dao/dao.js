@@ -14,6 +14,7 @@ const { getFarmerByID, getFarmerByEmail } = require("./farmer");
 const {
   getClientByID,
   addFundToWallet,
+  setFundToWallet,
   findClients,
   createClientsTextSearchIndexes,
   createClient,
@@ -132,6 +133,8 @@ exports.signupClient = (fullName, phoneNumber, email, password, address) =>
 exports.findClients = (searchString) => findClients(db, searchString);
 exports.addFundToWallet = (clientID, increaseBy) =>
   addFundToWallet(db, clientID, increaseBy);
+exports.setFundToWallet = (clientID, value) =>
+  setFundToWallet(db, clientID, value);
 exports.createClientsTextSearchIndexes = () =>
   createClientsTextSearchIndexes(db);
 

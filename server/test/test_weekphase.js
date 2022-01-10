@@ -2,9 +2,10 @@ const chai = require("chai");
 const expect = chai.expect;
 const chaiHttp = require("chai-http");
 chai.use(chaiHttp);
-
+var {
+  weekphaseEightHandler,
+} = require("../services/weekphase_service/weekphase_config");
 const sinon = require("sinon");
-
 // -------------
 // STUBS SECTION
 // -------------
@@ -19,7 +20,7 @@ sinon
 var weekphaseService = require("../services/weekphase_service/weekphase_service");
 
 // Weekphases API tests
-exports.tests = (app) => {
+exports.tests = (app, mongoUnit, testData, dao) => {
   describe("Weekphases Cron tests:", () => {
     beforeEach(() => {
       weekphaseService.init();
@@ -188,6 +189,33 @@ exports.tests = (app) => {
             expect(res.status).to.be.equal(204);
             done();
           });
+      });
+    });
+  });
+
+  describe("Weekphase handlers tests:", () => {
+    describe("weekphaseEightHandler test", () => {
+      beforeEach(() => {
+        dao.open();
+        mongoUnit.load(testData.ordersCollection3);
+      });
+
+      afterEach(() => {
+        mongoUnit.drop();
+        dao.close();
+      });
+
+      it("It should set to unretrieved only the order with id: 6187c957b288576ca26f8251", (done) => {
+        weekphaseEightHandler().then(() =>
+          dao.getOrdersByClientID("6187c957b288576ca26f8257").then((orders) => {
+            expect(orders.length).to.be.equal(6);
+            let updatedOrder = orders.find(
+              (el) => el._id.toString() == "6187c957b288576ca26f8251"
+            );
+            expect(updatedOrder.status).to.be.equal("unretrieved");
+            done();
+          })
+        );
       });
     });
   });

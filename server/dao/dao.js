@@ -37,6 +37,7 @@ const {
   getOrdersByClientID,
   completeOrder,
   getOrdersByClientIDList,
+  setPreparedOrdersToUnretrieved,
   getOrdersContainingProducts,
   updateOrders,
 } = require("./order");
@@ -193,6 +194,8 @@ exports.getOrdersByClientID = (clientID) => getOrdersByClientID(db, clientID);
 exports.completeOrder = (orderID) => completeOrder(db, orderID);
 exports.getOrdersByClientIDList = (clientIDList) =>
   getOrdersByClientIDList(db, clientIDList);
+exports.setPreparedOrdersToUnretrieved = (week, year) =>
+  setPreparedOrdersToUnretrieved(db, week, year);
 exports.updateOrders = (orders) => updateOrders(db, orders);
 
 // User (Client, Farmer, Employee, Manager)

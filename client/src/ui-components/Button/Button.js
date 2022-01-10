@@ -9,6 +9,7 @@ function Button(props) {
       variant={props.variant}
       onClick={props.onClick}
       disabled={props.disabled}
+      form={props.form}
       type={props.type}>
       <Container>
         <Row className='align-items-center'>

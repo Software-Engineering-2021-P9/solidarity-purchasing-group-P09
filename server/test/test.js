@@ -1165,27 +1165,9 @@ describe("Orders API tests:", () => {
         .send({
           clientID: "777777777777777777777777",
           products: [
-            {
-              productID: "000000000000000000000001",
-              quantity: 3,
-              packaging: "100g",
-              price: 3.5,
-              status: "waiting",
-            },
-            {
-              productID: "000000000000000000000004",
-              quantity: 1,
-              packaging: "4 units",
-              price: 2.3,
-              status: "waiting",
-            },
-            {
-              productID: "000000000000000000000006",
-              quantity: 2,
-              packaging: "1 units",
-              price: 4.5,
-              status: "waiting",
-            },
+            { productID: "000000000000000000000001", quantity: 3 },
+            { productID: "000000000000000000000004", quantity: 1 },
+            { productID: "000000000000000000000006", quantity: 2 },
           ],
           shipmentInfo: {
             type: "shipment",
@@ -1208,9 +1190,27 @@ describe("Orders API tests:", () => {
               expect(res.body.clientID).to.be.equal("777777777777777777777777");
               expect(res.body.id).to.be.equal(id);
               expect(res.body.products).to.be.eql([
-                { productID: "000000000000000000000001", quantity: 3 },
-                { productID: "000000000000000000000004", quantity: 1 },
-                { productID: "000000000000000000000006", quantity: 2 },
+                {
+                  productID: "000000000000000000000001",
+                  quantity: 3,
+                  packaging: "100g",
+                  price: 3.5,
+                  status: "waiting",
+                },
+                {
+                  productID: "000000000000000000000004",
+                  quantity: 1,
+                  packaging: "4 units",
+                  price: 2.3,
+                  status: "waiting",
+                },
+                {
+                  productID: "000000000000000000000006",
+                  quantity: 2,
+                  packaging: "1 units",
+                  price: 4.5,
+                  status: "waiting",
+                },
               ]);
               expect(res.body.shipmentInfo).to.be.eql({
                 type: "shipment",

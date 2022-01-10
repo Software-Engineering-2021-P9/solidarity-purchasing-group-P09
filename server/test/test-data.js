@@ -128,6 +128,16 @@ exports.ordersCollection2 = {
 exports.clientsCollection = {
   clients: [
     {
+      _id: ObjectID("777777777777777777777777"),
+      email: "pippo@gmail.com",
+      //role: "client",
+      fullName: " pippo",
+      phoneNumber: 3205758803,
+      //password: "$2a$10$AU6PIEG1tq1467LUurqOjuoKzdvdtZHTFnCh00YzNGm7zzf7wa0rq",
+      address: "fsfsaf dsafsa fsafsa,26 Milano,12342",
+      wallet: 0,
+    },
+    {
       _id: ObjectID("618d4ad3736f2caf2d3b3ca5"),
       email: "ehsanansari@gmail.com",
       //role: "client",

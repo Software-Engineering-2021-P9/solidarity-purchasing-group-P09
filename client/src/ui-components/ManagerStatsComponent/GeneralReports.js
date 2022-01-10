@@ -3,7 +3,7 @@ import "./ReportsCSS.css";
 import React from "react";
 import { Col, Row } from "react-bootstrap";
 import { gridIcon } from "../icons";
-import { Pie, PieChart, Cell } from "recharts";
+import { Pie, PieChart, Cell, Legend } from "recharts";
 
 function GeneralReports(props) {
   const unretrieved_perc = (
@@ -73,7 +73,13 @@ function GeneralReports(props) {
         <Col className="px-0 mx-md-5 my-sm-4 my-xs-5 my-md-0" sm="12" md="6">
           <Row className="d-flex align-items-center">
             <Col className="w-auto add-space" md="auto" sm="auto">
-              <PieChart width={200} height={170}>
+              <PieChart width={200} height={210}>
+                <Legend
+                  layout="horizontal"
+                  verticalAlign="bottom"
+                  align="center"
+                  wrapperStyle={{ fontWeight: "bold" }}
+                />
                 <Pie
                   label={renderCustomizedLabel}
                   labelLine={false}

@@ -88,7 +88,7 @@ exports.addFundToWalletHandler = async function (req, res, next) {
 
     if(finalWalletValue != result.value.wallet){
       try {
-        await dao.addFundToWallet(clientID, parseFloat(finalWalletValue));
+        await dao.setFundToWallet(clientID, parseFloat(finalWalletValue));
       }
       catch (err) {
         console.error(`SetFundToWalletHandler() -> couldn't top up wallet: ${err}`);

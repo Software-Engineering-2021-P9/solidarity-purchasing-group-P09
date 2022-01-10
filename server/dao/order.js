@@ -33,7 +33,7 @@ exports.getOrderByID = async (db, orderID) => {
 // -----------
 
 exports.updateOrderStatusToWaiting = (db, orderID) => {
-  var query = { _id: ObjectId(orderID) };
+  var query = { _id: ObjectID(orderID) };
   var update = { $set: {status: OrderStatus.WAITING} };
   return db.collection(orderCollectionName).updateOne(query, update, { returnDocument: 'after' });
 }

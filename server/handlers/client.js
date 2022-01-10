@@ -64,7 +64,7 @@ exports.addFundToWalletHandler = async function (req, res, next) {
       orders = await dao.getOrdersByClientID(clientID);
     }catch(err){
       console.error(`getOrdersByClientID() -> couldn't retrieve client orders: ${err}`);
-      return res.status(502).end(); 
+      return res.status(500).end(); 
     }
 
     orders = orders.filter(order => order.status == OrderStatus.NOTCOVERED).sort((a, b)=>{

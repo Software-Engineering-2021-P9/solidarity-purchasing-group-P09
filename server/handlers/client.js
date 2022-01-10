@@ -86,7 +86,7 @@ exports.addFundToWalletHandler = async function (req, res, next) {
       }
     }
 
-    return res.json({ newWalletValue: finalWalletValue});
+    return res.json({ newWalletValue: orders.length});
 };
 
 exports.findClientValidatorChain = [

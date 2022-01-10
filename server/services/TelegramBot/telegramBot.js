@@ -4,7 +4,9 @@ const API = require("./API_Bot");
 const token = process.env.BOT_TOKEN || undefined;
 
 const PORT = process.env.PORT_BOT || 3002;
-const URL = process.env.URL || "https://spg-testing.herokuapp.com/"; //"https://spg-deploy-feat-telegra-lmixoy.herokuapp.com/";
+
+//if no URL is given, it will use the spg-testing URL
+const URL = process.env.URL || "https://spg-testing.herokuapp.com/";
 
 try {
   if (token === undefined) {
@@ -17,7 +19,6 @@ try {
 
   bot.launch();
 
-  //Client sends start and will receive a welcome message,
   bot.command("start", async (ctx) => {
     try {
       await API.addTelegramUsers(URL, ctx.chat.id);

@@ -6,8 +6,6 @@ const mongoUnit = require("mongo-unit");
 
 const testData = require("./test-data");
 
-const { OrderStatus } = require("../models/order");
-
 const { getCurrentWeekClient } = require("../services/time_service");
 let dao = require("../dao/dao");
 

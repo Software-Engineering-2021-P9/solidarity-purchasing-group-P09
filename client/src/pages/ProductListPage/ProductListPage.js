@@ -1,6 +1,6 @@
 import { React, useEffect, useState, useContext } from "react";
-import { useLocation, useHistory } from "react-router";
-import { Row, Col, CardGroup, Modal, Button } from "react-bootstrap";
+import { useLocation } from "react-router";
+import { Row, Col, CardGroup } from "react-bootstrap";
 import { getAvailableNavbarLinks } from "../../Routes";
 
 import { NavbarComponent } from "../../ui-components/NavbarComponent/NavbarComponent";
@@ -9,18 +9,17 @@ import ProductCard from "../../ui-components/ProductCardComponent/ProductCard";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./ProductListPage.css";
-import { alertIcon } from "../../ui-components/icons";
 
 import { findProducts, getOrders } from "../../services/ApiClient";
 import Order from "../../services/models/Order";
-
+import { AlertPopUp } from "../../ui-components/AlertPopUp/AlertPopUp";
 import { AuthContext } from "../../contexts/AuthContextProvider";
+
 import UserRoles from "../../services/models/UserRoles";
 
 function ProductListPage(props) {
   const location = useLocation();
   const authContext = useContext(AuthContext);
-  const history = useHistory();
 
   const [products, setProducts] = useState([]);
 
@@ -40,11 +39,16 @@ function ProductListPage(props) {
 
   const [cartUpdated, setCartUpdated] = useState(false);
   const [cartEmpty, setCartEmpty] = useState(false);
-
-  const currentUser = authContext.currentUser;
-  const [firstTimeNotify, setFirstTimeNotify] = useState(true);
   const [clientHasNotCoveredOrders, setClientHasNotCoveredOrders] =
     useState(false);
+  const [clientHasMissingPickups, setClientHasMissingPickups] = useState(false);
+  const [missingPickupsHasShown, setMissingPickupsHasShown] = useState(false);
+  const [hasNotCoveredHasShown, setHasNotCoveredHasShown] = useState(false);
+  const currentUser = authContext.currentUser;
+  const [
+    currentlyMissingPickupAlertIsShown,
+    setCurrentlyMissingPickupAlertIsShown,
+  ] = useState(true);
 
   if (
     clientHasNotCoveredOrders === false &&
@@ -59,7 +63,15 @@ function ProductListPage(props) {
           ).length > 0
         )
           setClientHasNotCoveredOrders(true);
+
+        if (
+          orders.filter(
+            (order) => order.status === Order.OrderStatus.UNRETRIEVED
+          ).length > 2
+        )
+          setClientHasMissingPickups(true);
       })
+
       .catch((err) => {
         throw err;
       });
@@ -136,7 +148,9 @@ function ProductListPage(props) {
       <NavbarComponent
         links={getAvailableNavbarLinks(authContext.currentUser)}
         loggedUser={authContext.currentUser}
-        showShoppingCart
+        showShoppingCart={
+          authContext?.currentUser?.role === UserRoles.CLIENT || location.state
+        }
         shoppingCartItems={cart.size}
         shoppingCart={cart}
         clientID={location.state ? location.state.clientID : ""}
@@ -144,7 +158,6 @@ function ProductListPage(props) {
         cartUpdated={cartUpdated}
         cartEmpty={cartEmpty}
       />
-
       <FilterRow
         text={text}
         handleCategoryChanged={handleCategoryChanged}
@@ -153,7 +166,6 @@ function ProductListPage(props) {
         setText={setText}
         handleOnSearchSubmit={handleOnSearchSubmit}
       />
-
       <Row lg={4} md={3} sm={2} xs={1} className="g-4">
         {products &&
           products.map((item) => {
@@ -176,59 +188,41 @@ function ProductListPage(props) {
           })}
       </Row>
 
-      <Modal
-        centered
-        show={
+      <AlertPopUp
+        conditions={
+          currentUser !== null &&
+          currentUser.role === "client" &&
+          clientHasMissingPickups &&
+          currentlyMissingPickupAlertIsShown &&
+          !missingPickupsHasShown
+        }
+        title="We received missed pickups"
+        body1="You already missed at least 3 pickups."
+        body2="You will be suspended if you miss totally 5 pickups."
+        setCurrentlyMissingPickUpAlertShown={
+          setCurrentlyMissingPickupAlertIsShown
+        }
+        currentlyMissingPickUpAlertShown={currentlyMissingPickupAlertIsShown}
+        setAsShown={setMissingPickupsHasShown}
+      />
+
+      <AlertPopUp
+        conditions={
           currentUser !== null &&
           currentUser.role === "client" &&
           clientHasNotCoveredOrders &&
-          firstTimeNotify
+          (!currentlyMissingPickupAlertIsShown || !clientHasMissingPickups) &&
+          !hasNotCoveredHasShown
         }
-      >
-        <Modal.Header>
-          <div className="margin-auto center-text">
-            <Modal.Title className="margin-auto">
-              {" "}
-              {alertIcon} Insufficient Wallet Balance
-            </Modal.Title>
-          </div>
-        </Modal.Header>
-
-        <Modal.Body>
-          <p className="center-text">
-            At the moment there are orders with status "not covered", waiting
-            for a wallet top up.
-          </p>
-          <p className="center-text">
-            Not covered orders will be deleted at the defined deadline.
-          </p>
-        </Modal.Body>
-
-        <Modal.Footer>
-          <div className="margin-auto">
-            <Button
-              className="product-list-page-popup-buttons"
-              variant="primary"
-              onClick={() => {
-                setFirstTimeNotify(false);
-              }}
-            >
-              Close
-            </Button>
-          </div>
-          <div className="margin-auto">
-            <Button
-              className="product-list-page-popup-buttons"
-              variant="primary"
-              onClick={() => {
-                history.push("/client");
-              }}
-            >
-              Check Orders
-            </Button>
-          </div>
-        </Modal.Footer>
-      </Modal>
+        title="Insufficient Wallet Balance"
+        body1="At the moment there are orders with status not covered, waiting for a wallet top up."
+        body2=" Not covered orders will be deleted at the defined deadline."
+        setCurrentlyMissingPickUpAlertShown={
+          setCurrentlyMissingPickupAlertIsShown
+        }
+        currentlyMissingPickUpAlertShown={currentlyMissingPickupAlertIsShown}
+        setAsShown={setHasNotCoveredHasShown}
+      />
     </>
   );
 }

@@ -148,11 +148,11 @@ function WeeklyForm(props) {
             className="mx-3 form-size"
             type="number"
             step={1}
-            max={52}
+            max={53}
             min={1}
             value={props.week}
             onChange={(e) => {
-              if (e.target.value >= 1 && e.target.value <= 52) {
+              if (e.target.value >= 1 && e.target.value <= 53) {
                 props.setWeek(parseInt(e.target.value));
               }
             }}

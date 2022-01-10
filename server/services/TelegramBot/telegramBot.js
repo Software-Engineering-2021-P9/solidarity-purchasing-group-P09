@@ -78,6 +78,7 @@ try {
   };
 } catch (error) {
   //No bot token was passee
+  console.error("There was some error with the bot: " + error);
 }
 
 exports.WriteList = async function () {

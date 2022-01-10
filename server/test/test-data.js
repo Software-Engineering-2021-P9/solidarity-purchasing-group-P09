@@ -757,6 +757,18 @@ exports.confirmProductAvailabilityCollections = {
       quantity: 5,
       reservedQuantity: 0,
     },
+    {
+      _id: ObjectID("000000000000000000000002"),
+      farmerID: ObjectID("000000000000000000000002"),
+      productID: ObjectID("000000000000000000000002"),
+      week: currentWeekFarmer,
+      year: currentYearFarmer,
+      status: "waiting",
+      price: 3.5,
+      packaging: "100g",
+      quantity: 5,
+      reservedQuantity: 0,
+    },
   ],
   orders: [
     {

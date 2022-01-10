@@ -486,6 +486,41 @@ describe("Products API tests: ", () => {
           done();
         });
     });
+
+    it("it must return the current week availability of the product ", (done) => {
+      chai
+        .request(app)
+        .get("/api/products/000000000000000000000006/availability/currentWeek")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          expect(res.body.productID).to.be.equal("000000000000000000000006");
+          expect(res.body.quantity).to.be.equal(52);
+          done();
+        });
+    });
+
+    it("it must return bad request if the productID is not a mongoID", (done) => {
+      chai
+        .request(app)
+        .get("/api/products/000000000111100000006/availability/currentWeek")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(400);
+          done();
+        });
+    });
+
+    it("it must return not found if the product hasn't current week availability set", (done) => {
+      chai
+        .request(app)
+        .get("/api/products/000000000000000000000011/availability/currentWeek")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(404);
+          done();
+        });
+    });
   });
 
   describe("GET /products/available", () => {
@@ -2389,7 +2424,7 @@ describe("Product Availability API tests:", () => {
     - canc
     */
 
-    it("it should success with an existing product availability", (done) => {
+    it("it should success with an existing product availability with associated orders", (done) => {
       chai
         .request(app)
         .patch("/api/availabilities/000000000000000000000001/confirm")
@@ -2447,6 +2482,41 @@ describe("Product Availability API tests:", () => {
               expect(ocan.products[0].quantity).to.be.equal(0);
               expect(ocan.status).to.be.equal("canceled");
               expect(ocan.totalPrice).to.be.equal(0);
+            })
+            .catch((e) => {
+              throw e;
+            });
+
+          done();
+        });
+    });
+
+    it("it should success with an existing product availability without associated orders", (done) => {
+      chai
+        .request(app)
+        .patch("/api/availabilities/000000000000000000000002/confirm")
+        .end(async (err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(204);
+
+          await dao
+            .getProductAvailabilityByID("000000000000000000000002")
+            .then((pa) => {
+              // Check confirmed availability
+              expect(pa._id.toString()).to.be.equal("000000000000000000000002");
+              expect(pa.farmerID.toString()).to.be.equal(
+                "000000000000000000000002"
+              );
+              expect(pa.productID.toString()).to.be.equal(
+                "000000000000000000000002"
+              );
+              expect(pa.week).to.be.equal(49);
+              expect(pa.year).to.be.equal(2021);
+              expect(pa.status).to.be.equal("confirmed");
+              expect(pa.price).to.be.equal(3.5);
+              expect(pa.packaging).to.be.equal("100g");
+              expect(pa.quantity).to.be.equal(5);
+              expect(pa.reservedQuantity).to.be.equal(0);
             })
             .catch((e) => {
               throw e;

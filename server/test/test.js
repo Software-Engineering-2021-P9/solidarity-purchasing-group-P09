@@ -1241,10 +1241,8 @@ describe("Orders API tests:", () => {
           expect(err).to.be.null;
           expect(res.status).to.be.equal(400);
           done();
-          });
         });
     });
-
 
     it("it should create a new order of type shipment and return it without pickUpSlot since it's not pickUp type", (done) => {
       chai

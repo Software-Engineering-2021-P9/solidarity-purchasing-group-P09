@@ -66,10 +66,14 @@ function ProductDetailsPage(props) {
         getNextWeekProductAvailability(productID),
       ])
         .then(
-          ([product, currentWeekAvailability, nextWeekProductAvailability]) => {
-            setProduct(product);
-            setCurrentWeekAvailability(currentWeekAvailability);
-            setNextWeekAvailability(nextWeekProductAvailability);
+          ([
+            productResult,
+            currentWeekAvailabilityResult,
+            nextWeekProductAvailabilityResult,
+          ]) => {
+            setProduct(productResult);
+            setCurrentWeekAvailability(currentWeekAvailabilityResult);
+            setNextWeekAvailability(nextWeekProductAvailabilityResult);
             setIsInitialized(true);
             setMustReload(false);
           }

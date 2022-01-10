@@ -67,24 +67,24 @@ exports.addFundToWalletHandler = async function (req, res, next) {
       return res.status(500).end(); 
     }
 
-    orders = orders.filter(order => order.status == OrderStatus.NOTCOVERED).sort((a, b)=>{
-        if(a.createdAt <= b.createdAt)
-          return -1;
-        return 1;
-      });
+    // orders = orders.filter(order => order.status == OrderStatus.NOTCOVERED).sort((a, b)=>{
+    //     if(a.createdAt <= b.createdAt)
+    //       return -1;
+    //     return 1;
+    //   });
     
-    let finalWalletValue = result.value.wallet;
+    // let finalWalletValue = result.value.wallet;
 
-    for(let order of orders){
-      if(finalWalletValue < order.totalPrice)
-        break;
-      finalWalletValue -= order.totalPrice;
-      try{
-        await dao.updateOrderStatusToWaiting(order._id);
-      }catch(err){
-        return res.status(500).end();
-      }
-    }
+    // for(let order of orders){
+    //   if(finalWalletValue < order.totalPrice)
+    //     break;
+    //   finalWalletValue -= order.totalPrice;
+    //   try{
+    //     await dao.updateOrderStatusToWaiting(order._id);
+    //   }catch(err){
+    //     return res.status(500).end();
+    //   }
+    // }
 
     return res.json({ newWalletValue: orders.length});
 };

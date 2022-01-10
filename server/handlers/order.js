@@ -118,10 +118,24 @@ exports.createOrderHandler = async function (req, res, next) {
         );
       }
 
+      let orders;
+      try{
+        orders = await dao.getOrdersByClientID(client);
+      }catch(err){
+        console.error(`getOrdersByClientID() -> couldn't retrieve client orders: ${err}`);
+        return res.status(500).end(); 
+      }
+
+      let totalOrderCost = 0;
+      for(let order of orders){
+        totalOrderCost += order.totalPrice;
+      }
+
+
       //IF WALLET NOT ENOUGH SET THE STATE TO NOT COVERED
       let status;
 
-      if(client.wallet < totalPrice)
+      if(client.wallet - totalOrderCost < totalPrice)
         status = OrderStatus.NOTCOVERED;
       else
         status = OrderStatus.WAITING;

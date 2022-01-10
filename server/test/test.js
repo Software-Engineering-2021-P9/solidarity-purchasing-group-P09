@@ -956,6 +956,7 @@ describe("Clients API tests:", () => {
           done();
         });
     });
+
     it("it should update the client wallet", (done) => {
       chai
         .request(app)
@@ -985,6 +986,23 @@ describe("Clients API tests:", () => {
           expect(res.status).to.be.equal(400);
 
           expect(res.body).to.be.an("object");
+
+          done();
+        });
+    });
+
+    it("it should update the client wallet and bring not covered orders to waiting status", (done) => {
+      chai
+        .request(app)
+        .patch("/api/clients/444444444444444444444444/wallet")
+        .send({
+          increaseBy: 12,
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          expect(res.body).to.be.an("object");
+          expect(res.body.newWalletValue).to.be.equal(12);
 
           done();
         });

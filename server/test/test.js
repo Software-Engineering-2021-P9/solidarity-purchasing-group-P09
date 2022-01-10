@@ -1165,7 +1165,9 @@ describe("Orders API tests:", () => {
         .send({
           clientID: "777777777777777777777777",
           products: [
-            { productID: "000000000000000000000012", quantity: 1 },
+            { productID: "000000000000000000000001", quantity: 3 },
+            { productID: "000000000000000000000004", quantity: 1 },
+            { productID: "000000000000000000000006", quantity: 2 },
           ],
           shipmentInfo: {
             type: "shipment",

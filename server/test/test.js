@@ -1002,7 +1002,7 @@ describe("Clients API tests:", () => {
           expect(err).to.be.null;
           expect(res.status).to.be.equal(200);
           expect(res.body).to.be.an("object");
-          expect(res.body.newWalletValue).to.be.equal(67.5);
+          expect(res.body.newWalletValue).to.be.equal(0);
 
           done();
         });

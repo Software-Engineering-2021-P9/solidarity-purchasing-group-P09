@@ -37,58 +37,7 @@ exports.employeesCollection = {
   ],
 };
 exports.ordersCollection = {
-  orders: [ 
-    {
-      _id: ObjectID("444444444444444444444443"),
-      clientID: ObjectID("144444444444444444444444"),
-      products: [
-        { productID: "6187c957b288576ca26f8258", quantity: 3 },
-        { productID: "6187c957b288576ca26f8259", quantity: 1 },
-        { productID: "6187c957b288576ca26f8250", quantity: 2 },
-      ],
-      status: "not-covered",
-      totalPrice: "6",
-      createdAt: "2019-11-16T13:00:07.616Z",
-      shipmentInfo: {
-        type: "pickup",
-        pickUpSlot: "32200",
-        address: "Via Prapappo Ravanello 54",
-      },
-    },
-    {
-      _id: ObjectID("444444444444444444444442"),
-      clientID: ObjectID("144444444444444444444444"),
-      products: [
-        { productID: "6187c957b288576ca26f8258", quantity: 3 },
-        { productID: "6187c957b288576ca26f8259", quantity: 1 },
-        { productID: "6187c957b288576ca26f8250", quantity: 2 },
-      ],
-      status: "not-covered",
-      totalPrice: "6",
-      createdAt: "2020-11-16T13:00:07.616Z",
-      shipmentInfo: {
-        type: "pickup",
-        pickUpSlot: "32200",
-        address: "Via Prapappo Ravanello 54",
-      },
-    },   
-    {
-      _id: ObjectID("444444444444444444444441"),
-      clientID: ObjectID("144444444444444444444444"),
-      products: [
-        { productID: "6187c957b288576ca26f8258", quantity: 3 },
-        { productID: "6187c957b288576ca26f8259", quantity: 1 },
-        { productID: "6187c957b288576ca26f8250", quantity: 2 },
-      ],
-      status: "not-covered",
-      totalPrice: "6",
-      createdAt: "2021-11-16T13:00:07.616Z",
-      shipmentInfo: {
-        type: "pickup",
-        pickUpSlot: "32200",
-        address: "Via Prapappo Ravanello 54",
-      },
-    },
+  orders: [
     {
       _id: ObjectID("6187c957b288576ca26f8251"),
       clientID: ObjectID("6187c957b288576ca26f8257"),
@@ -142,6 +91,57 @@ exports.ordersCollection = {
 
 exports.ordersCollection2 = {
   orders: [
+    {
+      _id: ObjectID("444444444444444444444443"),
+      clientID: ObjectID("144444444444444444444444"),
+      products: [
+        { productID: "6187c957b288576ca26f8258", quantity: 3 },
+        { productID: "6187c957b288576ca26f8259", quantity: 1 },
+        { productID: "6187c957b288576ca26f8250", quantity: 2 },
+      ],
+      status: "not-covered",
+      totalPrice: "6",
+      createdAt: "2019-11-16T13:00:07.616Z",
+      shipmentInfo: {
+        type: "pickup",
+        pickUpSlot: "32200",
+        address: "Via Prapappo Ravanello 54",
+      },
+    },
+    {
+      _id: ObjectID("444444444444444444444442"),
+      clientID: ObjectID("144444444444444444444444"),
+      products: [
+        { productID: "6187c957b288576ca26f8258", quantity: 3 },
+        { productID: "6187c957b288576ca26f8259", quantity: 1 },
+        { productID: "6187c957b288576ca26f8250", quantity: 2 },
+      ],
+      status: "not-covered",
+      totalPrice: "6",
+      createdAt: "2020-11-16T13:00:07.616Z",
+      shipmentInfo: {
+        type: "pickup",
+        pickUpSlot: "32200",
+        address: "Via Prapappo Ravanello 54",
+      },
+    },   
+    {
+      _id: ObjectID("444444444444444444444441"),
+      clientID: ObjectID("144444444444444444444444"),
+      products: [
+        { productID: "6187c957b288576ca26f8258", quantity: 3 },
+        { productID: "6187c957b288576ca26f8259", quantity: 1 },
+        { productID: "6187c957b288576ca26f8250", quantity: 2 },
+      ],
+      status: "not-covered",
+      totalPrice: "6",
+      createdAt: "2021-11-16T13:00:07.616Z",
+      shipmentInfo: {
+        type: "pickup",
+        pickUpSlot: "32200",
+        address: "Via Prapappo Ravanello 54",
+      },
+    },
     {
       _id: ObjectID("6187c957b288576ca26f8251"),
       clientID: ObjectID("6187c957b288576ca26f8257"),

@@ -786,7 +786,7 @@ describe("Clients API tests:", () => {
         .end((err, res) => {
           expect(err).to.be.null;
           expect(res.body).to.be.an("array");
-          expect(res.body.length).to.be.equal(3);
+          expect(res.body.length).to.be.equal(4);
           expect(res.body.map((client) => client.id)).to.include.members([
             "6a8fc927bb88c762a26f0000",
             "618d4ad3736f2caf2d3b3ca5",

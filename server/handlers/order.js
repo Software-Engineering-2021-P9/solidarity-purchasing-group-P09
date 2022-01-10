@@ -56,7 +56,7 @@ exports.createOrderHandler = async function (req, res, next) {
   let status;
 
   if(client.wallet < totalPrice)
-    status = OrderStatus.NOT_COVERED;
+    status = OrderStatus.NOTCOVERED;
   else
     status = OrderStatus.WAITING;
 

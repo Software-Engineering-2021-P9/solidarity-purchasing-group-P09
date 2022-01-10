@@ -961,6 +961,7 @@ describe("Orders API tests:", () => {
   beforeEach(() => {
     dao.open();
     mongoUnit.load(testData.ordersCollection);
+    mongoUnit.load(testData.clientsCollection);
   });
 
   afterEach(() => {

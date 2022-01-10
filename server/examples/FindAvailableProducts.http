@@ -1,0 +1,12 @@
+GET http://localhost:3001/api/products/available?searchString=Orange HTTP/1.1
+Content-Type: application/json
+
+###
+
+GET http://localhost:3001/api/products/available?category=fruit HTTP/1.1
+Content-Type: application/json
+
+###
+
+GET http://localhost:3001/api/products/available?searchString=Orange&category=fruit HTTP/1.1
+Content-Type: application/json

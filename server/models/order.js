@@ -7,7 +7,6 @@ const OrderStatus = {
   CONFIRMED: "confirmed",
   PREPARED: "prepared",
   DONE: "done",
-  UNRETRIEVED: "unretrieved",
 };
 
 class OrderProduct {

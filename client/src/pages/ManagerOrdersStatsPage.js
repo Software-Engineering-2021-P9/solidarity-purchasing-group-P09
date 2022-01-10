@@ -32,7 +32,7 @@ function ManagerOrdersStatsPage(props) {
 
   const [week, setWeek] = useState(2);
   const [year, setYear] = useState(2022);
-  const [month, setMonth] = useState(1);
+  const [month, setMonth] = useState(0);
   const [typeReports, setTypeReports] = useState(0); // 0 weekly, 1 monthly
 
   const getWeekNumbers = useCallback(

@@ -111,10 +111,14 @@ function UnretrievedMonthlyBar(props) {
           <h6>{`month : ${label}-${year_info}`}</h6>
           <p>{`unretrieved orders : ${payload[0].value}`}</p>
           <p>{`total orders : ${payload[1].value}`}</p>
-          <p>{`% of unretrieved orders : ${(
-            (payload[0].value / payload[1].value) *
-            100
-          ).toFixed(2)}`}</p>
+          {payload[0].value && payload[1].value ? (
+            <p>{`% of unretrieved orders : ${(
+              (payload[0].value / payload[1].value) *
+              100
+            ).toFixed(2)}`}</p>
+          ) : (
+            <p>{`% of unretrieved orders : N/A`}</p>
+          )}
         </div>
       );
     }

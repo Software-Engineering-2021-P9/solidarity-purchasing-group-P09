@@ -86,13 +86,14 @@ exports.addFundToWalletHandler = async function (req, res, next) {
       }
     }
 
-    if(finalWalletValue != result.value.wallet)
-    try {
-      result = await dao.addFundToWallet(clientID, parseFloat(finalWalletValue));
-    }
-    catch (err) {
-      console.error(`SetFundToWalletHandler() -> couldn't top up wallet: ${err}`);
-      return res.status(500).end();
+    if(finalWalletValue != result.value.wallet){
+      try {
+        await dao.addFundToWallet(clientID, parseFloat(finalWalletValue));
+      }
+      catch (err) {
+        console.error(`SetFundToWalletHandler() -> couldn't top up wallet: ${err}`);
+        return res.status(500).end();
+      }
     }
 
     return res.json({ newWalletValue: finalWalletValue});

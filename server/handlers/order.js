@@ -110,7 +110,7 @@ exports.createOrderHandler = async function (req, res, next) {
       try {
         client = await dao.getClientByID(req.body.clientID.toString());
       } catch (err) {
-        return res.status(500).end();
+        return res.status(510).end();
       }
       if (!client) {
         console.error(

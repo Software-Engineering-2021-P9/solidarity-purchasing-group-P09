@@ -1,21 +1,12 @@
 import { Col, FormControl, InputGroup, Row } from "react-bootstrap";
-import { useEffect, useState } from "react";
 import UserRoles from "../../services/models/UserRoles";
 import Button from "../Button/Button";
 import { Link } from "react-router-dom";
 import { personCircleIcon, pinMapIcon, walletIcon } from "../icons";
-import { getOrders } from "../../services/ApiClient";
+
 import "./ClientDetailsCSS.css";
 
 function ClientDetails(props) {
-  const [orders, setOrders] = useState([]);
-
-  useEffect(() => {
-    getOrders(props.clientInfo?.id).then((newO) => {
-      setOrders(newO);
-    });
-  }, [props.clientInfo?.id]);
-
   return (
     <Row>
       <Col
@@ -117,7 +108,7 @@ function ClientDetails(props) {
         </Row>
         <Row className="mx-0">
           <span className="num-order">
-            <span className="black">{orders.length}</span> (Total)
+            <span className="black">{props.ordersLength}</span> (Total)
           </span>
         </Row>
         {props.loggedUser.role === UserRoles.EMPLOYEE && (

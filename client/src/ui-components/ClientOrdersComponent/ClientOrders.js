@@ -1,31 +1,23 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { ClientOrderTableRow } from "./ClientOrderTableRow";
 import { Container, Col, Row } from "react-bootstrap";
 import "./ClientOrders.css";
-import { getOrders } from "../../services/ApiClient";
 import {
   calendarIcon,
   cashIcon,
   listIcon,
   pinMapSmallIcon,
   statusIcon,
+  shipmentIcon,
 } from "../icons";
 function ClientOrders(props) {
-  const [orders, setOrders] = useState([]);
-
-  useEffect(() => {
-    getOrders(props.clientID).then((newO) => {
-      setOrders(newO);
-    });
-  }, [props.clientID]);
-
   return (
     <Container>
       <Row>
         <h3 className="header-orders">Client Previous Orders</h3>
       </Row>
-      {orders.length > 0 ? (
-        <Row>
+      {props.orders.length > 0 ? (
+        <Row className="bigger-font">
           <Col className="table-orders table-container mx-0 px-3">
             <Row className="table-header table-header-visibility mx-0 px-0">
               <Col md="3" lg="3" xl="3" className="mx-0 px-0">
@@ -36,13 +28,13 @@ function ClientOrders(props) {
                 {calendarIcon} Date
               </Col>
               <Col md="3" lg="3" xl="3" className="mx-0 px-0">
-                {pinMapSmallIcon} Pick up location
+                {pinMapSmallIcon} Pick up | {shipmentIcon} Shipment
               </Col>
               <Col md="3" lg="3" xl="3" className="mx-0 px-0">
                 {statusIcon} Status
               </Col>
             </Row>
-            {orders.map((order) => (
+            {props.orders.map((order) => (
               <ClientOrderTableRow
                 loggedUser={props.loggedUser}
                 key={order.id}

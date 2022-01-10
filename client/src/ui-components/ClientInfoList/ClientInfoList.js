@@ -13,23 +13,23 @@ function ClientInfoList(props) {
     <Container>
       <Col>
         {props.isLoading ? (
-          <Container className="pt-5 d-flex justify-content-center">
-            <Spinner variant="dark" animation="border" />
+          <Container className='pt-5 d-flex justify-content-center'>
+            <Spinner variant='dark' animation='border' />
           </Container>
         ) : (
           <>
             {getEmptyListText() !== "" ? (
-              <Row className="justify-content-center pt-3">
-                <Col sm="6">
+              <Row className='justify-content-center pt-3'>
+                <Col sm='6'>
                   {getEmptyListText()
                     .split("\n")
                     .map((line) => (
-                      <h4 className="title text-center">{line}</h4>
+                      <h4 className='title text-center'>{line}</h4>
                     ))}
                 </Col>
               </Row>
             ) : (
-              <Row md={3} sm={3} xs={1} className="my-3 d-flex ">
+              <Row md={3} sm={2} xs={1} className='my-3 d-flex '>
                 {props.clientInfoList?.map((item, index) => (
                   <Col>
                     <ClientInfoListItem

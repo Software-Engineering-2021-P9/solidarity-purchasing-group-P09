@@ -994,7 +994,7 @@ describe("Clients API tests:", () => {
     it("it should update the client wallet and bring not covered orders to waiting status", (done) => {
       chai
         .request(app)
-        .patch("/api/clients/444444444444444444444444/wallet")
+        .patch("/api/clients/6187c957b288576ca26f8257/wallet")
         .send({
           increaseBy: 12,
         })

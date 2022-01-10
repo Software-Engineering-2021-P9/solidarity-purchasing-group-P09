@@ -1,7 +1,7 @@
 const axios = require("axios");
 
 exports.findProducts = async function (base_url) {
-  let urlRequest = base_url + "api/products";
+  let urlRequest = base_url + "api/products/available?";
 
   const response = await axios.get(urlRequest);
   switch (response.status) {

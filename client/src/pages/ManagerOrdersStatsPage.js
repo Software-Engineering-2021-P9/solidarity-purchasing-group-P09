@@ -57,8 +57,6 @@ function ManagerOrdersStatsPage(props) {
       const week_end = Math.ceil(
         (end_date.getDay() + 1 + numberOfDays_end) / 7
       );
-      console.log(month_number);
-      console.log([week_start, week_end]);
       return [week_start, week_end];
     },
     [year]

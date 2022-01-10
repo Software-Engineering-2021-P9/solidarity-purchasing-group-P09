@@ -126,6 +126,7 @@ exports.createOrderHandler = async function (req, res, next) {
         return res.status(500).end(); 
       }
 
+      orders = orders.filter(o => o.status==OrderStatus.WAITING || o.status==OrderStatus.NOTCOVERED);
       let totalOrderCost = 0;
       for(let order of orders){
         totalOrderCost += order.totalPrice;

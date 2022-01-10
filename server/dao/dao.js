@@ -194,8 +194,6 @@ exports.getOrdersByClientID = (clientID) => getOrdersByClientID(db, clientID);
 exports.completeOrder = (orderID) => completeOrder(db, orderID);
 exports.getOrdersByClientIDList = (clientIDList) =>
   getOrdersByClientIDList(db, clientIDList);
-exports.createClientsTextSearchIndexes = () =>
-  createClientsTextSearchIndexes(db);
 exports.setPreparedOrdersToUnretrieved = (week, year) =>
   setPreparedOrdersToUnretrieved(db, week, year);
 exports.updateOrders = (orders) => updateOrders(db, orders);

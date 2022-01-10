@@ -97,7 +97,7 @@ exports.ordersCollection = {
         { productID: "6187c957b288576ca26f8259", quantity: 1 },
         { productID: "6187c957b288576ca26f8250", quantity: 2 },
       ],
-      status: "not-covered",
+      status: "prepared",
       totalPrice: "6",
       createdAt: "2021-11-16T13:00:07.616Z",
       shipmentInfo: {
@@ -113,7 +113,7 @@ exports.ordersCollection = {
         { productID: "6187c957b288576ca26f8258", quantity: 10 },
         { productID: "6187c957b288576ca26f8259", quantity: 2 },
       ],
-      status: "not-covered",
+      status: "done",
       totalPrice: "12",
       createdAt: "2021-12-17T13:00:07.616Z",
       shipmentInfo: {

@@ -1190,9 +1190,9 @@ describe("Orders API tests:", () => {
               expect(res.body.clientID).to.be.equal("777777777777777777777777");
               expect(res.body.id).to.be.equal(id);
               expect(res.body.products).to.be.eql([
-                { productID: "6187c957b288576ca26f8258", quantity: 3 },
-                { productID: "6187c957b288576ca26f8259", quantity: 1 },
-                { productID: "6187c957b288576ca26f8250", quantity: 2 },
+                { productID: "000000000000000000000001", quantity: 3 },
+                { productID: "000000000000000000000004", quantity: 1 },
+                { productID: "000000000000000000000006", quantity: 2 },
               ]);
               expect(res.body.shipmentInfo).to.be.eql({
                 type: "shipment",

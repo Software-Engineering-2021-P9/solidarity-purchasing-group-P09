@@ -1222,6 +1222,30 @@ describe("Orders API tests:", () => {
         });
     });
 
+    it("it should create a new order not covered because no money on wallet", (done) => {
+      chai
+        .request(app)
+        .post("/api/orders")
+        .send({
+          clientID: "77777777777777d777777777",
+          products: [
+            { productID: "000000000000000000000001", quantity: 3 },
+            { productID: "000000000000000000000004", quantity: 1 },
+            { productID: "000000000000000000000006", quantity: 2 },
+          ],
+          shipmentInfo: {
+            type: "shipment",
+            address: "Via its real trust me 54",
+          },
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(400);
+          done();
+          });
+        });
+    });
+
 
     it("it should create a new order of type shipment and return it without pickUpSlot since it's not pickUp type", (done) => {
       chai

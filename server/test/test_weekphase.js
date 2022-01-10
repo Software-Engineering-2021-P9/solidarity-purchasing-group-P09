@@ -138,12 +138,12 @@ exports.tests = (app) => {
         chai
           .request(app)
           .patch("/api/testing/weekphases/current")
-          .send({ weekphaseID: "weekphase-4" })
+          .send({ weekphaseID: "weekphase-9" })
           .end((err, res) => {
             expect(err).to.be.null;
             expect(res.status).to.be.equal(204);
             expect(weekphaseService.getCurrentWeekphase()).to.be.equal(
-              "weekphase-4"
+              "weekphase-9"
             );
             done();
           });

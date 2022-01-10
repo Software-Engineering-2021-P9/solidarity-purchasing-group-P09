@@ -16,6 +16,9 @@ exports.managerIDPathValidator = param("managerID").exists().isMongoId();
 exports.employeeIDPathValidator = param("employeeID").exists().isMongoId();
 exports.clientIDPathValidator = param("clientID").exists().isMongoId();
 exports.productIDPathValidator = param("productID").exists().isMongoId();
+exports.productAvailabilityIDPathValidator = param("availabilityID")
+  .exists()
+  .isMongoId();
 exports.farmerIDPathValidator = param("farmerID").exists().isMongoId();
 exports.weekphaseIDBodyValidator = body("weekphaseID")
   .exists()

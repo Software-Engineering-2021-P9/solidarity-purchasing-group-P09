@@ -3,17 +3,21 @@ import React, { useContext, useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router";
 import { getAvailableNavbarLinks } from "../Routes";
 
-import { Col, Container, Image, Row, Spinner } from "react-bootstrap";
+import { Col, Container, Image, Row, Spinner, Card } from "react-bootstrap";
 
 import ActionConfirmationModal from "../ui-components/ActionConfirmationModal/ActionConfirmationModal";
+import Button from "../ui-components/Button/Button";
 import Divider from "../ui-components/Divider/Divider";
 import ErrorToast from "../ui-components/ErrorToast/ErrorToast";
 import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponent";
 
 import {
+  confirmProductAvailability,
+  getCurrentWeekProductAvailability,
   getNextWeekProductAvailability,
   getProductByID,
   setNextWeekProductAvailability,
+  updateProductAvailability,
 } from "../services/ApiClient";
 
 import { AuthContext } from "../contexts/AuthContextProvider";
@@ -24,6 +28,8 @@ import ProductDetails from "../ui-components/ProductDetails/ProductDetails";
 import ImageService from "../services/ImageService/ImageService";
 import ProductAvailabilityDetails from "../ui-components/ProductAvailabilityDetails/ProductAvailabilityDetails";
 import ProductAvailabilityForm from "../ui-components/ProductAvailabilityForm/ProductAvailabilityForm";
+import { ProductAvailabilityStatus } from "../services/models/ProductAvailability";
+import ProductAvailabilityUpdateForm from "../ui-components/ProductAvailabilityUpdateForm/ProductAvailabilityUpdateForm";
 
 function ProductDetailsPage(props) {
   const params = useParams();
@@ -37,7 +43,10 @@ function ProductDetailsPage(props) {
   const [requestError, setRequestError] = useState("");
 
   const [product, setProduct] = useState(null);
+  const [currentWeekAvailability, setCurrentWeekAvailability] = useState(null);
   const [nextWeekAvailability, setNextWeekAvailability] = useState(null);
+
+  const [availabilityToUpdate, setAvailabilityToUpdate] = useState(null);
 
   const [actionConfirmationModalMessage, setActionConfirmationModalMessage] =
     useState("");
@@ -53,14 +62,22 @@ function ProductDetailsPage(props) {
     const loadData = () =>
       Promise.all([
         getProductByID(productID),
+        getCurrentWeekProductAvailability(productID),
         getNextWeekProductAvailability(productID),
       ])
-        .then(([product, nextWeekProductAvailability]) => {
-          setProduct(product);
-          setNextWeekAvailability(nextWeekProductAvailability);
-          setIsInitialized(true);
-          setMustReload(false);
-        })
+        .then(
+          ([
+            productResult,
+            currentWeekAvailabilityResult,
+            nextWeekProductAvailabilityResult,
+          ]) => {
+            setProduct(productResult);
+            setCurrentWeekAvailability(currentWeekAvailabilityResult);
+            setNextWeekAvailability(nextWeekProductAvailabilityResult);
+            setIsInitialized(true);
+            setMustReload(false);
+          }
+        )
         .catch((err) =>
           setRequestError("Failed to fetch data: " + err.message)
         );
@@ -93,21 +110,91 @@ function ProductDetailsPage(props) {
     });
   }
 
+  function onConfirmCurrentWeekProductAvailabilitySubmit(data) {
+    setActionConfirmationModalMessage(
+      `Are you sure you want confirm the availability for the current week?`
+    );
+    setActionConfirmationModalCallback(() => () => {
+      setIsActionLoading(true);
+      confirmProductAvailability(currentWeekAvailability.id)
+        .catch((err) =>
+          setRequestError(
+            "Failed to confirm current week availability: " + err.message
+          )
+        )
+        .finally(() => {
+          setMustReload(true);
+          setIsActionLoading(false);
+          onActionConfirmationModalHide();
+        });
+    });
+  }
+
   function onActionConfirmationModalHide() {
     setActionConfirmationModalMessage("");
     setActionConfirmationModalCallback(null);
   }
 
+  function onUpdateAvailabilityClick(availability) {
+    setAvailabilityToUpdate(availability);
+  }
+
+  function onAvailabilityUpdateModalFormSubmit(data) {
+    setIsActionLoading(true);
+    updateProductAvailability(availabilityToUpdate.id, data.quantity)
+      .catch((err) =>
+        setRequestError("Failed to update product availability: " + err.message)
+      )
+      .finally(() => {
+        setMustReload(true);
+        setIsActionLoading(false);
+        onAvailabilityUpdateModalFormCancel();
+      });
+  }
+
+  function onAvailabilityUpdateModalFormCancel() {
+    setAvailabilityToUpdate(null);
+  }
+
   function buildCurrentWeekAvailabilitySection() {
     return (
       <>
-        {product?.availability ? (
-          <Row className='pt-3'>
-            <ProductAvailabilityDetails availability={product?.availability} />
-          </Row>
-        ) : (
-          <h4 className='title text-center'>No availability set</h4>
-        )}
+        <Card>
+          <Card.Title>
+            <h2 className='subtitle ps-3 pt-1'>Current Week Availability</h2>
+          </Card.Title>
+          <Card.Body className='pt-0'>
+            {currentWeekAvailability ? (
+              <Row>
+                <ProductAvailabilityDetails
+                  availability={currentWeekAvailability}
+                />
+              </Row>
+            ) : (
+              <h4 className='title text-center'>No availability set</h4>
+            )}
+          </Card.Body>
+          <Card.Footer className='text-center'>
+            {currentWeekAvailability?.status ===
+              ProductAvailabilityStatus.WAITING && (
+              <>
+                <Button
+                  onClick={() =>
+                    onConfirmCurrentWeekProductAvailabilitySubmit()
+                  }>
+                  Confirm
+                </Button>
+                <Button
+                  className='ms-3'
+                  onClick={() =>
+                    onUpdateAvailabilityClick(currentWeekAvailability)
+                  }>
+                  Update
+                </Button>
+              </>
+            )}
+          </Card.Footer>
+        </Card>
       </>
     );
   }
@@ -115,20 +202,43 @@ function ProductDetailsPage(props) {
   function buildNextWeekAvailabilitySection() {
     return (
       <>
-        {nextWeekAvailability ? (
-          <Row className='pt-3'>
-            <ProductAvailabilityDetails availability={nextWeekAvailability} />
-          </Row>
-        ) : (
-          <>
-            <Container className='pt-3'>
-              <ProductAvailabilityForm
-                isLoading={isActionLoading}
-                onSubmit={onSetNextWeekProductAvailabilitySubmit}
-              />
-            </Container>
-          </>
-        )}
+        <Card>
+          <Card.Title>
+            <h2 className='subtitle ps-3 pt-1'>Next Week Availability</h2>
+          </Card.Title>
+          <Card.Body className='pt-0'>
+            {nextWeekAvailability ? (
+              <Row>
+                <ProductAvailabilityDetails
+                  availability={nextWeekAvailability}
+                />
+              </Row>
+            ) : (
+              <>
+                <Container>
+                  <ProductAvailabilityForm
+                    isLoading={isActionLoading}
+                    onSubmit={onSetNextWeekProductAvailabilitySubmit}
+                  />
+                </Container>
+              </>
+            )}
+          </Card.Body>
+          <Card.Footer className='text-center'>
+            {nextWeekAvailability?.status ===
+              ProductAvailabilityStatus.WAITING && (
+              <>
+                <Button
+                  className='ms-3'
+                  onClick={() =>
+                    onUpdateAvailabilityClick(nextWeekAvailability)
+                  }>
+                  Update
+                </Button>
+              </>
+            )}
+          </Card.Footer>
+        </Card>
       </>
     );
   }
@@ -147,38 +257,39 @@ function ProductDetailsPage(props) {
         </Container>
       ) : (
         <>
-          <Row>
-            <h1 className='title'>{product.name}</h1>
-          </Row>
-          <Row className='pt-2 pb-3'>
-            <Col
-              xs='12'
-              sm='12'
-              md='5'
-              className='d-flex justify-content-center pb-3'>
-              <Image
-                style={{ width: "270px" }}
-                src={ImageService.returnImageByCategory(product.category)}
-                rounded
-              />
-            </Col>
-            <Col xs='12' sm='12' md='6'>
-              <ProductDetails product={product} />
+          <Row className='justify-content-center mb-3'>
+            <Col xs='12' sm='12' md='12' lg='9' xl='8' xxl='7'>
+              <Card className='mt-2'>
+                <Card.Title>
+                  <h1 className='title ms-3'>{product.name}</h1>
+                </Card.Title>
+                <Card.Body className='text-center'>
+                  <Row>
+                    <Col xs='12' md='5'>
+                      <Image
+                        style={{ width: "270px" }}
+                        src={ImageService.returnImageByCategory(
+                          product.category
+                        )}
+                        rounded
+                      />
+                    </Col>
+                    <Divider className='d-block d-md-none mt-4' />
+                    <Col xs='12' md='7'>
+                      <ProductDetails product={product} />
+                    </Col>
+                  </Row>
+                </Card.Body>
+              </Card>
             </Col>
           </Row>
           <Divider />
           <Row>
-            <Col xs='12' md='6' className='pb-3'>
-              <Row>
-                <h2 className='subtitle'>Current Week Availability</h2>
-              </Row>
+            <Col xs='12' lg='6' className='pb-3'>
               {buildCurrentWeekAvailabilitySection()}
             </Col>
             <Divider className='d-block d-md-none' />
-            <Col xs='12' md='6' className='pb-3'>
-              <Row>
-                <h2 className='subtitle'>Next Week Availability</h2>
-              </Row>
+            <Col xs='12' lg='6' className='pb-3'>
               {buildNextWeekAvailabilitySection()}
             </Col>
           </Row>
@@ -197,6 +308,15 @@ function ProductDetailsPage(props) {
         onCancel={onActionConfirmationModalHide}
         isLoading={isActionLoading}
       />
+      {availabilityToUpdate && (
+        <ProductAvailabilityUpdateForm
+          show={availabilityToUpdate}
+          onHide={onAvailabilityUpdateModalFormCancel}
+          availability={availabilityToUpdate}
+          onSubmit={onAvailabilityUpdateModalFormSubmit}
+          isLoading={isActionLoading}
+        />
+      )}
     </>
   );
 }

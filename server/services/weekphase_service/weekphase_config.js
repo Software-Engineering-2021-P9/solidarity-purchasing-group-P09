@@ -62,7 +62,7 @@ exports.weekphasesConfig = [
     "52200",
     "60900",
     "Europe/Rome",
-    weekphaseEightHandler
+    exports.weekphaseEightHandler
   ),
   new WeekPhase(
     "weekphase-9",
@@ -180,17 +180,17 @@ function weekphaseSevenHandler() {
 // Employee:
 //    - Can make orders (NWC)
 //    - Can update pickup time (NWC)
-async function weekphaseEightHandler() {
+exports.weekphaseEightHandler = async () => {
   console.log("weekphase-8", dayjs().toISOString());
 
   try {
     await dao.setPreparedOrdersToUnretrieved(...getCurrentWeek());
   } catch (err) {
     console.log(
-      `WeekphaseEightHandler() --> Couldn't set current week prepared orders to unretrieved`
+      `WeekphaseEightHandler() --> Couldn't set current week prepared orders to unretrieved: ${err}`
     );
   }
-}
+};
 
 // - Weekphase 9 (SAT 09:00 - SUN 00:00):
 // Farmers:
@@ -204,5 +204,3 @@ async function weekphaseEightHandler() {
 function weekphaseNineHandler() {
   console.log("weekphase-9", dayjs().toISOString());
 }
-
-module.exports = { weekphaseEightHandler };

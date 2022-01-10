@@ -36,6 +36,7 @@ const {
   getOrdersByClientID,
   completeOrder,
   getOrdersByClientIDList,
+  setPreparedOrdersToUnretrieved,
 } = require("./order");
 
 const {

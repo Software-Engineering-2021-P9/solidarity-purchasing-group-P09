@@ -20,7 +20,7 @@ sinon
 var weekphaseService = require("../services/weekphase_service/weekphase_service");
 
 // Weekphases API tests
-exports.tests = (app, mongoUnit, testData) => {
+exports.tests = (app, mongoUnit, testData, dao) => {
   describe("Weekphases Cron tests:", () => {
     beforeEach(() => {
       weekphaseService.init();
@@ -194,21 +194,28 @@ exports.tests = (app, mongoUnit, testData) => {
   });
 
   describe("Weekphase handlers tests:", () => {
-    beforeEach(() => {
-      dao.open();
-      mongoUnit.load(testData.ordersCollection3);
-    });
-
-    afterEach(() => {
-      mongoUnit.drop();
-      dao.close();
-    });
-
     describe("weekphaseEightHandler test", () => {
-      it("It should set to unretrieved only the order with id: 6187c957b288576ca26f8251", async (done) => {
-        await weekphaseEightHandler();
-        let orders = await dao.getOrdersByClientID("6187c957b288576ca26f8257");
-        expect(orders.length).to.be.equal(3);
+      beforeEach(() => {
+        dao.open();
+        mongoUnit.load(testData.ordersCollection3);
+      });
+
+      afterEach(() => {
+        mongoUnit.drop();
+        dao.close();
+      });
+
+      it("It should set to unretrieved only the order with id: 6187c957b288576ca26f8251", (done) => {
+        weekphaseEightHandler().then(() =>
+          dao.getOrdersByClientID("6187c957b288576ca26f8257").then((orders) => {
+            expect(orders.length).to.be.equal(3);
+            let updatedOrder = orders.find(
+              (el) => el._id.toString() == "6187c957b288576ca26f8251"
+            );
+            expect(updatedOrder.status).to.be.equal("unretrieved");
+            done();
+          })
+        );
       });
     });
   });

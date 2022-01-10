@@ -1158,6 +1158,53 @@ describe("Orders API tests:", () => {
         });
     });
 
+    it("it should create a new order not covered because no money on wallet", (done) => {
+      chai
+        .request(app)
+        .post("/api/orders")
+        .send({
+          clientID: "777777777777777777777777",
+          products: [
+            { productID: "6187c957b288576ca26f8258", quantity: 3 },
+            { productID: "6187c957b288576ca26f8259", quantity: 1 },
+            { productID: "6187c957b288576ca26f8250", quantity: 2 },
+          ],
+          shipmentInfo: {
+            type: "shipment",
+            address: "Via its real trust me 54",
+          },
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          const id = res.body.id;
+
+          chai
+            .request(app)
+            .get("/api/orders/" + id)
+            .end((err, res) => {
+              expect(err).to.be.null;
+              expect(res.status).to.be.equal(200);
+              expect(res.body).to.be.an("object");
+
+              expect(res.body.clientID).to.be.equal("777777777777777777777777");
+              expect(res.body.id).to.be.equal(id);
+              expect(res.body.products).to.be.eql([
+                { productID: "6187c957b288576ca26f8258", quantity: 3 },
+                { productID: "6187c957b288576ca26f8259", quantity: 1 },
+                { productID: "6187c957b288576ca26f8250", quantity: 2 },
+              ]);
+              expect(res.body.shipmentInfo).to.be.eql({
+                type: "shipment",
+                address: "Via its real trust me 54",
+              });
+              expect(res.body.status).to.be.equal("not-covered");
+              done();
+            });
+        });
+    });
+
+
     it("it should create a new order of type shipment and return it without pickUpSlot since it's not pickUp type", (done) => {
       chai
         .request(app)
@@ -1408,6 +1455,8 @@ describe("Orders API tests:", () => {
         });
     });
   });
+
+
 
   describe("GET /orders", () => {
     it("it should retrieve the client's orders with given ClientID", (done) => {

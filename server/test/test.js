@@ -1221,7 +1221,7 @@ describe("Orders API tests:", () => {
         });
     });
 
-    it("it should create a new order not covered because no money on wallet", (done) => {
+    it("it should fail to create a new order because wrong client id", (done) => {
       chai
         .request(app)
         .post("/api/orders")
@@ -1239,7 +1239,7 @@ describe("Orders API tests:", () => {
         })
         .end((err, res) => {
           expect(err).to.be.null;
-          expect(res.status).to.be.equal(400);
+          expect(res.status).to.be.equal(500);
           done();
         });
     });

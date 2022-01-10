@@ -937,6 +937,23 @@ describe("Clients API tests:", () => {
         });
     });
 
+    it("it should update the client wallet and put not covered orders to waiting", (done) => {
+      chai
+        .request(app)
+        .patch("/api/clients/444444444444444444444444/wallet")
+        .send({
+          increaseBy: 12,
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          expect(res.body).to.be.an("object");
+          expect(res.body.newWalletValue).to.be.equal(0);
+
+          done();
+        });
+    });
+
     it("it must return 400 when a negative float is given as increaseBy", (done) => {
       chai
         .request(app)

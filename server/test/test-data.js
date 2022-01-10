@@ -847,3 +847,16 @@ exports.confirmProductAvailabilityCollections = {
     },
   ],
 };
+
+exports.userTelegramCollection = {
+  chats: [
+    {
+      _id: ObjectID("6187c957b288576ca26f8257"),
+      chatID: 371107506,
+    },
+    {
+      _id: ObjectID("6187c957b288576ca26f8252"),
+      chatID: 1322211351,
+    },
+  ],
+};

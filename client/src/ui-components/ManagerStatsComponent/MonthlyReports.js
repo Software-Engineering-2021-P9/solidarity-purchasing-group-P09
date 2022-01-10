@@ -75,7 +75,8 @@ function MonthlyReports(props) {
         </Col>
       </Row>
       <Row className="stats-subtitle my-5 mx-1">
-        Number of unretrieved orders Vs Number of total orders per month
+        Number of unretrieved orders Vs Number of total orders per month (last
+        10 months)
       </Row>
       {props.initializedBar ? (
         <Row>

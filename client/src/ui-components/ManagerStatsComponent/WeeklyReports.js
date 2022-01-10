@@ -68,7 +68,8 @@ function WeeklyReports(props) {
         </Col>
       </Row>
       <Row className="stats-subtitle my-5 mx-1">
-        Number of unretrieved orders Vs Number of total orders per week
+        Number of unretrieved orders Vs Number of total orders per week (last 10
+        weeks)
       </Row>
       {props.initializedBar ? (
         <Row>

@@ -263,7 +263,7 @@ function ManagerOrdersStatsPage(props) {
             />
           </Row>
           <Row className="my-3 mx-3">
-            {typeReports === 0 ? (
+            {typeReports === 0 && (
               <>
                 <WeeklyReports
                   week={week}
@@ -277,7 +277,8 @@ function ManagerOrdersStatsPage(props) {
                   initializedBar={initializedBar}
                 />
               </>
-            ) : (
+            )}
+            {typeReports === 1 && (
               <>
                 <MonthlyReports
                   month={month}

@@ -28,7 +28,7 @@ before(async () => {
   app = require("../app");
 
   // Import test files
-  require("./test_weekphase").tests(app);
+  require("./test_weekphase").tests(app, mongoUnit, testData, dao);
 });
 
 after(() => {

@@ -3,7 +3,7 @@
 const dayjs = require("dayjs");
 const { WeekPhase } = require("./models/weekphase");
 var dao = require("../../dao/dao");
-const { getCurrentWeek } = require("../time_service");
+const { getCurrentWeekClient } = require("../time_service");
 
 // Weekphases configuration
 // No overlapping phases are allowed
@@ -184,7 +184,7 @@ exports.weekphaseEightHandler = async () => {
   console.log("weekphase-8", dayjs().toISOString());
 
   try {
-    await dao.setPreparedOrdersToUnretrieved(...getCurrentWeek());
+    await dao.setPreparedOrdersToUnretrieved(...getCurrentWeekClient());
   } catch (err) {
     console.log(
       `WeekphaseEightHandler() --> Couldn't set current week prepared orders to unretrieved: ${err}`

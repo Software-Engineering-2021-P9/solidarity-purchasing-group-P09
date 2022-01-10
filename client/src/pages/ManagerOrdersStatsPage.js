@@ -35,8 +35,6 @@ function ManagerOrdersStatsPage(props) {
   const [month, setMonth] = useState(1);
   const [typeReports, setTypeReports] = useState(0); // 0 weekly, 1 monthly
 
-  const [currentValues, setCurrentValues] = useState({});
-
   function getWeekNumbers(month_number) {
     var start_date = new Date(year, month_number, 1);
     var num_days = new Date(year, month_number + 1, 0).getDate();
@@ -45,7 +43,6 @@ function ManagerOrdersStatsPage(props) {
       start_date.getMonth(),
       start_date.getDate() + num_days - 1
     );
-
     var oneJan = new Date(start_date.getFullYear(), 0, 1);
     var numberOfDays_start = Math.floor(
       (start_date - oneJan) / (24 * 60 * 60 * 1000)
@@ -60,34 +57,6 @@ function ManagerOrdersStatsPage(props) {
     console.log(month_number);
     console.log([week_start, week_end]);
     return [week_start, week_end];
-  }
-
-  function getCurrentValues() {
-    var currentdate = new Date();
-    var oneJan = new Date(currentdate.getFullYear(), 0, 1);
-    var numberOfDays = Math.floor(
-      (currentdate - oneJan) / (24 * 60 * 60 * 1000)
-    );
-    const curr_week = Math.ceil((currentdate.getDay() + 1 + numberOfDays) / 7);
-    const curr_year = currentdate.getFullYear();
-    const curr_month = currentdate.getMonth();
-    const prev_week = curr_week === 1 ? 52 : curr_week - 1;
-    const prev_month = curr_month === 0 ? 11 : curr_month - 1;
-
-    console.log({
-      curr_week: curr_week,
-      curr_year: curr_year,
-      curr_month: curr_month,
-      prev_week: prev_week,
-      prev_month: prev_month,
-    });
-    setCurrentValues({
-      curr_week: curr_week,
-      curr_year: curr_year,
-      curr_month: curr_month,
-      prev_week: prev_week,
-      prev_month: prev_month,
-    });
   }
 
   useEffect(() => {
@@ -128,7 +97,7 @@ function ManagerOrdersStatsPage(props) {
 
       // previous week
       let prev_year =
-        currentValues.curr_month == 0 && currentValues.curr_week == 1
+        currentValues.curr_month === 0 && currentValues.curr_week === 1
           ? 2021
           : 2022;
       getWeeklyOrdersStat(currentValues.prev_week, prev_year)
@@ -140,9 +109,8 @@ function ManagerOrdersStatsPage(props) {
             "Failed to fetch previous week reports: " + err.message
           )
         );
-
       // previous month
-      prev_year = currentValues.curr_month == 0 ? 2021 : 2022;
+      prev_year = currentValues.curr_month === 0 ? 2021 : 2022;
       let prev_month_week = getWeekNumbers(currentValues.prev_month);
       getWeekIntervalOrdersStat(
         prev_month_week[0],
@@ -159,7 +127,27 @@ function ManagerOrdersStatsPage(props) {
           )
         );
     };
-    getCurrentValues();
+    let currentValues;
+
+    var currentdate = new Date();
+    var oneJan = new Date(currentdate.getFullYear(), 0, 1);
+    var numberOfDays = Math.floor(
+      (currentdate - oneJan) / (24 * 60 * 60 * 1000)
+    );
+    const curr_week = Math.ceil((currentdate.getDay() + 1 + numberOfDays) / 7);
+    const curr_year = currentdate.getFullYear();
+    const curr_month = currentdate.getMonth();
+    const prev_week = curr_week === 1 ? 52 : curr_week - 1;
+    const prev_month = curr_month === 0 ? 11 : curr_month - 1;
+
+    currentValues = {
+      curr_week: curr_week,
+      curr_year: curr_year,
+      curr_month: curr_month,
+      prev_week: prev_week,
+      prev_month: prev_month,
+    };
+
     getGeneralReports();
   }, []);
 

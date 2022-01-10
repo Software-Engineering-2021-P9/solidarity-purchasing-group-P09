@@ -55,8 +55,8 @@ function AuthContextProvider(props) {
           });
       });
     },
-    getUserIconLink: function(){
-      switch(this.currentUser?.role){
+    getUserIconLink: function () {
+      switch (this.currentUser?.role) {
         case UserRoles.CLIENT:
           return clientDetailsRouteName;
         case UserRoles.EMPLOYEE:
@@ -64,7 +64,7 @@ function AuthContextProvider(props) {
         default:
           return "";
       }
-    }
+    },
   });
 
   useEffect(() => {

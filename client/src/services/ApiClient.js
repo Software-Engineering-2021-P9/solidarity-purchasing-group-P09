@@ -266,7 +266,7 @@ export async function createProduct(product) {
 }
 
 export async function findProducts(category, searchString) {
-  let urlRequest = "/api/products?";
+  let urlRequest = "/api/products/available?";
 
   if (searchString) {
     urlRequest += "searchString=" + searchString;
@@ -375,6 +375,30 @@ export async function setNextWeekProductAvailability(
   }
 }
 
+export async function getCurrentWeekProductAvailability(productID) {
+  const response = await fetch(
+    `/api/products/${productID}/availability/currentWeek`
+  );
+
+  switch (response.status) {
+    case 200:
+      let responseBody = await response.json();
+      return ProductAvailability.fromJSON(responseBody);
+    case 400:
+      throw new Error("Validation error occurred");
+    case 401:
+      throw new Error("Unauthorized");
+    case 404:
+      return null;
+    case 500:
+      throw new Error("Internal Server Error");
+    default:
+      throw new Error(
+        "An error occurred retrieving product's current week availability"
+      );
+  }
+}
+
 export async function getNextWeekProductAvailability(productID) {
   const response = await fetch(
     `/api/products/${productID}/availability/nextWeek`
@@ -396,6 +420,60 @@ export async function getNextWeekProductAvailability(productID) {
       throw new Error(
         "An error occurred retrieving product's next week availability"
       );
+  }
+}
+
+export async function updateProductAvailability(
+  productAvailabilityID,
+  quantity
+) {
+  var obj = {
+    quantity: parseInt(quantity),
+  };
+
+  const response = await fetch(`/api/availabilities/${productAvailabilityID}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ ...obj }),
+  });
+
+  switch (response.status) {
+    case 204:
+      return;
+    case 400:
+      throw new Error("Validation error occurred");
+    case 401:
+      throw new Error("Unauthorized");
+    case 404:
+      throw new Error("Not Found");
+    case 500:
+      throw new Error("Internal Server Error");
+    default:
+      throw new Error("An error occurred updating product availability");
+  }
+}
+
+export async function confirmProductAvailability(productAvailabilityID) {
+  const response = await fetch(
+    `/api/availabilities/${productAvailabilityID}/confirm`,
+    {
+      method: "PATCH",
+    }
+  );
+
+  switch (response.status) {
+    case 204:
+      return;
+    case 400:
+      throw new Error("Validation error occurred");
+    case 401:
+      throw new Error("Unauthorized");
+    case 404:
+      throw new Error("Not Found");
+    case 500:
+      throw new Error("Internal Server Error");
+    default:
+      throw new Error("An error occurred confirming product availability");
   }
 }
 

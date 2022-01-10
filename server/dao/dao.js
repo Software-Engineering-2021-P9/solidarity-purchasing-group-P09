@@ -37,6 +37,7 @@ const {
   getOrdersByClientID,
   completeOrder,
   getOrdersByClientIDList,
+  setPreparedOrdersToUnretrieved,
   getOrdersContainingProducts,
   updateOrders,
 } = require("./order");
@@ -49,6 +50,13 @@ const {
   findProductsByFarmerID,
   createProduct,
 } = require("./product");
+
+const {
+  countWeekUnretrievedOrders,
+  countWeekOrders,
+  countTimeIntervalUnretrievedOrders,
+  countTimeIntervalOrders,
+} = require("./stats");
 
 const {
   getTelegramUsers,
@@ -186,6 +194,8 @@ exports.getOrdersByClientID = (clientID) => getOrdersByClientID(db, clientID);
 exports.completeOrder = (orderID) => completeOrder(db, orderID);
 exports.getOrdersByClientIDList = (clientIDList) =>
   getOrdersByClientIDList(db, clientIDList);
+exports.setPreparedOrdersToUnretrieved = (week, year) =>
+  setPreparedOrdersToUnretrieved(db, week, year);
 exports.updateOrders = (orders) => updateOrders(db, orders);
 
 // User (Client, Farmer, Employee, Manager)
@@ -209,6 +219,29 @@ exports.getUserByEmail = async (email) => {
   }
   return usersFound[0];
 };
+
+// Stats
+exports.countWeekUnretrievedOrders = (week, year) =>
+  countWeekUnretrievedOrders(db, week, year);
+
+exports.countWeekOrders = (week, year) => countWeekOrders(db, week, year);
+
+exports.countTimeIntervalUnretrievedOrders = (
+  startWeek,
+  endWeek,
+  startYear,
+  endYear
+) =>
+  countTimeIntervalUnretrievedOrders(
+    db,
+    startWeek,
+    endWeek,
+    startYear,
+    endYear
+  );
+
+exports.countTimeIntervalOrders = (startWeek, endWeek, startYear, endYear) =>
+  countTimeIntervalOrders(db, startWeek, endWeek, startYear, endYear);
 
 //Telegram BOT
 exports.addTelegramUsers = (telegramUser) => addTelegramUsers(db, telegramUser);

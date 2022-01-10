@@ -3,6 +3,8 @@
 const dayjs = require("dayjs");
 const { WeekPhase } = require("./models/weekphase");
 const bot = require("../TelegramBot/telegramBot");
+var dao = require("../../dao/dao");
+const { getCurrentWeekClient } = require("../time_service");
 
 // Weekphases configuration
 // No overlapping phases are allowed
@@ -61,7 +63,7 @@ exports.weekphasesConfig = [
     "52200",
     "60900",
     "Europe/Rome",
-    weekphaseEightHandler
+    exports.weekphaseEightHandler
   ),
   new WeekPhase(
     "weekphase-9",
@@ -179,9 +181,17 @@ function weekphaseSevenHandler() {
 // Employee:
 //    - Can make orders (NWC)
 //    - Can update pickup time (NWC)
-function weekphaseEightHandler() {
+exports.weekphaseEightHandler = async () => {
   console.log("weekphase-8", dayjs().toISOString());
-}
+
+  try {
+    await dao.setPreparedOrdersToUnretrieved(...getCurrentWeekClient());
+  } catch (err) {
+    console.log(
+      `WeekphaseEightHandler() --> Couldn't set current week prepared orders to unretrieved: ${err}`
+    );
+  }
+};
 
 // - Weekphase 9 (SAT 09:00 - SUN 00:00):
 // Farmers:

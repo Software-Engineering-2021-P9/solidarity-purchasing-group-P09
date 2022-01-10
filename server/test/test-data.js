@@ -860,3 +860,87 @@ exports.userTelegramCollection = {
     },
   ],
 };
+
+exports.ordersCollection3 = {
+  orders: [
+    {
+      _id: ObjectID("6187c957b288576ca26f8251"),
+      clientID: ObjectID("6187c957b288576ca26f8257"),
+      products: [
+        { productID: "6187c957b288576ca26f8258", quantity: 3 },
+        { productID: "6187c957b288576ca26f8259", quantity: 1 },
+        { productID: "6187c957b288576ca26f8250", quantity: 2 },
+      ],
+      week: currentWeek,
+      year: currentYear,
+      status: "prepared",
+      totalPrice: "6",
+      createdAt: "2021-11-16T13:00:07.616Z",
+    },
+    {
+      _id: ObjectID("6187c957b288576ca26f8999"),
+      clientID: ObjectID("6187c957b288576ca26f8257"),
+      products: [
+        { productID: "6187c957b288576ca26f8258", quantity: 10 },
+        { productID: "6187c957b288576ca26f8259", quantity: 2 },
+      ],
+      week: currentWeek,
+      year: 2001,
+      status: "prepared",
+      totalPrice: "12",
+      createdAt: "2021-12-16T13:00:07.616Z",
+    },
+    {
+      _id: ObjectID("6187c957b288576ca26f8990"),
+      clientID: ObjectID("6187c957b288576ca26f8257"),
+      products: [
+        { productID: "6187c957b288576ca26f8258", quantity: 10 },
+        { productID: "6187c957b288576ca26f8259", quantity: 2 },
+      ],
+      week: currentWeek,
+      year: currentYear,
+      status: "waiting",
+      totalPrice: "12",
+      createdAt: "2021-12-16T13:00:07.616Z",
+    },
+    {
+      _id: ObjectID("6187c957b288576ca26f899a"),
+      clientID: ObjectID("6187c957b288576ca26f8257"),
+      products: [
+        { productID: "6187c957b288576ca26f8258", quantity: 10 },
+        { productID: "6187c957b288576ca26f8259", quantity: 2 },
+      ],
+      week: currentWeek,
+      year: currentYear,
+      status: "unretrieved",
+      totalPrice: "12",
+      createdAt: "2021-12-16T13:00:07.616Z",
+    },
+    {
+      _id: ObjectID("6187c957b288576ca26f89aa"),
+      clientID: ObjectID("6187c957b288576ca26f8257"),
+      products: [
+        { productID: "6187c957b288576ca26f8258", quantity: 10 },
+        { productID: "6187c957b288576ca26f8259", quantity: 2 },
+      ],
+      week: currentWeek - 2,
+      year: currentYear,
+      status: "unretrieved",
+      totalPrice: "12",
+      createdAt: "2021-12-16T13:00:07.616Z",
+    },
+    {
+      _id: ObjectID("6187c957b288576ca26f8aaa"),
+      clientID: ObjectID("6187c957b288576ca26f8257"),
+      products: [
+        { productID: "6187c957b288576ca26f8258", quantity: 10 },
+        { productID: "6187c957b288576ca26f8259", quantity: 2 },
+      ],
+      week: currentWeek + 1,
+      year: currentYear,
+      status: "unretrieved",
+      totalPrice: "12",
+      createdAt: "2021-12-16T13:00:07.616Z",
+    },
+  ],
+};

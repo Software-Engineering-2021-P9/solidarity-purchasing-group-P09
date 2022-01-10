@@ -249,6 +249,29 @@ exports.availabilityPackagingBodyValidator = body("packaging")
   .trim()
   .escape();
 
+// stats validators
+exports.weekQueryValidator = query("week")
+  .optional()
+  .notEmpty()
+  .bail()
+  .isInt({ min: 1, max: 53 });
+
+exports.yearQueryValidator = query("year").optional().notEmpty().bail().isInt();
+
+exports.startWeekQueryValidator = query("startWeek")
+  .notEmpty()
+  .bail()
+  .isInt({ min: 1, max: 53 });
+
+exports.endWeekQueryValidator = query("endWeek")
+  .notEmpty()
+  .bail()
+  .isInt({ min: 1, max: 53 });
+
+exports.startYearQueryValidator = query("startYear").notEmpty().bail().isInt();
+
+exports.endYearQueryValidator = query("endYear").notEmpty().bail().isInt();
+
 exports.telegramChatIDValidator = body("chatID")
   .notEmpty()
   .bail()

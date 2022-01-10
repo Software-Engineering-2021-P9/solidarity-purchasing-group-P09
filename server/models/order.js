@@ -35,6 +35,7 @@ const OrderStatus = {
   PREPARED: "prepared",
   DONE: "done",
   CANCELED: "canceled",
+  UNRETRIEVED: "unretrieved",
 };
 
 const ShipmentType = {

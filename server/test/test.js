@@ -2348,3 +2348,107 @@ describe("Managers API tests:", () => {
     });
   });
 });
+
+//
+//BOT tests
+//
+describe("Telgeram BOT API tests:", () => {
+  beforeEach(() => {
+    dao.open();
+    mongoUnit.load(testData.userTelegramCollection);
+    dao.createUniqueTelegramUserIndex();
+  });
+  afterEach(() => {
+    mongoUnit.drop();
+    dao.close();
+  });
+
+  describe("POST /telegram/users", () => {
+    it("it should write in the DB the new user", (done) => {
+      chai
+        .request(app)
+        .post("/api/telegram/users")
+        .send({ chatID: "100000001" })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          expect(res.body).to.be.an("object");
+          expect(res.body.acknowledged).to.be.eql(true);
+          done();
+        });
+    });
+
+    it("it should return an error if the chatID is not a integer", (done) => {
+      chai
+        .request(app)
+        .post("/api/telegram/users")
+        .send({ chatID: "100000000asdac" })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(400);
+          done();
+        });
+    });
+
+    it("it should return an error if the chatID is already present in the DB", (done) => {
+      chai
+        .request(app)
+        .post("/api/telegram/users")
+        .send({ chatID: "371107506" })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(500);
+          done();
+        });
+    });
+
+    it("it must fail when mongo fails", (done) => {
+      dao.close();
+      chai
+        .request(app)
+        .post("/api/telegram/users")
+        .send({ chatID: "100000000" })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(500);
+          done();
+        });
+    });
+  });
+
+  describe("GET /telegram/users", () => {
+    it("it should returns all telegram users", (done) => {
+      chai
+        .request(app)
+        .get("/api/telegram/users")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          expect(res.body).to.be.an("array");
+          expect(res.body).to.be.eql([
+            {
+              _id: "6187c957b288576ca26f8257",
+              chatID: 371107506,
+            },
+            {
+              _id: "6187c957b288576ca26f8252",
+              chatID: 1322211351,
+            },
+          ]);
+          done();
+        });
+    });
+
+    it("it must fail when mongo fails", (done) => {
+      dao.close();
+      chai
+        .request(app)
+        .get("/api/telegram/users")
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(500);
+          done();
+        });
+    });
+  });
+});

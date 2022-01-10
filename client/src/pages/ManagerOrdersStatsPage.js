@@ -209,7 +209,7 @@ function ManagerOrdersStatsPage(props) {
     };
     setInitializedBar(false);
     getBarReports();
-  }, [typeReports]);
+  }, [typeReports]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     const getFormReports = () => {

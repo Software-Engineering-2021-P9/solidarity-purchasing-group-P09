@@ -56,7 +56,7 @@ exports.createOrderHandler = async function (req, res, next) {
           `CreateOrder() -> couldn't retrieve order products availabilities: ${err}`
         );
         await session.abortTransaction();
-        return res.status(511).end();
+        return res.status(500).end();
       }
 
       let productAvailabilities = result.map((r) =>
@@ -101,7 +101,7 @@ exports.createOrderHandler = async function (req, res, next) {
           `CreateOrder() -> couldn't update product availabilities: ${err}`
         );
         await session.abortTransaction();
-        return res.status(512).end();
+        return res.status(500).end();
       }
 
       //GET CLIENT WALLET
@@ -110,7 +110,7 @@ exports.createOrderHandler = async function (req, res, next) {
       try {
         client = await dao.getClientByID(req.body.clientID.toString());
       } catch (err) {
-        return res.status(510).end();
+        return res.status(500).end();
       }
       if (!client) {
         console.error(
@@ -159,14 +159,14 @@ exports.createOrderHandler = async function (req, res, next) {
       } catch (err) {
         console.error(`CreateOrder() -> couldn't create order: ${err}`);
         await session.abortTransaction();
-        return res.status(513).end();
+        return res.status(500).end();
       }
 
       return res.json({ id: result.insertedId });
     });
   } catch (err) {
     console.error(`CreateOrder() -> Error initializing transaction: ${err}`);
-    return res.status(514).end();
+    return res.status(500).end();
   }
 };
 

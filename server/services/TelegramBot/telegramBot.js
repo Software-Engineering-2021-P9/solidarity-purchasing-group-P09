@@ -81,7 +81,6 @@ try {
   exports.WriteList = async function () {
     let users = [];
     users = await API.getTelegramUsers(URL);
-    console.log("Utenti: " + users);
     users.map((id) => {
       writeProductList(id.chatID);
     });

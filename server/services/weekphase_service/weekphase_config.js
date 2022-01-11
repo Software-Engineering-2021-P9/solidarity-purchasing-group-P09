@@ -2,8 +2,8 @@
 
 const dayjs = require("dayjs");
 const { WeekPhase } = require("./models/weekphase");
+const bot = require("../TelegramBot/telegramBot");
 var dao = require("../../dao/dao");
-const { getCurrentWeekClient } = require("../time_service");
 
 // Weekphases configuration
 // No overlapping phases are allowed
@@ -57,12 +57,8 @@ exports.weekphasesConfig = [
     "Europe/Rome",
     weekphaseSevenHandler
   ),
-  new WeekPhase(
-    "weekphase-8",
-    "52200",
-    "60900",
-    "Europe/Rome",
-    exports.weekphaseEightHandler
+  new WeekPhase("weekphase-8", "52200", "60900", "Europe/Rome", (params) =>
+    exports.weekphaseEightHandler(params)
   ),
   new WeekPhase(
     "weekphase-9",
@@ -180,11 +176,11 @@ function weekphaseSevenHandler() {
 // Employee:
 //    - Can make orders (NWC)
 //    - Can update pickup time (NWC)
-exports.weekphaseEightHandler = async () => {
+exports.weekphaseEightHandler = async (params) => {
   console.log("weekphase-8", dayjs().toISOString());
 
   try {
-    await dao.setPreparedOrdersToUnretrieved(...getCurrentWeekClient());
+    await dao.setPreparedOrdersToUnretrieved(...params.currentWeekClient);
   } catch (err) {
     console.log(
       `WeekphaseEightHandler() --> Couldn't set current week prepared orders to unretrieved: ${err}`
@@ -201,6 +197,14 @@ exports.weekphaseEightHandler = async () => {
 // Employee:
 //    - Can make orders (NWC)
 //    - Can update pickup time (NWC)
-function weekphaseNineHandler() {
+async function weekphaseNineHandler() {
   console.log("weekphase-9", dayjs().toISOString());
+
+  try {
+    //bot needs to write to every clients about the possibility to make new ordes
+    await bot.WriteList();
+  } catch (error) {
+    //if the bot was already deployed it will not work
+    console.error("Couldn't call the bot: " + error);
+  }
 }

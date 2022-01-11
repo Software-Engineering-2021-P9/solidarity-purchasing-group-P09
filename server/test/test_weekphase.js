@@ -191,6 +191,51 @@ exports.tests = (app, mongoUnit, testData, dao) => {
           });
       });
     });
+
+    describe("PATCH /testing/weekphases/next", () => {
+      it("it should set the override weekphase to the next weekphase", (done) => {
+        chai
+          .request(app)
+          .patch("/api/testing/weekphases/next")
+          .end((err, res) => {
+            expect(err).to.be.null;
+            expect(res.status).to.be.equal(204);
+            expect(weekphaseService.getCurrentWeekphase()).to.be.equal(
+              "weekphase-2"
+            );
+            expect(weekphaseService.getCurrentWeekClient()).to.be.eqls([
+              49, 2021,
+            ]);
+            expect(weekphaseService.getCurrentWeekFarmer()).to.be.eqls([
+              48, 2021,
+            ]);
+            done();
+          });
+      });
+    });
+
+    describe("PATCH /testing/weekphases/previous", () => {
+      it("it should set the override weekphase to the previous weekphase", (done) => {
+        chai
+          .request(app)
+          .patch("/api/testing/weekphases/previous")
+          .end((err, res) => {
+            expect(err).to.be.null;
+            expect(res.status).to.be.equal(204);
+            expect(weekphaseService.getCurrentWeekphase()).to.be.equal(
+              "weekphase-9"
+            );
+
+            expect(weekphaseService.getCurrentWeekClient()).to.be.eqls([
+              49, 2021,
+            ]);
+            expect(weekphaseService.getCurrentWeekFarmer()).to.be.eqls([
+              48, 2021,
+            ]);
+            done();
+          });
+      });
+    });
   });
 
   describe("Weekphase handlers tests:", () => {

@@ -120,7 +120,7 @@ exports.createOrderHandler = async function (req, res, next) {
 
       let orders;
       try{
-        orders = await dao.getOrdersByClientID(client);
+        orders = await dao.getOrdersByClientID(req.body.clientID);
       }catch(err){
         console.error(`getOrdersByClientID() -> couldn't retrieve client orders: ${err}`);
         return res.status(510).end(); 

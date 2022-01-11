@@ -123,7 +123,7 @@ exports.createOrderHandler = async function (req, res, next) {
         orders = await dao.getOrdersByClientID(client);
       }catch(err){
         console.error(`getOrdersByClientID() -> couldn't retrieve client orders: ${err}`);
-        return res.status(500).end(); 
+        return res.status(510).end(); 
       }
 
       orders = orders.filter(o => o.status==OrderStatus.WAITING || o.status==OrderStatus.NOTCOVERED);
@@ -174,14 +174,14 @@ exports.createOrderHandler = async function (req, res, next) {
       } catch (err) {
         console.error(`CreateOrder() -> couldn't create order: ${err}`);
         await session.abortTransaction();
-        return res.status(500).end();
+        return res.status(511).end();
       }
 
       return res.json({ id: result.insertedId });
     });
   } catch (err) {
     console.error(`CreateOrder() -> Error initializing transaction: ${err}`);
-    return res.status(500).end();
+    return res.status(512).end();
   }
 };
 

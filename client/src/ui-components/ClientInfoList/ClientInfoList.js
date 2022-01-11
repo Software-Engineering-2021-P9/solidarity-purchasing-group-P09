@@ -1,5 +1,4 @@
 import { Col, Container, Row, Spinner } from "react-bootstrap";
-import ClientInfoListHeader from "./ClientInfoListHeader";
 import ClientInfoListItem from "./ClientInfoListItem";
 
 function ClientInfoList(props) {
@@ -13,7 +12,6 @@ function ClientInfoList(props) {
   return (
     <Container>
       <Col>
-        <ClientInfoListHeader />
         {props.isLoading ? (
           <Container className='pt-5 d-flex justify-content-center'>
             <Spinner variant='dark' animation='border' />
@@ -31,15 +29,17 @@ function ClientInfoList(props) {
                 </Col>
               </Row>
             ) : (
-              <>
+              <Row md={3} sm={2} xs={1} className='my-3 d-flex '>
                 {props.clientInfoList?.map((item, index) => (
-                  <ClientInfoListItem
-                    key={"client-info-item-" + index}
-                    clientInfo={item}
-                    onClick={() => props.onItemClick(index)}
-                  />
+                  <Col>
+                    <ClientInfoListItem
+                      key={"client-info-item-" + index}
+                      clientInfo={item}
+                      onClick={() => props.onItemClick(index)}
+                    />
+                  </Col>
                 ))}
-              </>
+              </Row>
             )}
           </>
         )}

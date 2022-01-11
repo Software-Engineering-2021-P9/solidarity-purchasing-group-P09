@@ -3,26 +3,20 @@ import React, { useContext, useEffect, useState } from "react";
 import { useHistory, useParams, useLocation } from "react-router";
 import { getAvailableNavbarLinks } from "../Routes";
 
-import {
-  Col,
-  Container,
-  FormControl,
-  InputGroup,
-  Row,
-  Spinner,
-  Alert,
-} from "react-bootstrap";
+import { Col, Container, Row, Spinner, Alert } from "react-bootstrap";
 
 import ActionConfirmationModal from "../ui-components/ActionConfirmationModal/ActionConfirmationModal";
-import Button from "../ui-components/Button/Button";
 import ClientDetails from "../ui-components/ClientDetails/ClientDetails";
 import { ClientOrders } from "../ui-components/ClientOrdersComponent/ClientOrders";
 import Divider from "../ui-components/Divider/Divider";
 import ErrorToast from "../ui-components/ErrorToast/ErrorToast";
 import { NavbarComponent } from "../ui-components/NavbarComponent/NavbarComponent";
-import { CreateNewOrderButton } from "../ui-components/ClientDetailsComponent/CreateNewOrderButton";
 
-import { addFundToWallet, getClientByID } from "../services/ApiClient";
+import {
+  addFundToWallet,
+  getClientByID,
+  getOrders,
+} from "../services/ApiClient";
 
 import { AuthContext } from "../contexts/AuthContextProvider";
 
@@ -56,6 +50,7 @@ function ClientDetailsPage(props) {
     useState(null);
   const [isActionLoading, setIsActionLoading] = useState(false);
 
+  const [orders, setOrders] = useState([]);
   useEffect(() => {
     if (!clientID) {
       history.push("/");
@@ -67,11 +62,17 @@ function ClientDetailsPage(props) {
           setClientInfo(result);
           setIsInitialized(true);
           setMustReload(false);
+
+          //fetch orders:
+          getOrders(result.id).then((newO) => {
+            setOrders(newO);
+          });
         })
         .catch((err) =>
           setRequestError("Failed to fetch client data: " + err.message)
         );
     };
+
     getClientInfo();
   }, [clientID, history, mustReload]);
 
@@ -121,7 +122,7 @@ function ClientDetailsPage(props) {
       {location.state != null && show ? (
         <Row>
           <Alert
-            variant='success'
+            variant="success"
             style={{
               color: "#635F46",
               fontWeight: "bold",
@@ -131,7 +132,8 @@ function ClientDetailsPage(props) {
               marginLeft: "1%",
             }}
             onClose={() => setShow(false)}
-            dismissible>
+            dismissible
+          >
             {authContext.currentUser.role === UserRoles.CLIENT &&
               "Your order was successfully created"}
             {authContext.currentUser.role === UserRoles.EMPLOYEE &&
@@ -143,45 +145,35 @@ function ClientDetailsPage(props) {
       )}
 
       {!isInitialized ? (
-        <Container className='pt-5 d-flex justify-content-center'>
-          <Spinner variant='dark' animation='border' />
+        <Container className="pt-5 d-flex justify-content-center">
+          <Spinner variant="dark" animation="border" />
         </Container>
       ) : (
         <>
           <Row>
-            <h1 className='title'>Client Details</h1>
+            <h1 className="title title-font">Client Details</h1>
           </Row>
-          <Row className='justify-content-around pt-2'>
-            <Col className='ms-5'>
-              <ClientDetails clientInfo={clientInfo} />
+          <Row className="justify-content-between pt-2">
+            <Col className="">
+              <ClientDetails
+                clientInfo={clientInfo}
+                loggedUser={authContext.currentUser}
+                fundsToAddAmount={fundsToAddAmount}
+                onFundsToAddAmountChange={onFundsToAddAmountChange}
+                onAddFundsToWalletButtonClick={onAddFundsToWalletButtonClick}
+                ordersLength={orders.length}
+              />
             </Col>
-            {authContext.currentUser.role === UserRoles.EMPLOYEE && (
-              <Col md='5'>
-                <InputGroup className='mb-3 pt-4'>
-                  <FormControl
-                    placeholder='50€'
-                    value={fundsToAddAmount}
-                    onChange={onFundsToAddAmountChange}
-                    required
-                  />
-                  <Button onClick={onAddFundsToWalletButtonClick}>
-                    Add funds
-                  </Button>
-                </InputGroup>
-              </Col>
-            )}
           </Row>
-          {authContext.currentUser.role === UserRoles.EMPLOYEE && (
-            <Row className='my-3'>
-              <CreateNewOrderButton clientID={clientID} />
-            </Row>
-          )}
-
           <Container>
             <Divider size={2} />
           </Container>
           <Row>
-            <ClientOrders clientID={clientID} />
+            <ClientOrders
+              loggedUser={authContext.currentUser}
+              clientID={clientID}
+              orders={orders}
+            />
           </Row>
         </>
       )}

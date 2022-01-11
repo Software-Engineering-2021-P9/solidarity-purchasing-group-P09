@@ -7,6 +7,8 @@ const {
   getEmployeeByEmail,
 } = require("./employee");
 
+const { getManagerByID, getManagerByEmail } = require("./manager");
+
 const { getFarmerByID, getFarmerByEmail } = require("./farmer");
 
 const {
@@ -16,8 +18,6 @@ const {
   createClientsTextSearchIndexes,
   createClient,
   signupClient,
-  getUserById,
-  getUser,
   getClientByEmail,
 } = require("./client");
 
@@ -25,14 +25,22 @@ const {
   getProductsAvailability,
   getProductAvailability,
   setProductAvailability,
-} = require("./productAvailability");
+  getProductAvailabilityByID,
+  updateProductAvailability,
+  confirmProductAvailability,
+  updateProductAvailabilities,
+} = require("./product_availability");
 
 const {
   createOrder,
   getOrderByID,
-  deleteOrder,
   getOrdersByClientID,
+  updateOrderStatusToWaiting,
   completeOrder,
+  getOrdersByClientIDList,
+  setPreparedOrdersToUnretrieved,
+  getOrdersContainingProducts,
+  updateOrders,
 } = require("./order");
 
 const {
@@ -44,9 +52,23 @@ const {
   createProduct,
 } = require("./product");
 
+const {
+  countWeekUnretrievedOrders,
+  countWeekOrders,
+  countTimeIntervalUnretrievedOrders,
+  countTimeIntervalOrders,
+} = require("./stats");
+
+const {
+  getTelegramUsers,
+  addTelegramUsers,
+  createUniqueTelegramUserIndex,
+} = require("./bot");
+
 const { ClientInfo } = require("../models/client_info");
 const { EmployeeInfo } = require("../models/employee_info");
 const { FarmerInfo } = require("../models/farmer_info");
+const { ManagerInfo } = require("../models/manager_info");
 
 // DAO initialization
 // Only one instance can be open at a time. Subsequent calls has no effect.
@@ -72,6 +94,23 @@ exports.close = () => {
   client = null;
 };
 
+// Runs the passed callback in a single mongodb transaction.
+exports.runInTransaction = (callback) => {
+  const session = client.startSession();
+
+  const transactionOptions = {
+    readPreference: "primary",
+    readConcern: { level: "local" },
+    writeConcern: { w: "majority" },
+  };
+
+  return session
+    .withTransaction(() => callback(session), transactionOptions)
+    .finally(() => {
+      session.endSession();
+    });
+};
+
 // Exported database access methods
 // Employee
 exports.getEmployeeByID = (employeeID) => getEmployeeByID(db, employeeID);
@@ -86,37 +125,41 @@ exports.getFarmerByEmail = (email) => getFarmerByEmail(db, email);
 
 // Client
 exports.getClientByID = (clientID) => getClientByID(db, clientID);
-
-exports.createClient = (fullName, phoneNumber, email, address, wallet) =>
-  createClient(db, fullName, phoneNumber, email, address, wallet);
-
-exports.signupClient = (
-  fullName,
-  phoneNumber,
-  email,
-  password,
-  address,
-  wallet
-) => signupClient(db, fullName, phoneNumber, email, password, address, wallet);
-
+exports.createClient = (fullName, phoneNumber, email, address) =>
+  createClient(db, fullName, phoneNumber, email, address);
+exports.signupClient = (fullName, phoneNumber, email, password, address) =>
+  signupClient(db, fullName, phoneNumber, email, password, address);
 exports.findClients = (searchString) => findClients(db, searchString);
 exports.addFundToWallet = (clientID, increaseBy) =>
   addFundToWallet(db, clientID, increaseBy);
+exports.createClientsTextSearchIndexes = () =>
+  createClientsTextSearchIndexes(db);
+
+//Manager
+exports.getManagerByID = (managerID) => getManagerByID(db, managerID);
+exports.getManagerByEmail = (email) => getManagerByEmail(db, email);
 
 // Product
+exports.getProductByID = (productID) => getProductByID(db, productID);
 exports.getProductsByIDs = (ids) => getProductsByIDs(db, ids);
 exports.findProducts = (searchString, category) =>
   findProducts(db, searchString, category);
+exports.findProductsByFarmerID = (farmerID, searchString, category) =>
+  findProductsByFarmerID(db, farmerID, searchString, category);
+exports.createProduct = (farmerID, name, description, category) =>
+  createProduct(db, farmerID, name, description, category);
 
 exports.createProductsTextSearchIndexes = () => {
   createProductsTextSearchIndexes(db);
 };
 
+// ProductAvailability
+exports.getProductAvailabilityByID = (availabilityID) =>
+  getProductAvailabilityByID(db, availabilityID);
 exports.getProductsAvailability = (listOfIDs, week, year) =>
   getProductsAvailability(db, listOfIDs, week, year);
 exports.getProductAvailability = (productID, week, year) =>
   getProductAvailability(db, productID, week, year);
-exports.getProductByID = (productID) => getProductByID(db, productID);
 exports.setProductAvailability = (
   farmerID,
   productID,
@@ -136,33 +179,40 @@ exports.setProductAvailability = (
     packaging,
     quantity
   );
-exports.findProductsByFarmerID = (farmerID, searchString, category) =>
-  findProductsByFarmerID(db, farmerID, searchString, category);
-exports.createProduct = (farmerID, name, description, category) =>
-  createProduct(db, farmerID, name, description, category);
+exports.updateProductAvailability = (availabilityID, quantity) =>
+  updateProductAvailability(db, availabilityID, quantity);
+exports.confirmProductAvailability = (availabilityID) =>
+  confirmProductAvailability(db, availabilityID);
+exports.updateProductAvailabilities = (productAvailabilities) =>
+  updateProductAvailabilities(db, productAvailabilities);
 
 // Order
-exports.createOrder = (clientID, products, status, totalPrice, createdAt) =>
-  createOrder(db, clientID, products, status, totalPrice, createdAt);
+exports.createOrder = (order) => createOrder(db, order);
 exports.getOrderByID = (orderID) => getOrderByID(db, orderID);
-exports.deleteOrder = (orderID) => deleteOrder(db, orderID);
+exports.getOrdersContainingProducts = (productID, week, year, sortByCreation) =>
+  getOrdersContainingProducts(db, productID, week, year, sortByCreation);
 exports.getOrdersByClientID = (clientID) => getOrdersByClientID(db, clientID);
+exports.updateOrderStatusToWaiting = (orderID) => updateOrderStatusToWaiting(db, orderID);
 exports.completeOrder = (orderID) => completeOrder(db, orderID);
+exports.getOrdersByClientIDList = (clientIDList) =>
+  getOrdersByClientIDList(db, clientIDList);
+exports.setPreparedOrdersToUnretrieved = (week, year) =>
+  setPreparedOrdersToUnretrieved(db, week, year);
+exports.updateOrders = (orders) => updateOrders(db, orders);
 
-exports.createClientsTextSearchIndexes = () =>
-  createClientsTextSearchIndexes(db);
-
-// User (Client, Farmer, Employee)
+// User (Client, Farmer, Employee, Manager)
 exports.getUserByEmail = async (email) => {
   let usersFound = await Promise.all([
     getClientByEmail(db, email),
     getFarmerByEmail(db, email),
     getEmployeeByEmail(db, email),
-  ]).then(([clientInfo, farmerInfo, employeeInfo]) => {
+    getManagerByEmail(db, email),
+  ]).then(([clientInfo, farmerInfo, employeeInfo, managerInfo]) => {
     let users = [];
     if (clientInfo) users.push(ClientInfo.fromMongoJSON(clientInfo));
     if (farmerInfo) users.push(FarmerInfo.fromMongoJSON(farmerInfo));
     if (employeeInfo) users.push(EmployeeInfo.fromMongoJSON(employeeInfo));
+    if (managerInfo) users.push(ManagerInfo.fromMongoJSON(managerInfo));
     return users;
   });
 
@@ -171,3 +221,31 @@ exports.getUserByEmail = async (email) => {
   }
   return usersFound[0];
 };
+
+// Stats
+exports.countWeekUnretrievedOrders = (week, year) =>
+  countWeekUnretrievedOrders(db, week, year);
+
+exports.countWeekOrders = (week, year) => countWeekOrders(db, week, year);
+
+exports.countTimeIntervalUnretrievedOrders = (
+  startWeek,
+  endWeek,
+  startYear,
+  endYear
+) =>
+  countTimeIntervalUnretrievedOrders(
+    db,
+    startWeek,
+    endWeek,
+    startYear,
+    endYear
+  );
+
+exports.countTimeIntervalOrders = (startWeek, endWeek, startYear, endYear) =>
+  countTimeIntervalOrders(db, startWeek, endWeek, startYear, endYear);
+
+//Telegram BOT
+exports.addTelegramUsers = (telegramUser) => addTelegramUsers(db, telegramUser);
+exports.getTelegramUsers = () => getTelegramUsers(db);
+exports.createUniqueTelegramUserIndex = () => createUniqueTelegramUserIndex(db);

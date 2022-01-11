@@ -1,7 +1,7 @@
 "use strict";
 
-const { ObjectId } = require("bson");
-const { OrderProduct, OrderStatus } = require("../models/order");
+const { ObjectID } = require("bson");
+const { OrderStatus } = require("../models/order");
 
 const orderCollectionName = "orders";
 
@@ -9,33 +9,15 @@ const orderCollectionName = "orders";
 // Create Order
 // ------------
 
-exports.createOrder = async (
-  db,
-  clientID,
-  products,
-  status,
-  totalPrice,
-  createdAt
-) => {
-  const mongoProducts = products?.map(
-    (p) => new OrderProduct(ObjectId(p.productID), p.quantity)
-  );
-
-  const newOrder = {
-    clientID: ObjectId(clientID),
-    products: mongoProducts,
-    status: status,
-    totalPrice: totalPrice,
-    createdAt: createdAt,
-  };
-
-  return db.collection(orderCollectionName).insertOne(newOrder);
+exports.createOrder = async (db, order) => {
+  return db.collection(orderCollectionName).insertOne(order);
 };
 
 exports.getOrdersByClientID = async (db, clientID) => {
   return db
     .collection(orderCollectionName)
-    .find({ clientID: ObjectId(clientID) })
+    .find({ clientID: ObjectID(clientID) })
+    .sort({ createdAt: -1 })
     .toArray();
 };
 // ------------
@@ -43,15 +25,39 @@ exports.getOrdersByClientID = async (db, clientID) => {
 // ------------
 
 exports.getOrderByID = async (db, orderID) => {
-  return db.collection(orderCollectionName).findOne(ObjectId(orderID));
+  return db.collection(orderCollectionName).findOne(ObjectID(orderID));
 };
 
 // -----------
-// DeleteOrder
+// UpdateOrderStatus
 // -----------
 
-exports.deleteOrder = async (db, orderID) => {
-  return db.collection(orderCollectionName).deleteOne(ObjectId(orderID));
+exports.updateOrderStatusToWaiting = (db, orderID) => {
+  var query = { _id: ObjectID(orderID) };
+  var update = { $set: {status: OrderStatus.WAITING} };
+  return db.collection(orderCollectionName).updateOne(query, update, { returnDocument: 'after' });
+}
+// --------------------------
+// GetOrdersContainingProduct
+// --------------------------
+
+exports.getOrdersContainingProducts = (
+  db,
+  productID,
+  week,
+  year,
+  sortByCreation
+) => {
+  return db
+    .collection(orderCollectionName)
+    .find({
+      status: OrderStatus.WAITING,
+      week: week,
+      year: year,
+      "products.productID": productID,
+    })
+    .sort({ createdAt: sortByCreation })
+    .toArray();
 };
 
 // -------------
@@ -59,7 +65,49 @@ exports.deleteOrder = async (db, orderID) => {
 // -------------
 
 exports.completeOrder = async (db, orderID) => {
-  const query = { _id: ObjectId(orderID), status: OrderStatus.PREPARED };
+  const query = { _id: ObjectID(orderID), status: OrderStatus.PREPARED };
   const update = { $set: { status: OrderStatus.DONE } };
   return db.collection(orderCollectionName).updateOne(query, update);
+};
+
+// ------------
+// UpdateOrders
+// ------------
+
+exports.updateOrders = async (db, orders) => {
+  const bulkData = orders.map((order) => {
+    if (!order._id) {
+      order._id = order.id;
+      delete order.id;
+    }
+    return {
+      replaceOne: {
+        upsert: false,
+        filter: {
+          _id: order._id,
+        },
+        replacement: order,
+      },
+    };
+  });
+  return db.collection(orderCollectionName).bulkWrite(bulkData);
+};
+
+// -----------------------
+// GetOrdersByClientIDList
+// -----------------------
+
+exports.getOrdersByClientIDList = async (db, clientIDList) => {
+  const query = { clientID: { $in: clientIDList } };
+
+  return db.collection(orderCollectionName).find(query).toArray();
+};
+
+exports.setPreparedOrdersToUnretrieved = async (db, week, year) => {
+  const query = {
+    $and: [{ week: week }, { year: year }, { status: OrderStatus.PREPARED }],
+  };
+  const data = { $set: { status: OrderStatus.UNRETRIEVED } };
+
+  return db.collection(orderCollectionName).updateMany(query, data);
 };

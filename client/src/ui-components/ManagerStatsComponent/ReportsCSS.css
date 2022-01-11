@@ -1,0 +1,101 @@
+.title-reports {
+  font-style: normal;
+  font-weight: bold;
+  font-size: 30px;
+  line-height: 30px;
+  color: #635f46;
+}
+
+.total-orders {
+  font-style: normal;
+  font-weight: bold;
+  font-size: 26px;
+  margin-bottom: 5px;
+  color: #000000;
+}
+
+.comment-stats {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 20px;
+  line-height: 20px;
+  color: #6a6764;
+}
+
+.icon-centre {
+  align-self: center;
+}
+
+.pie-text {
+  font-weight: bold;
+}
+
+.container-this-week {
+  background: #fafafa;
+  border: 1px solid #d8d8d8;
+  box-sizing: border-box;
+  border-radius: 15px;
+  min-width: 300px;
+}
+
+.comments-week-stats {
+  color: #6a6764;
+  font-weight: 600;
+  margin-left: 1px;
+}
+
+.form-size {
+  min-width: 130px !important;
+  max-width: 130px !important;
+  margin-left: 0px !important;
+  margin-top: 10px;
+}
+
+.stats-subtitle {
+  font-style: normal;
+  font-weight: bold;
+  font-size: 18px;
+  line-height: 22px;
+  color: #635f46;
+}
+.green-text {
+  color: green;
+}
+
+.red-text {
+  color: red;
+}
+
+.custom-tooltip {
+  background-color: #ffffffe8;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.unretrieved-info {
+  color: #db9471;
+}
+.total-info {
+  color: #b2b6bd;
+}
+.label-tooltip {
+  font-weight: bold;
+}
+
+@media only screen and (max-width: 577px) {
+  .add-space {
+    margin-top: 20px;
+  }
+}
+@media only screen and (max-width: 755px) {
+  .media-margin {
+    margin-left: 0px !important;
+    padding-left: 0px !important;
+  }
+}
+@media only screen and (max-width: 368px) {
+  .media-margin-left {
+    margin-left: 20px !important;
+    margin-top: 5px !important;
+  }
+}

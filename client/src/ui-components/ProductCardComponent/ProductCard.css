@@ -1,40 +1,118 @@
-.text {
-  color: #68717a !important;
+.card {
+  /* Stroke/light */
+  border: 1px solid #dee2e6;
+  box-sizing: border-box;
+  /*box-shadow: 7px 20px 20px rgba(0, 0, 0, 0.25);*/
+  border-radius: 20px;
+  width: 100%;
+  /*margin-bottom: 10%;*/
+}
+
+.card-img {
+  border-radius: 20px;
+}
+
+.body {
+  min-height: 250px !important;
 }
 
 .card-title {
   color: black !important;
-  font-weight: 600 !important;
-  font-size: x-large !important;
+  margin-bottom: 0px !important;
+  font-weight: 650;
+  font-size: 23px;
+  line-height: 34px;
 }
 
-.body {
-  min-height: 170px !important;
+.min-height {
+  min-height: 165px;
 }
 
-.footer{
-  background-color: transparent;
+.product-price {
+  font-style: normal;
+  font-weight: 800;
+  font-size: 22px;
+  line-height: 34px;
+  /* identical to box height, or 109% */
+  text-align: right;
+  color: #db9471;
+  vertical-align: top;
 }
 
-.add-to-cart-button{
+.packaging-text {
+  margin-left: 10px;
+}
+
+.card-text {
+  color: #68717a !important;
+  font-family: sans-serif;
+  font-style: normal;
+  font-size: 16px;
+  font-weight: lighter;
+}
+
+.description {
+  min-height: 50px;
+}
+
+.bg-progressbar {
+  padding-left: 0 !important;
+  margin: 0;
+  background-color: #db9471 !important;
+  border-radius: 20px;
+}
+.bg-progressbar-5 {
+  padding-left: 0 !important;
+  margin: 0;
+  background-color: #db4a3f !important;
+  border-radius: 20px;
+}
+.progressbar-row {
+  margin-left: 0px;
+  margin-right: 0px;
+  text-align: center;
+  color: #68717a;
+}
+
+.add-to-cart-button {
   background-color: transparent !important;
-  color:  #635f46;
+  color: black;
   width: auto !important;
-  border: 1px solid black;
-  border-color: #635f46 ;
+  border: 0px solid black;
+  border-color: #635f46;
+  font-weight: bold;
+  padding: 0%;
 }
 
-.add-to-cart-button:hover{
-  background-color:  #7465132f;
-  color:  #635f46;
+.add-to-cart-button:hover {
+  background-color: #7465132f;
+  color: black;
   width: auto !important;
   border: 1px solid black;
-  border-color: #635f46 ;
+  border-color: #635f46;
+  padding: 0%;
 }
 
-.add-to-cart-button:focus{
-  background-color:  #74651365;
-  color:  #635f46;
+.add-to-cart-button:focus {
+  background-color: #74651365;
+  color: #635f46;
   border: 1px solid black;
-  border-color: #635f46 ;
+  border-color: #635f46;
+  padding: 0%;
+}
+
+.form-input-gt10 {
+  border-radius: 20px;
+  max-width: 60px;
+  height: 30px;
+}
+
+.delete-icon {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.footer {
+  background-color: transparent;
+  height: 50px;
 }

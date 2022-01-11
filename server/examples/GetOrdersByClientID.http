@@ -1,0 +1,2 @@
+GET http://localhost:3001/api/orders?clientID=61a4e5d01615e4bdb8c79e4f HTTP/1.1
+Content-Type: application/json

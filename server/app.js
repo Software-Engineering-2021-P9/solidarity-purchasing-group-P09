@@ -7,9 +7,12 @@ const passport = require("passport");
 
 var dao = require("./dao/dao");
 
+var weekphaseService = require("./services/weekphase_service/weekphase_service");
+
 const {
   checkValidationErrorMiddleware,
 } = require("./handlers/shared_validators");
+
 var userHandlers = require("./handlers/user");
 
 var employeeHandlers = require("./handlers/employee");
@@ -20,7 +23,16 @@ var orderHandlers = require("./handlers/order");
 
 var productHandlers = require("./handlers/product");
 
+var productAvailabilityHandlers = require("./handlers/product_availability");
+
 var farmerHandlers = require("./handlers/farmer");
+
+var managerHandlers = require("./handlers/manager");
+
+var weekphaseHandlers = require("./handlers/weekphase");
+
+var statsHandlers = require("./handlers/stats");
+var botHandlers = require("./handlers/bot");
 
 const {
   sessionSettings,
@@ -29,6 +41,9 @@ const {
   deserializeUser,
 } = require("./services/auth_service");
 
+// ------------
+// SERVER SETUP
+// ------------
 const port = process.env.PORT || 3001;
 const buildAPIPath = (apiPath) => "/api" + apiPath;
 
@@ -41,6 +56,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(cors());
 
+// ----------
+// AUTH SETUP
+// ----------
 passport.use(passportStrategy);
 passport.serializeUser(serializeUser);
 passport.deserializeUser(deserializeUser);
@@ -48,11 +66,13 @@ app.use(sessionSettings);
 app.use(passport.initialize());
 app.use(passport.session());
 
+// -----------------------
+// SERVICES INITIALIZATION
+// -----------------------
 dao.open();
+weekphaseService.init();
 
-// -------------
-// login methods
-// -------------
+// ------------- // login methods // -------------
 
 app.post(buildAPIPath("/users/login"), userHandlers.loginHandler(passport));
 app.get(buildAPIPath("/users/current"), userHandlers.getCurrentUserHandler);
@@ -74,6 +94,17 @@ app.post(
   employeeHandlers.createEmployeeHandlerValidatorChain,
   checkValidationErrorMiddleware,
   employeeHandlers.createEmployeeHandler
+);
+
+// --------
+// managers
+// --------
+
+app.get(
+  buildAPIPath("/managers/:managerID"),
+  managerHandlers.getManagerByIDValidatorChain,
+  checkValidationErrorMiddleware,
+  managerHandlers.getManagerByIDHandler
 );
 
 // --------
@@ -121,6 +152,14 @@ app.post(
 
 app.post(
   buildAPIPath("/orders"),
+  /*   weekphaseService.checkWeekphaseMiddleware([
+    "weekphase-1",
+    "weekphase-5",
+    "weekphase-6",
+    "weekphase-7",
+    "weekphase-8",
+    "weekphase-9",
+  ]), */
   orderHandlers.createOrderValidatorChain,
   checkValidationErrorMiddleware,
   orderHandlers.createOrderHandler
@@ -140,9 +179,23 @@ app.patch(
   orderHandlers.completeOrderHandler
 );
 
+app.get(
+  buildAPIPath("/orders/:orderID"),
+  orderHandlers.getOrderByIDValidatorChain,
+  checkValidationErrorMiddleware,
+  orderHandlers.getOrderByID
+);
+
 // ---------
 // /products
 // ---------
+
+app.get(
+  buildAPIPath("/products/available"),
+  productHandlers.findAvailableProductsValidatorChain,
+  checkValidationErrorMiddleware,
+  productHandlers.findAvailableProductsHandler
+);
 
 app.get(
   buildAPIPath("/products"),
@@ -159,25 +212,57 @@ app.get(
 );
 
 app.post(
-  buildAPIPath("/products/:productID/availability"),
-  productHandlers.setNextWeekProductAvailabilityValidatorChain,
-  checkValidationErrorMiddleware,
-  productHandlers.setNextWeekProductAvailabilityHandler
-);
-
-app.get(
-  buildAPIPath("/products/:productID/availability/nextWeek"),
-  productHandlers.getNextWeekProductAvailabilityValidatorChain,
-  checkValidationErrorMiddleware,
-  productHandlers.getNextWeekProductAvailability
-);
-
-app.post(
   buildAPIPath("/products"),
   productHandlers.createProductValidatorChain,
   checkValidationErrorMiddleware,
   productHandlers.createProductHandler
 );
+
+// ---------------
+// /availabilities
+// ---------------
+app.get(
+  buildAPIPath("/availabilities/:availabilityID"),
+  productAvailabilityHandlers.getProductAvailabilityByIDValidatorChain,
+  checkValidationErrorMiddleware,
+  productAvailabilityHandlers.getProductAvailabilityByIDHandler
+);
+
+app.post(
+  buildAPIPath("/products/:productID/availability"),
+  productAvailabilityHandlers.setNextWeekProductAvailabilityValidatorChain,
+  checkValidationErrorMiddleware,
+  productAvailabilityHandlers.setNextWeekProductAvailabilityHandler
+);
+
+app.get(
+  buildAPIPath("/products/:productID/availability/nextWeek"),
+  productAvailabilityHandlers.getNextWeekProductAvailabilityValidatorChain,
+  checkValidationErrorMiddleware,
+  productAvailabilityHandlers.getNextWeekProductAvailability
+);
+
+app.get(
+  buildAPIPath("/products/:productID/availability/currentWeek"),
+  productAvailabilityHandlers.getCurrentWeekProductAvailabilityValidatorChain,
+  checkValidationErrorMiddleware,
+  productAvailabilityHandlers.getCurrentWeekProductAvailability
+);
+
+app.patch(
+  buildAPIPath("/availabilities/:availabilityID/confirm"),
+  productAvailabilityHandlers.confirmProductAvailabilityValidatorChain,
+  checkValidationErrorMiddleware,
+  productAvailabilityHandlers.confirmProductAvailabilityHandler
+);
+
+app.patch(
+  buildAPIPath("/availabilities/:availabilityID"),
+  productAvailabilityHandlers.updateProductAvailabilityValidatorChain,
+  checkValidationErrorMiddleware,
+  productAvailabilityHandlers.updateProductAvailabilityHandler
+);
+
 // --------
 // /farmers
 // --------
@@ -187,6 +272,67 @@ app.get(
   farmerHandlers.getFarmerProductsValidatorChain,
   checkValidationErrorMiddleware,
   farmerHandlers.getFarmerProductsHandler
+);
+
+// -----------
+// /weekphases
+// -----------
+
+app.get(
+  buildAPIPath("/weekphases/current"),
+  weekphaseHandlers.getCurrentWeekphaseHandler
+);
+
+app.patch(
+  buildAPIPath("/testing/weekphases/current"),
+  weekphaseHandlers.setWeekphaseOverrideValidatorChain,
+  checkValidationErrorMiddleware,
+  weekphaseHandlers.setWeekphaseOverrideHandler
+);
+
+app.patch(
+  buildAPIPath("/testing/weekphases/next"),
+  weekphaseHandlers.setNextWeekphaseOverrideHandler
+);
+
+app.patch(
+  buildAPIPath("/testing/weekphases/previous"),
+  weekphaseHandlers.setPreviousWeekphaseOverrideHandler
+);
+
+// ------
+// /stats
+// ------
+
+app.get(
+  buildAPIPath("/stats/orders/unretrieved/weekly"),
+  statsHandlers.weeklyUnretrievedOrdersStatsValidatorChain,
+  checkValidationErrorMiddleware,
+  statsHandlers.weeklyUnretrievedOrdersStatsHandler
+);
+
+app.get(
+  buildAPIPath("/stats/orders/unretrieved/timeInterval"),
+  statsHandlers.timeIntervalUnretrievedOrdersStatsValidatorChain,
+  checkValidationErrorMiddleware,
+  statsHandlers.timeIntervalUnretrievedOrdersStatsHandler
+);
+
+// ---------
+// /telegram
+// ---------
+
+app.get(
+  buildAPIPath("/telegram/users"),
+  checkValidationErrorMiddleware,
+  botHandlers.getTelegramUsersHandler
+);
+
+app.post(
+  buildAPIPath("/telegram/users"),
+  botHandlers.addTelegramUsersValidatorChain,
+  checkValidationErrorMiddleware,
+  botHandlers.addTelegramUsersHandler
 );
 
 // Serve client app

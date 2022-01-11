@@ -1,8 +1,9 @@
 var dao = require("../dao/dao");
 const { Product } = require("../models/product");
 const { ProductAvailability } = require("../models/product_availability");
-const dayjs = require("dayjs");
-const { getNextWeek } = require("../services/time_service");
+const {
+  getNextWeekFarmer,
+} = require("../services/weekphase_service/weekphase_service");
 const {
   searchStringValidator,
   productCategoryValidator,
@@ -36,7 +37,7 @@ exports.getFarmerProductsHandler = async function (req, res, next) {
   try {
     productsAvailabilitiesResult = await dao.getProductsAvailability(
       productsResult.map((product) => product._id),
-      ...getNextWeek(dayjs())
+      ...getNextWeekFarmer()
     );
   } catch (err) {
     console.error(

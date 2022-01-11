@@ -2,6 +2,7 @@
 
 const dayjs = require("dayjs");
 const { WeekPhase } = require("./models/weekphase");
+const bot = require("../TelegramBot/telegramBot");
 var dao = require("../../dao/dao");
 
 // Weekphases configuration
@@ -196,6 +197,14 @@ exports.weekphaseEightHandler = async (params) => {
 // Employee:
 //    - Can make orders (NWC)
 //    - Can update pickup time (NWC)
-function weekphaseNineHandler() {
+async function weekphaseNineHandler() {
   console.log("weekphase-9", dayjs().toISOString());
+
+  try {
+    //bot needs to write to every clients about the possibility to make new ordes
+    await bot.WriteList();
+  } catch (error) {
+    //if the bot was already deployed it will not work
+    console.error("Couldn't call the bot: " + error);
+  }
 }

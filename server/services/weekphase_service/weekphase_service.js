@@ -186,7 +186,6 @@ exports.getCurrentWeekClient = () => {
 
 const normalizeClientWeek = (now, currentWeek, currentYear) => {
   // If weekphase override is active and the weekphase goes above the next week boundary, increase the current week considering the current weekphase
-  // TODO: debug this
   if (overrideWeekphaseID) {
     currentWeek += clientWeekIncrease;
   } else if (

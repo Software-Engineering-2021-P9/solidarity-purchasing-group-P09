@@ -206,7 +206,9 @@ exports.tests = (app, mongoUnit, testData, dao) => {
       });
 
       it("It should set to unretrieved only the order with id: 6187c957b288576ca26f8251", (done) => {
-        weekphaseEightHandler().then(() =>
+        weekphaseEightHandler({
+          currentWeekClient: weekphaseService.getCurrentWeekClient(),
+        }).then(() =>
           dao.getOrdersByClientID("6187c957b288576ca26f8257").then((orders) => {
             expect(orders.length).to.be.equal(6);
             let updatedOrder = orders.find(

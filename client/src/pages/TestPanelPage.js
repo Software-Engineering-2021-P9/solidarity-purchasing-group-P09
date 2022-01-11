@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { Card, Col, Row, Button, Spinner, Container } from "react-bootstrap";
 import {
   getCurrentWeekphase,
+  setNextWeekphaseOverride,
+  setPreviousWeekphaseOverride,
   setWeekphaseOverride,
 } from "../services/ApiClient";
 import ErrorToast from "../ui-components/ErrorToast/ErrorToast";
@@ -48,11 +50,19 @@ function TestPanelPage() {
   const [mustReload, setMustReload] = useState(true);
   const [requestError, setRequestError] = useState("");
   const [currentWeekphaseID, setCurrentWeekphaseID] = useState(null);
+  const [currentWeekYearClient, setCurrentWeekYearClient] = useState(null);
+  const [nextWeekYearClient, setNextWeekYearClient] = useState(null);
+  const [currentWeekYearFarmer, setCurrentWeekYearFarmer] = useState(null);
+  const [nextWeekYearFarmer, setNextWeekYearFarmer] = useState(null);
 
   useEffect(() => {
     const loadData = () => {
-      getCurrentWeekphase().then((weekphaseID) => {
-        setCurrentWeekphaseID(weekphaseID);
+      getCurrentWeekphase().then((result) => {
+        setCurrentWeekphaseID(result.currentWeekphase);
+        setCurrentWeekYearClient(result.cwc);
+        setNextWeekYearClient(result.nwc);
+        setCurrentWeekYearFarmer(result.cwf);
+        setNextWeekYearFarmer(result.nwf);
         setIsInitialized(true);
         setMustReload(false);
       });
@@ -146,6 +156,25 @@ function TestPanelPage() {
     );
   }
 
+  function buildWeekYearCounterCard(title, currentWeekYear, nextWeekYear) {
+    return (
+      <Card>
+        <Card.Body>
+          <Card.Title>{title}</Card.Title>
+          <hr />
+          <Row>
+            <Col xs='4'>Current Week</Col>
+            <Col xs='4'>{currentWeekYear[0] + " - " + currentWeekYear[1]}</Col>
+          </Row>
+          <Row>
+            <Col xs='4'>Next Week</Col>
+            <Col xs='4'>{nextWeekYear[0] + " - " + nextWeekYear[1]}</Col>
+          </Row>
+        </Card.Body>
+      </Card>
+    );
+  }
+
   function getNextWeekphaseID() {
     let index = weekphasesConfig.findIndex(
       (wp) => wp.id === currentWeekphaseID
@@ -154,7 +183,15 @@ function TestPanelPage() {
   }
 
   function onNextPhaseButtonClick() {
-    setWeekphaseOverride(getNextWeekphaseID())
+    setNextWeekphaseOverride()
+      .then(() => {
+        setMustReload(true);
+      })
+      .catch((err) => setRequestError(err.message));
+  }
+
+  function onPreviousPhaseButtonClick() {
+    setPreviousWeekphaseOverride()
       .then(() => {
         setMustReload(true);
       })
@@ -175,23 +212,42 @@ function TestPanelPage() {
         <Spinner />
       ) : (
         <>
-          <Row className='mt-5 align-content-center'>
+          <Row className='mt-5 align-content-center' style={{ minHeight: 500 }}>
             <Col xs='6'>{buildCurrentWeekphaseCard(currentWeekphaseID)}</Col>
             <Col xs='6'>{buildCurrentWeekphaseCard(getNextWeekphaseID())}</Col>
+          </Row>
+          <Row className='mt-5 align-content-center'>
+            <Col xs='6'>
+              {buildWeekYearCounterCard(
+                "Client - Employee - Manager",
+                currentWeekYearClient,
+                nextWeekYearClient
+              )}
+            </Col>
+            <Col xs='6'>
+              {buildWeekYearCounterCard(
+                "Farmer",
+                currentWeekYearFarmer,
+                nextWeekYearFarmer
+              )}
+            </Col>
           </Row>
 
           <Row className='mt-5 w-50 text-center'>
             Manually forcing the next phase will cause the system to enter an
-            overridden state: the internal clock will be stopped and phase
-            transitions won't happen.
+            overridden state: the internal clock will be stopped and automatic
+            phase transitions won't happen.
             <br />
             <br />
             Use the reset button to remove the override.
           </Row>
           <Container className='mt-4 d-flex justify-content-center'>
-            <Button onClick={onNextPhaseButtonClick}>Next Phase</Button>
+            <Button onClick={onPreviousPhaseButtonClick}>Previous Phase</Button>
             <Button className='ms-5' onClick={onResetButtonClick}>
               Reset
+            </Button>
+            <Button className='ms-5' onClick={onNextPhaseButtonClick}>
+              Next Phase
             </Button>
           </Container>
         </>

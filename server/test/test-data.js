@@ -4,7 +4,7 @@ const {
   getCurrentWeekClient,
   getCurrentWeekFarmer,
   getNextWeekFarmer,
-} = require("../services/time_service");
+} = require("../services/weekphase_service/weekphase_service");
 
 exports.managersCollection = {
   managers: [

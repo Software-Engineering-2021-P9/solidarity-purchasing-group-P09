@@ -7,7 +7,7 @@ const {
 const {
   getNextWeekFarmer,
   getCurrentWeekFarmer,
-} = require("../services/time_service");
+} = require("../services/weekphase_service/weekphase_service");
 const {
   searchStringValidator,
   productCategoryValidator,

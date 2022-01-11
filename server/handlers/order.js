@@ -18,11 +18,14 @@ const {
   orderShipmentTypeBodyValidator,
   orderPickUpSlotBodyValidator,
 } = require("./shared_validators");
-const { getNextWeekClient, getNowDate } = require("../services/time_service");
+const {
+  getNextWeekClient,
+} = require("../services/weekphase_service/weekphase_service");
 const {
   getOrderProductStatusForProductAvailabilityStatus,
   getPriceForShipmentType,
 } = require("../services/order_service");
+const { getNowDate } = require("../services/time_service");
 
 // -----------
 // CreateOrder

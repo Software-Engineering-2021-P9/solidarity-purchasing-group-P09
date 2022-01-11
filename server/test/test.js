@@ -6,7 +6,9 @@ const mongoUnit = require("mongo-unit");
 
 const testData = require("./test-data");
 
-const { getCurrentWeekClient } = require("../services/time_service");
+const {
+  getCurrentWeekClient,
+} = require("../services/weekphase_service/weekphase_service");
 let dao = require("../dao/dao");
 
 // ----------------------------------

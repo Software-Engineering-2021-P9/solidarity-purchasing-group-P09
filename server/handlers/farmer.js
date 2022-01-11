@@ -2,21 +2,13 @@ var dao = require("../dao/dao");
 const { Product } = require("../models/product");
 const { ProductAvailability } = require("../models/product_availability");
 const {
-  ProductAvailabilityResult,
-} = require("../models/product_availability_result");
-const {
   getNextWeekFarmer,
-  getCurrentWeekFarmer,
-} = require("../services/time_service");
+} = require("../services/weekphase_service/weekphase_service");
 const {
   searchStringValidator,
   productCategoryValidator,
   hasAvailabilitySetValidator,
   farmerIDPathValidator,
-  productIDPathValidator,
-  availabilityPriceBodyValidator,
-  availabilityQuantityBodyValidator,
-  availabilityPackagingBodyValidator,
 } = require("./shared_validators");
 
 exports.getFarmerProductsValidatorChain = [

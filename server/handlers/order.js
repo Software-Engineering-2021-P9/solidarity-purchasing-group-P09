@@ -18,11 +18,14 @@ const {
   orderShipmentTypeBodyValidator,
   orderPickUpSlotBodyValidator,
 } = require("./shared_validators");
-const { getNextWeekClient, getNowDate } = require("../services/time_service");
+const {
+  getNextWeekClient,
+} = require("../services/weekphase_service/weekphase_service");
 const {
   getOrderProductStatusForProductAvailabilityStatus,
   getPriceForShipmentType,
 } = require("../services/order_service");
+const { getNowDate } = require("../services/time_service");
 
 // -----------
 // CreateOrder
@@ -104,6 +107,43 @@ exports.createOrderHandler = async function (req, res, next) {
         return res.status(500).end();
       }
 
+      //GET CLIENT WALLET
+      let client;
+
+      try {
+        client = await dao.getClientByID(req.body.clientID.toString());
+      } catch (err) {
+        return res.status(500).end();
+      }
+      if (!client) {
+        console.error(
+          `getClientByID() -> couldn't retrieve client`
+        );
+      }
+
+      let orders;
+      try{
+        orders = await dao.getOrdersByClientID(req.body.clientID);
+      }catch(err){
+        console.error(`getOrdersByClientID() -> couldn't retrieve client orders: ${err}`);
+        return res.status(500).end(); 
+      }
+
+      orders = orders.filter(o => o.status==OrderStatus.WAITING || o.status==OrderStatus.NOTCOVERED);
+      let totalOrderCost = 0;
+      for(let order of orders){
+        totalOrderCost += order.totalPrice;
+      }
+
+
+      //IF WALLET NOT ENOUGH SET THE STATE TO NOT COVERED
+      let status;
+
+      if(client.wallet - totalOrderCost < totalPrice)
+        status = OrderStatus.NOTCOVERED;
+      else
+        status = OrderStatus.WAITING;
+
       // Build new order
       const [week, year] = getNextWeekClient();
 
@@ -119,7 +159,7 @@ exports.createOrderHandler = async function (req, res, next) {
               op.packaging
             )
         ),
-        status: OrderStatus.WAITING,
+        status: status,
         totalPrice: totalPrice,
         createdAt: getNowDate().toISOString(),
         week: week,

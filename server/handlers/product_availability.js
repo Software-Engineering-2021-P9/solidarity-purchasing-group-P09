@@ -10,12 +10,13 @@ const {
 const {
   getNextWeekFarmer,
   getCurrentWeekFarmer,
-} = require("../services/time_service");
+} = require("../services/weekphase_service/weekphase_service");
 const {
   productAvailabilityIDPathValidator,
   productIDPathValidator,
   availabilityPriceBodyValidator,
   availabilityQuantityBodyValidator,
+  availabilityQuantityZeroableBodyValidator,
   availabilityPackagingBodyValidator,
 } = require("./shared_validators");
 // --------------------------
@@ -205,7 +206,7 @@ exports.getCurrentWeekProductAvailability = async function (req, res, next) {
 
 exports.updateProductAvailabilityValidatorChain = [
   productAvailabilityIDPathValidator,
-  availabilityQuantityBodyValidator,
+  availabilityQuantityZeroableBodyValidator,
 ];
 
 exports.updateProductAvailabilityHandler = async function (req, res, next) {

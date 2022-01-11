@@ -290,6 +290,16 @@ app.patch(
   weekphaseHandlers.setWeekphaseOverrideHandler
 );
 
+app.patch(
+  buildAPIPath("/testing/weekphases/next"),
+  weekphaseHandlers.setNextWeekphaseOverrideHandler
+);
+
+app.patch(
+  buildAPIPath("/testing/weekphases/previous"),
+  weekphaseHandlers.setPreviousWeekphaseOverrideHandler
+);
+
 // ------
 // /stats
 // ------

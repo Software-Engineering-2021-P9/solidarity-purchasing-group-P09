@@ -241,6 +241,11 @@ exports.availabilityQuantityBodyValidator = body("quantity")
   .bail()
   .isInt({ min: 1 });
 
+exports.availabilityQuantityZeroableBodyValidator = body("quantity")
+  .notEmpty()
+  .bail()
+  .isInt({ min: 0 });
+
 exports.availabilityPackagingBodyValidator = body("packaging")
   .notEmpty()
   .bail()

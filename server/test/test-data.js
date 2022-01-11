@@ -4,7 +4,7 @@ const {
   getCurrentWeekClient,
   getCurrentWeekFarmer,
   getNextWeekFarmer,
-} = require("../services/time_service");
+} = require("../services/weekphase_service/weekphase_service");
 
 exports.managersCollection = {
   managers: [
@@ -92,6 +92,57 @@ exports.ordersCollection = {
 exports.ordersCollection2 = {
   orders: [
     {
+      _id: ObjectID("444444444444444444444443"),
+      clientID: ObjectID("144444444444444444444444"),
+      products: [
+        { productID: "6187c957b288576ca26f8258", quantity: 3 },
+        { productID: "6187c957b288576ca26f8259", quantity: 1 },
+        { productID: "6187c957b288576ca26f8250", quantity: 2 },
+      ],
+      status: "not-covered",
+      totalPrice: "6",
+      createdAt: "2019-11-16T13:00:07.616Z",
+      shipmentInfo: {
+        type: "pickup",
+        pickUpSlot: "32200",
+        address: "Via Prapappo Ravanello 54",
+      },
+    },
+    {
+      _id: ObjectID("444444444444444444444442"),
+      clientID: ObjectID("144444444444444444444444"),
+      products: [
+        { productID: "6187c957b288576ca26f8258", quantity: 3 },
+        { productID: "6187c957b288576ca26f8259", quantity: 1 },
+        { productID: "6187c957b288576ca26f8250", quantity: 2 },
+      ],
+      status: "not-covered",
+      totalPrice: "6",
+      createdAt: "2020-11-16T13:00:07.616Z",
+      shipmentInfo: {
+        type: "pickup",
+        pickUpSlot: "32200",
+        address: "Via Prapappo Ravanello 54",
+      },
+    },   
+    {
+      _id: ObjectID("444444444444444444444441"),
+      clientID: ObjectID("144444444444444444444444"),
+      products: [
+        { productID: "6187c957b288576ca26f8258", quantity: 3 },
+        { productID: "6187c957b288576ca26f8259", quantity: 1 },
+        { productID: "6187c957b288576ca26f8250", quantity: 2 },
+      ],
+      status: "not-covered",
+      totalPrice: "6",
+      createdAt: "2021-11-16T13:00:07.616Z",
+      shipmentInfo: {
+        type: "pickup",
+        pickUpSlot: "32200",
+        address: "Via Prapappo Ravanello 54",
+      },
+    },
+    {
       _id: ObjectID("6187c957b288576ca26f8251"),
       clientID: ObjectID("6187c957b288576ca26f8257"),
       products: [
@@ -130,6 +181,26 @@ exports.ordersCollection2 = {
 
 exports.clientsCollection = {
   clients: [
+    {
+      _id: ObjectID("144444444444444444444444"),
+      email: "pippo@gmail.com",
+      //role: "client",
+      fullName: " pippo",
+      phoneNumber: 3205758803,
+      //password: "$2a$10$AU6PIEG1tq1467LUurqOjuoKzdvdtZHTFnCh00YzNGm7zzf7wa0rq",
+      address: "fsfsaf dsafsa fsafsa,26 Milano,12342",
+      wallet: 0,
+    },
+    {
+      _id: ObjectID("777777777777777777777777"),
+      email: "pippo@gmail.com",
+      //role: "client",
+      fullName: " pippo",
+      phoneNumber: 3205758803,
+      //password: "$2a$10$AU6PIEG1tq1467LUurqOjuoKzdvdtZHTFnCh00YzNGm7zzf7wa0rq",
+      address: "fsfsaf dsafsa fsafsa,26 Milano,12342",
+      wallet: 0,
+    },
     {
       _id: ObjectID("618d4ad3736f2caf2d3b3ca5"),
       email: "ehsanansari@gmail.com",

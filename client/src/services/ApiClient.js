@@ -596,8 +596,7 @@ export async function getCurrentWeekphase() {
   if (response.status !== 200) {
     throw new Error("An error occurred during current weekphase fetch");
   }
-  let responseBody = await response.json();
-  return responseBody?.currentWeekphase;
+  return response.json();
 }
 
 export async function setWeekphaseOverride(weekphaseID) {
@@ -614,6 +613,26 @@ export async function setWeekphaseOverride(weekphaseID) {
       return;
     default:
       throw new Error("An error occurred during weekphase override");
+  }
+}
+
+export async function setNextWeekphaseOverride() {
+  const response = await fetch("/api/testing/weekphases/next", {
+    method: "PATCH",
+  });
+
+  if (response.status !== 204) {
+    throw new Error("An error occurred during weekphase override");
+  }
+}
+
+export async function setPreviousWeekphaseOverride() {
+  const response = await fetch("/api/testing/weekphases/previous", {
+    method: "PATCH",
+  });
+
+  if (response.status !== 204) {
+    throw new Error("An error occurred during weekphase override");
   }
 }
 

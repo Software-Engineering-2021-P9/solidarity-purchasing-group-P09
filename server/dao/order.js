@@ -34,9 +34,11 @@ exports.getOrderByID = async (db, orderID) => {
 
 exports.updateOrderStatusToWaiting = (db, orderID) => {
   var query = { _id: ObjectID(orderID) };
-  var update = { $set: {status: OrderStatus.WAITING} };
-  return db.collection(orderCollectionName).updateOne(query, update, { returnDocument: 'after' });
-}
+  var update = { $set: { status: OrderStatus.WAITING } };
+  return db
+    .collection(orderCollectionName)
+    .updateOne(query, update, { returnDocument: "after" });
+};
 // --------------------------
 // GetOrdersContainingProduct
 // --------------------------
@@ -51,7 +53,10 @@ exports.getOrdersContainingProducts = (
   return db
     .collection(orderCollectionName)
     .find({
-      status: OrderStatus.WAITING,
+      $or: [
+        { status: OrderStatus.WAITING },
+        { status: OrderStatus.NOTCOVERED },
+      ],
       week: week,
       year: year,
       "products.productID": productID,

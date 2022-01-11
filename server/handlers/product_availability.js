@@ -16,6 +16,7 @@ const {
   productIDPathValidator,
   availabilityPriceBodyValidator,
   availabilityQuantityBodyValidator,
+  availabilityQuantityZeroableBodyValidator,
   availabilityPackagingBodyValidator,
 } = require("./shared_validators");
 // --------------------------
@@ -205,7 +206,7 @@ exports.getCurrentWeekProductAvailability = async function (req, res, next) {
 
 exports.updateProductAvailabilityValidatorChain = [
   productAvailabilityIDPathValidator,
-  availabilityQuantityBodyValidator,
+  availabilityQuantityZeroableBodyValidator,
 ];
 
 exports.updateProductAvailabilityHandler = async function (req, res, next) {

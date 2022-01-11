@@ -72,6 +72,11 @@
   padding: 10px;
 }
 
+.current-week-info {
+  font-weight: 500;
+  font-style: italic;
+  color: #6a6764;
+}
 .unretrieved-info {
   color: #db9471;
 }

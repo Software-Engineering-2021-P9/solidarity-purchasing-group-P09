@@ -28,6 +28,15 @@ exports.getOrderByID = async (db, orderID) => {
   return db.collection(orderCollectionName).findOne(ObjectID(orderID));
 };
 
+// -----------
+// UpdateOrderStatus
+// -----------
+
+exports.updateOrderStatusToWaiting = (db, orderID) => {
+  var query = { _id: ObjectID(orderID) };
+  var update = { $set: {status: OrderStatus.WAITING} };
+  return db.collection(orderCollectionName).updateOne(query, update, { returnDocument: 'after' });
+}
 // --------------------------
 // GetOrdersContainingProduct
 // --------------------------

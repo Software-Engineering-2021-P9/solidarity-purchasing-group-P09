@@ -822,7 +822,7 @@ describe("Clients API tests:", () => {
         .end((err, res) => {
           expect(err).to.be.null;
           expect(res.body).to.be.an("array");
-          expect(res.body.length).to.be.equal(2);
+          expect(res.body.length).to.be.equal(4);
           expect(res.body.map((client) => client.id)).to.include.members([
             "6a8fc927bb88c762a26f0000",
             "618d4ad3736f2caf2d3b3ca5",
@@ -956,6 +956,7 @@ describe("Clients API tests:", () => {
           done();
         });
     });
+
     it("it should update the client wallet", (done) => {
       chai
         .request(app)
@@ -989,6 +990,23 @@ describe("Clients API tests:", () => {
           done();
         });
     });
+
+    it("it should update the client wallet and bring not covered orders to waiting status", (done) => {
+      chai
+        .request(app)
+        .patch("/api/clients/144444444444444444444444/wallet")
+        .send({
+          increaseBy: 12,
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          expect(res.body).to.be.an("object");
+          expect(res.body.newWalletValue).to.be.equal(12);
+
+          done();
+        });
+    });
   });
 });
 
@@ -998,6 +1016,7 @@ describe("Orders API tests:", () => {
     dao.open();
     mongoUnit.load(testData.ordersCollection);
     mongoUnit.load(testData.productsAvailabilityCollection3);
+    mongoUnit.load(testData.clientsCollection);
   });
 
   afterEach(() => {
@@ -1152,6 +1171,93 @@ describe("Orders API tests:", () => {
         .end((err, res) => {
           expect(err).to.be.null;
           expect(res.status).to.be.equal(400);
+          done();
+        });
+    });
+
+    it("it should create a new order not covered because no money on wallet", (done) => {
+      chai
+        .request(app)
+        .post("/api/orders")
+        .send({
+          clientID: "777777777777777777777777",
+          products: [
+            { productID: "000000000000000000000001", quantity: 3 },
+            { productID: "000000000000000000000004", quantity: 1 },
+            { productID: "000000000000000000000006", quantity: 2 },
+          ],
+          shipmentInfo: {
+            type: "shipment",
+            address: "Via its real trust me 54",
+          },
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(200);
+          const id = res.body.id;
+
+          chai
+            .request(app)
+            .get("/api/orders/" + id)
+            .end((err, res) => {
+              expect(err).to.be.null;
+              expect(res.status).to.be.equal(200);
+              expect(res.body).to.be.an("object");
+
+              expect(res.body.clientID).to.be.equal("777777777777777777777777");
+              expect(res.body.id).to.be.equal(id);
+              expect(res.body.products).to.be.eql([
+                {
+                  productID: "000000000000000000000001",
+                  quantity: 3,
+                  packaging: "100g",
+                  price: 3.5,
+                  status: "waiting",
+                },
+                {
+                  productID: "000000000000000000000004",
+                  quantity: 1,
+                  packaging: "4 units",
+                  price: 2.3,
+                  status: "waiting",
+                },
+                {
+                  productID: "000000000000000000000006",
+                  quantity: 2,
+                  packaging: "1 units",
+                  price: 4.5,
+                  status: "waiting",
+                },
+              ]);
+              expect(res.body.shipmentInfo).to.be.eql({
+                type: "shipment",
+                address: "Via its real trust me 54",
+              });
+              expect(res.body.status).to.be.equal("not-covered");
+              done();
+            });
+        });
+    });
+
+    it("it should fail to create a new order because wrong client id", (done) => {
+      chai
+        .request(app)
+        .post("/api/orders")
+        .send({
+          clientID: "77777777777777d777777777",
+          products: [
+            { productID: "000000000000000000000001", quantity: 3 },
+            { productID: "000000000000000000000004", quantity: 1 },
+            { productID: "000000000000000000000006", quantity: 2 },
+          ],
+          shipmentInfo: {
+            type: "shipment",
+            address: "Via its real trust me 54",
+          },
+        })
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res.status).to.be.equal(500);
           done();
         });
     });

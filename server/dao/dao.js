@@ -35,6 +35,7 @@ const {
   createOrder,
   getOrderByID,
   getOrdersByClientID,
+  updateOrderStatusToWaiting,
   completeOrder,
   getOrdersByClientIDList,
   setPreparedOrdersToUnretrieved,
@@ -191,6 +192,7 @@ exports.getOrderByID = (orderID) => getOrderByID(db, orderID);
 exports.getOrdersContainingProducts = (productID, week, year, sortByCreation) =>
   getOrdersContainingProducts(db, productID, week, year, sortByCreation);
 exports.getOrdersByClientID = (clientID) => getOrdersByClientID(db, clientID);
+exports.updateOrderStatusToWaiting = (orderID) => updateOrderStatusToWaiting(db, orderID);
 exports.completeOrder = (orderID) => completeOrder(db, orderID);
 exports.getOrdersByClientIDList = (clientIDList) =>
   getOrdersByClientIDList(db, clientIDList);

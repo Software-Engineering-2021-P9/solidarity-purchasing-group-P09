@@ -59,6 +59,7 @@ function ManagerOrdersStatsPage(props) {
 
       const currentMonth = new Date().getMonth();
       if (currentMonth == month_number) {
+        /* eslint eqeqeq: 0 */
         week_end = currWeek;
       }
 

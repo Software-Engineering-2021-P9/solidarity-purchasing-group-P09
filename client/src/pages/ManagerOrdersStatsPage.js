@@ -30,6 +30,7 @@ function ManagerOrdersStatsPage(props) {
   const [formReports, setFormReports] = useState({});
   const [barReports, setBarReports] = useState(new Map());
 
+  const [currWeek, setCurrWeek] = useState(0);
   const [week, setWeek] = useState(2);
   const [year, setYear] = useState(2022);
   const [month, setMonth] = useState(0);
@@ -54,12 +55,16 @@ function ManagerOrdersStatsPage(props) {
       const week_start = Math.ceil(
         (start_date.getDay() + 1 + numberOfDays_start) / 7
       );
-      const week_end = Math.ceil(
-        (end_date.getDay() + 1 + numberOfDays_end) / 7
-      );
+      let week_end = Math.ceil((end_date.getDay() + 1 + numberOfDays_end) / 7);
+
+      const currentMonth = new Date().getMonth();
+      if (currentMonth == month_number) {
+        week_end = currWeek;
+      }
+
       return [week_start, week_end];
     },
-    [year]
+    [year, currWeek]
   );
 
   useEffect(() => {
@@ -87,7 +92,7 @@ function ManagerOrdersStatsPage(props) {
       let this_month_week = getWeekNumbers(currentValues.curr_month);
       getWeekIntervalOrdersStat(
         this_month_week[0],
-        this_month_week[1],
+        currentValues.curr_week,
         currentValues.curr_year,
         currentValues.curr_year
       )
@@ -141,7 +146,7 @@ function ManagerOrdersStatsPage(props) {
     const curr_month = currentdate.getMonth();
     const prev_week = curr_week === 1 ? 52 : curr_week - 1;
     const prev_month = curr_month === 0 ? 11 : curr_month - 1;
-
+    setCurrWeek(curr_week);
     currentValues = {
       curr_week: curr_week,
       curr_year: curr_year,
@@ -158,7 +163,7 @@ function ManagerOrdersStatsPage(props) {
       if (typeReports === 0) {
         let map_week_bar = new Map();
         let year_week_bar = 2021;
-        const weeks_week_bar = [46, 47, 48, 49, 50, 51, 52, 53, 1, 2];
+        const weeks_week_bar = [46, 47, 48, 49, 50, 51, 52, 1, 2];
 
         for (const w of weeks_week_bar) {
           if (w === 1 || w === 2) {
@@ -272,6 +277,7 @@ function ManagerOrdersStatsPage(props) {
                   previousWeekReports={previousWeekReports}
                   setWeek={setWeek}
                   setYear={setYear}
+                  currWeek={currWeek}
                   barReports={barReports}
                   initializedBar={initializedBar}
                 />

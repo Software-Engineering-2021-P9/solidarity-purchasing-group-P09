@@ -51,7 +51,7 @@ function WeeklyReports(props) {
               </Col>
             )}
           </Row>
-          <Row>of unretrieved orders this week</Row>
+          <Row>of unretrieved orders this week ({props.currWeek})</Row>
         </Col>
         <Col
           className="mx-xs-0 mx-md-4 mx-lg-4 px-sm-0 px-xs-0 px-md-0 px-lg-4 media-margin"
@@ -72,9 +72,14 @@ function WeeklyReports(props) {
         weeks)
       </Row>
       {props.initializedBar ? (
-        <Row>
-          <UnretrievedWeeklyBar barReports={props.barReports} />
-        </Row>
+        <>
+          <Row>
+            <UnretrievedWeeklyBar barReports={props.barReports} />
+          </Row>
+          <Row className="my-4 mx-2 current-week-info">
+            Current week data will be consistent only at the end of the week.
+          </Row>
+        </>
       ) : (
         <Row className="h-auto justify-content-center align-content-center">
           <Spinner animation="border" />
@@ -153,11 +158,11 @@ function WeeklyForm(props) {
             className="mx-3 form-size"
             type="number"
             step={1}
-            max={53}
+            max={52}
             min={1}
             value={props.week}
             onChange={(e) => {
-              if (e.target.value >= 1 && e.target.value <= 53) {
+              if (e.target.value >= 1 && e.target.value <= 52) {
                 props.setWeek(parseInt(e.target.value));
               }
             }}
@@ -177,7 +182,7 @@ function WeeklyForm(props) {
           />
         </InputGroup>
       </Row>
-      {props.formReports.unretrievedCount ? (
+      {props.formReports.unretrievedCount || props.formReports.totalCount ? (
         <Row className="comments-week-stats">
           Unretrieved orders in week {props.week} of {props.year} were{" "}
           {props.formReports.unretrievedCount},{" "}

@@ -79,9 +79,14 @@ function MonthlyReports(props) {
         10 months)
       </Row>
       {props.initializedBar ? (
-        <Row>
-          <UnretrievedMonthlyBar barReports={props.barReports} />
-        </Row>
+        <>
+          <Row>
+            <UnretrievedMonthlyBar barReports={props.barReports} />
+          </Row>
+          <Row className="my-4 mx-2 current-week-info">
+            Current month data will be consistent only at the end of the month.
+          </Row>
+        </>
       ) : (
         <Row className="h-auto justify-content-center align-content-center">
           <Spinner animation="border" />
@@ -109,9 +114,9 @@ function UnretrievedMonthlyBar(props) {
       if (label === "JAN") year_info = 2022;
       return (
         <div className="custom-tooltip">
-          <h6>{`month : ${label}-${year_info}`}</h6>
-          <p>{`unretrieved orders : ${payload[0].value}`}</p>
-          <p>{`total orders : ${payload[1].value}`}</p>
+          <p className="label-tooltip">{`month : ${label}-${year_info}`}</p>
+          <p className="unretrieved-info">{`unretrieved orders : ${payload[0].value}`}</p>
+          <p className="total-info">{`total orders : ${payload[1].value}`}</p>
           {payload[0].value && payload[1].value ? (
             <p>{`% of unretrieved orders : ${(
               (payload[0].value / payload[1].value) *

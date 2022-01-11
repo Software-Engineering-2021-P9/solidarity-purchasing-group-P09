@@ -136,6 +136,7 @@ function ManagerOrdersStatsPage(props) {
           )
         );
     };
+
     let currentValues;
     var currentdate = new Date();
     var oneJan = new Date(currentdate.getFullYear(), 0, 1);

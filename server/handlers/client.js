@@ -41,25 +41,58 @@ exports.addFundToWalletValidatorChain = [
   addFundToWalletBodyValidator,
 ];
 exports.addFundToWalletHandler = async function (req, res, next) {
-  let result;
+    let result;
+    let orders;
+    const clientID = req.params.clientID;
 
-  try {
-    result = await dao.addFundToWallet(
-      req.params.clientID,
-      parseFloat(req.body.increaseBy)
-    );
-  } catch (err) {
-    console.error(`AddFundToWalletHandler() -> couldn't top up wallet: ${err}`);
-    return res.status(500).end();
-  }
+    //TOP UP WALLET
+    try {
+        result = await dao.addFundToWallet(clientID, parseFloat(req.body.increaseBy));
+    }
+    catch (err) {
+        console.error(`AddFundToWalletHandler() -> couldn't top up wallet: ${err}`);
+        return res.status(500).end();
+    }
+    if (result.value == null) {
+        console.error(`AddFundToWalletHandler() -> couldn't find client collection or client document`);
+        return res.status(400).end();
+    }
 
-  if (result.value == null) {
-    console.error(
-      `AddFundToWalletHandler() -> couldn't find client collection or client document`
-    );
-    return res.status(400).end();
-  }
-  return res.json({ newWalletValue: result.value.wallet });
+    //GET "NOT COVERED" STATUS ORDERS, ORDER THEM FROM OLDER TO NEWER, 
+    //AND CHANGE THEM TO "WAITING" STATE IF WALLET AFTER TOP UP IS SUFFICIENT 
+    try{
+      orders = await dao.getOrdersByClientID(clientID);
+    }catch(err){
+      console.error(`getOrdersByClientID() -> couldn't retrieve client orders: ${err}`);
+      return res.status(500).end(); 
+    }
+
+    let waitingOrders = orders.filter(order => order.status == OrderStatus.WAITING);
+    let waitingOrdersCost = 0;
+    for(let order of waitingOrders){
+      waitingOrdersCost += order.totalPrice;
+    }
+
+    let notCoveredOrders = orders.filter(order => order.status == OrderStatus.NOTCOVERED).sort((a, b)=>{
+        if(a.createdAt <= b.createdAt)
+          return -1;
+        return 1;
+      });
+    
+    let moneyToCoverOrdersNotCovered = result.value.wallet - waitingOrdersCost;
+
+    for(let order of notCoveredOrders){
+      if(moneyToCoverOrdersNotCovered < order.totalPrice)
+        break;
+        moneyToCoverOrdersNotCovered -= order.totalPrice;
+      try{
+        await dao.updateOrderStatusToWaiting(order._id);
+      }catch(err){
+        return res.status(500).end();
+      }
+    }
+
+    return res.json({ newWalletValue: result.value.wallet});
 };
 
 exports.findClientValidatorChain = [

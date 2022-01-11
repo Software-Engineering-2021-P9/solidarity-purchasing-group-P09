@@ -6,6 +6,7 @@ import Product from "./models/Product";
 import ProductAvailability from "./models/ProductAvailability";
 import Order from "./models/Order";
 import UserRoles from "./models/UserRoles";
+import OrdersStats from "./models/OrdersStats";
 
 // Builds the query parameters for an URL from the passed object
 function buildQueryParametersString(queryParams) {
@@ -639,5 +640,72 @@ export async function setPreviousWeekphaseOverride() {
       return;
     default:
       throw new Error("An error occurred during weekphase override");
+  }
+}
+
+// ----------
+// Reports
+// ----------
+
+export async function getWeeklyOrdersStat(week, year) {
+  // Returns mock data right now
+  let response;
+
+  if (!week && !year) {
+    response = await fetch("/api/stats/orders/unretrieved/weekly?");
+  } else {
+    response = await fetch(
+      "/api/stats/orders/unretrieved/weekly?week=" + week + "&year=" + year
+    );
+  }
+
+  switch (response.status) {
+    case 200:
+      let responseBody = await response.json();
+      return OrdersStats.fromJSON(responseBody);
+    case 400:
+      throw new Error("Validation error occurred");
+    case 401:
+      throw new Error("Unauthorized");
+    case 404:
+      throw new Error("Not Found");
+    case 500:
+      throw new Error("Internal Server Error");
+    default:
+      throw new Error("An error occurred retrieving the product");
+  }
+}
+
+export async function getWeekIntervalOrdersStat(
+  startWeek,
+  endWeek,
+  startYear,
+  endYear
+) {
+  let response = await fetch(
+    "/api/stats/orders/unretrieved/timeInterval?startWeek=" +
+      startWeek +
+      "&endWeek=" +
+      endWeek +
+      "&startYear=" +
+      startYear +
+      "&endYear=" +
+      endYear
+  );
+
+  switch (response.status) {
+    case 200:
+      let responseBody = await response.json();
+      return OrdersStats.fromJSON(responseBody);
+    case 400:
+      throw new Error("Validation error occurred");
+    case 401:
+      throw new Error("Unauthorized");
+    case 404:
+      throw new Error("Not Found");
+    case 500:
+      throw new Error("Internal Server Error");
+    default:
+      throw new Error("An error occurred retrieving the product");
   }
 }

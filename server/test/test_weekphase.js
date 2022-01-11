@@ -116,6 +116,7 @@ exports.tests = (app, mongoUnit, testData, dao) => {
     });
 
     afterEach(() => {
+      weekphaseService.setWeekphaseOverride(null);
       weekphaseService.close();
     });
 
@@ -191,6 +192,139 @@ exports.tests = (app, mongoUnit, testData, dao) => {
           });
       });
     });
+
+    describe("PATCH /testing/weekphases/next", () => {
+      it("it should set the override weekphase to the next weekphase", (done) => {
+        chai
+          .request(app)
+          .patch("/api/testing/weekphases/next")
+          .end((err, res) => {
+            expect(err).to.be.null;
+            expect(res.status).to.be.equal(204);
+            expect(weekphaseService.getCurrentWeekphase()).to.be.equal(
+              "weekphase-2"
+            );
+            expect(weekphaseService.getCurrentWeekClient()).to.be.eqls([
+              49, 2021,
+            ]);
+            expect(weekphaseService.getCurrentWeekFarmer()).to.be.eqls([
+              48, 2021,
+            ]);
+            done();
+          });
+      });
+
+      it("it should increase the client week when stepping from weekphase 1 to 2", (done) => {
+        weekphaseService.setWeekphaseOverride("weekphase-1");
+        chai
+          .request(app)
+          .patch("/api/testing/weekphases/next")
+          .end((err, res) => {
+            expect(err).to.be.null;
+            expect(res.status).to.be.equal(204);
+            expect(weekphaseService.getCurrentWeekphase()).to.be.equal(
+              "weekphase-2"
+            );
+
+            expect(weekphaseService.getCurrentWeekClient()).to.be.eqls([
+              49, 2021,
+            ]);
+            expect(weekphaseService.getCurrentWeekFarmer()).to.be.eqls([
+              48, 2021,
+            ]);
+            done();
+          });
+      });
+
+      it("it should increase the farmer week when stepping from weekphase 8 to 9", (done) => {
+        weekphaseService.setWeekphaseOverride("weekphase-8");
+        chai
+          .request(app)
+          .patch("/api/testing/weekphases/next")
+          .end((err, res) => {
+            expect(err).to.be.null;
+            expect(res.status).to.be.equal(204);
+            expect(weekphaseService.getCurrentWeekphase()).to.be.equal(
+              "weekphase-9"
+            );
+
+            expect(weekphaseService.getCurrentWeekClient()).to.be.eqls([
+              48, 2021,
+            ]);
+            expect(weekphaseService.getCurrentWeekFarmer()).to.be.eqls([
+              49, 2021,
+            ]);
+            done();
+          });
+      });
+    });
+
+    describe("PATCH /testing/weekphases/previous", () => {
+      it("it should set the override weekphase to the previous weekphase", (done) => {
+        chai
+          .request(app)
+          .patch("/api/testing/weekphases/previous")
+          .end((err, res) => {
+            expect(err).to.be.null;
+            expect(res.status).to.be.equal(204);
+            expect(weekphaseService.getCurrentWeekphase()).to.be.equal(
+              "weekphase-9"
+            );
+
+            expect(weekphaseService.getCurrentWeekClient()).to.be.eqls([
+              48, 2021,
+            ]);
+            expect(weekphaseService.getCurrentWeekFarmer()).to.be.eqls([
+              48, 2021,
+            ]);
+            done();
+          });
+      });
+
+      it("it should decrease the client week when stepping from weekphase 2 to 1", (done) => {
+        weekphaseService.setWeekphaseOverride("weekphase-2");
+        chai
+          .request(app)
+          .patch("/api/testing/weekphases/previous")
+          .end((err, res) => {
+            expect(err).to.be.null;
+            expect(res.status).to.be.equal(204);
+            expect(weekphaseService.getCurrentWeekphase()).to.be.equal(
+              "weekphase-1"
+            );
+
+            expect(weekphaseService.getCurrentWeekClient()).to.be.eqls([
+              47, 2021,
+            ]);
+            expect(weekphaseService.getCurrentWeekFarmer()).to.be.eqls([
+              48, 2021,
+            ]);
+            done();
+          });
+      });
+
+      it("it should decrease the farmer week when stepping from weekphase 9 to 8", (done) => {
+        weekphaseService.setWeekphaseOverride("weekphase-9");
+        chai
+          .request(app)
+          .patch("/api/testing/weekphases/previous")
+          .end((err, res) => {
+            expect(err).to.be.null;
+            expect(res.status).to.be.equal(204);
+            expect(weekphaseService.getCurrentWeekphase()).to.be.equal(
+              "weekphase-8"
+            );
+
+            expect(weekphaseService.getCurrentWeekClient()).to.be.eqls([
+              48, 2021,
+            ]);
+            expect(weekphaseService.getCurrentWeekFarmer()).to.be.eqls([
+              47, 2021,
+            ]);
+            done();
+          });
+      });
+    });
   });
 
   describe("Weekphase handlers tests:", () => {
@@ -206,7 +340,9 @@ exports.tests = (app, mongoUnit, testData, dao) => {
       });
 
       it("It should set to unretrieved only the order with id: 6187c957b288576ca26f8251", (done) => {
-        weekphaseEightHandler().then(() =>
+        weekphaseEightHandler({
+          currentWeekClient: weekphaseService.getCurrentWeekClient(),
+        }).then(() =>
           dao.getOrdersByClientID("6187c957b288576ca26f8257").then((orders) => {
             expect(orders.length).to.be.equal(6);
             let updatedOrder = orders.find(

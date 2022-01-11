@@ -1,7 +1,9 @@
 var dao = require("../dao/dao");
 const { Product } = require("../models/product");
 const { ProductAvailability } = require("../models/product_availability");
-const { getNextWeekClient } = require("../services/time_service");
+const {
+  getNextWeekClient,
+} = require("../services/weekphase_service/weekphase_service");
 const {
   searchStringValidator,
   productCategoryValidator,
